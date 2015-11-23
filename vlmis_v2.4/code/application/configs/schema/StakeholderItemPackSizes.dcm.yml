@@ -1,0 +1,150 @@
+StakeholderItemPackSizes:
+  type: entity
+  table: stakeholder_item_pack_sizes
+  fields:
+    pkId:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      column: pk_id
+      generator:
+        strategy: IDENTITY
+    packSizeDescription:
+      type: text
+      nullable: true
+      column: pack_size_description
+    length:
+      type: integer
+      unsigned: false
+      nullable: true
+    width:
+      type: integer
+      unsigned: false
+      nullable: true
+    height:
+      type: integer
+      unsigned: false
+      nullable: true
+    batchNoStartPosition:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: batch_no_start_position
+    batchNoEndPosition:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: batch_no_end_position
+    expiryDateStartPosition:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: expiry_date_start_position
+   
+    expiryDateEndPosition:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: expiry_date_end_position
+    gtinStartPosition:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: gtin_start_position
+    gtinEndPosition:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: gtin_end_position
+    batchLength:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: batch_length  
+    quantityPerPack:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: quantity_per_pack
+    volumePerUnitNet:
+      type: decimal
+      nullable: true
+      column: volume_per_unit_net
+    prePrintedBarcode:
+      type: boolean
+      nullable: true
+      column: pre_printed_barcode
+    status:
+      type: boolean
+      nullable: true
+    listRank:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: list_rank
+    volumPerVial:
+      type: decimal
+      nullable: true
+      column: volum_per_vial
+    gtin:
+      type: boolean
+      nullable: true
+    batch:
+      type: boolean
+      nullable: true
+    expiry:
+      type: boolean
+      nullable: true
+    itemGtin:
+      type: string
+      length: 20
+      fixed: false
+      nullable: true
+      column: item_gtin
+    expiryDateFormat:
+      type: string
+      length: 50
+      fixed: false
+      nullable: true
+      column: expiry_date_format
+      
+  oneToOne:
+    itemPackSize:
+      targetEntity: ItemPackSizes
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        item_pack_size_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    stakeholder:
+      targetEntity: Stakeholders
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        stakeholder_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    barcodeType:
+      targetEntity: ListDetail
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        barcode_type:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    packagingLevel:
+      targetEntity: ListDetail
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        packaging_level:
+          referencedColumnName: pk_id
+      orphanRemoval: false  
+   
+  lifecycleCallbacks: {  }

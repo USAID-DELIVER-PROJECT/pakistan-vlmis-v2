@@ -1,0 +1,32 @@
+CampaignItemPackSizes:
+  type: entity
+  table: campaign_item_pack_sizes
+  fields:
+    pkId:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      column: pk_id
+      generator:
+        strategy: IDENTITY
+  oneToOne:
+    campaign:
+      targetEntity: Campaigns
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        campaign_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    itemPackSize:
+      targetEntity: ItemPackSizes
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        item_pack_size_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

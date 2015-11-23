@@ -1,0 +1,32 @@
+BarcodeScannerWarehouses:
+  type: entity
+  table: barcode_scanner_warehouses
+  fields:
+    pkId:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      column: pk_id
+      generator:
+        strategy: IDENTITY
+  oneToOne:
+    warehouse:
+      targetEntity: Warehouses
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        warehouse_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    scanner:
+      targetEntity: BarcodeScanners
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        scanner_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

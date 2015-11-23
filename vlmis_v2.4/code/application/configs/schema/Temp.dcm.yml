@@ -1,0 +1,59 @@
+Temp:
+  type: entity
+  table: temp
+  fields:
+    pkId:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      column: pk_id
+      generator:
+        strategy: IDENTITY
+    epiCenter:
+      type: string
+      length: 255
+      fixed: false
+      nullable: true
+      column: epi_center
+    type:
+      type: string
+      length: 255
+      fixed: false
+      nullable: true
+    level:
+      type: string
+      length: 255
+      fixed: false
+      nullable: true
+    province:
+      type: string
+      length: 255
+      fixed: false
+      nullable: true
+    district:
+      type: string
+      length: 255
+      fixed: false
+      nullable: true
+    tehsil:
+      type: string
+      length: 255
+      fixed: false
+      nullable: true
+    uc:
+      type: string
+      length: 255
+      fixed: false
+      nullable: true
+    lead:
+      type: string
+      length: 255
+      fixed: false
+      nullable: true
+    username:
+      type: string
+      length: 255
+      fixed: false
+      nullable: true
+  lifecycleCallbacks: {  }

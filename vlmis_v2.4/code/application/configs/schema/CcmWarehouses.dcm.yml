@@ -1,0 +1,53 @@
+CcmWarehouses:
+  type: entity
+  table: ccm_warehouses
+  fields:
+    pkId:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      column: pk_id
+      generator:
+        strategy: IDENTITY
+    routineImmunizationIcepackRequirments:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+      column: routine_immunization_icepack_requirments
+    campaignIcepackRequirments:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+      column: campaign_icepack_requirments
+  oneToOne:
+    electricityAvailability:
+      targetEntity: ListDetail
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        electricity_availability_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    vaccineSupplyMode:
+      targetEntity: ListDetail
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        vaccine_supply_mode:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    warehouse:
+      targetEntity: Warehouses
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        warehouse_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

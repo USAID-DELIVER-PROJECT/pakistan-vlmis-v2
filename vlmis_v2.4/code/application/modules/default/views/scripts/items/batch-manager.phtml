@@ -1,0 +1,278 @@
+<!-- Content -->
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <h3 class="page-title">Batch Management</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="portlet box green">
+                    <div class="portlet-title">
+                        <div class="caption">
+
+                        </div>
+                        <div class="tools">
+                            <a href="javascript:;" class="collapse">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form method="POST" name="batch_search" action="" >
+                                    <!-- Row -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <!-- Widget -->
+                                            <div class="widget row-fluid" data-toggle="collapse-widget">
+
+                                                <!-- Widget heading -->
+                                                <div class="widget-head">
+                                                    <h4 class="heading">Vaccine</h4>
+                                                </div>
+                                                <!-- // Widget heading END -->
+
+                                                <div class="widget-body">
+                                                    <select name="product" id="product">
+                                                        <?php
+                                                        echo "<option value=''>Select</option>";
+                                                        if (mysql_num_rows($items) > 0) {
+                                                            while ($row = mysql_fetch_object($items)) {
+                                                                ?>
+                                                                <option value="<?php echo $row->itm_id; ?>" <?php if ($row->itm_id == $product) { ?>selected=""<?php } ?>><?php echo $row->itm_name ?></option>
+                                                                <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!-- Widget -->
+                                            <div class="widget" data-toggle="collapse-widget">
+
+                                                <!-- Widget heading -->
+                                                <div class="widget-head">
+                                                    <h4 class="heading">Status</h4>
+                                                </div>
+                                                <!-- // Widget heading END -->
+
+                                                <div class="widget-body uniformjs">
+                                                    <label class="radio">
+                                                        <input type="radio" class="radio" name="status" value="1" <?php if ($status == 1) { ?>checked="" <?php } ?> />
+                                                        Running
+                                                    </label><br/>
+                                                    <label class="radio">
+                                                        <input type="radio" class="radio" name="status" value="2" <?php if ($status == 2) { ?>checked="" <?php } ?> />
+                                                        Stacked
+                                                    </label><br/>
+                                                    <label class="radio">
+                                                        <input type="radio" class="radio" name="status" value="3" <?php if ($status == 3) { ?>checked="" <?php } ?> />
+                                                        Finished
+                                                    </label><br/>
+                                                    <label class="radio">
+                                                        <input type="radio" class="radio" name="status" value="" <?php if ($status == '') { ?>checked="" <?php } ?>/>
+                                                        Total
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <!-- // Widget END -->
+                                            <div class="col-md-4">
+                                                <!-- Group -->
+                                                <div class="control-group">
+                                                    <label class="control-label" for="firstname">Batch No</label>
+                                                    <div class="controls">
+                                                        <input class="col-md-12" id="batch_no" name="batch_no" type="text" value="<?php echo $batch_no; ?>" />
+                                                    </div>
+                                                </div>
+                                                <!-- // Group END -->
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!-- Group -->
+                                                <div class="control-group">
+                                                    <label class="control-label" for="firstname">Ref No</label>
+                                                    <div class="controls">
+                                                        <input class="col-md-12" id="ref_no" name="ref_no" type="text" value="<?php echo $ref_no; ?>" />
+                                                    </div>
+                                                </div>
+                                                <!-- // Group END -->
+                                            </div>
+                                            <div class="col-md-3">
+                                                <!-- Group -->
+                                                <div class="control-group">
+                                                    <label class="control-label" for="firstname">&nbsp;</label>
+                                                    <div class="controls">
+                                                        <button class="btn btn-success" id="search" name="search" type="submit" > <i></i>Search </button>
+                                                    </div>
+                                                </div>
+                                                <!-- // Group END -->
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6" id="vaccine-detail" <?php if ($flag == true) { ?> style="display:block;" <?php } else { ?>style="display:none;" <?php } ?>>
+                                            <!-- Widget -->
+                                            <?php
+                                            if (isset($product) && !empty($product)) {
+                                                $result = $objStockBatch->find_by_item($product);
+                                                (int) $RunningVials = $result->RunningQty * $result->doses_per_unit;
+                                                (int) $StackedVials = $result->StackedQty * $result->doses_per_unit;
+                                                (int) $FinishedVials = $result->FinishedQty * $result->doses_per_unit;
+                                                (int) $total = $RunningVials + $StackedVials + $FinishedVials;
+                                            } else {
+                                                $RunningVials = 0;
+                                                $StackedVials = 0;
+                                                $FinishedVials = 0;
+                                                $total = 0;
+                                            }
+                                            ?>
+                                            <div class="widget row-fluid" data-toggle="collapse-widget"  id="batch_detail_ajax">
+
+                                                <!-- Widget heading -->
+                                                <div class="widget-head">
+                                                    <h4 class="heading"> <span id="name"><?php echo $result->itm_name; ?></span></h4>
+                                                </div>
+                                                <!-- // Widget heading END -->
+
+                                                <div class="widget-body">
+                                                    <div class="col-md-3">
+                                                        <h5>Batch Status</h5>
+                                                        <p>Running</p>
+                                                        <p>Stacked</p>
+                                                        <p>Finished</p>
+                                                        <h5>Total</h5>
+                                                    </div>
+                                                    <div class="span3 center">
+                                                        <h5>No of Batches</h5>
+                                                        <p id="running"><?php echo (!empty($result->running) ? $result->running : 0 ); ?></p>
+                                                        <p id="stacked"><?php echo (!empty($result->stacked) ? $result->stacked : 0 ); ?></p>
+                                                        <p id="finished"><?php echo (!empty($result->finished) ? $result->finished : 0 ); ?></p>
+                                                        <h5 id="total"><?php echo ($result->running + $result->stacked + $result->finished); ?></h5>
+                                                    </div>
+                                                    <div class="span3 center">
+                                                        <h5>Qty <?php if ($result->fkUnitID == 2) { ?>in Doses<?php } else if ($result->fkUnitID == 3) { ?>in Pcs<?php } ?></h5>
+                                                        <p><?php echo number_format($RunningVials); ?></p>
+                                                        <p><?php echo number_format($StackedVials); ?></p>
+                                                        <p><?php echo number_format($FinishedVials); ?></p>
+                                                        <h5><?php echo number_format($total); ?></h5>
+                                                    </div>
+                                                    <?php if ($result->fkUnitID == 2) { ?>
+                                                        <div class="span3 center">
+                                                            <h5>Qty in Vials</h5>
+                                                            <p><?php echo number_format($result->RunningQty); ?></p>
+                                                            <p><?php echo number_format($result->StackedQty); ?></p>
+                                                            <p><?php echo number_format($result->FinishedQty); ?></p>
+                                                            <h5><?php echo number_format($result->RunningQty + $result->StackedQty + $result->FinishedQty); ?></h5>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                            <!-- Widget -->
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-md-12">
+                                <?php
+                                echo App_Controller_Functions::getPageNarrative(Zend_Registry::get('resource'));
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="portlet box green">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            Batch List
+                        </div>
+                        <div class="tools">
+                            <a href="javascript:;" class="collapse">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="dynamicTable table table-striped table-bordered table-hover dataTable no-footer">
+                                    <!-- Table heading -->
+                                    <thead>
+                                        <tr>
+                                            <th>SR. No.</th>
+                                            <th>Vaccine</th>
+                                            <th>Batch No.</th>
+                                            <th>Expiry Date</th>
+                                            <th>Qty</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <!-- // Table heading END -->
+
+                                    <!-- Table body -->
+                                    <tbody>
+                                        <?php
+                                        if (!empty($data) && mysql_num_rows($data) > 0) {
+                                            $i = 1;
+                                            while ($row = mysql_fetch_object($data)) {
+                                                $batchArray[] = $row;
+                                                ?>
+                                                <!-- Table row -->
+                                                <tr class="gradeX">
+                                                    <td><?php echo $i; ?></td>
+                                                    <td><?php echo $row->itm_name; ?></td>
+                                                    <td><?php echo $row->batch_no; ?></td>
+                                                    <td><?php echo date("d M,Y", strtotime($row->batch_expiry)); ?></td>
+                                                    <td><?php echo number_format($row->BatchQty);
+                                                echo ' ' . $row->UnitType; ?></td>
+                                                    <td id="batch<?php echo $row->batch_id; ?>-status"> &nbsp; <?php echo $row->status; ?></td>
+                                                    <td class="col-md-3">
+                                                        <input type="hidden" name="status" id="batch<?php echo $row->batch_id; ?>_status" value="<?php echo $row->status; ?>" />
+                                                        <input type="hidden" name="batch_id" id="batch<?php echo $row->batch_id; ?>_id" value="<?php echo $row->batch_id; ?>" />
+                                                        <button class="btn btn-inverse" id="batch<?php echo $row->batch_id; ?>-makeit">Make it <span id="batch<?php echo $row->batch_id; ?>-button"><?php echo ($row->status == 'Stacked' || $row->status == 'Finished') ? "Running" : "Stacked"; ?></span></button>
+                                                    </td>
+                                                </tr>
+        <?php $i++;
+    }
+} ?>
+                                        <!-- // Table row END -->
+                                    </tbody>
+                                    <!-- // Table body END -->
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<?php $_SESSION['batch_management'] = $batchArray; ?>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="portlet box green">
+                    <div class="portlet-title">
+                        <div class="caption">
+
+                        </div>
+                        <div class="tools">
+                            <a href="javascript:;" class="collapse">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form name="batch_form" id="batch_form" action="batch_management_action.php" method="POST">
+                                    <button id="print_vaccine_placement" type="submit" class="btn btn-primary" onclick="window.open('print_batch_management.php', '_blank', 'width=860,height=595');">
+                                        Print
+                                    </button>
+                                    <input type="hidden" name="batch_print" id="batch_print" value="Print" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

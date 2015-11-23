@@ -1,0 +1,81 @@
+<?php
+$skOfcLvl = isset($this->form_values['SkOfcLvl']) ? $this->form_values['SkOfcLvl'] : '';
+$provId = isset($this->form_values['provId']) ? $this->form_values['provId'] : '';
+$distId = isset($this->form_values['distId']) ? $this->form_values['distId'] : '';
+$provSelId = isset($this->form_values['provSelId']) ? $this->form_values['provSelId'] : '';
+$divSelId = isset($this->form_values['divSelId']) ? $this->form_values['divSelId'] : '';
+$distSelId = isset($this->form_values['distSelId']) ? $this->form_values['distSelId'] : '';
+$tehSelId = isset($this->form_values['tehSelId']) ? $this->form_values['tehSelId'] : '';
+$page = isset($this->form_values['report']) ? $this->form_values['report'] : '';
+if ($skOfcLvl != 1 && empty($provId) && empty($distId)) {
+    if ($page != 'rep' && $page != 'sindh') {
+        echo "<option value=\"all\">All</option>";
+    }
+    if ($page == 'sindh') {
+        $qry = $this->reports()->getProvinceNameSindh();
+    } else {
+        $qry = $this->reports()->getProvinceName();
+    }
+
+
+    foreach ($qry as $row) {
+        if ($provSelId == $row['PkLocID'])
+            $sel = "selected='selected'";
+        else
+            $sel = "";
+        ?>
+        <option value="<?php echo $row['PkLocID']; ?>" <?php echo $sel; ?>><?php echo $row['LocName']; ?></option>
+        <?php
+    }
+}
+if ($skOfcLvl != 3 && $skOfcLvl != 1 && !empty($provId)) {
+    if ($page != 'rep') {
+        echo "<option value=\"all\">All</option>";
+    }
+    $qry = $this->reports()->getProvinceName1($provId);
+
+    foreach ($qry as $row) {
+        if ($distSelId == $row['PkLocID'])
+            $sel = "selected='selected'";
+        else
+            $sel = "";
+        ?>
+        <option value="<?php echo $row['PkLocID']; ?>" <?php echo $sel; ?>><?php echo $row['LocName']; ?></option>
+        <?php
+    }
+}
+
+if ($skOfcLvl != 3 && $skOfcLvl != 1 && !empty($distId)) {
+    if ($page != 'rep') {
+        echo "<option value=\"all\">All</option>";
+    }
+
+    if ($distId != 'all') {
+        $qry = $this->reports()->getProvinceName2($distId);
+
+        foreach ($qry as $row) {
+            if ($tehSelId == $row['PkLocID'])
+                $sel = "selected='selected'";
+            else
+                $sel = "";
+            ?>
+            <option value="<?php echo $row['PkLocID']; ?>" <?php echo $sel; ?>><?php echo $row['LocName']; ?></option>
+            <?php
+        }
+    }
+}
+if ($skOfcLvl == 3 && !empty($provId)) {
+
+    $qry = $this->reports()->getDivisions($provId);
+
+    foreach ($qry as $row) {
+        if ($divSelId == $row['PkLocID'])
+            $sel = "selected='selected'";
+        else
+            $sel = "";
+        ?>
+        <option value="<?php echo $row['PkLocID']; ?>" <?php echo $sel; ?>><?php echo $row['LocName']; ?></option>
+        <?php
+    }
+}
+?>

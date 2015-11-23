@@ -1,0 +1,68 @@
+<!-- Content -->
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <h3 class="page-title">
+            <?php echo $this->translate("Update Working Status");
+            ?>
+        </h3>
+        <!-- Table -->
+        <table class="receiveSearch table table-striped table-bordered table-hover dataTable no-footer"  >
+            <!-- Table heading -->
+            <thead>
+                <tr>
+                    <th rowspan="2"><?php echo $this->translate("Facility Name") ?></th>
+                    <th rowspan="2"><?php echo $this->translate("Last Update") ?></th>
+                    <th rowspan="2"><?php echo $this->translate("Action") ?></th>
+                </tr>
+            </thead>
+            <!-- // Table heading END -->
+
+            <!-- Table body -->
+            <tbody>
+                <!-- Table row -->
+                <?php
+                $i = 1;
+
+                if ($this->warehosue_name && count($this->warehosue_name) > 0) :
+                    foreach ($this->warehosue_name as $row):
+                        ?>
+                        <tr class="gradeX">
+                            <td><?php echo $row['warehouse_name'] ?></td>
+                            <td><?php echo $row['status_date'] ?></td>
+                            <td>
+                                <a id="<?php echo $row['pk_id']; ?>" class="btn  btn-link btn-success input-sm" href="<?php echo $this->baseUrl() ?>/cold-chain/update-working-status?id=<?php echo $row['pk_id'] ?>" ><?php echo $this->translate("Update") ?>
+
+
+                            </td>
+
+                        </tr>
+                        <?php
+                        $i++;
+                    endforeach;
+                endif;
+                ?>
+                <!-- // Table row END -->
+            </tbody>
+            <!-- // Table body END -->
+        </table>
+
+        <form method="post" action="<?php echo $this->baseUrl(); ?>/iadmin/manage-locations/update" id="update-locations">
+            <div class="modal fade" id="modal-update-locations"tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title">Asset Status Update</h3>
+                        </div>
+                        <div class="modal-body" id="modal-body-contents">
+                            <div style="text-align: center; "><img src="<?php echo $this->baseUrl(); ?>/images/loader.gif"/></div>
+                        </div>
+                        <div class="modal-footer " id="update-button">
+                            <input class="btn btn-primary" type="submit" value="<?php echo $this->translate("Update"); ?>">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

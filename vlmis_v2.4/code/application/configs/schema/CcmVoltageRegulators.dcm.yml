@@ -1,0 +1,77 @@
+CcmVoltageRegulators:
+  type: entity
+  table: ccm-voltage-regulators
+  fields:
+    pkId:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      column: pk_id
+      generator:
+        strategy: IDENTITY
+    nominalVoltage:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: nominal_voltage
+    continousPower:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: continous_power
+    frequency:
+      type: string
+      length: 50
+      fixed: false
+      nullable: true
+      column: frequency
+    inputVoltageRange:
+      type: string
+      length: 50
+      fixed: false
+      nullable: true
+      column: input_voltage_range
+    outputVoltageRange:
+      type: string
+      length: 50
+      fixed: false
+      nullable: true
+      column: output_voltage_range      
+    createdDate:
+      type: datetime
+      nullable: false
+      column: created_date
+    modifiedDate:
+      type: datetime
+      nullable: true
+      column: modified_date
+  oneToOne:
+    ccm:
+      targetEntity: ColdChain
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        ccm_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    createdBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        created_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

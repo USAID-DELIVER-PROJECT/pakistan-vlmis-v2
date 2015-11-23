@@ -1,0 +1,62 @@
+<?xml version="1.0"?><chart bgcolor="E9E9E9" outcnvbasefontcolor="666666" caption="Icepack freezing capacity against routine requirements" numberprefix="" showvalues="0" numvdivlines="10" showalternatevgridcolor="1" alternatevgridcolor="e1f5ff" divlinecolor="e1f5ff" vdivlinecolor="e1f5ff" basefontcolor="666666" tooltipbgcolor="F3F3F3" tooltipbordercolor="666666" canvasbordercolor="666666" canvasborderthickness="1" showplotborder="1" plotfillalpha="80" showborder="0" exportEnabled="1" rotateValues="1" >
+        <categories>
+            <category label="Urban Health Center" />
+            <category label="Tehsil/Town vaccine store" />
+            <category label="Teaching hospital" />
+            <category label="Hospital - Private" />
+            <category label="Rural health centre" />
+            <category label="Basic Health Unit" />
+            <category label="Clinic Private" />
+            <category label="DHQ/AHQ Hospital" />
+        </categories>
+        <dataset seriesname="Surplus > 30%" color="0000FF" plotbordercolor="000000">
+            <set value="27400" />
+            <set value="29800" />
+            <set value="25800" />
+            <set value="26800" />
+            <set value="34800" />
+            <set value="29600" />
+            <set value="11800" />
+            <set value="32600" />
+        </dataset>
+        <dataset seriesname="Surplus 10-30%" color="#FFFF00" plotbordercolor="B1D1DC">        
+            <set value="31800" />
+            <set value="36700" />
+            <set value="29700" />
+            <set value="31900" />
+            <set value="32900" />
+            <set value="34800" />
+            <set value="44800" />
+            <set value="29000" />
+        </dataset>
+        <dataset seriesname="Match +/- 30%" color="#01FF00" plotbordercolor="C8A1D1">
+            <set value="4500" />
+            <set value="6500" />
+            <set value="7600" />
+            <set value="6800" />
+            <set value="11800" />
+            <set value="19700" />
+            <set value="34800" />
+            <set value="3800" />
+        </dataset>
+        <dataset seriesname="Shortage 10-30%" color="#FF6600" plotbordercolor="C8A1D1">
+            <set value="21700" />
+            <set value="21900" />
+            <set value="31800" />
+            <set value="36000" />
+            <set value="79000" />
+            <set value="12900" />
+            <set value="29800" />
+            <set value="39800" />
+        </dataset>
+        <dataset seriesname="Shortage > 30%" color="#800000" plotbordercolor="000000">
+            <set value="27400" />
+            <set value="29800" />
+            <set value="25800" />
+            <set value="26800" />
+            <set value="29600" />
+            <set value="32600" />
+            <set value="12200" />
+            <set value="9800" />
+        </dataset>
+</chart>

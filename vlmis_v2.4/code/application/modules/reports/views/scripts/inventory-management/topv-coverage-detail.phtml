@@ -1,0 +1,482 @@
+<?php
+$from_sel_month = $this->from_month_sel;
+$from_sel_year = $this->from_year_sel;
+$year = $this->year_sel;
+$month = $this->month_sel;
+$sel_prov = $this->prov_sel;
+$sel_dist = $this->district_id;
+$sel_tehsil = $this->tehsil;
+$wh_type = $this->wh_type;
+
+// Headers of the Grid
+$header = 'Sr.No.,Tehsil/Taluka,UC,Live Birth Target';
+$header0 = '#rspan,#rspan,#rspan,#rspan';
+
+$header1 = '#rspan,#rspan,#rspan,#rspan';
+$cspan = '#cspan,#cspan,#cspan,#cspan,#cspan';
+$width = '50,100,100,80';
+$ro = 'ro,ro,ro,ro';
+
+$header .= ",<div style='text-align:center;'>Coverage tOPV-0</div>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan";
+$header .= ",<div style='text-align:center;'>less than 1 year</div>";
+$header .= ",<div style='text-align:center;'>Coverage tOPV-1(0-11 Months)</div>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan";
+$header .= ",<div style='text-align:center;'>Coverage tOPV-2(0-11 Months)</div>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan";
+$header .= ",<div style='text-align:center;'>Coverage tOPV-3(0-11 Months)</div>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan";
+$header .= ",<div style='text-align:center;'>less than 2 year</div>";
+
+$header .= ",<div style='text-align:center;'>Coverage tOPV-1(12-23 Months)</div>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan";
+$header .= ",<div style='text-align:center;'>Coverage tOPV-2(12-23 Months)</div>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan";
+$header .= ",<div style='text-align:center;'>Coverage tOPV-3(12-23 Months)</div>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan";
+
+$cspan .= ',#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan';
+$header0 .= ",<div style='text-align:center;'>Inside</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Referral</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Outreach</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Total</div>";
+$header0 .= ",<div style='text-align:center;'>Coverage(%)</div>";
+$width .= ',40,40,40,40,40,40,60,90';
+
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>tOPV-0</span>';
+$header1 .= ',<span>tOPV-0</span>';
+$ro .= ',ro,ro,ro,ro,ro,ro,ro,ro';
+$cspan .= ',#cspan';
+$header0 .= ',#rspan';
+$header1 .= ',#rspan';
+$width .= ',70';
+$ro .= ',ro';
+
+$cspan .= ',#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan';
+$header0 .= ",<div style='text-align:center;'>Inside</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Referral</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Outreach</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Total</div>";
+$header0 .= ",<div style='text-align:center;'>Coverage(%)</div>";
+$width .= ',40,40,40,40,40,40,60,90';
+
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>tOPV-1</span>';
+$header1 .= ',<span>tOPV-1</span>';
+$ro .= ',ro,ro,ro,ro,ro,ro,ro,ro';
+
+$cspan .= ',#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan';
+$header0 .= ",<div style='text-align:center;'>Inside</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Referral</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Outreach</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Total</div>";
+$header0 .= ",<div style='text-align:center;'>Coverage(%)</div>";
+$width .= ',40,40,40,40,40,40,60,90';
+
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>tOPV-2</span>';
+$header1 .= ',<span>tOPV-2</span>';
+$ro .= ',ro,ro,ro,ro,ro,ro,ro,ro';
+
+$cspan .= ',#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan';
+$header0 .= ",<div style='text-align:center;'>Inside</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Referral</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Outreach</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Total</div>";
+$header0 .= ",<div style='text-align:center;'>Coverage(%)</div>";
+$width .= ',40,40,40,40,40,40,60,90';
+
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>tOPV-3</span>';
+$header1 .= ',<span>tOPV-3</span>';
+$ro .= ',ro,ro,ro,ro,ro,ro,ro,ro';
+
+$cspan .= ',#cspan';
+$header0 .= ',#rspan';
+$header1 .= ',#rspan';
+$width .= ',70';
+$ro .= ',ro';
+
+$cspan .= ',#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan';
+$header0 .= ",<div style='text-align:center;'>Inside</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Referral</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Outreach</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Total</div>";
+$header0 .= ",<div style='text-align:center;'>Coverage(%)</div>";
+$width .= ',40,40,40,40,40,40,60,90';
+
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>tOPV-1</span>';
+$header1 .= ',<span>tOPV-1</span>';
+$ro .= ',ro,ro,ro,ro,ro,ro,ro,ro';
+
+$cspan .= ',#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan';
+$header0 .= ",<div style='text-align:center;'>Inside</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Referral</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Outreach</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Total</div>";
+$header0 .= ",<div style='text-align:center;'>Coverage(%)</div>";
+$width .= ',40,40,40,40,40,40,60,90';
+
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>tOPV-2</span>';
+$header1 .= ',<span>tOPV-2</span>';
+$ro .= ',ro,ro,ro,ro,ro,ro,ro,ro';
+
+$cspan .= ',#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan';
+$header0 .= ",<div style='text-align:center;'>Inside</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Referral</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Outreach</div>,#cspan";
+$header0 .= ",<div style='text-align:center;'>Total</div>";
+$header0 .= ",<div style='text-align:center;'>Coverage(%)</div>";
+$width .= ',40,40,40,40,40,40,60,90';
+
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>M</span>,<span>F</span>';
+$header1 .= ',<span>tOPV-3</span>';
+$header1 .= ',<span>tOPV-3</span>';
+$ro .= ',ro,ro,ro,ro,ro,ro,ro,ro';
+
+$xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+$xml_store .= "<rows>";
+
+$sum_arr = array();
+
+$query = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 145, 0);
+$j = 1;
+
+
+foreach ($query as $row) {
+
+    $location_id = $row['location_id'];
+    $data_arr[$location_id][] = $j;
+    $data_arr[$location_id][] = $row['tehsil'];
+    $data_arr[$location_id][] = $row['ucs'];
+    $data_arr[$location_id][] = $row['lbt'];
+
+    $data_arr[$location_id][] = $row['fixed_inside_uc_male_0'];
+    $data_arr[$location_id][] = $row['fixed_inside_uc_female_0'];
+    $data_arr[$location_id][] = $row['referal_male_0'];
+    $data_arr[$location_id][] = $row['referal_female_0'];
+    $data_arr[$location_id][] = $row['outreach_male_0'];
+    $data_arr[$location_id][] = $row['outreach_female_0'];
+    $data_arr[$location_id][] = $row['consumption_0'];
+    $data_arr[$location_id][] = $row['consumptionPercentage_0'];
+    // Target
+    $data_arr[$location_id][] = $row['target'];
+    $j++;
+// end
+}
+$query1 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 145, 1);
+
+
+foreach ($query1 as $row) {
+
+    $location_id = $row['location_id'];
+
+
+    $data_arr[$location_id][] = $row['fixed_inside_uc_male_0'];
+    $data_arr[$location_id][] = $row['fixed_inside_uc_female_0'];
+    $data_arr[$location_id][] = $row['referal_male_0'];
+    $data_arr[$location_id][] = $row['referal_female_0'];
+    $data_arr[$location_id][] = $row['outreach_male_0'];
+    $data_arr[$location_id][] = $row['outreach_female_0'];
+    $data_arr[$location_id][] = $row['consumption_0'];
+    $data_arr[$location_id][] = $row['consumptionPercentage_0'];
+    // Target
+// end
+}
+
+$query2 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 145, 2);
+
+foreach ($query2 as $row) {
+
+    $location_id = $row['location_id'];
+
+
+    $data_arr[$location_id][] = $row['fixed_inside_uc_male_0'];
+    $data_arr[$location_id][] = $row['fixed_inside_uc_female_0'];
+    $data_arr[$location_id][] = $row['referal_male_0'];
+    $data_arr[$location_id][] = $row['referal_female_0'];
+    $data_arr[$location_id][] = $row['outreach_male_0'];
+    $data_arr[$location_id][] = $row['outreach_female_0'];
+    $data_arr[$location_id][] = $row['consumption_0'];
+    $data_arr[$location_id][] = $row['consumptionPercentage_0'];
+    // Target
+// end
+}
+
+$query3 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 145, 3);
+
+
+foreach ($query3 as $row) {
+
+    $location_id = $row['location_id'];
+
+
+    $data_arr[$location_id][] = $row['fixed_inside_uc_male_0'];
+    $data_arr[$location_id][] = $row['fixed_inside_uc_female_0'];
+    $data_arr[$location_id][] = $row['referal_male_0'];
+    $data_arr[$location_id][] = $row['referal_female_0'];
+    $data_arr[$location_id][] = $row['outreach_male_0'];
+    $data_arr[$location_id][] = $row['outreach_female_0'];
+    $data_arr[$location_id][] = $row['consumption_0'];
+    $data_arr[$location_id][] = $row['consumptionPercentage_0'];
+    // Target
+    $data_arr[$location_id][] = $row['l2bt'];
+
+// end
+}
+
+$query4 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 146, 1);
+
+
+foreach ($query4 as $row) {
+
+    $location_id = $row['location_id'];
+
+
+    $data_arr[$location_id][] = $row['fixed_inside_uc_male_0'];
+    $data_arr[$location_id][] = $row['fixed_inside_uc_female_0'];
+    $data_arr[$location_id][] = $row['referal_male_0'];
+    $data_arr[$location_id][] = $row['referal_female_0'];
+    $data_arr[$location_id][] = $row['outreach_male_0'];
+    $data_arr[$location_id][] = $row['outreach_female_0'];
+    $data_arr[$location_id][] = $row['consumption_0'];
+    $data_arr[$location_id][] = $row['consumptionPercentage_0'];
+    // Target
+// end
+}
+$query5 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 146, 2);
+
+foreach ($query5 as $row) {
+
+    $location_id = $row['location_id'];
+
+
+    $data_arr[$location_id][] = $row['fixed_inside_uc_male_0'];
+    $data_arr[$location_id][] = $row['fixed_inside_uc_female_0'];
+    $data_arr[$location_id][] = $row['referal_male_0'];
+    $data_arr[$location_id][] = $row['referal_female_0'];
+    $data_arr[$location_id][] = $row['outreach_male_0'];
+    $data_arr[$location_id][] = $row['outreach_female_0'];
+    $data_arr[$location_id][] = $row['consumption_0'];
+    $data_arr[$location_id][] = $row['consumptionPercentage_0'];
+    // Target
+// end
+}
+$query6 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 146, 3);
+
+foreach ($query6 as $row) {
+
+    $location_id = $row['location_id'];
+
+
+    $data_arr[$location_id][] = $row['fixed_inside_uc_male_0'];
+    $data_arr[$location_id][] = $row['fixed_inside_uc_female_0'];
+    $data_arr[$location_id][] = $row['referal_male_0'];
+    $data_arr[$location_id][] = $row['referal_female_0'];
+    $data_arr[$location_id][] = $row['outreach_male_0'];
+    $data_arr[$location_id][] = $row['outreach_female_0'];
+    $data_arr[$location_id][] = $row['consumption_0'];
+    $data_arr[$location_id][] = $row['consumptionPercentage_0'];
+    // Target
+// end
+}
+
+foreach ($data_arr as $dis_id => $sub_arr) {
+
+    $xml_store .= "<row>";
+    $xml_store .= "<cell>$sub_arr[0]</cell>";
+    $xml_store .= "<cell>$sub_arr[1]</cell>";
+    $xml_store .= "<cell>$sub_arr[2]</cell>";
+
+    foreach ($sub_arr as $key => $value) {
+        if (!isset($sum_arr[$key])) {
+            $sum_arr[$key] = 0;
+        }
+        $sum_arr[$key] += $value;
+        //$accpLimit = '0';
+        if ($key > 2) {
+
+            $xml_store .= "<cell style=\"text-align:right;\">$value </cell>";
+        }
+    }
+    $xml_store .="</row>";
+}
+
+
+// To show Total
+array_shift($sum_arr);
+
+$xml_store .= "<row>";
+$xml_store .= "<cell></cell>";
+$xml_store .= "<cell></cell>";
+
+$xml_store .= "<cell style=\"font-weight:bold\">Total</cell>";
+foreach ($sum_arr as $key => $value) {
+    //   App_Controller_Functions::pr($sum_arr);
+    if ($key == 2) {
+        $total_wh = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key > 2 && $key < 9) {
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 9) {
+        $total_val1 = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 10) {
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val1 / $total_wh) * 100) . " %</cell>";
+    } else if ($key == 11) {
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key > 11 && $key < 18) {
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 18) {
+        $total_val2 = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 19) {
+
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val2 / $total_wh) * 100) . " %</cell>";
+    } else if ($key > 19 && $key < 26) {
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 26) {
+        $total_val3 = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 27) {
+
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val3 / $total_wh) * 100) . " %</cell>";
+    } else if ($key > 27 && $key < 34) {
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 34) {
+        $total_val4 = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 35) {
+
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val4 / $total_wh) * 100) . " %</cell>";
+    } else if ($key == 36) {
+
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . " </cell>";
+    } else if ($key > 36 && $key < 43) {
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 43) {
+        $total_val5 = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 44) {
+        ;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val5 / $total_wh) * 100) . " %</cell>";
+    } else if ($key > 44 && $key < 51) {
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 51) {
+        $total_val = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 52) {
+
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val / $total_wh) * 100) . " %</cell>";
+    } else if ($key > 52 && $key < 59) {
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 59) {
+        $total_val = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 60) {
+
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val / $total_wh) * 100) . " %</cell>";
+    }
+}
+
+$xml_store .="</row>";
+
+
+
+$xml_store .="</rows>";
+
+/* $in_type = 'N';
+  $in_stk = 1;
+  $in_year = $sel_year;
+ */
+?>
+<?php
+$report_title = $this->report_title;
+if (!empty($sel_month)) {
+    $report_month = date('F', mktime(0, 0, 0, $sel_month));
+} else {
+    $report_month = "";
+}
+?>
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <h3 class="page-title"><?php echo $report_title . ' ' . $report_month . ' ' . $sel_year; ?></h3>
+        <h5 style="color: red">
+            Note: This report is under user testing.Please check and provide feedback at support@lmis.gov.pk
+        </h5>
+        <div class="innerLR">
+            <script>
+                var mygrid;
+                function doInitGrid() {
+                    mygrid = new dhtmlXGridObject('mygrid_container');
+                    mygrid.selMultiRows = true;
+                    mygrid.setImagePath("<?php echo $this->baseUrl(); ?>/common/reports/dhtmlxGrid/dhtmlxGrid/codebase/imgs/");
+                    //mygrid.setHeader("Province,Consumption,AMC,On Hand,MOS,#cspan");
+                    mygrid.setHeader("<div style='text-align:center; font-size:14px; font-weight:bold; font-family:Helvetica'><?php echo "'$report_title at  $this->loc_name'   for (" . date('F', mktime(0, 0, 0, $this->from_month_sel)) . '-' . $this->from_year_sel . ') to (' . date('F', mktime(0, 0, 0, $this->month_sel)) . '-' . $this->from_year_sel; ?>)  (Doses)</div>,<?php echo substr($cspan, 0, -14); ?>");
+                    mygrid.attachHeader("<?php echo $header; ?>");
+
+                    mygrid.attachHeader("<?php echo $header0; ?>");
+                    mygrid.attachHeader("<?php echo $header1; ?>");
+                    mygrid.setInitWidths("<?php echo $width; ?>");
+                    mygrid.setColTypes("<?php echo $ro; ?>");
+                    //   mygrid.setColumnHidden(0, true);
+                    mygrid.enableRowsHover(true, 'onMouseOver');   // `onMouseOver` is the css class name.
+                    mygrid.setSkin("light");
+                    mygrid.init();
+                    mygrid.clearAll();
+                    $('body').append('<textarea id="xml_string" style="display:none;"><?php echo addslashes($xml_store); ?></textarea>');
+                    mygrid.loadXMLString(document.getElementById('xml_string').value);
+                }
+            </script>
+            <table width="99%">
+                <tr>
+                    <td colspan="2">
+                        <?php
+                        echo App_Controller_Functions::getPageNarrative(Zend_Registry::get('resource'));
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <?php echo $this->render('inventory-management/reports-header_coverage.phtml') ?>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="text-align:right; padding-bottom:10px;">
+                        <img style="cursor:pointer;" src="<?php echo $this->baseUrl(); ?>/images/pdf-32.png" onClick="mygrid.toPDF('<?php echo $this->baseUrl(); ?>/common/reports/dhtmlxGrid/dhtmlxGrid/grid2pdf/server/generate.php');" title="<?php echo $this->translate("Export to PDF"); ?>"/>&nbsp;&nbsp;
+                        <img style="cursor:pointer; margin-left:-5px" src="<?php echo $this->baseUrl(); ?>/images/excel-32.png" onClick="mygrid.toExcel('<?php echo $this->baseUrl(); ?>/common/reports/dhtmlxGrid/dhtmlxGrid/grid2excel/server/generate.php');" title="<?php echo $this->translate("Export to Excel"); ?>" />
+                    </td>
+                </tr>
+
+            </table>
+
+            <table width="99%" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>
+                        <div id="mygrid_container" style="width:100%; height:700px;"></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+
+    var whType = <?php echo $wh_type; ?>;
+    var province = <?php echo $sel_prov; ?>;
+    var district = <?php echo $sel_dist; ?>;
+    var tehsil = <?php echo $sel_tehsil; ?>;
+</script>
+

@@ -1,0 +1,91 @@
+Reports:
+  type: entity
+  table: reports
+  fields:
+    pkId:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      column: pk_id
+      generator:
+        strategy: IDENTITY
+    reportId:
+      type: string
+      length: 50
+      fixed: false
+      nullable: false
+      column: report_id
+    reportGroup:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+      column: report_group
+    reportType:
+      type: decimal
+      nullable: true
+      column: report_type
+    reportTitle:
+      type: string
+      length: 50
+      fixed: false
+      nullable: true
+      column: report_title
+    reportXaxis:
+      type: string
+      length: 50
+      fixed: false
+      nullable: true
+      column: report_xaxis
+    reportYaxis:
+      type: string
+      length: 50
+      fixed: false
+      nullable: true
+      column: report_yaxis
+    reportUnits:
+      type: string
+      length: 50
+      fixed: false
+      nullable: true
+      column: report_units
+    reportFactor:
+      type: decimal
+      nullable: true
+      column: report_factor
+    reportField:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+      column: report_field
+    reportDescription:
+      type: text
+      nullable: true
+      column: report_description
+    staticPage:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+      column: static_page
+    footerStaticPage:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+      column: footer_static_page
+    reportOrder:
+      type: boolean
+      nullable: true
+      column: report_order
+    reportShowSimple:
+      type: boolean
+      nullable: true
+      column: report_show_simple
+    reportShowComparision:
+      type: boolean
+      nullable: true
+      column: report_show_comparision
+  lifecycleCallbacks: {  }

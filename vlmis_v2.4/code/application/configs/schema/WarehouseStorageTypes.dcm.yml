@@ -1,0 +1,33 @@
+WarehouseStorageTypes:
+  type: entity
+  table: warehouse_storage_types
+  fields:
+    pkId:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      column: pk_id
+      generator:
+        strategy: IDENTITY
+    storageTemperature:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: storage_temperature
+    stakeholderItemPackSizeId:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: stakeholder_item_pack_size_id
+    warehouseTypeId:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: warehouse_type_id
+    stakeholderActivityId:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: stakeholder_activity_id
+  lifecycleCallbacks: {  }

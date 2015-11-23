@@ -1,0 +1,33 @@
+UserLoginLog:
+  type: entity
+  table: user_login_log
+  fields:
+    pkId:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      column: pk_id
+      generator:
+        strategy: IDENTITY
+    ipAddress:
+      type: string
+      length: 15
+      fixed: false
+      nullable: false
+      column: ip_address    
+    loginTime:
+      type: datetime
+      nullable: true
+      column: login_time
+  oneToOne:
+    user:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        user_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }
