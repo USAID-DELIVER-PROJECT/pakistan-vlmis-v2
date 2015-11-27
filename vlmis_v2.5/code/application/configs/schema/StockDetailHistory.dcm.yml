@@ -1,0 +1,75 @@
+StockDetailHistory:
+  type: entity
+  table: stock_detail_history
+  fields:
+    pkId:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      column: pk_id
+      generator:
+        strategy: IDENTITY
+    detailId:
+      type: integer
+      unsigned: false
+      nullable: false
+      column: detail_id
+    quantity:
+      type: bigint
+      nullable: true
+    temporary:
+      type: boolean
+      nullable: true
+    vvmStage:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: vvm_stage
+    isReceived:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: is_received
+    adjustmentType:
+      type: boolean
+      nullable: true
+      column: adjustment_type
+    stockMasterId:
+      type: integer
+      unsigned: false
+      nullable: false
+      column: stock_master_id
+    stockBatchId:
+      type: integer
+      unsigned: false
+      nullable: false
+      column: stock_batch_id
+    itemUnitId:
+      type: integer
+      unsigned: false
+      nullable: false
+      column: item_unit_id
+    actionType:
+      type: boolean
+      nullable: false
+      column: action_type
+    createdBy:
+      type: integer
+      unsigned: false
+      nullable: false
+      column: created_by
+    createdDate:
+      type: datetime
+      nullable: true
+      column: created_date
+    modifiedBy:
+      type: integer
+      unsigned: false
+      nullable: false
+      column: modified_by
+    modifiedDate:
+      type: datetime
+      nullable: false
+      column: modified_date
+  lifecycleCallbacks: {  }

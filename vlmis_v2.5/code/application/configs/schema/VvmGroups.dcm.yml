@@ -1,0 +1,58 @@
+VvmGroups:
+  type: entity
+  table: vvm_groups
+  fields:
+    pkId:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      column: pk_id
+      generator:
+        strategy: IDENTITY
+    createdDate:
+      type: datetime
+      nullable: true
+      column: created_date
+    modifiedDate:
+      type: datetime
+      nullable: false
+      column: modified_date
+  oneToOne:
+    vvmStage:
+      targetEntity: VvmStages
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        vvm_stage_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    createdBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        created_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    vvmGroup:
+      targetEntity: VvmGroups
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        vvm_group_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }
