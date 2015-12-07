@@ -168,24 +168,23 @@ class Iadmin_ManageStocksController extends App_Controller_Base {
         $form->packaging_level_update->setValue($stakeholder_item_pack->getPackagingLevel()->getPkId());
         // $form->barcode_ty_id = setValue($stakeholder_item_pack->getBarcodeType()->getPkId());
         $form->item_gtin->setValue($stakeholder_item_pack->getItemGtin());
-        $form->gtin_start_position->setValue($stakeholder_item_pack->getGtinStartPosition());
-        $form->batch_no_start_position->setValue($stakeholder_item_pack->getBatchNoStartPosition());
-        $form->expiry_date_start_position->setValue($stakeholder_item_pack->getExpiryDateStartPosition());
-
-        $form->gtin_end_position->setValue($stakeholder_item_pack->getGtinEndPosition());
-        $form->batch_no_end_position->setValue($stakeholder_item_pack->getBatchNoEndPosition());
-        $form->expiry_date_end_position->setValue($stakeholder_item_pack->getExpiryDateEndPosition());
+        //$form->gtin_start_position->setValue($stakeholder_item_pack->getGtinStartPosition());
+       // $form->batch_no_start_position->setValue($stakeholder_item_pack->getBatchNoStartPosition());
+        //$form->expiry_date_start_position->setValue($stakeholder_item_pack->getExpiryDateStartPosition());
+//
+//        $form->gtin_end_position->setValue($stakeholder_item_pack->getGtinEndPosition());
+//        $form->batch_no_end_position->setValue($stakeholder_item_pack->getBatchNoEndPosition());
+//        $form->expiry_date_end_position->setValue($stakeholder_item_pack->getExpiryDateEndPosition());
         $form->pack_size_description->setValue($stakeholder_item_pack->getPackSizeDescription());
-        $form->gtin->setValue($stakeholder_item_pack->getGtin());
-        $form->batch->setValue($stakeholder_item_pack->getBatch());
-        $form->expiry->setValue($stakeholder_item_pack->getExpiry());
-        $form->batch_length->setValue($stakeholder_item_pack->getBatchLength());
+//        $form->gtin->setValue($stakeholder_item_pack->getGtin());
+//        $form->batch->setValue($stakeholder_item_pack->getBatch());
+//        $form->expiry->setValue($stakeholder_item_pack->getExpiry());
+//        $form->batch_length->setValue($stakeholder_item_pack->getBatchLength());
         $form->length->setValue($stakeholder_item_pack->getLength());
         $form->width->setValue($stakeholder_item_pack->getWidth());
         $form->height->setValue($stakeholder_item_pack->getHeight());
         $form->quantity_per_pack->setValue($stakeholder_item_pack->getQuantityPerPack());
-        $form->volume_per_unit_net->setValue($stakeholder_item_pack->getVolumePerUnitNet());
-
+        $form->volum_per_vial->setValue($stakeholder_item_pack->getVolumPerVial());
 
         $this->view->form = $form;
 

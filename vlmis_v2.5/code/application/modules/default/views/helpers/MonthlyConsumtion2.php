@@ -77,9 +77,6 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
            AND w0_.item_pack_size_id = '$pk_id' ";
         }
 
-        //   echo $querypro."<br>";
-
-
         $row = $this->_em->getConnection()->prepare($querypro);
 
         $rs = $row->execute();
@@ -195,9 +192,6 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
            AND w0_.item_pack_size_id = '$pk_id' ";
         }
 
-        // echo $querypro;
-
-
         $row = $this->_em->getConnection()->prepare($querypro);
 
         $rs = $row->execute();
@@ -226,7 +220,7 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
                         w0_.warehouse_id = '$wh_id'
                         AND 
                        DATE_FORMAT(w0_.reporting_start_date,'%Y') = '$pov[0]' LIMIT 1 ";
-//echo $querypro;
+
         $row = $this->_em->getConnection()->prepare($querypro);
 
         $rs = $row->execute();
@@ -365,8 +359,7 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
         $this->_em = Zend_Registry::get('doctrine');
 
         $querypro = "SELECT
-               
-                count(log_book.pk_id) as total
+              count(log_book.pk_id) as total
               FROM
                  log_book
               INNER JOIN log_book_item_doses ON log_book.pk_id = log_book_item_doses.log_book_id
@@ -375,8 +368,7 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
               log_book.warehouse_id = '$wh_id' AND
               DATE_FORMAT(log_book.vaccination_date,'%Y-%m') = '$date_in'
               AND log_book.gender = '$gender'";
-        // echo $querypro;
-        // exit;
+
         $row = $this->_em->getConnection()->prepare($querypro);
 
         $rs = $row->execute();
@@ -394,8 +386,7 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
             item_pack_sizes
             WHERE
             item_pack_sizes.pk_id = '$item_id'";
-        // echo $querypro;
-        // exit;
+
         $row = $this->_em->getConnection()->prepare($querypro);
 
         $rs = $row->execute();
@@ -406,7 +397,7 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
 
     public function getStockOnHand($warehouse_id, $str_date) {
         $this->_em = Zend_Registry::get('doctrine');
-       $pov = explode('-', $str_date);
+        $pov = explode('-', $str_date);
 
         $querypro = "SELECT DISTINCT stock_master.pk_id
             FROM
@@ -415,7 +406,7 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
             WHERE
             stock_master.to_warehouse_id = '$warehouse_id'
             AND  DATE_FORMAT(stock_master.transaction_date, '%Y-%m') = '$pov[0]-$pov[1]'";
-      
+
         $row = $this->_em->getConnection()->prepare($querypro);
 
         $rs = $row->execute();

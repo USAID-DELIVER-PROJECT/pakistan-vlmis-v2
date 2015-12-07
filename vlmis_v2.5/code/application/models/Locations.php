@@ -474,7 +474,7 @@ class Model_Locations extends Model_Base {
             $where[] = "gl.pkId = '" . $form_values['location_level'] . "'";
         } else {
 
-//$where[] = "gl.pkId IN (3,4,5,6)";
+
             $where[] = "gl.pkId  = '3' ";
         }
         if (!empty($form_values['combo1'])) {
@@ -483,7 +483,7 @@ class Model_Locations extends Model_Base {
         if (!empty($form_values['combo2'])) {
             $where[] = "l.district  = '" . $form_values['combo2'] . "'";
         }
-//$where[] = "l.district  = '107' ";
+
         if (!empty($form_values['combo3'])) {
             $where[] = "l.parent = '" . $form_values['combo3'] . "'";
         }
@@ -509,7 +509,7 @@ class Model_Locations extends Model_Base {
             $str_sql->AndWhere("l.pkId NOT IN (" . $sub_sql->getQuery()->getDql() . ")");
         }
 
-//echo $str_sql->getQuery()->getSql();
+
         $row = $str_sql->getQuery()->getResult();
         return $row;
     }
@@ -576,9 +576,7 @@ class Model_Locations extends Model_Base {
         if ($form_values['locLvl'] == 6) {
             $where = "l.parent='" . $form_values['locid'] . "' and l.geoLevel='6'  ";
         }
-//        if (is_array($where)) {
-//            $where_s = implode(" AND ", $where);
-//        }
+
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("l.locationName")
                 ->from('Locations', 'l')
@@ -603,7 +601,7 @@ class Model_Locations extends Model_Base {
 
     public function checkCcmLocationId() {
         $form_values = $this->form_values;
-//App_Controller_Functions::pr($form_values);
+
         if ($form_values['locLvl'] == 3) {
             $where = "l.province ='" . $form_values['province'] . "' and gl.pkId='3' and l.ccmLocationId='" . $form_values['ccm_location_id'] . "' ";
         }
@@ -633,7 +631,7 @@ class Model_Locations extends Model_Base {
 
     public function checkCcmLocationIdUpdate() {
         $form_values = $this->form_values;
-//App_Controller_Functions::pr($form_values);
+
         if ($form_values['locLvl'] == 3) {
             $where = "l.province ='" . $form_values['province'] . "' and gl.pkId='3' and l.ccmLocationId='" . $form_values['ccm_location_id_update'] . "' and l.locationName='" . $form_values['location_name_update'] . "' ";
         }
@@ -646,9 +644,7 @@ class Model_Locations extends Model_Base {
         if ($form_values['locLvl'] == 6) {
             $where = "l.parent='" . $form_values['locid'] . "' and gl.pkId='6' and l.ccmLocationId='" . $form_values['ccm_location_id_update'] . "' and l.locationName='" . $form_values['location_name_update'] . "' ";
         }
-        if (is_array($where)) {
-            $where_s = implode(" AND ", $where);
-        }
+        
 
 
         $str_sql = $this->_em->createQueryBuilder()
@@ -686,30 +682,31 @@ class Model_Locations extends Model_Base {
      * @return type
      */
     public function getPlacementLocations($wh_id, $type) {
-        if ($type == 99) {
+        
+        if ($type ==  Model_Placements::LOCATIONTYPE_CCM ) {
             $str_sql = $this->_em->getConnection()->prepare("SELECT
-placement_locations.pk_id,
-placement_locations.location_type,
-placement_locations.location_barcode,
-placement_locations.location_id
-FROM
-placement_locations
-INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
-WHERE
-cold_chain.warehouse_id = $wh_id AND
-placement_locations.location_type = $type");
+                placement_locations.pk_id,
+                placement_locations.location_type,
+                placement_locations.location_barcode,
+                placement_locations.location_id
+                FROM
+                placement_locations
+                INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
+                WHERE
+                cold_chain.warehouse_id = $wh_id AND
+                placement_locations.location_type = $type");
         } else {
             $str_sql = $this->_em->getConnection()->prepare("SELECT
-placement_locations.pk_id,
-placement_locations.location_type,
-placement_locations.location_barcode,
-placement_locations.location_id
-FROM
-placement_locations
-INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
-WHERE
-non_ccm_locations.warehouse_id = $wh_id AND
-placement_locations.location_type = $type");
+                placement_locations.pk_id,
+                placement_locations.location_type,
+                placement_locations.location_barcode,
+                placement_locations.location_id
+                FROM
+                placement_locations
+                INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
+                WHERE
+                non_ccm_locations.warehouse_id = $wh_id AND
+                placement_locations.location_type = $type");
         }
 
         $str_sql->execute();
@@ -955,40 +952,40 @@ placement_locations.location_type = $type");
     public function getNonCcmLocationsStatus($wh_id) {
 
         $str_sql = "SELECT
-	placement_locations.location_id,
-	non_ccm_locations.location_name,
+                placement_locations.location_id,
+                non_ccm_locations.location_name,
 
-IF (
-	ROUND(
-		abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
-	) = 0,
-	NULL,
-	item_pack_sizes.item_name
-) AS item_name,
+        IF (
+                ROUND(
+                        abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
+                ) = 0,
+                NULL,
+                item_pack_sizes.item_name
+        ) AS item_name,
 
-IF (
-	ROUND(
-		abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
-	) = 0,
-	NULL,
-	item_pack_sizes.pk_id
-) AS item_id,
- ROUND(
-	abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
-) AS pack_quantity,
- abs(Sum(placements.quantity)) AS quantity
-FROM
-	placement_locations
-LEFT JOIN placements ON placement_locations.pk_id = placements.placement_location_id
-INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
-LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-LEFT JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
-LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
-WHERE
-	non_ccm_locations.warehouse_id = " . $wh_id . "
-GROUP BY
-	non_ccm_locations.pk_id,
-	item_pack_sizes.pk_id";
+        IF (
+                ROUND(
+                        abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
+                ) = 0,
+                NULL,
+                item_pack_sizes.pk_id
+        ) AS item_id,
+         ROUND(
+                abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
+        ) AS pack_quantity,
+         abs(Sum(placements.quantity)) AS quantity
+        FROM
+                placement_locations
+        LEFT JOIN placements ON placement_locations.pk_id = placements.placement_location_id
+        INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
+        LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
+        LEFT JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+        WHERE
+                non_ccm_locations.warehouse_id = " . $wh_id . "
+        GROUP BY
+                non_ccm_locations.pk_id,
+                item_pack_sizes.pk_id";
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
         $rec->execute();
@@ -1209,10 +1206,10 @@ GROUP BY
 
     public function getCountryList() {
         $str_sql = "SELECT
-                        tbl_country.id AS country_id,
-                        tbl_country.countryName AS country_name
+                        countries.id AS country_id,
+                        countries.countryName AS country_name
                     FROM
-                        tbl_country";
+                        countries";
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
         $rec->execute();

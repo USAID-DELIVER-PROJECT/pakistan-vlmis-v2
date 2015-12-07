@@ -39,17 +39,17 @@ class Model_CampaignReadiness extends Model_Base {
     public function getLatestCampaignByDistrict() {
 
         $distirct_id = $this->_identity->getDistrictId($this->_identity->getIdentity());
-         $str_sql = "SELECT
-                                
+        $str_sql = "SELECT
+
                                 Max(campaigns.pk_id) as pkId
                                 FROM
                                 campaign_districts
                                 INNER JOIN campaign_targets ON campaign_targets.campaign_id = campaign_districts.campaign_id
                                 INNER JOIN campaigns ON campaigns.pk_id = campaign_targets.campaign_id
-                                where campaign_districts.district_id = $distirct_id                        
+                                where campaign_districts.district_id = $distirct_id
                                 ";
 
-        
+
         $em = Zend_Registry::get('doctrine');
         $row = $em->getConnection()->prepare($str_sql);
         $row->execute();

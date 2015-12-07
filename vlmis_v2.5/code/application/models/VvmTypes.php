@@ -31,10 +31,10 @@ class Model_VvmTypes extends Model_Base {
     public function getAllVvmTypes($order = null, $sort = null) {
 
         $str_sql = $this->_em->createQueryBuilder()
-                ->select("vt.pkId,vt.vvmTypeName,vt.status,u.userName,ip.itemName")
+                ->select("vt.pkId,vt.vvmTypeName,vt.status,u.userName")
                 ->from('VvmTypes', 'vt')
-                ->join('vt.createdBy', 'u')
-                ->join('vt.itemPackSize', 'ip');
+                ->join('vt.createdBy', 'u');
+                //->join('vt.itemPackSize', 'ip');
         if (!empty($this->form_values['vvmTypeName'])) {
             $str_sql->where("vt.vvmTypeName = '" . $this->form_values['vvmTypeName'] . "'  ");
         }

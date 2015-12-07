@@ -49,39 +49,39 @@ class Model_StakeholderItemPackSizes extends Model_Base {
             $packaging_level = $this->_em->find("ListDetail", $form_values['packaging_level']);
             $stakeholder_item_pack->setPackagingLevel($packaging_level);
         }
-        if (!empty($form_values['batch_length'])) {
-
-            $stakeholder_item_pack->setBatchLength($form_values['batch_length']);
-        }
+//        if (!empty($form_values['batch_length'])) {
+//
+//            $stakeholder_item_pack->setBatchLength($form_values['batch_length']);
+//        }
 
 
         $stakeholder_item_pack->setItemGtin($form_values['item_gtin']);
 
-        $stakeholder_item_pack->setGtin($form_values['gtin']);
-        $stakeholder_item_pack->setBatch($form_values['batch']);
-        $stakeholder_item_pack->setExpiry($form_values['expiry']);
-        $stakeholder_item_pack->setGtinStartPosition($form_values['gtin_start_position']);
-        $stakeholder_item_pack->setBatchNoStartPosition($form_values['batch_no_start_position']);
-        $stakeholder_item_pack->setExpiryDateStartPosition($form_values['expiry_date_start_position']);
-        $stakeholder_item_pack->setGtinEndPosition($form_values['gtin_end_position']);
-        $stakeholder_item_pack->setBatchNoEndPosition($form_values['batch_no_end_position']);
-        $stakeholder_item_pack->setExpiryDateEndPosition($form_values['expiry_date_end_position']);
+//        $stakeholder_item_pack->setGtin($form_values['gtin']);
+//        $stakeholder_item_pack->setBatch($form_values['batch']);
+//        $stakeholder_item_pack->setExpiry($form_values['expiry']);
+//        $stakeholder_item_pack->setGtinStartPosition($form_values['gtin_start_position']);
+//        $stakeholder_item_pack->setBatchNoStartPosition($form_values['batch_no_start_position']);
+//        $stakeholder_item_pack->setExpiryDateStartPosition($form_values['expiry_date_start_position']);
+//        $stakeholder_item_pack->setGtinEndPosition($form_values['gtin_end_position']);
+//        $stakeholder_item_pack->setBatchNoEndPosition($form_values['batch_no_end_position']);
+//        $stakeholder_item_pack->setExpiryDateEndPosition($form_values['expiry_date_end_position']);
         $stakeholder_item_pack->setPackSizeDescription($form_values['pack_size_description']);
         $stakeholder_item_pack->setLength($form_values['length']);
         $stakeholder_item_pack->setWidth($form_values['width']);
         $stakeholder_item_pack->setHeight($form_values['height']);
-        if (!empty($form_values['expiry_date_format'])) {
-            //$expiry_date_format = $this->_em->find("ListDetail", $form_values['expiry_date_format']);
-            $stakeholder_item_pack->setExpiryDateFormat($form_values['expiry_date_format']);
-        }
+//        if (!empty($form_values['expiry_date_format'])) {
+//            //$expiry_date_format = $this->_em->find("ListDetail", $form_values['expiry_date_format']);
+//            $stakeholder_item_pack->setExpiryDateFormat($form_values['expiry_date_format']);
+//        }
         $stakeholder_item_pack->setQuantityPerPack($form_values['quantity_per_pack']);
-        $stakeholder_item_pack->setVolumePerUnitNet($form_values['volume_per_unit_net']);
-        $stakeholder_item_pack->setPrePrintedBarcode($form_values['pre_printed_barcode']);
-        $created_by = $this->_em->getRepository('Users')->find($this->_user_id);
-        $stakeholder_item_pack->setModifiedBy($created_by);
-        $stakeholder_item_pack->setModifiedDate(App_Tools_Time::now());
-        $stakeholder_item_pack->setCreatedBy($created_by);
+        $stakeholder_item_pack->setVolumPerVial($form_values['volume_per_unit_net']);
+//        $stakeholder_item_pack->setPrePrintedBarcode($form_values['pre_printed_barcode']);
+        $user_id = $this->_em->getRepository('Users')->find($this->_user_id);
+        $stakeholder_item_pack->setCreatedBy($user_id);
         $stakeholder_item_pack->setCreatedDate(App_Tools_Time::now());
+        $stakeholder_item_pack->setModifiedBy($user_id);
+        $stakeholder_item_pack->setModifiedDate(App_Tools_Time::now());
         $this->_em->persist($stakeholder_item_pack);
         $this->_em->flush();
     }
@@ -105,32 +105,32 @@ class Model_StakeholderItemPackSizes extends Model_Base {
             $packaging_level = $this->_em->find("ListDetail", $form_values['packaging_level_update']);
             $stakeholder_item_pack->setPackagingLevel($packaging_level);
         }
-        if (!empty($form_values['batch_length'])) {
-            $stakeholder_item_pack->setBatchLength($form_values['batch_length']);
-        }
+//        if (!empty($form_values['batch_length'])) {
+//            $stakeholder_item_pack->setBatchLength($form_values['batch_length']);
+//        }
 
 
         $stakeholder_item_pack->setItemGtin($form_values['item_gtin']);
 
-        $stakeholder_item_pack->setGtin($form_values['gtin']);
-        $stakeholder_item_pack->setBatch($form_values['batch']);
-        $stakeholder_item_pack->setExpiry($form_values['expiry']);
-        $stakeholder_item_pack->setGtinStartPosition($form_values['gtin_start_position']);
-        $stakeholder_item_pack->setBatchNoStartPosition($form_values['batch_no_start_position']);
-        $stakeholder_item_pack->setExpiryDateStartPosition($form_values['expiry_date_start_position']);
-        $stakeholder_item_pack->setGtinEndPosition($form_values['gtin_end_position']);
-        $stakeholder_item_pack->setBatchNoEndPosition($form_values['batch_no_end_position']);
-        $stakeholder_item_pack->setExpiryDateEndPosition($form_values['expiry_date_end_position']);
+//        $stakeholder_item_pack->setGtin($form_values['gtin']);
+//        $stakeholder_item_pack->setBatch($form_values['batch']);
+//        $stakeholder_item_pack->setExpiry($form_values['expiry']);
+//        $stakeholder_item_pack->setGtinStartPosition($form_values['gtin_start_position']);
+//        $stakeholder_item_pack->setBatchNoStartPosition($form_values['batch_no_start_position']);
+//        $stakeholder_item_pack->setExpiryDateStartPosition($form_values['expiry_date_start_position']);
+//        $stakeholder_item_pack->setGtinEndPosition($form_values['gtin_end_position']);
+//        $stakeholder_item_pack->setBatchNoEndPosition($form_values['batch_no_end_position']);
+//        $stakeholder_item_pack->setExpiryDateEndPosition($form_values['expiry_date_end_position']);
         $stakeholder_item_pack->setPackSizeDescription($form_values['pack_size_description']);
         $stakeholder_item_pack->setLength($form_values['length']);
         $stakeholder_item_pack->setWidth($form_values['width']);
         $stakeholder_item_pack->setHeight($form_values['height']);
 
         $stakeholder_item_pack->setQuantityPerPack($form_values['quantity_per_pack']);
-        $stakeholder_item_pack->setVolumePerUnitNet($form_values['volume_per_unit_net']);
-        $stakeholder_item_pack->setPrePrintedBarcode($form_values['pre_printed_barcode']);
-        $created_by = $this->_em->getRepository('Users')->find($this->_user_id);
-        $stakeholder_item_pack->setModifiedBy($created_by);
+        $stakeholder_item_pack->setVolumPerVial($form_values['volume_per_unit_net']);
+//        $stakeholder_item_pack->setPrePrintedBarcode($form_values['pre_printed_barcode']);
+        $user_id = $this->_em->getRepository('Users')->find($this->_user_id);
+        $stakeholder_item_pack->setModifiedBy($user_id);
         $stakeholder_item_pack->setModifiedDate(App_Tools_Time::now());
         $this->_em->persist($stakeholder_item_pack);
         $this->_em->flush();
@@ -138,7 +138,7 @@ class Model_StakeholderItemPackSizes extends Model_Base {
 
     public function getStakeholderItemPackSizes() {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select('si.pkId,si.quantityPerPack,si.volumePerUnitNet,si.itemGtin,si.batchLength,ip.itemName,s.stakeholderName,ld.listValue')
+                ->select('si.pkId,si.quantityPerPack,si.itemGtin,ip.itemName,s.stakeholderName,ld.listValue,si.volumPerVial')
                 ->from("StakeholderItemPackSizes", "si")
                 ->join('si.itemPackSize', 'ip')
                 ->join('si.stakeholder', 's')
@@ -168,7 +168,8 @@ class Model_StakeholderItemPackSizes extends Model_Base {
 
     public function getStakeholderItemPackSizesAll($barcode_id) {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select('si.pkId,si.itemGtin,si.gtin,si.batch,si.expiry,si.batchNoStartPosition,si.batchNoEndPosition,si.expiryDateStartPosition,si.expiryDateEndPosition,si.gtinStartPosition,si.gtinEndPosition,si.prePrintedBarcode,si.packSizeDescription,si.length,si.width,si.height,si.quantityPerPack,si.volumePerUnitNet,ip.itemName,s.stakeholderName,ld.listValue as barcodeType,ld1.listValue as expiryDateFormat')
+                ->select('si.pkId,si.itemGtin,si.packSizeDescription,si.length,si.width,si.height,si.quantityPerPack,'
+                        . 'ip.itemName,s.stakeholderName,ld.listValue as barcodeType')
                 ->from("StakeholderItemPackSizes", "si")
                 ->join('si.itemPackSize', 'ip')
                 ->join('si.stakeholder', 's')
@@ -189,24 +190,24 @@ class Model_StakeholderItemPackSizes extends Model_Base {
         $stakeholder_item_pack->setStakeholder($stakeholder_id);
         $item_pack_id = $this->_em->find("ItemPackSizes", $form_values['item_pack_size_id']);
         $stakeholder_item_pack->setItemPackSize($item_pack_id);
-        $stakeholder_item_pack->setGtin($form_values['gtin']);
-        $stakeholder_item_pack->setBatch($form_values['batch']);
-        $stakeholder_item_pack->setExpiry($form_values['expiry']);
+//        $stakeholder_item_pack->setGtin($form_values['gtin']);
+//        $stakeholder_item_pack->setBatch($form_values['batch']);
+//        $stakeholder_item_pack->setExpiry($form_values['expiry']);
         $stakeholder_item_pack->setItemGtin($form_values['item_gtin']);
-        $stakeholder_item_pack->setGtinStartPosition($form_values['gtin_start_position']);
-        $stakeholder_item_pack->setBatchNoStartPosition($form_values['batch_no_start_position']);
-        $stakeholder_item_pack->setExpiryDateStartPosition($form_values['expiry_date_start_position']);
-        $stakeholder_item_pack->setExpiryDateFormat($form_values['expiry_date_format']);
-        $stakeholder_item_pack->setGtinEndPosition($form_values['gtin_end_position']);
-        $stakeholder_item_pack->setBatchNoEndPosition($form_values['batch_no_end_position']);
-        $stakeholder_item_pack->setExpiryDateEndPosition($form_values['expiry_date_end_position']);
+//        $stakeholder_item_pack->setGtinStartPosition($form_values['gtin_start_position']);
+//        $stakeholder_item_pack->setBatchNoStartPosition($form_values['batch_no_start_position']);
+//        $stakeholder_item_pack->setExpiryDateStartPosition($form_values['expiry_date_start_position']);
+//        $stakeholder_item_pack->setExpiryDateFormat($form_values['expiry_date_format']);
+//        $stakeholder_item_pack->setGtinEndPosition($form_values['gtin_end_position']);
+//        $stakeholder_item_pack->setBatchNoEndPosition($form_values['batch_no_end_position']);
+//        $stakeholder_item_pack->setExpiryDateEndPosition($form_values['expiry_date_end_position']);
         $stakeholder_item_pack->setPackSizeDescription($form_values['pack_size_description']);
         $stakeholder_item_pack->setLength($form_values['length']);
         $stakeholder_item_pack->setWidth($form_values['width']);
         $stakeholder_item_pack->setHeight($form_values['height']);
         $stakeholder_item_pack->setQuantityPerPack($form_values['quantity_per_pack']);
-        $stakeholder_item_pack->setVolumePerUnitNet($form_values['volume_per_unit_net']);
-        $stakeholder_item_pack->setPrePrintedBarcode($form_values['pre_printed_barcode']);
+//        $stakeholder_item_pack->setVolumePerUnitNet($form_values['volume_per_unit_net']);
+//        $stakeholder_item_pack->setPrePrintedBarcode($form_values['pre_printed_barcode']);
         $created_by = $this->_em->getRepository('Users')->find($this->_user_id);
         $stakeholder_item_pack->setModifiedBy($created_by);
         $stakeholder_item_pack->setModifiedDate(App_Tools_Time::now());
@@ -264,13 +265,17 @@ class Model_StakeholderItemPackSizes extends Model_Base {
     }
 
     public function getAllIssueProductsByStakeholder() {
+        $tran_date = $this->form_values['trans_date'];
+        if(empty($tran_date)){
+            $tran_date = date("d/m/Y h:i:s A");
+        }
         $arr_data = array();
         $str_sql = $this->_em->createQueryBuilder()
                 ->select('DISTINCT ips.pkId')
                 ->from('StockBatch', 'sb')
                 ->join("sb.itemPackSize", "ips")
                 ->where("sb.warehouse = " . $this->_identity->getWarehouseId())
-                ->andWhere("DATE_FORMAT(sb.expiryDate,'%Y-%m-%d') > '" . date("Y-m-d") . "'")
+                ->andWhere("DATE_FORMAT(sb.expiryDate,'%Y-%m-%d') > '" . App_Controller_Functions::dateToDbFormat($tran_date) . "'")
                 ->andWhere("sb.quantity > 0")
                 ->orderBy("ips.listRank", "ASC");
 

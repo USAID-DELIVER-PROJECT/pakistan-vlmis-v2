@@ -22,8 +22,11 @@ class Model_CcmStatusHistory extends Model_Base {
     public function updateColdChainStatus() {
         date_default_timezone_set('Asia/karachi');
         $cc_id = $this->form_values['ccm_id'];
+        
+        
 
         $created_by = $this->_em->find('Users', $this->_user_id);
+        
 
         foreach ($cc_id as $index => $ccm_id) {
             $working_status = $this->form_values['working_status'];
@@ -60,7 +63,7 @@ class Model_CcmStatusHistory extends Model_Base {
                 $utilization_id = $this->_em->getRepository('CcmStatusList')->find($utilization[$index]);
                 $ccm_status_history->setUtilization($utilization_id);
             }
-
+             $ccm_status_history->setCreatedBy($created_by);
             $ccm_status_history->setModifiedBy($created_by);
             $ccm_status_history->setModifiedDate(App_Tools_Time::now());
             $this->_em->persist($ccm_status_history);
@@ -91,7 +94,7 @@ class Model_CcmStatusHistory extends Model_Base {
             $ccm_status->setWarehouse($warehouse_id);
             $ccm_asset_type_q = $this->_em->getRepository('CcmAssetTypes')->find($asset_id_q[$index]);
             $ccm_status->setCcmAssetType($ccm_asset_type_q);
-
+            $ccm_status->setCreatedBy($created_by);
             $ccm_status->setModifiedBy($created_by);
             $ccm_status->setModifiedDate(App_Tools_Time::now());
             $this->_em->persist($ccm_status);
@@ -124,7 +127,7 @@ class Model_CcmStatusHistory extends Model_Base {
 
             $warehouse_id = $this->_em->getRepository('Warehouses')->find($wh_id);
             $ccm_history->setWarehouse($warehouse_id);
-
+            $ccm_history->setCreatedBy($created_by);
             $ccm_history->setModifiedBy($created_by);
             $ccm_history->setModifiedDate(App_Tools_Time::now());
             $this->_em->persist($ccm_history);

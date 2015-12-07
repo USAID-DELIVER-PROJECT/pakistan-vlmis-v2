@@ -64,6 +64,7 @@ if ($type == 'Pending') {
                     <?php if ($type == 'Issue') { ?>
                         <th>Status</th>
                         <th>Received Date</th>
+    <!--                        <th>In-Transit Days</th>-->
                     <?php } ?>
                 </tr>
             </thead>
@@ -86,13 +87,17 @@ if ($type == 'Pending') {
 
                                 <?php if ($row['IsReceived'] != 0 && $row['adjustmentType'] == 2) { ?>
                                     <td align="center"><?php echo $this->reports()->receivedDate($row['PkStockID']); ?></td>
+                <!--                                    <td align="center">
+                                    <?php //$diff = (($from_sel_year - $from_sel_year) + ($report_month - $from_sel_month)); ?>
+                                    <?php //echo $this->reports()->receivedDate($row['PkStockID']); ?></td>-->
                                 <?php } else if ($this->isPartialReceived($row['PkStockID']) == 'Partial Received') { ?>
 
                                     <td align="center"><?php echo $this->reports()->receivedDate($row['PkStockID']); ?></td>
+                <!--                                    <td align="center"><?php //echo $this->reports()->receivedDate($row['PkStockID']);  ?></td>-->
 
                                 <?php } else { ?>
                                     <td align="center">-</td>
-
+                <!--                                    <td align="center">-</td>  -->
                                 <?php } ?>
                             <?php } ?>
                         <?php } ?>

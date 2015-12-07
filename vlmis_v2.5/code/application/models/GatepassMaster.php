@@ -23,7 +23,7 @@ class Model_GatepassMaster extends Model_Base {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("gpm.pkId, gpm.number")
                 ->from('GatepassMaster', 'gpm');
-        //echo $str_sql->getQuery()->getSql();exit;
+       
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -57,7 +57,7 @@ class Model_GatepassMaster extends Model_Base {
         if (!empty($form_values['transaction_date'])) {
             $gp_master->setTransactionDate(new \DateTime(date("Y-m-d h:i")));
         }
-        //$number = "12";
+        
         $number = substr(number_format(time() * rand(), 0, '', ''), 0, 10);
         $gp_master->setNumber($number);
 
@@ -77,39 +77,30 @@ class Model_GatepassMaster extends Model_Base {
 
         $stock_detail = new Model_StockDetail();
 
-        // list($stm, $stcmaster) = explode('_',$form_values['quantity']);
-        //// $stm = explode('_',$form_values['quantity']);
-        // print_r($stm);exit;
         $count1 = 1;
         $detailId = array();
         foreach ($form_values['quantity'] as $key => $value) {
-            $value1 = $value; //2000
-            // echo $value1;exit;
-            // $gp_detail = new GatepassDetail();
+            $value1 = $value; 
+           
             if (!empty($value1)) {
                 list($stm, $stcmaster) = explode('_', $key);
-                //  echo $stcmaster;
-                //  echo $stm;exit;
+                
                 $res_rec = $stock_detail->quantityDataByStcBatch($stm, $stcmaster);
                 $dataArr = array();
                 foreach ($res_rec as $res) {
-                    $detail_pkid = $res['pkId']; //131
-                    $detail_qty = abs($res['quantity']); //5000
-                    // echo $dataArr[$res['pkId']] = $res['quantity'];exit; //-5000
-
-                    $dataArr[$detail_pkid] = $detail_qty; //5000
+                    $detail_pkid = $res['pkId']; 
+                    $detail_qty = abs($res['quantity']);
+                    $dataArr[$detail_pkid] = $detail_qty; 
                 }
-                // echo "<pre>"; print_r($dataArr[$detail_pkid]);exit;
-                //print_r($dataArr);exit; // [131]=>5000
+              
                 while ($value1 > 0) {
 
                     $arr = $stock_detail->getClosest($dataArr, $value);
-                    //  echo $arr[1];exit; //5000
-                    $qty = $value1; //2000exit;
-                    $value1 = $value1 - $arr[1]; //  2000-(5000) = -3000  
+                    
+                    $qty = $value1; 
+                    $value1 = $value1 - $arr[1]; 
                     if ($value1 > 0) {
-                        //echo $arr[0];exit; //131
-                        $detailId[$arr[0]] = (int) $arr[1]; //  $detailId[131] = -5000
+                        $detailId[$arr[0]] = (int) $arr[1]; 
                     } else {
 
                         $detailId[$arr[0]] = (int) $qty;
@@ -117,17 +108,13 @@ class Model_GatepassMaster extends Model_Base {
                 }
             }
         }
-        // print_r($detailId);
-        //exit;
+      
         $gp_m_id = $this->_em->getRepository('GatepassMaster')->find($gp_master_id);
 
         foreach ($detailId as $detId => $quantity) {
-            // echo "here";exit;
-            //echo $quantity;
-            //exit;
-//echo $quantity;exit;
+           
             $gp_detail = new GatepassDetail();
-//echo $quantity;exit;
+
             $stock_d_id = $this->_em->getRepository('StockDetail')->find($detId);
 
             $gp_detail->setStockDetail($stock_d_id);
@@ -136,8 +123,7 @@ class Model_GatepassMaster extends Model_Base {
 
             $gp_detail->setGatepassMaster($gp_m_id);
 
-            // $sb_id = $this->_em->getRepository('StockBatch')->find(12);
-            //$gp_detail->setStockBatch($sb_id);
+          
 
             $created_by = $this->_em->find('Users', $this->_user_id);
             $gp_detail->setCreatedBy($created_by);
@@ -148,15 +134,9 @@ class Model_GatepassMaster extends Model_Base {
             $this->_em->persist($gp_detail);
             $this->_em->flush();
 
-            //    echo "here".$value."<br>".$detId."<br>".$gp_master_id;exit;
-            // $count1++;
         }
 
-        // $this->_em->persist($gp_detail);
-        // $count1++;
-        //var_dump($detailId);
-        //exit;
-        //$this->_em->persist($gp_detail);
+     
     }
 
 }

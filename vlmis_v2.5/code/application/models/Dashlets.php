@@ -70,7 +70,7 @@ class Model_Dashlets extends Model_Base {
             INNER JOIN warehouses ON stock_master.to_warehouse_id = warehouses.pk_id
             INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
             WHERE
-            stock_master.transaction_type_id = 2
+            stock_master.transaction_type_id = ".Model_TransactionTypes::TRANSACTION_ISSUE."
             and warehouses.status = 1
             AND DATE_FORMAT(stock_master.transaction_date, '%Y-%m') = $date 
             AND stakeholders.geo_level_id = 2

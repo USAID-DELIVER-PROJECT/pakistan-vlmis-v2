@@ -19,7 +19,7 @@ class Model_ReportOptions extends Model_Base {
         $this->_table = $this->_em->getRepository('ReportOptions');
     }
 
-    public function getReportDataSql() {
+        public function getReportDataSql() {
         return $this->_table->findOneBy(
                         array(
                             'reportStakeholder' => $this->form_values['stakeholder'],

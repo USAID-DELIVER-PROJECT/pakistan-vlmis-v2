@@ -333,8 +333,8 @@ class Model_Graphs extends Model_Base {
                     $sql = str_replace("\$all_provinces", $all_provinces, $sql);
                     $sql = str_replace("\$all_districts", "'" . $all_districts . "'", $sql);
                     $dbg_sql.=$sql . '<br>';
-                    //echo $sql."<br>";
-                    //exit;
+                    echo $sql."<br>";
+                    exit;
                     $str_sql = $this->_em->getConnection()->prepare($sql);
                     $str_sql->execute();
                     $row = $str_sql->fetchAll();
@@ -589,7 +589,7 @@ ORDER BY
 
                 $xmlstore_array[] = $xmlstore;
             }
-            
+
             $cache->save($xmlstore_array, $reportedwastages);
         }
 
@@ -1050,8 +1050,11 @@ ORDER BY
         foreach ($data_arr as $item => $sub) {
             $dataset .= '<dataset seriesname="' . $item . '" color="' . $data_arr[$item]['color'] . '" >';
             foreach ($sub as $key => $val) {
+//                echo '<pre>';
+//                print_r($val);
+//                exit();
                 //echo $data_arr[$item][$key]['color'];
-                $dataset .= '<set color="' . $data_arr[$item]['color'] . '" value="' . $data_arr[$item][$key]['quantity'] . '" />';
+                $dataset .= '<set color="' . $data_arr[$item]['color'] . '" value="' . ((!empty($val['quantity'])) ? $val['quantity'] : '0') . '" />';
             }
             $dataset .='</dataset>';
         }

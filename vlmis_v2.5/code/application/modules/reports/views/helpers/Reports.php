@@ -2640,6 +2640,7 @@ $distFilter
 				Tehsil.pk_id
 			ORDER BY
 				Tehsil.location_name ASC";
+
         $this->_em = Zend_Registry::get('doctrine');
         $row = $this->_em->getConnection()->prepare($querypro);
 
@@ -5649,8 +5650,8 @@ GROUP BY
 			) B ON A.pk_id = B.pk_id
 		) B ON A.pk_id = B.pk_id
 	)";
-          //  echo $str_qry;
-           // exit;
+        //  echo $str_qry;
+        // exit;
 
         $this->_em = Zend_Registry::get('doctrine');
         $row = $this->_em->getConnection()->prepare($str_qry);
@@ -6291,7 +6292,7 @@ GROUP BY
         return $row->fetchAll();
     }
 
-    public function cbaCoverageReport($wh_type, $report_year, $report_month, $from_sel_month, $from_sel_year, $district, $sel_tehsil) {
+    public function cbaCoverageReport($wh_type, $report_year, $report_month, $from_sel_month, $from_sel_year, $district, $sel_tehsil, $vac_id) {
         if ($wh_type == 5) {
             $where = "AND tehsils.pk_id = $sel_tehsil";
         } else {
@@ -6299,194 +6300,118 @@ GROUP BY
             $where = "";
         }
 
-        $report_date1 = $report_year . "-" . $report_month;
+        $report_date1 = $from_sel_year . "-" . $report_month;
         $report_date = date('Y-m', strtotime($report_date1));
 
         $from_report_date = $from_sel_year . "-" . $from_sel_month;
         $from_report_date = date('Y-m', strtotime($from_report_date));
+        $diff = (($from_sel_year - $from_sel_year) + ($report_month - $from_sel_month) + 1);
 
         $str_qry = "SELECT
 	B.pk_id AS location_id,
 	B.district AS district,
 	B.tehsil AS tehsil,
 	B.ucs AS ucs,
-        B.target AS target,
-      
-	IFNULL(A.fixed_inside_uc_male_1, 0) AS fixed_inside_uc_male_1,
-	IFNULL(A.fixed_inside_uc_female_1,0) AS fixed_inside_uc_female_1,
-	IFNULL(A.outreach_male_1, 0) AS outreach_male_1,
-	IFNULL(A.outreach_female_1, 0) AS outreach_female_1,
-	IFNULL(A.referal_male_1, 0) AS referal_male_1,
-	IFNULL(A.referal_female_1, 0) AS referal_female_1,
-	(IFNULL(A.fixed_inside_uc_male_1, 0) + IFNULL(A.fixed_inside_uc_female_1,0) + IFNULL(A.outreach_male_1, 0) + IFNULL(A.outreach_female_1, 0) + IFNULL(A.referal_male_1, 0) + IFNULL(A.referal_female_1, 0)
-	) AS consumption_1,
-	ROUND( 
-		((
-		IFNULL(A.fixed_inside_uc_male_1, 0) + IFNULL(
-			A.fixed_inside_uc_female_1,
-			0
-		) + IFNULL(A.outreach_male_1, 0) + IFNULL(A.outreach_female_1, 0) + IFNULL(A.referal_male_1, 0) + IFNULL(A.referal_female_1, 0)
-	) /  B.target) * 100
-	) AS consumptionPercentage_1,
-
-
-	IFNULL(A.fixed_inside_uc_male_2, 0) AS fixed_inside_uc_male_2,
-	IFNULL(
-		A.fixed_inside_uc_female_2,
-		0
-	) AS fixed_inside_uc_female_2,
-	IFNULL(A.outreach_male_2, 0) AS outreach_male_2,
-	IFNULL(A.outreach_female_2, 0) AS outreach_female_2,
-	IFNULL(A.referal_male_2, 0) AS referal_male_2,
-	IFNULL(A.referal_female_2, 0) AS referal_female_2,
-	(
-		IFNULL(A.fixed_inside_uc_male_2, 0) + IFNULL(
-			A.fixed_inside_uc_female_2,
-			0
-		) + IFNULL(A.outreach_male_2, 0) + IFNULL(A.outreach_female_2, 0) + IFNULL(A.referal_male_2, 0) + IFNULL(A.referal_female_2, 0)
-	) AS consumption_2,
-	ROUND( 
-		((
-		IFNULL(A.fixed_inside_uc_male_2, 0) + IFNULL(
-			A.fixed_inside_uc_female_2,
-			0
-		) + IFNULL(A.outreach_male_2, 0) + IFNULL(A.outreach_female_2, 0) + IFNULL(A.referal_male_2, 0) + IFNULL(A.referal_female_2, 0)
-	) /  B.target) * 100
-	) AS consumptionPercentage_2
-        FROM
+	B.target AS target,
+	Round(((B.target))) AS lbt,
+	IFNULL(A.pregnant_women, 0) AS pregnant_women,
+	IFNULL(A.non_pregnant_women, 0) AS non_pregnant_women,
+	IFNULL(A.pregnant_women, 0) + IFNULL(A.non_pregnant_women,0)  as consumption,
+	IFNULL(ROUND(
+		(
+			(
+				IFNULL(A.non_pregnant_women, 0) ) / ((B.target))
+		) * 100
+	),0) AS consumptionPercentage
+       FROM
 	(
 		(
-                SELECT
-                        locations.pk_id,
-
-
-            IF (
-            hf_data_detail.vaccine_schedule_id = 1 && hf_data_detail.age_group_id = 145,
-            hf_data_detail.fixed_inside_uc_male,
-            0
-            ) AS fixed_inside_uc_male_1,
-
-            IF (
-            hf_data_detail.vaccine_schedule_id = 1 && hf_data_detail.age_group_id = 145,
-            hf_data_detail.fixed_inside_uc_female,
-            0
-            ) AS fixed_inside_uc_female_1,
-
-            IF (
-            hf_data_detail.vaccine_schedule_id = 1 && hf_data_detail.age_group_id = 145,
-            hf_data_detail.outreach_male,
-            0
-            ) AS outreach_male_1,
-
-            IF (
-            hf_data_detail.vaccine_schedule_id = 1 && hf_data_detail.age_group_id = 145,
-            hf_data_detail.outreach_female,
-            0
-            ) AS outreach_female_1,
-
-            IF (
-            hf_data_detail.vaccine_schedule_id = 1 && hf_data_detail.age_group_id = 145,
-            hf_data_detail.referal_male,
-            0
-            ) AS referal_male_1,
-
-            IF (
-            hf_data_detail.vaccine_schedule_id = 1 && hf_data_detail.age_group_id = 145,
-            hf_data_detail.referal_female,
-            0
-            ) AS referal_female_1,
-
-            IF (
-            hf_data_detail.vaccine_schedule_id = 2 && hf_data_detail.age_group_id = 146,
-            hf_data_detail.fixed_inside_uc_male,
-            0
-            ) AS fixed_inside_uc_male_2,
-
-            IF (
-            hf_data_detail.vaccine_schedule_id = 2 && hf_data_detail.age_group_id = 146,
-            hf_data_detail.fixed_inside_uc_female,
-            0
-            ) AS fixed_inside_uc_female_2,
-
-            IF (
-            hf_data_detail.vaccine_schedule_id = 2 && hf_data_detail.age_group_id = 146,
-            hf_data_detail.outreach_male,
-            0
-            ) AS outreach_male_2,
-
-            IF (
-            hf_data_detail.vaccine_schedule_id = 2 && hf_data_detail.age_group_id = 146,
-            hf_data_detail.outreach_female,
-            0
-            ) AS outreach_female_2,
-
-            IF (
-            hf_data_detail.vaccine_schedule_id = 2 && hf_data_detail.age_group_id = 146,
-            hf_data_detail.referal_male,
-            0
-            ) AS referal_male_2,
-
-            IF (
-            hf_data_detail.vaccine_schedule_id = 2 && hf_data_detail.age_group_id = 146,
-            hf_data_detail.referal_female,
-            0
-            ) AS referal_female_2
-            FROM
-                    warehouses
-            INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
-            INNER JOIN hf_data_detail ON hf_data_master.pk_id = hf_data_detail.hf_data_master_id
-            INNER JOIN locations ON warehouses.location_id = locations.pk_id
-            WHERE
-                    hf_data_master.item_pack_size_id = 12
-            AND DATE_FORMAT(
-                    hf_data_master.reporting_start_date,
-                    '%Y-%m'
-            ) BETWEEN '$from_report_date' AND '$report_date'
-			
+			SELECT
+				locations.pk_id,
+				hf_data_detail.pregnant_women,
+				hf_data_detail.non_pregnant_women
+			FROM
+				warehouses
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			INNER JOIN hf_data_detail ON hf_data_master.pk_id = hf_data_detail.hf_data_master_id
+			INNER JOIN locations ON warehouses.location_id = locations.pk_id
+			WHERE
+				hf_data_master.item_pack_size_id = 12
+                        AND hf_data_detail.vaccine_schedule_id = '$vac_id'
+			AND DATE_FORMAT(
+				hf_data_master.reporting_start_date,
+				'%Y-%m'
+			) BETWEEN '$from_report_date' AND '$report_date'
+			GROUP BY
+				location_id
 		) A
 		RIGHT JOIN (
 			SELECT
-                        ucs.pk_id AS pk_id,
-                        locations.location_name AS district,
-                        tehsils.location_name AS tehsil,
-                        ucs.location_name AS ucs,
-                        ROUND(
-                        COALESCE (
-                        ROUND(
-                        (
-                        (
-                        (
-                        location_populations.population * 1
-                        ) / 100 * 3.57
-                        )
-                        )
-                        ) / 12,
-                        NULL,
-                        0
-                        )
-                        ) AS target
+				A.pk_id,
+				A.district,
+				A.tehsil,
+				A.ucs,
+				IFNULL(B.target, 0) AS target
 			FROM
-				locations
-			INNER JOIN locations AS tehsils ON locations.pk_id = tehsils.parent_id
-			INNER JOIN locations AS ucs ON tehsils.pk_id = ucs.parent_id
-			INNER JOIN warehouses ON ucs.pk_id = warehouses.location_id
-			INNER JOIN location_populations ON ucs.pk_id = location_populations.location_id
-			WHERE
-				locations.geo_level_id = 4
-			AND YEAR (
-				location_populations.estimation_date
-			) = '$report_year'
-			AND locations.province_id = 2
-			AND locations.pk_id = '$district'
-                            $where
-			GROUP BY
-				ucs.pk_id
-			ORDER BY
-				tehsil,
-				ucs
+				(
+					SELECT
+						ucs.pk_id AS pk_id,
+						locations.location_name AS district,
+						tehsils.location_name AS tehsil,
+						ucs.location_name AS ucs
+					FROM
+						locations
+					INNER JOIN locations AS tehsils ON locations.pk_id = tehsils.parent_id
+					INNER JOIN locations AS ucs ON tehsils.pk_id = ucs.parent_id
+					INNER JOIN warehouses ON ucs.pk_id = warehouses.location_id
+					WHERE
+						locations.geo_level_id = 4
+					AND locations.pk_id = '$district'
+                                             $where
+					GROUP BY
+						ucs.pk_id
+					ORDER BY
+						tehsil,
+						ucs
+				) A
+			LEFT JOIN (
+				SELECT
+					ROUND(
+						COALESCE (
+							ROUND(
+								(
+									(
+										(
+											(
+												location_populations.population * 1
+											) / 100 * 18.43
+										)
+									) * $diff
+								)
+							) / 12,
+							NULL,
+							0
+						)
+					) AS target,
+					ucs.pk_id AS pk_id
+				FROM
+					locations
+				INNER JOIN locations AS tehsils ON locations.pk_id = tehsils.parent_id
+				INNER JOIN locations AS ucs ON tehsils.pk_id = ucs.parent_id
+				INNER JOIN warehouses ON ucs.pk_id = warehouses.location_id
+				INNER JOIN location_populations ON ucs.pk_id = location_populations.location_id
+				WHERE
+					locations.geo_level_id = 4
+				AND YEAR (
+					location_populations.estimation_date
+				) = '$from_sel_year'
+				AND locations.pk_id = '$district'
+                                     $where
+				GROUP BY
+					ucs.pk_id
+			) B ON A.pk_id = B.pk_id
 		) B ON A.pk_id = B.pk_id
 	)";
-
 
         $this->_em = Zend_Registry::get('doctrine');
         $row = $this->_em->getConnection()->prepare($str_qry);

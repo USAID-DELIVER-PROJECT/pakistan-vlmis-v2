@@ -27,26 +27,6 @@ CcmStatusHistory:
       type: datetime
       nullable: true
       column: status_date
-    ccmStatusListId:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: ccm_status_list_id
-    ccmAssetTypeId:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: ccm_asset_type_id
-    reasonId:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: reason_id
-    utilizationId:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: utilization_id
     createdDate:
       type: datetime
       nullable: true
@@ -56,6 +36,15 @@ CcmStatusHistory:
       nullable: false
       column: modified_date
   oneToOne:
+    utilization:
+      targetEntity: CcmStatusList
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        utilization_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
     ccm:
       targetEntity: ColdChain
       cascade: {  }
@@ -63,6 +52,15 @@ CcmStatusHistory:
       inversedBy: null
       joinColumns:
         ccm_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    reason:
+      targetEntity: CcmStatusList
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        reason_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     warehouse:
@@ -90,6 +88,24 @@ CcmStatusHistory:
       inversedBy: null
       joinColumns:
         modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    ccmStatusList:
+      targetEntity: CcmStatusList
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        ccm_status_list_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    ccmAssetType:
+      targetEntity: CcmAssetTypes
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        ccm_asset_type_id:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

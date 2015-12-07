@@ -42,14 +42,14 @@ class Model_PlacementLocations extends Model_Base {
         $em = Zend_Registry::get('doctrine');
 
         $str_sql = "SELECT
-non_ccm_locations.location_name,
-non_ccm_locations.pk_id,
-placement_locations.pk_id as plcid
-FROM
-non_ccm_locations
-INNER JOIN placement_locations ON non_ccm_locations.pk_id = placement_locations.location_id
-WHERE
-placement_locations.location_id = $nonccm";
+            non_ccm_locations.location_name,
+            non_ccm_locations.pk_id,
+            placement_locations.pk_id as plcid
+            FROM
+            non_ccm_locations
+            INNER JOIN placement_locations ON non_ccm_locations.pk_id = placement_locations.location_id
+            WHERE
+            placement_locations.location_id = $nonccm";
         $res = $em->getConnection()->prepare($str_sql);
         $res->execute();
         $result = $res->fetchAll();
@@ -185,12 +185,12 @@ placement_locations.location_id = $nonccm";
                         cold_chain.warehouse_id = $warehouse_id
                 AND (
                         (
-                                cold_chain.ccm_asset_type_id = 3
-                                OR AssetMainType.pk_id = 3
+                                cold_chain.ccm_asset_type_id = ".Model_CcmAssetTypes::COLDROOM."
+                                OR AssetMainType.pk_id = ".Model_CcmAssetTypes::COLDROOM."
                         )
                         OR (
-                                cold_chain.ccm_asset_type_id = 1
-                                OR AssetMainType.pk_id = 1
+                                cold_chain.ccm_asset_type_id = ".Model_CcmAssetTypes::REFRIGERATOR."
+                                OR AssetMainType.pk_id = ".Model_CcmAssetTypes::REFRIGERATOR."
                         )
                 )
                 AND placement_locations.location_type = " . self::LOCATIONTYPE_CCM . "

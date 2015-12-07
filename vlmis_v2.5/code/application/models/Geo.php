@@ -130,6 +130,8 @@ class Model_Geo extends Model_Base {
                                                 District.pk_id
                                         ORDER BY
                                                 tehsil_id ASC) B ON A.tehsil_id = B.tehsil_id ";
+        //echo $str_sql;
+        //exit;
         $row = $em->getConnection()->prepare($str_sql);
         $row->execute();
         $data = $row->fetchAll(\PDO::FETCH_ASSOC);
@@ -1591,7 +1593,7 @@ class Model_Geo extends Model_Base {
                     INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
                     INNER JOIN map_district_mapping ON warehouses.district_id = map_district_mapping.district_id
                     WHERE
-                            stock_batch.number = '" . $batch . "'
+                    stock_batch.number = '" . $batch . "'
                     AND warehouses. STATUS = 1
                     AND stock_batch.`status` = 'Running'
                     GROUP BY

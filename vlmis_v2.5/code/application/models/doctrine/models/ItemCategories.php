@@ -37,12 +37,12 @@ class ItemCategories
     /**
      * @var Users
      */
-    private $modifiedBy;
+    private $createdBy;
 
     /**
      * @var Users
      */
-    private $createdBy;
+    private $modifiedBy;
 
 
     /**
@@ -136,26 +136,6 @@ class ItemCategories
     }
 
     /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
      * Set createdBy
      *
      * @param Users $createdBy
@@ -173,5 +153,25 @@ class ItemCategories
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
     }
 }

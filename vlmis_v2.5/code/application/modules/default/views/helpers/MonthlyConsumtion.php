@@ -16,7 +16,7 @@ class Zend_View_Helper_MonthlyConsumtion extends Zend_View_Helper_Abstract {
 //                    wd.reportingStartDate,
 //                    wd.nearestExpiry,
 //                    wd.createdDate')
-//                ->from("WarehousesData","wd")
+//                ->from("HfDataMaster","wd")
 //                ->where("wd.warehouse = $wh_id")
 //                ->andWhere("DATE_FORMAT(wd.reportingStartDate, '%Y-%m-%d') = '$prev_month_date'")
 //                ->andWhere("wd.itemPackSize=$pk_id");

@@ -1,14 +1,14 @@
-$(function() {
-    
+$(function () {
+
     $("#number").select2();
-    
+
     $("#issue-print").trigger("click");
 
     if ($("#activity_id").val() != '') {
         getProductsByStakeholder($("#activity_id").val());
     }
 
-    $('#item_id').change(function() {
+    $('#item_id').change(function () {
         $('#vvm_stage').html('');
         $("#available_quantity").val('');
         $("#expiry_date").val('');
@@ -21,9 +21,9 @@ $(function() {
             $.ajax({
                 type: "POST",
                 url: appName + "/stock-batch/ajax-running-batches",
-                data: {item_id: $(this).val(), page: 'issue'},
+                data: {item_id: $(this).val(), page: 'issue', transaction_date: $('#transaction_date').val()},
                 dataType: 'html',
-                success: function(data) {
+                success: function (data) {
                     $('#number').html(data);
                 }
             });
@@ -32,17 +32,17 @@ $(function() {
                 url: appName + "/stock-batch/ajax-product-batches",
                 data: {item_id: $(this).val()},
                 dataType: 'html',
-                success: function(data) {
+                success: function (data) {
                     $('#product-unit').html(data);
                 }
             });
-            
+
             $.ajax({
                 type: "POST",
                 url: appName + "/stock-batch/ajax-product-category",
                 data: {item_id: $(this).val()},
                 dataType: 'html',
-                success: function(data) {
+                success: function (data) {
                     if (data == 2) {
                         $("#priority_div").hide();
                         $("#expiry_div").hide();
@@ -52,7 +52,7 @@ $(function() {
                     }
                 }
             });
-            
+
             if (activity_id == 2) {
                 $.ajax({
                     type: "POST",
@@ -61,7 +61,7 @@ $(function() {
                         warehouse_id: $('#warehouse').val(), item_id: $(this).val()
                     },
                     dataType: 'html',
-                    success: function(data) {
+                    success: function (data) {
                         $('#campaign_id').html(data);
                         $('#campaign_id').css('backgroundColor', 'Green');
                         $.cookie('blink_div_background_color', "campaign_id");
@@ -78,7 +78,7 @@ $(function() {
                         warehouse_id: $('#hdn_to_warehouse_id').val(), item_id: $(this).val()
                     },
                     dataType: 'html',
-                    success: function(data) {
+                    success: function (data) {
                         $('#campaign_id').html(data);
                         $('#campaign_id').css('backgroundColor', 'Green');
                         $.cookie('blink_div_background_color', "campaign_id");
@@ -89,29 +89,29 @@ $(function() {
         }
     });
 
-    $('#number').click(function() {
+    $('#number').click(function () {
         $.ajax({
             type: "POST",
             url: appName + "/stock-batch/ajax-available-batch-quantity",
             data: {batch: $('#number').val(), tr_date: $("#transaction_date").val(), page: 'issue'},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 $('#itembatches').html(data);
             }
         });
-        
+
         $.ajax({
             type: "POST",
             url: appName + "/stock-batch/ajax-available-vvm-stages",
             data: {batch: $('#number').val(), page: 'issue'},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 $('#vvm_stage_lable').html(data);
             }
         });
     });
 
-    $('#warehouse').change(function() {
+    $('#warehouse').change(function () {
 
         if ($('#activity_id').val() == 2) {
             $.ajax({
@@ -121,7 +121,7 @@ $(function() {
                     warehouse_id: $('#warehouse').val(), item_id: $('#item_id').val()
                 },
                 dataType: 'html',
-                success: function(data) {
+                success: function (data) {
                     $('#campaign_id').html(data);
                     $('#campaign_id').css('backgroundColor', 'Green');
                     $.cookie('blink_div_background_color', "campaign_id");
@@ -130,12 +130,14 @@ $(function() {
             });
         }
     });
-    $('#transaction_date').change(function() {
+    $('#transaction_date').change(function () {
         $('#item_id').val("");
         $("#number").select2("val", "");
         $('#vvm_stage').html("NA");
         $('#available_quantity').val("");
         $('#expiry_date').val("");
+        
+        getProductsByStakeholder($("#activity_id").val());
     });
 
 
@@ -191,7 +193,7 @@ $(function() {
 //            });
 //        }
 //    });
-    $("#issue_period").change(function() {
+    $("#issue_period").change(function () {
         var option = $(this).val();
         if (option == 'custom') {
             $("#issue_period_date").show();
@@ -199,11 +201,11 @@ $(function() {
             $("#issue_period_date").hide();
         }
     });
-    $("#print_issue2").click(function() {
+    $("#print_issue2").click(function () {
         window.open('stock_issue_print', '_blank', 'width=860,height=595');
     }
     );
-    $("#wh_link").click(function() {
+    $("#wh_link").click(function () {
         var wh_id;
         wh_id = $("#warehouse").val();
         window.open('coldchain_show_list.php?wh_id=' + wh_id, '_blank', 'width=860,height=595');
@@ -234,15 +236,15 @@ $(function() {
         centsLimit: 0,
         limit: 10
     });
-    $('#warehouse').change(function() {
+    $('#warehouse').change(function () {
         var warehouse = $(this).val();
         $('#wh_link').show();
         $('#wh_button').html('<a href="#?wh_id=' + warehouse + '"><button type="button" class="btn btn-info" name="wh_link" id="wh_link">Cold chain</button></a>');
     });
-    $('#batch_no').change(function() {
+    $('#batch_no').change(function () {
         //$objStockBatch->FindItemQtyByBatchId();
     });
-    $('[data-toggle="notyfy"]').click(function()
+    $('[data-toggle="notyfy"]').click(function ()
     {
         $.notyfy.closeAll();
         var self = $(this);
@@ -254,7 +256,7 @@ $(function() {
             buttons: (self.data('type') != 'confirm') ? false : [{
                     addClass: 'btn btn-success btn-small btn-icon glyphicons ok_2',
                     text: '<i></i> Ok',
-                    onClick: function($notyfy) {
+                    onClick: function ($notyfy) {
                         var id = self.attr("id");
 
                         $notyfy.close();
@@ -278,7 +280,7 @@ $(function() {
                 }, {
                     addClass: 'btn btn-danger btn-small btn-icon glyphicons remove_2',
                     text: '<i></i> Cancel',
-                    onClick: function($notyfy) {
+                    onClick: function ($notyfy) {
                         $notyfy.close();
                         /*   notyfy({
                          force: true,
@@ -296,7 +298,7 @@ $(function() {
 var notification = [];
 notification['confirm'] = 'Do you want to continue?';
 
-$("#btn-loading").click(function(e) {
+$("#btn-loading").click(function (e) {
     e.preventDefault();
     var validator = $("#new_issue_form").validate();
     var aval_qty = $("#available_quantity").val();
@@ -316,7 +318,7 @@ $("#btn-loading").click(function(e) {
     }
 });
 
-$('#vvm_stage').change(function(e) {
+$('#vvm_stage').change(function (e) {
     if ($(this).val() == 3) {
         alert("VVM Stage 3 Not Usable");
     }
@@ -325,7 +327,7 @@ $('#vvm_stage').change(function(e) {
     }
 
 });
-$('#quantity, #item_id').change(function(e) {
+$('#quantity, #item_id').change(function (e) {
 
     var quantity = $('#quantity').val();
     var itemId = $('#item_id').val();
@@ -338,7 +340,7 @@ $('#quantity, #item_id').change(function(e) {
             type: "POST",
             url: appName + "/stock/ajax-product-cat-and-doses",
             data: 'quantity=' + quantity + '&itemId=' + itemId,
-            success: function(doses) {
+            success: function (doses) {
                 if (doses != '')
                 {
                     $('#product-doses').css('display', 'table-row');
@@ -404,7 +406,7 @@ $("#new_issue_form").validate({
             required: "Please select purpose"
         }
     },
-    submitHandler: function(form) {
+    submitHandler: function (form) {
         // $('#btn-loading')
         $('#btn-loading').attr('disabled', 'disabled');
         form.submit();
@@ -431,7 +433,7 @@ $("#issue_stock").validate({
     }
 });
 
-$('#activity_id').change(function(e) {
+$('#activity_id').change(function (e) {
     $("#number").select2("val", "");
     $('#available_quantity').val('');
     $('#expiry_date').val('');
@@ -445,7 +447,7 @@ $('#activity_id').change(function(e) {
                 warehouse_id: $("#warehouse").val(), item_id: $("#item_id").val()
             },
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 $('#campaign_id').html(data);
                 $('#campaign_id').css('backgroundColor', 'Green');
                 $.cookie('blink_div_background_color', "campaign_id");
@@ -465,10 +467,10 @@ function getProductsByStakeholder(activity_id) {
         type: "POST",
         url: appName + "/stock/ajax-get-products-by-stakeholder-activity",
         data: {
-            activity_id: activity_id, type: 2
+            activity_id: activity_id, type: 2, tran_date: $("#transaction_date").val()
         },
         dataType: 'html',
-        success: function(data) {
+        success: function (data) {
             $('#item_id').html(data);
             $('#item_id').css('backgroundColor', 'Green');
             $.cookie('blink_div_background_color', "item_id");
@@ -477,31 +479,30 @@ function getProductsByStakeholder(activity_id) {
     });
 }
 
-
-$.validator.addMethod("custom_warehouse", function(value, element) {
+$.validator.addMethod("custom_warehouse", function (value, element) {
     var curr_value = $("#curr_wh").val();
     return curr_value != value;
 }, "Please select another store");
 
-$("#print_issue").click(function() {
+$("#print_issue").click(function () {
     var id = $('#hdn_master_id').val();
     window.open(appName + '/stock/print-issue?id=' + id, '_blank', 'scrollbars=1,width=860,height=595');
 });
 
 
-$("span[id$='-stockedit']").click(function() {
+$("span[id$='-stockedit']").click(function () {
     var value = $(this).attr("id");
     var id = value.replace("-stockedit", "");
     document.location = appName + "/stock/issue/id/" + id;
 });
 
-$("#whchange").click(function() {
+$("#whchange").click(function () {
     $("#whcancel").show();
     $("#whchange").hide();
     $("#wh_change_div").show();
 });
 
-$("#whcancel").click(function() {
+$("#whcancel").click(function () {
     $("#whchange").show();
     $("#whcancel").hide();
     $("#wh_change_div").hide();

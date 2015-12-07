@@ -215,11 +215,13 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_request->getPost())) {
 
+                $status='1'; // Default status is 1.
                 $item_category = new ItemCategories();
                 $item_category->setItemCategoryName($form->item_category_name->getValue());
-                $createdBy = $this->_em->getRepository('Users')->find($this->_userid);
-                $item_category->setCreatedBy($createdBy);
-                $item_category->setModifiedBy($createdBy);
+                $user_id = $this->_em->getRepository('Users')->find($this->_userid);
+                $item_category->setCreatedBy($user_id);
+                $item_category->setModifiedBy($user_id);
+                $item_category->setStatus($status);
                 $item_category->setCreatedDate(App_Tools_Time::now());
                 $item_category->setModifiedDate(App_Tools_Time::now());
                 $this->_em->persist($item_category);
@@ -535,7 +537,7 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->paginator = $paginator;
         $this->view->sort = $sort;
         $this->view->order = $order;
-        $this->view->counter = $counter;
+//        $this->view->counter = $counter;
 
         $base_url = Zend_Registry::get('baseurl');
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
@@ -547,19 +549,16 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
 
                 $form_values = $this->_request->getPost();
 
-
                 $vvm_type = new VvmTypes();
                 $vvm_type->setVvmTypeName($form_values['vvm_type_name']);
 
-
-                $item_pack = $this->_em->getRepository('ItemPackSizes')->find($form_values['item_pack_size_id']);
-                $vvm_type->setItemPackSize($item_pack);
-
+//                $item_pack = $this->_em->getRepository('ItemPackSizes')->find($form_values['item_pack_size_id']);
+//                $vvm_type->setItemPackSize($item_pack);
 
                 $vvm_type->setStatus($form_values['status']);
-                $created_by = $this->_em->find('Users', $this->_userid);
-                $vvm_type->setCreatedBy($created_by);
-                $vvm_type->setModifiedBy($created_by);
+                $user_id = $this->_em->find('Users', $this->_userid);
+                $vvm_type->setCreatedBy($user_id);
+                $vvm_type->setModifiedBy($user_id);
                 $vvm_type->setCreatedDate(App_Tools_Time::now());
                 $vvm_type->setModifiedDate(App_Tools_Time::now());
                 $this->_em->persist($vvm_type);
@@ -577,7 +576,7 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $form = new Form_Iadmin_VvmTypeAdd();
 
         $form->vvm_type_name->setValue($vvmType->getVvmTypeName());
-        $form->item_pack_size_id->setValue($vvmType->getItemPackSize()->getPkId());
+        //$form->item_pack_size_id->setValue($vvmType->getItemPackSize()->getPkId());
 
         $form->vvm_type_id->setValue($vvmType->getPkId());
         $this->view->form = $form;

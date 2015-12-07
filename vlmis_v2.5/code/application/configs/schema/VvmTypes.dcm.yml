@@ -19,11 +19,6 @@ VvmTypes:
     status:
       type: boolean
       nullable: true
-    itemPackSizeId:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: item_pack_size_id
     createdDate:
       type: datetime
       nullable: true
@@ -33,15 +28,6 @@ VvmTypes:
       nullable: true
       column: modified_date
   oneToOne:
-    modifiedBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        modified_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     createdBy:
       targetEntity: Users
       cascade: {  }
@@ -49,6 +35,15 @@ VvmTypes:
       inversedBy: null
       joinColumns:
         created_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

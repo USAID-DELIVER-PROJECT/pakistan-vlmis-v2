@@ -25,7 +25,7 @@ GatepassDetail:
       column: modified_date
   oneToOne:
     stockDetail:
-      targetEntity: StakeholderActivities
+      targetEntity: StockDetail
       cascade: {  }
       mappedBy: null
       inversedBy: null

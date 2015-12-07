@@ -23,7 +23,7 @@ class Model_Items extends Model_Base {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("i.pkId,i.description")
                 ->from('Items', 'i');
-        //echo $str_sql->getQuery()->getSql();die;
+       
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -42,20 +42,7 @@ class Model_Items extends Model_Base {
         return $row = $str_sql->getQuery()->getResult();
     }
 
-    /* public function getItemsByCategory() {
-      $str_sql = $this->_em->createQueryBuilder()
-      ->select("i.pkId as itemId,i.description,ips.pkId")
-      ->from("ItemPackSizes", "ips")
-      ->join("ips.item", "i")
-      ->where("ips.itemCategory = 2");
-      $str_sql->getQuery()->getSql();
-      $row = $str_sql->getQuery()->getResult();
-      if (!empty($row) && count($row) > 0) {
-      return $row;
-      } else {
-      return false;
-      }
-      } */
+   
 
     public function checkItem() {
         $form_values = $this->form_values;

@@ -23,7 +23,7 @@ class Model_LogBook extends Model_Base {
 
 
         $data = $this->form_values;
-        // App_Controller_Functions::pr($data);
+        
         $name = $data['name'];
         $father_name = $data['father_name'];
         $age = $data['age'];

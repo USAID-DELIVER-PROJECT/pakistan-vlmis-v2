@@ -25,11 +25,6 @@ class Stakeholders
     private $listRank;
 
     /**
-     * @var integer $mainStakeholder
-     */
-    private $mainStakeholder;
-
-    /**
      * @var datetime $createdDate
      */
     private $createdDate;
@@ -42,7 +37,7 @@ class Stakeholders
     /**
      * @var Stakeholders
      */
-    private $parent;
+    private $mainStakeholder;
 
     /**
      * @var StakeholderTypes
@@ -73,6 +68,11 @@ class Stakeholders
      * @var Users
      */
     private $modifiedBy;
+
+    /**
+     * @var Stakeholders
+     */
+    private $parent;
 
 
     /**
@@ -126,26 +126,6 @@ class Stakeholders
     }
 
     /**
-     * Set mainStakeholder
-     *
-     * @param integer $mainStakeholder
-     */
-    public function setMainStakeholder($mainStakeholder)
-    {
-        $this->mainStakeholder = $mainStakeholder;
-    }
-
-    /**
-     * Get mainStakeholder
-     *
-     * @return integer 
-     */
-    public function getMainStakeholder()
-    {
-        return $this->mainStakeholder;
-    }
-
-    /**
      * Set createdDate
      *
      * @param datetime $createdDate
@@ -186,23 +166,23 @@ class Stakeholders
     }
 
     /**
-     * Set parent
+     * Set mainStakeholder
      *
-     * @param Stakeholders $parent
+     * @param Stakeholders $mainStakeholder
      */
-    public function setParent(\Stakeholders $parent)
+    public function setMainStakeholder(\Stakeholders $mainStakeholder)
     {
-        $this->parent = $parent;
+        $this->mainStakeholder = $mainStakeholder;
     }
 
     /**
-     * Get parent
+     * Get mainStakeholder
      *
      * @return Stakeholders 
      */
-    public function getParent()
+    public function getMainStakeholder()
     {
-        return $this->parent;
+        return $this->mainStakeholder;
     }
 
     /**
@@ -323,5 +303,25 @@ class Stakeholders
     public function getModifiedBy()
     {
         return $this->modifiedBy;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param Stakeholders $parent
+     */
+    public function setParent(\Stakeholders $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return Stakeholders 
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }

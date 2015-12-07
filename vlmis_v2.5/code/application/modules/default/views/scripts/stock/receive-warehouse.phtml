@@ -65,8 +65,8 @@
                                                 <h4 style="color: #0A770A;">If online voucher is different from printed voucher, please request to issuing authority for latest voucher printout.</h4>
                                             </div>
                                         </div>
-                                        <div class="widget">
-                                            <div class="widget-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
                                                 <!-- Table -->
                                                 <table class="table table-bordered table-condensed table-striped table-vertical-center checkboxs js-table-sortable">
                                                     <!-- Table heading -->
@@ -225,54 +225,80 @@
                                             </div>
                                         </div>
                                         <!-- Widget -->
-                                        <div class="widget">
-                                            <div class="widget-body">
-                                                <div class="row">
-                                                    <div class="col-md-5">
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="remarks">
-                                                                <?php echo $this->translate("Remarks"); ?>
-                                                            </label>
-                                                            <div class="controls">
-                                                                <input name="remarks" id="remarks" type="text" class="form-control" />
-                                                            </div>
-                                                        </div>
+                                        <br>
+                                        <?php //for ($j = $i; $j <= $i + 5; $j++) { ?>
+                                            <!-- <div class="row">
+                                                <div class="col-md-12">
+                                                    <table class="table table-bordered table-condensed table-striped table-vertical-center checkboxs js-table-sortable">
+                                                        <tr>
+                                                            <td><?php //echo $j; ?></td>
+                                                            <td>
+                                                                <select id="product" name="product" class="form-control">
+                                                                    <option value="">Select</option>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select id="batch" name="batch" class="form-control">
+                                                                    <option value="">Select</option>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select id="location" name="location" class="form-control">
+                                                                    <option value="">Select</option>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <input name="quantity" id="quantity" class="form-control"/>
+                                                            </td>
+                                                        </tr>
+                                                    </table>                                                
+                                                </div>                                            
+                                            </div><br> -->
+                                        <?php //} ?>                                        
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="control-group">
+                                                    <label class="control-label" for="remarks">
+                                                        <?php echo $this->translate("Remarks"); ?>
+                                                    </label>
+                                                    <div class="controls">
+                                                        <input name="remarks" id="remarks" type="text" class="form-control" />
                                                     </div>
-                                                    <div class="col-md-3">
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="rec_ref">
-                                                                <?php echo $this->translate("Receive Reference"); ?>
-                                                            </label>
-                                                            <div class="controls">
-                                                                <input name="rec_ref" id="rec_ref" type="text" class="form-control" />
-                                                            </div>
-                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="control-group">
+                                                    <label class="control-label" for="rec_ref">
+                                                        <?php echo $this->translate("Receive Reference"); ?>
+                                                    </label>
+                                                    <div class="controls">
+                                                        <input name="rec_ref" id="rec_ref" type="text" class="form-control" />
                                                     </div>
-                                                    <div class="col-md-3">
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="rec_date">
-                                                                <?php echo $this->translate("Received Date"); ?>
-                                                            </label>
-                                                            <div class="controls">
-                                                                <input name="rec_date" id="rec_date" value="<?php echo date("d/m/Y H:i A", strtotime($this->result[0]['receiveDate'])); ?>" type="text" class="form-control" readonly="" />
-                                                                <input id="issue_year" value="<?php echo $y1; ?>" type="hidden" />
-                                                                <input id="issue_month" value="<?php echo $m1; ?>" type="hidden" />
-                                                                <input id="issue_day" value="<?php echo $d1; ?>" type="hidden" />
-                                                            </div>
-                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="control-group">
+                                                    <label class="control-label" for="rec_date">
+                                                        <?php echo $this->translate("Received Date"); ?>
+                                                    </label>
+                                                    <div class="controls">
+                                                        <input name="rec_date" id="rec_date" value="<?php echo date("d/m/Y h:i A", strtotime($this->result[0]['receiveDate'])); ?>" type="text" class="form-control" readonly="" />
+                                                        <input id="issue_year" value="<?php echo $y1; ?>" type="hidden" />
+                                                        <input id="issue_month" value="<?php echo $m1; ?>" type="hidden" />
+                                                        <input id="issue_day" value="<?php echo $d1; ?>" type="hidden" />
                                                     </div>
-                                                    <div class="col-md-1 right">
-                                                        <label class="control-label">
-                                                            &nbsp;
-                                                        </label>
-                                                        <div class="controls">
-                                                            <button type="submit" id="save" name="save" class="btn btn-primary">
-                                                                <?php echo $this->translate("Save"); ?>
-                                                            </button>
-                                                            <input class="form-control" type="hidden" name="stock_id" id="stock_id" value="<?php echo $master_id; ?>"/>
-                                                        </div>
-                                                    </div>
-                                                </div>                                                
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1 right">
+                                                <label class="control-label">
+                                                    &nbsp;
+                                                </label>
+                                                <div class="controls">
+                                                    <button type="submit" id="save" name="save" class="btn btn-primary">
+                                                        <?php echo $this->translate("Save"); ?>
+                                                    </button>
+                                                    <input class="form-control" type="hidden" name="stock_id" id="stock_id" value="<?php echo $master_id; ?>"/>
+                                                </div>
                                             </div>
                                         </div>
                                     <?php elseif (!empty($this->issue_no)): ?>

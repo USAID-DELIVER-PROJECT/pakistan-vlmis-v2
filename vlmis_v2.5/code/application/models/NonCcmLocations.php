@@ -91,9 +91,6 @@ class Model_NonCcmLocations extends Model_Base {
                 ->from("NonCcmLocations", "ncl")
                 ->where("ncl.locationName = '$locationName'");
 
-
-        //echo $str_sql->getQuery()->getSql();
-        // die();
         $result = $str_sql->getQuery()->getResult();
         if (count($result) <= 0) {
             return 0;
@@ -133,8 +130,7 @@ class Model_NonCcmLocations extends Model_Base {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select('ncl.pkId, ncl.locationName')
                 ->from("NonCcmLocations", "ncl");
-        // echo $str_sql->getQuery()->getSql();
-        // die();
+        
         $result = $str_sql->getQuery()->getResult();
         return $result;
     }
@@ -317,12 +313,12 @@ class Model_NonCcmLocations extends Model_Base {
 
     public function getMinRow() {
         $str_sql = $this->_em->getConnection()->prepare("SELECT
-min(list_detail.list_value)
-FROM
-non_ccm_locations
-INNER JOIN list_detail ON non_ccm_locations.`row` = list_detail.pk_id
-WHERE
-list_detail.list_master_id =" . Model_ListMaster::ROW);
+        min(list_detail.list_value)
+        FROM
+        non_ccm_locations
+        INNER JOIN list_detail ON non_ccm_locations.`row` = list_detail.pk_id
+        WHERE
+        list_detail.list_master_id =" . Model_ListMaster::ROW);
 
         $str_sql->execute();
         $result = $str_sql->fetchAll();
@@ -345,13 +341,14 @@ list_detail.list_master_id =" . Model_ListMaster::ROW);
 				GROUP BY
 					non_ccm_locations.warehouse_id";
 
+echo $sql;
 
         $str_sql1 = $this->_em->getConnection()->prepare($sql);
 
         $str_sql1->execute();
         $result = $str_sql1->fetchAll();
         if (count($result) > 0) {
-            //return $result;
+           
             return $result[0]['shelf'];
         } else {
             return false;
@@ -370,13 +367,13 @@ list_detail.list_master_id =" . Model_ListMaster::ROW);
 				GROUP BY
 					non_ccm_locations.warehouse_id";
 
-
+echo $sql;
         $str_sql1 = $this->_em->getConnection()->prepare($sql);
 
         $str_sql1->execute();
         $result = $str_sql1->fetchAll();
         if (count($result) > 0) {
-            //return $result;
+           
             return $result[0]['racks'];
         } else {
             return false;
@@ -385,12 +382,12 @@ list_detail.list_master_id =" . Model_ListMaster::ROW);
 
     public function getMinRack() {
         $str_sql = $this->_em->getConnection()->prepare("SELECT
-min(list_detail.list_value)
-FROM
-non_ccm_locations
-INNER JOIN list_detail ON non_ccm_locations.`rack` = list_detail.pk_id
-WHERE
-list_detail.list_master_id =" . Model_ListMaster::RACK);
+        min(list_detail.list_value)
+        FROM
+        non_ccm_locations
+        INNER JOIN list_detail ON non_ccm_locations.`rack` = list_detail.pk_id
+        WHERE
+        list_detail.list_master_id =" . Model_ListMaster::RACK);
 
         $str_sql->execute();
         $result = $str_sql->fetchAll();
@@ -404,12 +401,20 @@ list_detail.list_master_id =" . Model_ListMaster::RACK);
     public function getMaxPallet() {
 
         $str_sql1 = $this->_em->getConnection()->prepare("SELECT
-max(list_detail.list_value) as maxVal
-FROM
-non_ccm_locations
-INNER JOIN list_detail ON non_ccm_locations.`pallet` = list_detail.pk_id
-WHERE
-list_detail.list_master_id =" . Model_ListMaster::PALLET);
+        max(list_detail.list_value) as maxVal
+        FROM
+        non_ccm_locations
+        INNER JOIN list_detail ON non_ccm_locations.`pallet` = list_detail.pk_id
+        WHERE
+        list_detail.list_master_id =" . Model_ListMaster::PALLET);
+        
+echo "SELECT
+        max(list_detail.list_value) as maxVal
+        FROM
+        non_ccm_locations
+        INNER JOIN list_detail ON non_ccm_locations.`pallet` = list_detail.pk_id
+        WHERE
+        list_detail.list_master_id =" . Model_ListMaster::PALLET;
 
         $str_sql1->execute();
         $result = $str_sql1->fetchAll();
@@ -422,12 +427,12 @@ list_detail.list_master_id =" . Model_ListMaster::PALLET);
 
     public function getMinPallet() {
         $str_sql = $this->_em->getConnection()->prepare("SELECT
-min(list_detail.list_value)
-FROM
-non_ccm_locations
-INNER JOIN list_detail ON non_ccm_locations.`pallet` = list_detail.pk_id
-WHERE
-list_detail.list_master_id =" . Model_ListMaster::PALLET);
+        min(list_detail.list_value)
+        FROM
+        non_ccm_locations
+        INNER JOIN list_detail ON non_ccm_locations.`pallet` = list_detail.pk_id
+        WHERE
+        list_detail.list_master_id =" . Model_ListMaster::PALLET);
 
         $str_sql->execute();
         $result = $str_sql->fetchAll();
@@ -440,18 +445,18 @@ list_detail.list_master_id =" . Model_ListMaster::PALLET);
 
     public function getNonCcmLocationId($bin_id) {
         $str_sql = "SELECT
-placement_locations.location_id
-FROM
-placement_locations
-WHERE
-placement_locations.pk_id =" . $bin_id;
+        placement_locations.location_id
+        FROM
+        placement_locations
+        WHERE
+        placement_locations.pk_id =" . $bin_id;
 
         $str_sql1 = $this->_em->getConnection()->prepare($str_sql);
 
         $str_sql1->execute();
         $result = $str_sql1->fetchAll();
         if (count($result) > 0) {
-            //return $result;
+            
             return $result[0]['location_id'];
         } else {
             return false;

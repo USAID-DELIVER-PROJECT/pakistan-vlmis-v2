@@ -9,11 +9,11 @@ $(function() {
     $("#update-vvm-types").validate({
         rules: {
             vvm_type_name: "required",
-            item_pack_size_id: "required"
+//            item_pack_size_id: "required"
         },
         messages: {
             vvm_type_name: "Please enter vvm type name.",
-            item_pack_size_id: "Select Item."
+//            item_pack_size_id: "Select Item."
         }
     });
 

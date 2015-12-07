@@ -49,7 +49,7 @@ class Zend_View_Helper_ExplorerReport extends Zend_View_Helper_Abstract {
                 ->select('wd.pkId as pk_id, wd.openingBalance as opening_balance, wd.receivedBalance as received_balance, wd.issueBalance as issue_balance,'
                         . 'wd.closingBalance as closing_balance, wd.vialsUsed as vials_used, wd.adjustments,'
                         . 'wd.reportingStartDate as reporting_start_date, wd.nearestExpiry as nearest_expiry')
-                ->from('WarehousesData', "wd")
+                ->from('HfDataMaster', "wd")
                 ->where("wd.warehouse = '" . $wh_id . "'")
                 ->andWhere("wd.itemPackSize = '" . $item_id . "' ")
                 ->andWhere("wd.reportingStartDate = '" . $previous_selected . "' ");

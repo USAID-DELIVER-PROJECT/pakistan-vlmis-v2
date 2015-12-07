@@ -6,30 +6,18 @@ class Form_Iadmin_SetupBarcode extends Zend_Form {
         "item_pack_size_id" => "Product",
         "item_pack_size_id_update" => "Product",
         "stakeholder_id" => "Manufacturer",
-        "stakeholder_id_update" => "Manufacturer",
-        "barcode_type" => "Barcode Type",
+        "stakeholder_id_update" => "Manufacturer",       
         "item_gtin" => "Item GTIN",
-        "gtin" => "Gtin",
-        "batch" => "Batch",
-        "expiry" => "expiry",
-        "gtin_start_position" => "GTIN Start Position",
-        "batch_no_start_position" => "Batch No  Start Position",
-        "expiry_date_start_position" => "Expiry Date Start Position",
-        "gtin_end_position" => "GTIN End POsition",
-        "batch_no_end_position" => "Batch No End POsition",
-        "expiry_date_end_position" => "Expiry Date End POsition",
         "pack_size_description" => "Pack Size",
         "length" => "Length",
         "width" => "Width",
         "height" => "Height",
         "packaging_level" => "Packaging Level",
-         "packaging_level_update" => "Packaging Level",
-        "batch_length" => "Batch Length",
-        //"expiry_date_format" => "Expiry Date Format",
+         "packaging_level_update" => "Packaging Level",      
         "quantity_per_pack" => "Vials Pcs",
-        "volume_per_unit_net" => "Volume",
-            //"pre_printed_barcode" => "Pre Printed Barcode",
+        "volum_per_vial" => "Volume",
     );
+    
     private $_list = array(
         'item_pack_size_id' => array(),
         'stakeholder_id' => array('' => "Select Manufacturer"),
@@ -37,24 +25,7 @@ class Form_Iadmin_SetupBarcode extends Zend_Form {
         'packaging_level' => array(),
         'packaging_level_update' => array()
     );
-    private $_checkbox = array(
-        'gtin' => array(
-            "0" => "No Gtin",
-            "1" => "Gtin",
-        ),
-        'batch' => array(
-            "0" => "No Batch",
-            "1" => "Batch",
-        ),
-        'expiry' => array(
-            "0" => "No Expiry",
-            "1" => "Expiry",
-        ),
-            /* 'pre_printed_barcode' => array(
-              "0" => "No Barcode",
-              "1" => "Barcode",
-              ), */
-    );
+   
     private $_hidden = array(
         "barcode_id" => "",
         "barcode_ty_id" => "",
@@ -75,17 +46,7 @@ class Form_Iadmin_SetupBarcode extends Zend_Form {
             }
         }
 
-        //Generate Manufacturer Combo
-        /* $stakeholder = new Model_Stakeholders();
-          $result1 = $stakeholder->getManufacturer();
-          $this->_list["stakeholder_id"][''] = "Select Manufacturer";
-          if ($result1) {
-          foreach ($result1 as $manufacturer) {
-          $this->_list["stakeholder_id"][$manufacturer['pkId']] = $manufacturer['stakeholderName'];
-          }
-          } */
-
-        //Generate Batch Type Combo
+        //Generate Pack type combo
         $list = new Model_ListDetail();
         $list->form_values = array('listMaster' => Model_ListMaster::packaging_level);
         $result2 = $list->getListDetail();
@@ -97,17 +58,6 @@ class Form_Iadmin_SetupBarcode extends Zend_Form {
                    $this->_list["packaging_level_update"][$packagingLevel->getPkId()] = $packagingLevel->getListValue();
             }
         }
-
-        /* /Generate Expiry Date Format Combo
-          $list = new Model_ListDetail();
-          $list->form_values = array('listMaster' => Model_ListMaster::EXPIRY_DATE_FORMAT);
-          $result3 = $list->getListDetail();
-          $this->_list["expiry_date_format"][''] = "Select Expiry Date Format";
-          if ($result3) {
-          foreach ($result3 as $expirydateformat) {
-          $this->_list["expiry_date_format"][$expirydateformat->getPkId()] = $expirydateformat->getListValue();
-          }
-          } */
 
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
@@ -126,17 +76,9 @@ class Form_Iadmin_SetupBarcode extends Zend_Form {
 
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
-                case "item_gtin":
-                case "batch_length":
-                case "gtin_start_position":
-                case "batch_no_start_position":
-                case "expiry_date_start_position":
-                case "gtin_end_position":
-                case "batch_no_end_position":
-                case "expiry_date_end_position":
-                //case "expiry_date_format";
+                case "item_gtin":              
                 case "quantity_per_pack":
-                case "volume_per_unit_net":
+                case "volum_per_vial":
                     $this->addElement("text", $col, array(
                         "attribs" => array("class" => "form-control"),
                         "allowEmpty" => true,
@@ -144,17 +86,7 @@ class Form_Iadmin_SetupBarcode extends Zend_Form {
                         "validators" => array()
                     ));
                     $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                /* case "expiry_date_format":
-                  $this->addElement("text", $col, array(
-                  "attribs" => array("class" => "form-control"),
-                  "allowEmpty" => true,
-                  "filters" => array("StringTrim", "StripTags"),
-                  "validators" => array()
-                  ));
-                  $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                  $this->getElement($col)->setValue("YYMMDD");
-                  break; */
+                    break;               
                 case "pack_size_description";
                     $this->addElement("text", $col, array(
                         "attribs" => array("class" => "form-control"),
@@ -164,18 +96,6 @@ class Form_Iadmin_SetupBarcode extends Zend_Form {
                     ));
                     $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
                     break;
-                case "gtin":
-                case "batch":
-                case "expiry":
-                    $this->addElement("checkbox", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-
                 case "length";
                     $this->addElement("text", $col, array(
                         "attribs" => array("class" => "form-control", "placeholder" => "Length"),
@@ -203,16 +123,6 @@ class Form_Iadmin_SetupBarcode extends Zend_Form {
                     ));
                     $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
                     break;
-                case "pre_printed_barcode":
-                    $this->addElement("checkbox", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-
                 default:
                     break;
             }
@@ -245,8 +155,6 @@ class Form_Iadmin_SetupBarcode extends Zend_Form {
 
                 case "item_pack_size_id_hidden":
                 case "stakeholder_id_update_hidden":
-
-
                     $this->addElement("hidden", $col);
                     $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
                     break;
@@ -281,36 +189,11 @@ class Form_Iadmin_SetupBarcode extends Zend_Form {
     public function readFields() {
         $this->getElement('item_pack_size_id')->setAttrib("disabled", "true");
         $this->getElement('stakeholder_id')->setAttrib("disabled", "true");
-        $this->getElement('barcode_type')->setAttrib("disabled", "true");
-        $this->getElement('gtin_start_position')->setAttrib("disabled", "true");
-        $this->getElement('batch_no_start_position')->setAttrib("disabled", "true");
-        $this->getElement('expiry_date_start_position')->setAttrib("disabled", "true");
-        //$this->getElement('expiry_date_format')->setAttrib("disabled", "true");
-        $this->getElement('gtin_end_position')->setAttrib("disabled", "true");
-        $this->getElement('batch_no_end_position')->setAttrib("disabled", "true");
-        $this->getElement('expiry_date_end_position')->setAttrib("disabled", "true");
         $this->getElement('pack_size_description')->setAttrib("readonly", "true");
         $this->getElement('length')->setAttrib("disabled", "true");
         $this->getElement('width')->setAttrib("disabled", "true");
         $this->getElement('height')->setAttrib("disabled", "true");
         $this->getElement('quantity_per_pack')->setAttrib("disabled", "true");
-        $this->getElement('volume_per_unit_net')->setAttrib("disabled", "true");
-        $this->getElement('pre_printed_barcode')->setAttrib("disabled", "true");
-        $this->getElement('gtin')->setAttrib("disabled", "true");
-        $this->getElement('batch')->setAttrib("disabled", "true");
-        $this->getElement('expiry')->setAttrib("disabled", "true");
+        $this->getElement('volum_per_vial')->setAttrib("disabled", "true");
     }
-
-    public function readOnlyFields() {
-        $this->getElement('gtin_start_position')->setAttrib("readonly", "true");
-        $this->getElement('batch_no_start_position')->setAttrib("readonly", "true");
-        $this->getElement('expiry_date_start_position')->setAttrib("readonly", "true");
-        $this->getElement('gtin_end_position')->setAttrib("readonly", "true");
-        $this->getElement('batch_no_end_position')->setAttrib("readonly", "true");
-        $this->getElement('expiry_date_end_position')->setAttrib("readonly", "true");
-        $this->getElement('gtin')->setAttrib("disabled", "true");
-        $this->getElement('batch')->setAttrib("disabled", "true");
-        $this->getElement('expiry')->setAttrib("disabled", "true");
-    }
-
 }

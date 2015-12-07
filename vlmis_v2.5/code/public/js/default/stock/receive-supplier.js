@@ -430,7 +430,7 @@ $('#activity_id').change(function (e) {
         type: "POST",
         url: appName + "/stock/ajax-get-products-by-stakeholder-activity",
         data: {
-            activity_id: activity_id, type: 1
+            activity_id: activity_id, type: 2
         },
         dataType: 'html',
         success: function (data) {

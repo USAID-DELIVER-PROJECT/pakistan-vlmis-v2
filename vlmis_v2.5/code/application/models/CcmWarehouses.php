@@ -288,41 +288,7 @@ class Model_CcmWarehouses extends Model_Base {
                     ) b
                    GROUP BY
                     FacilityType";
-        //echo $str_qry;exit;
-        /* $str_qry = "select FacilityType, 
-          sum(b.surplus30) as surplus30,
-          sum(b.surplus1030) as surplus1030,
-          sum(b.match10) as match10,
-          sum(b.shortage1030) as shortage1030,
-          Sum(b.shortage30) AS shortage30 from (
-          SELECT
-          a.FacilityType, Required, ActualCap, Difference,
-          IF (Difference / Required > 0.3, 1, 0) AS surplus30,
-          IF (Difference / Required < 0.3 AND Difference / Required > 0.1, 1, 0) AS surplus1030,
-          IF (Difference / Required <= 0.1 AND Difference / Required >= - 0.1, 1, 0) AS match10,
-          IF (Difference / Required < - 0.1 AND Difference / Required > - 0.3, 1, 0) AS shortage1030,
-          IF (Difference / Required < - 0.3, 1, 0) AS shortage30
-          FROM
-          (
-          SELECT
-          Province.location_name AS Province,
-          locations.location_name AS District,
-          warehouses.warehouse_name AS FacilityName,
-          warehouse_types.warehouse_type_name AS FacilityType,
-          (warehouse_population.capacity_4degree) AS ActualCap,
-          (warehouse_population.requirments_4degree) AS Required,
-          (warehouse_population.capacity_4degree) - (warehouse_population.requirments_4degree) AS Difference
-          FROM
-          warehouses
-          INNER JOIN warehouse_types ON warehouses.warehouse_type_id = warehouse_types.pk_id
-          INNER JOIN warehouse_population ON warehouse_population.warehouse_id = warehouses.pk_id
-          INNER JOIN locations ON warehouses.district_id = locations.pk_id
-          INNER JOIN locations AS Province ON warehouses.province_id = Province.pk_id
-          " . $str_where . "
-          ORDER BY
-          warehouse_types.geo_level_id ASC
-          ) a )b GROUP BY FacilityType"; */
-        //echo $str_qry;
+       
 
         $row = $this->_em->getConnection()->prepare($str_qry);
         $row->execute();
@@ -502,50 +468,50 @@ class Model_CcmWarehouses extends Model_Base {
 
         $str_qry = "
                    SELECT
- b.FacilityType,
- sum(b.surplus30) AS surplus30,
- sum(b.surplus1030) AS surplus1030,
- sum(b.match10) AS match10,
- sum(b.shortage1030) AS shortage1030,
- Sum(b.shortage30) AS shortage30
-FROM
- (
-  SELECT
-   a.FacilityType,
-  IF (
-   Difference / Required > 0.3,
-   1,
-   0
-  ) AS surplus30,
+                    b.FacilityType,
+                    sum(b.surplus30) AS surplus30,
+                    sum(b.surplus1030) AS surplus1030,
+                    sum(b.match10) AS match10,
+                    sum(b.shortage1030) AS shortage1030,
+                    Sum(b.shortage30) AS shortage30
+                   FROM
+                    (
+                     SELECT
+                      a.FacilityType,
+                     IF (
+                      Difference / Required > 0.3,
+                      1,
+                      0
+                     ) AS surplus30,
 
- IF (
-  Difference / Required <= 0.3
-  AND Difference / Required > 0.1,
-  1,
-  0
- ) AS surplus1030,
+                    IF (
+                     Difference / Required <= 0.3
+                     AND Difference / Required > 0.1,
+                     1,
+                     0
+                    ) AS surplus1030,
 
-IF (
- Difference / Required <= 0.1
- AND Difference / Required >= - 0.1,
- 1,
- 0
-) AS match10,
+                   IF (
+                    Difference / Required <= 0.1
+                    AND Difference / Required >= - 0.1,
+                    1,
+                    0
+                   ) AS match10,
 
-IF (
- Difference / Required < - 0.1
- AND Difference / Required >= - 0.3,
- 1,
- 0
-) AS shortage1030,
+                   IF (
+                    Difference / Required < - 0.1
+                    AND Difference / Required >= - 0.3,
+                    1,
+                    0
+                   ) AS shortage1030,
 
-IF (
- Difference / Required < - 0.3,
- 1,
- 0
-) AS shortage30
-FROM
- (SELECT
+                   IF (
+                    Difference / Required < - 0.3,
+                    1,
+                    0
+                   ) AS shortage30
+                   FROM
+                    (SELECT
 
                         warehouse_types.warehouse_type_name AS FacilityType,
                         warehouses.ccem_id AS FacilityCode,
@@ -558,10 +524,9 @@ FROM
                         INNER JOIN cold_chain ON cold_chain.warehouse_id = warehouses.pk_id
                         INNER JOIN warehouse_population ON warehouses.pk_id = warehouse_population.warehouse_id
                    WHERE
-                        cold_chain.ccm_asset_type_id = 2
+                        cold_chain.ccm_asset_type_id = ".Model_CcmAssetTypes::VACCINECARRIER."
                         " . $str_where . "
- )a)b group by FacilityType
-                    ";
+                    )a)b group by FacilityType";
         //die($str_qry);
         $row = $this->_em->getConnection()->prepare($str_qry);
         $row->execute();
@@ -587,8 +552,8 @@ FROM
                     INNER JOIN ccm_asset_types AS AssetMainType ON AssetSubtype.parent_id = AssetMainType.pk_id
                     INNER JOIN ccm_status_history ON cold_chain.ccm_status_history_id = ccm_status_history.pk_id
                 WHERE
-                    AssetMainType.pk_id = 1
-                   and warehouses.status = 1
+                    AssetMainType.pk_id = ".Model_CcmAssetTypes::REFRIGERATOR."
+                   and warehouses.status = ".Model_CcmAssetTypes::REFRIGERATOR."
                 GROUP BY
                     warehouse_types.pk_id,
                     AssetSubtype.pk_id

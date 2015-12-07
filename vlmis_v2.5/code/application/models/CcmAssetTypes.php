@@ -21,6 +21,8 @@ class Model_CcmAssetTypes extends Model_Base {
     const VOLTAGEREGULATOR = 5;
     const GENERATOR = 6;
     const TRANSPORT = 7;
+    const SUBCOLDROOM = 36;
+    const SUBFREEZERROOM = 37;
 
     public function __construct() {
         parent::__construct();

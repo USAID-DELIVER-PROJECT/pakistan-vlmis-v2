@@ -42,7 +42,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->stk = $stk;
             $this->view->actionpage = 'national-report';
         } else {
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             //$year = $warehouse_data->getMaxYear();
             $year = date("Y");
             $warehouse_data->getMaxMonth($year);
@@ -173,7 +173,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $item = $item_pack_sizes->productsReport();
 
         if (!empty($this->_request->year_sel) && !empty($this->_request->month_sel)) {
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $year = $this->_request->year_sel;
             $month = $this->_request->month_sel;
             $this->view->year_sel = $year;
@@ -202,7 +202,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->counter = 1;
             $this->view->actionpage = 'provincial-report';
         } else {
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $year = date("Y");
 //            if (date('d') > 10) {
 //                $month = date("m", strtotime("-1"));
@@ -289,7 +289,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $item = $item_pack_sizes->productsReport();
 
             $this->view->item_id = $item;
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $year = date("Y");
             if (date('d') > 10) {
                 $month = date("m", strtotime("-1"));
@@ -371,7 +371,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $item = $item_pack_sizes->productsReport();
 
             $this->view->item_id = $item;
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $year = date("Y");
 //            if (date('d') > 10) {
 //                $month = date("m", strtotime("-1"));
@@ -482,7 +482,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $item_pack_sizes = new Model_ItemPackSizes();
             $item = $item_pack_sizes->productsReport();
             $this->view->item_id = $item;
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $year = date("Y");
 //            if (date('d') > 10) {
 //                $month = date("m", strtotime("-1"));
@@ -623,7 +623,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $item = $item_pack_sizes->productsReport();
 
             $this->view->item_id = $item;
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $year = date("Y");
 //            if (date('d') > 10) {
 //                $month = date("m", strtotime("-1"));
@@ -1444,7 +1444,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $q_str_pro = '';
         $q_str_prov = '';
         $sel_prov = '';
-        $warehouses_data = new Model_WarehousesData();
+        $warehouses_data = new Model_HfDataMaster();
         $item_pack_sizes = new Model_ItemPackSizes();
         $locations = new Model_Locations();
         $stakeholders = new Model_Stakeholders();
@@ -1674,7 +1674,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
 
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_request->getPost())) {
-                $warehouse_data = new Model_WarehousesData();
+                $warehouse_data = new Model_HfDataMaster();
                 $warehouse_data->form_values = $form->getValues();
                 $this->view->xml_store = $warehouse_data->getStockAnalysisDistrictWiseReport();
             }

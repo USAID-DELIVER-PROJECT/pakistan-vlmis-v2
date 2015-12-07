@@ -35,6 +35,7 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
             if (!empty($form_values['combo4'])) {
                 $params['combo4'] = $form_values['combo4'];
             }
+            $counter = $this->_getParam("counter", 10);
             $sort = $this->_getParam("sort", "asc");
             $order = $this->_getParam("order", "store");
             $warehouses->form_values = $this->_request->getPost();
@@ -56,6 +57,7 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
             $this->view->counter = $counter;
             $this->view->pagination_params = $params;
         } else {
+            $counter = $this->_getParam("counter", 10);
             $sort = $this->_getParam("sort", "asc");
             $order = $this->_getParam("order", "store");
             $warehouses->form_values = $this->_request->getParams();

@@ -20,11 +20,6 @@ class CcmHistory
     private $quantity;
 
     /**
-     * @var integer $action
-     */
-    private $action;
-
-    /**
      * @var datetime $createdDate
      */
     private $createdDate;
@@ -35,9 +30,9 @@ class CcmHistory
     private $modifiedDate;
 
     /**
-     * @var Users
+     * @var ListDetail
      */
-    private $modifiedBy;
+    private $action;
 
     /**
      * @var ColdChain
@@ -53,6 +48,11 @@ class CcmHistory
      * @var Warehouses
      */
     private $warehouse;
+
+    /**
+     * @var Users
+     */
+    private $modifiedBy;
 
 
     /**
@@ -83,26 +83,6 @@ class CcmHistory
     public function getQuantity()
     {
         return $this->quantity;
-    }
-
-    /**
-     * Set action
-     *
-     * @param integer $action
-     */
-    public function setAction($action)
-    {
-        $this->action = $action;
-    }
-
-    /**
-     * Get action
-     *
-     * @return integer 
-     */
-    public function getAction()
-    {
-        return $this->action;
     }
 
     /**
@@ -146,23 +126,23 @@ class CcmHistory
     }
 
     /**
-     * Set modifiedBy
+     * Set action
      *
-     * @param Users $modifiedBy
+     * @param ListDetail $action
      */
-    public function setModifiedBy(\Users $modifiedBy)
+    public function setAction(\ListDetail $action)
     {
-        $this->modifiedBy = $modifiedBy;
+        $this->action = $action;
     }
 
     /**
-     * Get modifiedBy
+     * Get action
      *
-     * @return Users 
+     * @return ListDetail 
      */
-    public function getModifiedBy()
+    public function getAction()
     {
-        return $this->modifiedBy;
+        return $this->action;
     }
 
     /**
@@ -223,5 +203,25 @@ class CcmHistory
     public function getWarehouse()
     {
         return $this->warehouse;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
     }
 }

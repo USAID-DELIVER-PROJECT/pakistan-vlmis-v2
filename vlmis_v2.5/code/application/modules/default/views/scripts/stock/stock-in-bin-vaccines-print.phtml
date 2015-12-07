@@ -57,12 +57,12 @@
                             $serial_num++;
                             ?>
                             <tr class="gradeX">
-                                <td><?php echo $serial_num;?></td>
+                                <td class="center"><?php echo $serial_num; ?></td>
                                 <td class="left"><?php echo $row->getItemName(); ?></td>
                                 <td class="left"><?php echo $row->getBatchNumber(); ?></td>
-                                <!--<td class="right"><?php //echo $row->getCartons();       ?></td> -->
+                                <!--<td class="right"><?php //echo $row->getCartons();         ?></td> -->
                                 <td class="right"><?php echo number_format($row->getQuantity()); ?></td>
-                                <td class="left"><?php echo ($row->getStockBatch()->getItemPackSize()->getVvmGroup() == 1 ? $row->getVvmStage()->getPkId() : $row->getVvmStage()->getVvmStageValue() ); ?></td>
+                                <td class="right"><?php echo ($row->getStockBatch()->getItemPackSize()->getVvmGroup()->getPkId() == 1 ? $row->getVvmStage()->getPkId() : $row->getVvmStage()->getVvmStageValue() ); ?></td>
                             </tr>
                             <?php
                         }

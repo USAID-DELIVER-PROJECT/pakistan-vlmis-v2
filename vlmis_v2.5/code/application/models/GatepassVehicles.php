@@ -25,7 +25,7 @@ class Model_GatepassVehicles extends Model_Base {
                 ->select('gpv.pkId', 'gpv.number')
                 ->from("GatepassVehicles", "gpv")
                 ->where("gpv.vehicleType = " . $this->form_values['vehicle_type_id']);
-        //echo $str_sql->getQuery()->getSql();exit;
+      
         $result = $str_sql->getQuery()->getResult();
 
         return $result;

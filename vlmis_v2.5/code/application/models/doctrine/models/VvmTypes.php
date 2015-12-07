@@ -25,11 +25,6 @@ class VvmTypes
     private $status;
 
     /**
-     * @var integer $itemPackSizeId
-     */
-    private $itemPackSizeId;
-
-    /**
      * @var datetime $createdDate
      */
     private $createdDate;
@@ -42,12 +37,12 @@ class VvmTypes
     /**
      * @var Users
      */
-    private $modifiedBy;
+    private $createdBy;
 
     /**
      * @var Users
      */
-    private $createdBy;
+    private $modifiedBy;
 
 
     /**
@@ -101,26 +96,6 @@ class VvmTypes
     }
 
     /**
-     * Set itemPackSizeId
-     *
-     * @param integer $itemPackSizeId
-     */
-    public function setItemPackSizeId($itemPackSizeId)
-    {
-        $this->itemPackSizeId = $itemPackSizeId;
-    }
-
-    /**
-     * Get itemPackSizeId
-     *
-     * @return integer 
-     */
-    public function getItemPackSizeId()
-    {
-        return $this->itemPackSizeId;
-    }
-
-    /**
      * Set createdDate
      *
      * @param datetime $createdDate
@@ -161,26 +136,6 @@ class VvmTypes
     }
 
     /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
      * Set createdBy
      *
      * @param Users $createdBy
@@ -198,5 +153,25 @@ class VvmTypes
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
     }
 }

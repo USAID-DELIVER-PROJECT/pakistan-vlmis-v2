@@ -66,18 +66,6 @@ class StakeholdersProxy extends \Stakeholders implements \Doctrine\ORM\Proxy\Pro
         return parent::getListRank();
     }
 
-    public function setMainStakeholder($mainStakeholder)
-    {
-        $this->__load();
-        return parent::setMainStakeholder($mainStakeholder);
-    }
-
-    public function getMainStakeholder()
-    {
-        $this->__load();
-        return parent::getMainStakeholder();
-    }
-
     public function setCreatedDate($createdDate)
     {
         $this->__load();
@@ -102,16 +90,16 @@ class StakeholdersProxy extends \Stakeholders implements \Doctrine\ORM\Proxy\Pro
         return parent::getModifiedDate();
     }
 
-    public function setParent(\Stakeholders $parent)
+    public function setMainStakeholder(\Stakeholders $mainStakeholder)
     {
         $this->__load();
-        return parent::setParent($parent);
+        return parent::setMainStakeholder($mainStakeholder);
     }
 
-    public function getParent()
+    public function getMainStakeholder()
     {
         $this->__load();
-        return parent::getParent();
+        return parent::getMainStakeholder();
     }
 
     public function setStakeholderType(\StakeholderTypes $stakeholderType)
@@ -186,10 +174,22 @@ class StakeholdersProxy extends \Stakeholders implements \Doctrine\ORM\Proxy\Pro
         return parent::getModifiedBy();
     }
 
+    public function setParent(\Stakeholders $parent)
+    {
+        $this->__load();
+        return parent::setParent($parent);
+    }
+
+    public function getParent()
+    {
+        $this->__load();
+        return parent::getParent();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'stakeholderName', 'listRank', 'mainStakeholder', 'createdDate', 'modifiedDate', 'parent', 'stakeholderType', 'stakeholderSector', 'geoLevel', 'stakeholderActivity', 'createdBy', 'modifiedBy');
+        return array('__isInitialized__', 'pkId', 'stakeholderName', 'listRank', 'createdDate', 'modifiedDate', 'mainStakeholder', 'stakeholderType', 'stakeholderSector', 'geoLevel', 'stakeholderActivity', 'createdBy', 'modifiedBy', 'parent');
     }
 
     public function __clone()

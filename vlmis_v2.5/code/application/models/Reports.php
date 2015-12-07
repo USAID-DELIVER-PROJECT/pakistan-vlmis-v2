@@ -202,7 +202,7 @@ class Model_Reports extends Model_Base {
 
             $str_sql = $this->_em->createQueryBuilder()
                     ->select("IF(max(wd.modifiedDate) > 0,max(wd.modifiedDate), 0) as MaxDate")
-                    ->from("WarehousesData", "wd")
+                    ->from("HfDataMaster", "wd")
                     ->where("wd.warehouse = " . $this->form_values['wh_id']);
 //echo $str_sql->getQuery()->getSql();
 //exit;
@@ -232,7 +232,7 @@ class Model_Reports extends Model_Base {
     /* public function getLast3Months() {
       $str_sql = $this->_em->createQueryBuilder()
       ->select("DATE_FORMAT(wd.reportingStartDate,'%Y-%m-%d') as MaxDate")
-      ->from("WarehousesData", "wd")
+      ->from("HfDataMaster", "wd")
       ->where("wd.warehouse =  " . $this->form_values['wh_id']);
 
       /* if ($this->form_values['wh_id'] == 427) {

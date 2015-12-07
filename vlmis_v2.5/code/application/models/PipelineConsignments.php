@@ -315,7 +315,7 @@ class Model_PipelineConsignments extends Model_Base {
         /*
          * Adjust Warehouse data for selected month and item
          */
-        $warehouse_data = new Model_WarehousesData();
+        $warehouse_data = new Model_HfDataMaster();
         $warehouse_data->form_values = array(
             'report_month' => date("m"),
             'report_year' => date("Y"),
@@ -512,7 +512,7 @@ class Model_PipelineConsignments extends Model_Base {
         /*
          * Adjust Warehouse data for selected month and item
          */
-        $warehouse_data = new Model_WarehousesData();
+        $warehouse_data = new Model_HfDataMaster();
         $warehouse_data->form_values = array(
             'report_month' => date("m"),
             'report_year' => date("Y"),
@@ -654,7 +654,7 @@ class Model_PipelineConsignments extends Model_Base {
                 ->from("PipelineConsignments", "fa")
                 ->where("fa.fromWarehouse = " . $wh_id)
                 ->andWhere("fa.status != 'Received'")
-                ->andWhere("fa.transactionType = 2")
+                ->andWhere("fa.transactionType = ".Model_TransactionTypes::TRANSACTION_ISSUE."")
                 ->andWhere("fa.itemPackSize IN (" . Zend_Registry::get('barcode_products') . ")");
         $rows = $str_sql->getQuery()->getResult();
         if (count($rows) > 0) {

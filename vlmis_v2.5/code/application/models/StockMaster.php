@@ -633,7 +633,7 @@ class Model_StockMaster extends Model_Base {
 
             $this->deleteStockMaster($master_id);
 
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->form_values['report_month'] = $month;
             $warehouse_data->form_values['report_year'] = $year;
             $warehouse_data->form_values['item_id'] = $item;
@@ -647,7 +647,7 @@ class Model_StockMaster extends Model_Base {
 
         /* $stock_batch = new Model_StockBatch;
           $stock_detail = new Model_StockDetail();
-          $warehouse_data = new Model_WarehousesData();
+          $warehouse_data = new Model_HfDataMaster();
 
           $params = $warehouse_data->getStockReportParams($id);
           $result = $stock_detail->getQuantityById($id);
@@ -720,7 +720,7 @@ class Model_StockMaster extends Model_Base {
     public function getAllItemStock() {
         $wh_id = $this->_identity->getWarehouseId();
         $where = array();
-
+        $sa_select='';
         if (!empty($this->form_values['number'])) {
             switch ($this->form_values['searchby']) {
                 case 1:
@@ -974,7 +974,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->join("b.itemPackSize", "p")
                 ->join("p.itemUnit", "i")
                 ->where("$where_s")
-                ->orderBy("s.transactionDate,p.itemName,tw.warehouseName");
+                ->orderBy("p.listRank,s.transactionDate,tw.warehouseName");
 //echo $str_sql->getQuery()->getSql();
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
@@ -1004,7 +1004,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
             $where[] = "s.transactionReference like '" . $this->form_values['number'] . "%'";
         }
         if (!empty($this->form_values['warehouses'])) {
-            $where[] = "s.toWarehouse  = '" . $this->form_values['warehouses'] . "'";
+            $where[] = "s.fromWarehouse  = '" . $this->form_values['warehouses'] . "'";
         }
         if (!empty($this->form_values['product'])) {
             $where[] = "b.itemPackSize = '" . $this->form_values['product'] . "'";
@@ -1042,7 +1042,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->join("b.itemPackSize", "p")
                 ->join("p.itemUnit", "i")
                 ->where("$where_s")
-                ->orderBy("s.transactionDate,p.itemName,tw.warehouseName");
+                ->orderBy("p.listRank,s.transactionDate,tw.warehouseName");
         //echo $str_sql->getQuery()->getSql();
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
@@ -2011,7 +2011,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
               $newdate = App_Controller_Functions::dateFormat($tdate, "-1 month", "d/m/Y");
 
               $qty = abs($stockdata['quantity']);
-              $wh_data = new Model_WarehousesData();
+              $wh_data = new Model_HfDataMaster();
               $cboflastmonth = $wh_data->closingBalanceOfMonth(App_Controller_Functions::monthFromDate($newdate), App_Controller_Functions::yearFromDate($newdate), $to_wh_id, $product);
               $wh_data->form_values['reporting_start_date'] = $year . "-" . $month . "-01";
               $wh_data->form_values['item_id'] = $product;
@@ -2212,7 +2212,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
 
         $stock_detail_id = $stock_detail->getPkId();
         $stock_batch = new Model_StockBatch();
-        $warehouse_data = new Model_WarehousesData();
+        $warehouse_data = new Model_HfDataMaster();
         $stock_batch->adjustQuantityBywarehouse($batch_id);
         $warehouse_data->addReport($stock_ID, $type);
 
@@ -2544,7 +2544,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
             $obj_stock_batch->autoRunningLEFOBatch($obj_stock_detail->getStockBatch()->getItemPackSize()->getPkId());
         }
 
-        $warehouse_data = new Model_WarehousesData();
+        $warehouse_data = new Model_HfDataMaster();
         $warehouse_data->addReport($details[0]->getStockMaster()->getPkId(), 1, 'wh');
 
         return true;
@@ -2664,9 +2664,9 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                     $stock_batch->setItemPackSize($ips_id);
                     $stock_batch->setStatus('Stacked');
                     $stock_batch->setUnitPrice($stockBatch['0']['unitPrice']);
-                    $stock_batch->setProductionDate(new \DateTime($stockBatch[0]['productionDate']));
-                    if (!empty($stockBatch[0]['vvmType'])) {
-                        $vvm_id = $this->_em->getRepository('VvmTypes')->find($stockBatch[0]['vvmType']);
+                    $stock_batch->setProductionDate(new \DateTime($stockBatch[0]['productionDate']));                    
+                    if (!empty($stockBatch['0']['vvmType'])) {
+                        $vvm_id = $this->_em->getRepository('VvmTypes')->find($stockBatch['0']['vvmType']);
                         $stock_batch->setVvmType($vvm_id);
                     }
                     $wb_id = $this->_em->getRepository('Warehouses')->find($wh_id);
@@ -2800,7 +2800,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
 
 
 
-        $warehouse_data = new Model_WarehousesData();
+        $warehouse_data = new Model_HfDataMaster();
         $warehouse_data->addReport($stock_id, 1, 'wh');
 
         return true;
@@ -3140,7 +3140,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
       /*
      * Adjust Warehouse data for selected month and item
      */
-    /* $warehouse_data = new Model_WarehousesData();
+    /* $warehouse_data = new Model_HfDataMaster();
       $warehouse_data->form_values = array(
       'report_month' => date("m"),
       'report_year' => date("Y"),
@@ -4213,7 +4213,7 @@ UNION
             $this->_em->flush();
 
             // REP Update data for updating warehouse_data table
-            $wh_data = new Model_WarehousesData();
+            $wh_data = new Model_HfDataMaster();
             $stock_detail = $this->_em->getRepository("StockDetail")->findBy(array("stockMaster" => $id));
 
             if (count($stock_detail) > 0) {
@@ -4819,7 +4819,7 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
             distribution_plan
             INNER JOIN warehouses ON distribution_plan.receiver_warehouse_id = warehouses.pk_id
             WHERE
-            distribution_plan.sender_warehouse_id = '$wh_id') B  ON A.to_warehouse_id = B.receiver_warehouse_id
+            distribution_plan.sender_warehouse_id = '$wh_id' AND warehouses.status='".parent::ACTIVE."') B  ON A.to_warehouse_id = B.receiver_warehouse_id
             ORDER BY warehouse_name";
 
         $this->_em = Zend_Registry::get('doctrine');

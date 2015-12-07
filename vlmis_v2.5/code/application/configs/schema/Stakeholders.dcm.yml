@@ -21,11 +21,6 @@ Stakeholders:
       unsigned: false
       nullable: true
       column: list_rank
-    mainStakeholder:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: main_stakeholder
     createdDate:
       type: datetime
       nullable: true
@@ -35,13 +30,13 @@ Stakeholders:
       nullable: false
       column: modified_date
   oneToOne:
-    parent:
+    mainStakeholder:
       targetEntity: Stakeholders
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        parent_id:
+        main_stakeholder:
           referencedColumnName: pk_id
       orphanRemoval: false
     stakeholderType:
@@ -96,6 +91,15 @@ Stakeholders:
       inversedBy: null
       joinColumns:
         modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    parent:
+      targetEntity: Stakeholders
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        parent_id:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

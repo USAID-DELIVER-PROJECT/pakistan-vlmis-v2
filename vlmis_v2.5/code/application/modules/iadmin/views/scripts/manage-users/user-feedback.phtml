@@ -8,7 +8,7 @@
 <!-- Content -->
 <div class="page-content-wrapper">
     <div class="page-content">
-        <h3 class="page-title"><?php echo $this->translate("User Feedback") ?> </h3>
+        <h3 class="page-title"><?php echo $this->translate("Users Feedback") ?> </h3>
         <div class="row">
             <div class="col-md-12">
                 <div class="portlet box green">
@@ -75,7 +75,7 @@
                                                         <?php echo $j; ?>
                                                     </td>
                                                     <td style="font-size:12px;" align="left" nowrap>
-                                                        <?php echo date("d/m/y", strtotime($row['date'])); ?>
+                                                        <?php echo date("d/m/y", strtotime($row['created_date'])); ?>
                                                     </td>
                                                     <td style="font-size:12px" nowrap>
                                                         <?php echo $row['name'] ?>

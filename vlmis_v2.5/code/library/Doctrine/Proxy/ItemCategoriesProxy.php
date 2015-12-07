@@ -90,18 +90,6 @@ class ItemCategoriesProxy extends \ItemCategories implements \Doctrine\ORM\Proxy
         return parent::getModifiedDate();
     }
 
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->__load();
-        return parent::setModifiedBy($modifiedBy);
-    }
-
-    public function getModifiedBy()
-    {
-        $this->__load();
-        return parent::getModifiedBy();
-    }
-
     public function setCreatedBy(\Users $createdBy)
     {
         $this->__load();
@@ -114,10 +102,22 @@ class ItemCategoriesProxy extends \ItemCategories implements \Doctrine\ORM\Proxy
         return parent::getCreatedBy();
     }
 
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->__load();
+        return parent::setModifiedBy($modifiedBy);
+    }
+
+    public function getModifiedBy()
+    {
+        $this->__load();
+        return parent::getModifiedBy();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'itemCategoryName', 'status', 'createdDate', 'modifiedDate', 'modifiedBy', 'createdBy');
+        return array('__isInitialized__', 'pkId', 'itemCategoryName', 'status', 'createdDate', 'modifiedDate', 'createdBy', 'modifiedBy');
     }
 
     public function __clone()

@@ -456,7 +456,7 @@ class Model_Users extends Model_Base {
                         user_feedback.phone,
                         user_feedback.department,
                         user_feedback.message,
-                        user_feedback.date)
+                        user_feedback.created_date)
                     VALUES ( '$name', '$e_mail', '$phone', '$department', '$message', NOW()
                             )";
 
@@ -475,7 +475,7 @@ class Model_Users extends Model_Base {
                         user_feedback.phone,
                         user_feedback.department,
                         user_feedback.message,
-                        user_feedback.date
+                        user_feedback.created_date
                     FROM
                         user_feedback";
 

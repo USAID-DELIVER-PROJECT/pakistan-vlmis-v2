@@ -82,8 +82,7 @@ class Model_ListDetail extends Model_Base {
             } else {
                 $qry->orderBy("lm.pkId", 'ASC');
             }
-           // echo $qry->getQuery()->getSql();
-//exit;
+   
             return $qry->getQuery()->getResult();
         }
     }

@@ -64,7 +64,7 @@
                                     $Rackcounter = 0;
                                     $locationFound = 1;
                                     $hit = 0;
-                                    $data_arr = array();
+                                    //$data_arr = array();
                                     $data_arr = $this->result;
                                     
                                     $maxRows = $this->max_value_shelf;
@@ -73,7 +73,6 @@
                                     //print "MaxRw=".$maxRows." Max COls=".$maxCols;
 
                                     for ($rr = 1; $rr <= $maxRows; $rr++) {
-
                                         for ($cc = 1; $cc <= $maxCols; $cc++) {
                                             //print "<br>[".$hit."]<br>";
                                             //print_r($locArray);
@@ -92,7 +91,7 @@
                                                 }
                                                 
 
-                                                //print " Hit Pre=".$hit." RC=". $Rowcounter." | ". $rr ." | ". $row1 ." | ".  $cc ." | ". $rack ." | ". $pallet."<br>";
+                                                print " Hit Pre=".$hit." RC=". $Rowcounter." | ". $rr ." | ". $row1 ." | ".  $cc ." | ". $rack ." | ". $pallet."<br>";
                                                  
                                                 if ($rr == $row1 && $cc == $rack && $pallet == $pp) {
                                                     $locArray[$rr][$cc][$pp] = $locname . "|" . $plc_locid;
@@ -109,7 +108,7 @@
                                             }
                                         }
                                     }
-
+print_r($locArray);
                                     for ($a = 1; $a <= $maxRows; $a++):
                                         ?>
                                         <tr style="border: 3px solid #d3d3d3;" >

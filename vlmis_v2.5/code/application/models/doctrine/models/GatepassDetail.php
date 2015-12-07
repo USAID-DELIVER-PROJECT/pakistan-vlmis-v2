@@ -30,7 +30,7 @@ class GatepassDetail
     private $modifiedDate;
 
     /**
-     * @var StakeholderActivities
+     * @var StockDetail
      */
     private $stockDetail;
 
@@ -123,9 +123,9 @@ class GatepassDetail
     /**
      * Set stockDetail
      *
-     * @param StakeholderActivities $stockDetail
+     * @param StockDetail $stockDetail
      */
-    public function setStockDetail(\StakeholderActivities $stockDetail)
+    public function setStockDetail(\StockDetail $stockDetail)
     {
         $this->stockDetail = $stockDetail;
     }
@@ -133,7 +133,7 @@ class GatepassDetail
     /**
      * Get stockDetail
      *
-     * @return StakeholderActivities 
+     * @return StockDetail 
      */
     public function getStockDetail()
     {

@@ -260,7 +260,7 @@ class Model_CcmModels extends Model_Base {
                 ->from("ColdChain", "cc")
                 ->join("cc.ccmModel", "cmo")
                 ->join("cmo.ccmMake", "cma")
-                ->where("cc.ccmAssetType = 5");
+                ->where("cc.ccmAssetType = ". Model_CcmAssetTypes::VOLTAGEREGULATOR ." ");
         $result = $str_sql->getQuery()->getResult();
         return $result;
     }
@@ -400,24 +400,23 @@ class Model_CcmModels extends Model_Base {
                     warehouse_types.warehouse_type_name,
                     District.location_name,
                     Province.location_name
-FROM
- ccm_models
-INNER JOIN cold_chain ON cold_chain.ccm_model_id = ccm_models.pk_id
-INNER JOIN ccm_status_history ON cold_chain.ccm_status_history_id = ccm_status_history.pk_id
-INNER JOIN warehouses ON cold_chain.warehouse_id = warehouses.pk_id
-INNER JOIN warehouse_types ON warehouses.warehouse_type_id = warehouse_types.pk_id
-INNER JOIN locations AS District ON warehouses.district_id = District.pk_id
-INNER JOIN locations AS Province ON District.province_id = Province.pk_id
-INNER JOIN ccm_asset_types AS Asset_Type ON Asset_Type.pk_id = ccm_models.ccm_asset_type_id
-WHERE
- (
-                   Asset_Type.pk_id = " . Model_CcmAssetTypes::REFRIGERATOR . "
-                   OR Asset_Type.parent_id = " . Model_CcmAssetTypes::REFRIGERATOR . "
-                        )
- and warehouses.status = 1 
-                        " . $str_where . "
-                    GROUP BY
-                        ccm_models.pk_id
+                    FROM
+                     ccm_models
+                    INNER JOIN cold_chain ON cold_chain.ccm_model_id = ccm_models.pk_id
+                    INNER JOIN ccm_status_history ON cold_chain.ccm_status_history_id = ccm_status_history.pk_id
+                    INNER JOIN warehouses ON cold_chain.warehouse_id = warehouses.pk_id
+                    INNER JOIN warehouse_types ON warehouses.warehouse_type_id = warehouse_types.pk_id
+                    INNER JOIN locations AS District ON warehouses.district_id = District.pk_id
+                    INNER JOIN locations AS Province ON District.province_id = Province.pk_id
+                    INNER JOIN ccm_asset_types AS Asset_Type ON Asset_Type.pk_id = ccm_models.ccm_asset_type_id
+                    WHERE
+                    (Asset_Type.pk_id = " . Model_CcmAssetTypes::REFRIGERATOR . "
+                     OR Asset_Type.parent_id = " . Model_CcmAssetTypes::REFRIGERATOR . "
+                     )
+                     and warehouses.status = 1 
+                     " . $str_where . "
+                     GROUP BY
+                     ccm_models.pk_id
                     ";
         $row = $this->_em->getConnection()->prepare($str_qry);
         $row->execute();
@@ -463,8 +462,8 @@ WHERE
                             INNER JOIN ccm_asset_types AS Asset_Type ON Asset_Type.pk_id = ccm_models.ccm_asset_type_id
                             WHERE
                             (
-                                Asset_Type.pk_id = 1
-                                OR Asset_Type.parent_id = 1
+                                Asset_Type.pk_id = ".Model_CcmAssetTypes::REFRIGERATOR."
+                                OR Asset_Type.parent_id =  ".Model_CcmAssetTypes::REFRIGERATOR."
                             )
                             AND warehouses.status = 1 
                             " . $str_where . "
@@ -550,22 +549,21 @@ WHERE
            sum(b.>10 Years) as `>10 Years`,
            Sum(b.Unknown) AS `Unknown` 
            from (            
-SELECT
+        SELECT
 	ccm_models.ccm_model_name AS Model,
 	SUM(IF(ADDDATE(CURDATE(), INTERVAL -2 YEAR) < DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') AND DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') != '0000-00-00', 1, 0))AS `0-2 Years`,
 	SUM(IF(ADDDATE(CURDATE(), INTERVAL -2 YEAR) > DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') AND ADDDATE(CURDATE(), INTERVAL -5 YEAR) < DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') AND DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') != '0000-00-00', 1, 0)) AS `3-5 Years`,
 	SUM(IF(ADDDATE(CURDATE(), INTERVAL -5 YEAR) > DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') AND ADDDATE(CURDATE(), INTERVAL -10 YEAR) < DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') AND DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') != '0000-00-00', 1, 0)) AS `6-10 Years`,
 	SUM(IF(ADDDATE(CURDATE(), INTERVAL -10 YEAR) > DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') AND DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') != '0000-00-00', 1, 0)) AS `>10 Years`,
 	SUM(IF(DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') = '0000-00-00' || cold_chain.working_since IS NULL, 1, 0)) AS `Unknown`
-FROM
+        FROM
 	ccm_models
-INNER JOIN cold_chain ON cold_chain.ccm_model_id = ccm_models.pk_id
-                    GROUP BY
-                        ccm_models.pk_id
-                  LIMIT 0,10
-) b group by Model
-LIMIT 0,10
-                    ";
+        INNER JOIN cold_chain ON cold_chain.ccm_model_id = ccm_models.pk_id
+        GROUP BY
+        ccm_models.pk_id
+        LIMIT 0,10
+        ) b group by Model
+        LIMIT 0,10";
         $row = $this->_em->getConnection()->prepare($str_qry);
         $row->execute();
         return $row->fetchAll();
@@ -1364,9 +1362,9 @@ LIMIT 0,10
                     WHERE
                     
                        ( ccm_asset_types.pk_id = " . Model_CcmAssetTypes::VOLTAGEREGULATOR . " OR ccm_asset_types.parent_id = " . Model_CcmAssetTypes::VOLTAGEREGULATOR . "
-)
-and warehouses.status = 1
-" . $str_where . "
+                    )
+                    and warehouses.status = 1
+                    " . $str_where . "
                     GROUP BY
                         warehouse_types.pk_id,
                         ccm_models.pk_id,
@@ -1532,7 +1530,7 @@ and warehouses.status = 1
                         INNER JOIN cold_chain ON cold_chain.warehouse_id = warehouses.pk_id
                         INNER JOIN warehouse_population ON warehouses.pk_id = warehouse_population.warehouse_id
                    WHERE
-                        cold_chain.ccm_asset_type_id = 2
+                        cold_chain.ccm_asset_type_id = ".Model_CcmAssetTypes::VACCINECARRIER."
                         and warehouses.status = 1
                         " . $str_where . "
                    GROUP BY

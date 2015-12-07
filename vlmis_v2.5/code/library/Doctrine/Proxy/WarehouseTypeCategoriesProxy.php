@@ -54,10 +54,58 @@ class WarehouseTypeCategoriesProxy extends \WarehouseTypeCategories implements \
         return parent::getCategoryName();
     }
 
+    public function setCreatedDate($createdDate)
+    {
+        $this->__load();
+        return parent::setCreatedDate($createdDate);
+    }
+
+    public function getCreatedDate()
+    {
+        $this->__load();
+        return parent::getCreatedDate();
+    }
+
+    public function setModifiedDate($modifiedDate)
+    {
+        $this->__load();
+        return parent::setModifiedDate($modifiedDate);
+    }
+
+    public function getModifiedDate()
+    {
+        $this->__load();
+        return parent::getModifiedDate();
+    }
+
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->__load();
+        return parent::setModifiedBy($modifiedBy);
+    }
+
+    public function getModifiedBy()
+    {
+        $this->__load();
+        return parent::getModifiedBy();
+    }
+
+    public function setCreatedBy(\Users $createdBy)
+    {
+        $this->__load();
+        return parent::setCreatedBy($createdBy);
+    }
+
+    public function getCreatedBy()
+    {
+        $this->__load();
+        return parent::getCreatedBy();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'categoryName');
+        return array('__isInitialized__', 'pkId', 'categoryName', 'createdDate', 'modifiedDate', 'modifiedBy', 'createdBy');
     }
 
     public function __clone()

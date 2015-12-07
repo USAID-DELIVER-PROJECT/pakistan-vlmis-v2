@@ -80,11 +80,6 @@ class WarehousesData
     private $isCalculated;
 
     /**
-     * @var Users
-     */
-    private $modifiedBy;
-
-    /**
      * @var ItemPackSizes
      */
     private $itemPackSize;
@@ -93,6 +88,11 @@ class WarehousesData
      * @var Warehouses
      */
     private $warehouse;
+
+    /**
+     * @var Users
+     */
+    private $modifiedBy;
 
 
     /**
@@ -366,26 +366,6 @@ class WarehousesData
     }
 
     /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
      * Set itemPackSize
      *
      * @param ItemPackSizes $itemPackSize
@@ -423,5 +403,25 @@ class WarehousesData
     public function getWarehouse()
     {
         return $this->warehouse;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
     }
 }

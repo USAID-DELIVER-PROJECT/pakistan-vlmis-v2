@@ -46,7 +46,7 @@ class Model_LocationTypes extends Model_Base {
         if ( $this->form_values['status'] =='2') {
             $str_sql->ANDwhere("lt.status = '0'  ");
         }
-       //echo $str_sql->getQuery()->getSql();exit;
+   
        return $row = $str_sql->getQuery()->getResult();
       
     }

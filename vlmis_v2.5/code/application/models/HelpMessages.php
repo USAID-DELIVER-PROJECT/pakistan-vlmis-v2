@@ -50,14 +50,10 @@ class Model_HelpMessages extends Model_Base {
         if ($order == 'status') {
             $str_sql->orderBy("hp.status", $sort);
         }
-        //echo $str_sql->getQuery()->getSql();
+      
         $row = $str_sql->getQuery()->getResult();
         return $row;
-        /*if (!empty($row) && count($row) > 0) {
-            return $row;
-        } else {
-            return false;
-        }*/
+        
     }
 
 }

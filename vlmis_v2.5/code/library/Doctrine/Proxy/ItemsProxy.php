@@ -186,16 +186,16 @@ class ItemsProxy extends \Items implements \Doctrine\ORM\Proxy\Proxy
         return parent::getChildSurvivingPercentPerYear();
     }
 
-    public function setModifiedBy(\Users $modifiedBy)
+    public function setChildSurvivingPercentTillSecondYear($childSurvivingPercentTillSecondYear)
     {
         $this->__load();
-        return parent::setModifiedBy($modifiedBy);
+        return parent::setChildSurvivingPercentTillSecondYear($childSurvivingPercentTillSecondYear);
     }
 
-    public function getModifiedBy()
+    public function getChildSurvivingPercentTillSecondYear()
     {
         $this->__load();
-        return parent::getModifiedBy();
+        return parent::getChildSurvivingPercentTillSecondYear();
     }
 
     public function setCreatedBy(\Users $createdBy)
@@ -210,10 +210,22 @@ class ItemsProxy extends \Items implements \Doctrine\ORM\Proxy\Proxy
         return parent::getCreatedBy();
     }
 
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->__load();
+        return parent::setModifiedBy($modifiedBy);
+    }
+
+    public function getModifiedBy()
+    {
+        $this->__load();
+        return parent::getModifiedBy();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'description', 'createdDate', 'modifiedDate', 'packVolume', 'dosesPerYear', 'packDiluentVolume', 'targetPopulationFactor', 'itemCategoryId', 'multiplier', 'wastageRateAllowed', 'populationPercentIncreasePerYear', 'childSurvivingPercentPerYear', 'modifiedBy', 'createdBy');
+        return array('__isInitialized__', 'pkId', 'description', 'createdDate', 'modifiedDate', 'packVolume', 'dosesPerYear', 'packDiluentVolume', 'targetPopulationFactor', 'itemCategoryId', 'multiplier', 'wastageRateAllowed', 'populationPercentIncreasePerYear', 'childSurvivingPercentPerYear', 'childSurvivingPercentTillSecondYear', 'createdBy', 'modifiedBy');
     }
 
     public function __clone()

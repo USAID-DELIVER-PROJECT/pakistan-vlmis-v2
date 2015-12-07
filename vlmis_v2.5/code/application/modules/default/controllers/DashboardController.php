@@ -14,6 +14,7 @@ class DashboardController extends App_Controller_Base {
         $campaign = new Model_Campaigns();
         $location = new Model_Locations();
 
+        $level='';
         // National Level
         if ($role_id == 3 || $role_id == 23 || $role_id == 26 || $role_id == 27) {
             $this->view->level = 1;

@@ -75,14 +75,19 @@ class Items
     private $childSurvivingPercentPerYear;
 
     /**
-     * @var Users
+     * @var float $childSurvivingPercentTillSecondYear
      */
-    private $modifiedBy;
+    private $childSurvivingPercentTillSecondYear;
 
     /**
      * @var Users
      */
     private $createdBy;
+
+    /**
+     * @var Users
+     */
+    private $modifiedBy;
 
 
     /**
@@ -336,23 +341,23 @@ class Items
     }
 
     /**
-     * Set modifiedBy
+     * Set childSurvivingPercentTillSecondYear
      *
-     * @param Users $modifiedBy
+     * @param float $childSurvivingPercentTillSecondYear
      */
-    public function setModifiedBy(\Users $modifiedBy)
+    public function setChildSurvivingPercentTillSecondYear($childSurvivingPercentTillSecondYear)
     {
-        $this->modifiedBy = $modifiedBy;
+        $this->childSurvivingPercentTillSecondYear = $childSurvivingPercentTillSecondYear;
     }
 
     /**
-     * Get modifiedBy
+     * Get childSurvivingPercentTillSecondYear
      *
-     * @return Users 
+     * @return float 
      */
-    public function getModifiedBy()
+    public function getChildSurvivingPercentTillSecondYear()
     {
-        return $this->modifiedBy;
+        return $this->childSurvivingPercentTillSecondYear;
     }
 
     /**
@@ -373,5 +378,25 @@ class Items
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
     }
 }

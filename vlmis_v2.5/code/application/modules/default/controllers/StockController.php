@@ -35,7 +35,7 @@ class StockController extends App_Controller_Base {
         $stock_master = new Model_StockMaster();
         $stock_batch = new Model_StockBatch();
         $stock_detail = new Model_StockDetail();
-        $warehouse_data = new Model_WarehousesData();
+        $warehouse_data = new Model_HfDataMaster();
         $placement = new Model_Placements();
         $form = new Form_ReceiveSupplier();
         $form_manufacturer = new Form_AddManufacturer();
@@ -433,7 +433,7 @@ class StockController extends App_Controller_Base {
 
             $temp = $this->_request->do;
 //App_Controller_Functions::pr(base64_decode(substr($temp, 1, strlen($temp) - 1)));
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->temp = $temp;
             $arr_temp = $warehouse_data->monthlyConsumtionTemp();
 
@@ -530,7 +530,7 @@ class StockController extends App_Controller_Base {
 
             $temp = $this->_request->do;
             //App_Controller_Functions::pr(base64_decode(substr($temp, 1, strlen($temp) - 1)));
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->temp = $temp;
             $arr_temp = $warehouse_data->monthlyConsumtionTemp();
             // App_Controller_Functions::pr($arr_temp);
@@ -596,16 +596,15 @@ class StockController extends App_Controller_Base {
             $this->view->items = $items;
             $this->view->items_non_vaccinces = $items_non_vaccines;
             $this->view->items_tt = $items_tt;
-
-//$form->uc->setValue($arr_temp['loc_id']);
         }
 
         if ($this->_request->isPost()) {
             $data = $this->_request->getPost();
 
-            $warehouse_data = new Model_WarehousesData();
-            $warehouse_data->form_values = $data;
-            $result = $warehouse_data->addMonthlyConsumption2Validation();
+
+            $hf_data_master = new Model_HfDataMaster();
+            $hf_data_master->form_values = $data;
+            $result = $hf_data_master->addMonthlyConsumption2Validation();
             // App_Controller_Functions::pr($result);
 
             if (empty($result)) {
@@ -613,110 +612,14 @@ class StockController extends App_Controller_Base {
                 $string = "Z" . base64_encode($data['wh_id'] . '|' . $l3m_dt->format('Y-m-') . '01|2');
                 $this->redirect("/stock/monthly-consumption2?do=" . $string);
             } else {
-// Open report in edit form after save
+                // Open report in edit form after save
                 //  App_Controller_Functions::pr($result);
                 $this->view->error = "P";
                 $this->view->msg = $result;
             }
         }
 
-//var_dump($this->_request->do);
-//exit;
 
-        $this->view->form = $form;
-        $this->view->do = $this->_request->do;
-    }
-
-    public function monthlyConsumption3Action() {
-
-        $form = new Form_MonthlyConsumption();
-
-        $warehouse = new Model_Warehouses();
-        $warehouses = $warehouse->getWarehouseNames();
-        $this->view->warehouses = $warehouses;
-
-        if (isset($this->_request->do) && !empty($this->_request->do)) {
-
-            $temp = $this->_request->do;
-//App_Controller_Functions::pr(base64_decode(substr($temp, 1, strlen($temp) - 1)));
-            $warehouse_data = new Model_WarehousesData();
-            $warehouse_data->temp = $temp;
-            $arr_temp = $warehouse_data->monthlyConsumtionTemp();
-
-            $this->view->month = $arr_temp['month'];
-            $this->view->mm = $arr_temp['mm'];
-            $this->view->year = $arr_temp['yy'];
-
-            $this->view->is_new_report = $arr_temp['is_new_rpt'];
-            $this->view->prev_month_date = $arr_temp['prev_month_date'];
-            $this->view->check_date = $arr_temp['check_date'];
-            $this->view->first_month = Zend_Registry::get('first_month');
-
-            $item_pack_sizes = new Model_ItemPackSizes();
-            $item_pack_sizes->form_values = array(
-                'month' => $arr_temp['mm'],
-                'year' => $arr_temp['yy'],
-                'wh_id' => $arr_temp['wh_id']
-            );
-
-            $items = $item_pack_sizes->monthlyConsumtion();
-
-            $warehouse_data->form_values = array('warehouse_id' => $arr_temp['wh_id']);
-            $result = $warehouse_data->getMonthYearByWarehouseId();
-
-            if ($result != false) {
-                $arr_combo = array();
-                $arr_combo[] = array(
-                    "key" => "",
-                    "value" => "Select"
-                );
-                foreach ($result as $row) {
-                    $loc_id = $row['location_id'];
-                    $do = 'Z' . base64_encode($arr_temp['wh_id'] . '|' . $row['report_year'] . '-' . str_pad($row['report_month'], 2, "0", STR_PAD_LEFT) . '-01' . '|2');
-                    $arr_combo[] = array(
-                        "key" => $do,
-                        "value" => $row['report_month'] . '-' . $row['report_year']
-                    );
-                }
-            } else {
-                $arr_combo = array();
-                $arr_combo[] = array(
-                    "key" => "",
-                    "value" => "Select"
-                );
-            }
-            $warehouse_name = $this->_em->getRepository("Warehouses")->find($arr_temp['wh_id']);
-            $warehouse_name = $warehouse_name->getWarehouseName();
-
-            $form->monthly_report->setMultiOptions($arr_combo);
-            $form->monthly_report->setValue($temp);
-
-            $this->view->rpt_date = $arr_temp['rpt_date'];
-            $this->view->wh_id = $arr_temp['wh_id'];
-            $this->view->warehouse_name = $warehouse_name;
-            $this->view->locid = $loc_id;
-            $this->view->items = $items;
-
-//$form->uc->setValue($arr_temp['loc_id']);
-        }
-
-        if ($this->_request->isPost()) {
-            $data = $this->_request->getPost();
-
-            $warehouse_data = new Model_WarehousesData();
-            $warehouse_data->form_values = $data;
-            $result = $warehouse_data->addMonthlyConsumption();
-
-            if ($result) {
-// Open report in edit form after save
-                $l3m_dt = new DateTime($data['rpt_date']);
-                $string = "Z" . base64_encode($data['wh_id'] . '|' . $l3m_dt->format('Y-m-') . '01|2');
-                $this->redirect("/stock/monthly-consumption?do=" . $string);
-            }
-        }
-
-//var_dump($this->_request->do);
-//exit;
 
         $this->view->form = $form;
         $this->view->do = $this->_request->do;
@@ -729,7 +632,7 @@ class StockController extends App_Controller_Base {
         if ($this->_request->isPost()) {
             $data = $this->_request->getPost();
 
-            $warehouse_data_draft = new Model_WarehousesData();
+            $warehouse_data_draft = new Model_HfDataMaster();
             $warehouse_data_draft->form_values = $data;
             $result = $warehouse_data_draft->addMonthlyConsumptionDraft();
         }
@@ -742,9 +645,10 @@ class StockController extends App_Controller_Base {
         if ($this->_request->isPost()) {
             $data = $this->_request->getPost();
 
-            $warehouse_data_draft = new Model_WarehousesData();
-            $warehouse_data_draft->form_values = $data;
-            $result = $warehouse_data_draft->addMonthlyConsumption2Draft();
+            //  $warehouse_data_draft = new Model_HfDataMaster();
+            $hf_data_master = new Model_HfDataMaster();
+            $hf_data_master->form_values = $data;
+            $result = $hf_data_master->addMonthlyConsumption2Draft();
         }
     }
 
@@ -982,7 +886,7 @@ class StockController extends App_Controller_Base {
         $stock_master = new Model_StockMaster();
         $stock_batch = new Model_StockBatch();
         $stock_detail = new Model_StockDetail();
-        $warehouse_data = new Model_WarehousesData();
+        $warehouse_data = new Model_HfDataMaster();
         $form = new Form_StockIssue();
         $form_values = array();
         $temp = array();
@@ -1603,13 +1507,38 @@ class StockController extends App_Controller_Base {
 
         array_push($export_array, array("Item Name", "Transaction Date", "Transaction Number", "Transaction Reference", "Warehouse Name", "Batch no.", "Expiry date", "Quantity", "Item Unit", "Doses per vial", "Total doses", "VVM Stage"));
         foreach ($data as $row) {
-            array_push($export_array, array($row['itemName'], $row['transactionDate'], $row['transactionNumber'], $row['transactionReference'], $row['warehouseName'], $row['number'], $row['expiryDate'], $row['quantity'], $row['itemUnitName'], $row['description'], $row['quantity'] * $row['description'], $row['vvmStageValue']));
+            array_push($export_array, array($row['itemName'], $row['transactionDate'], $row['transactionNumber'], $row['transactionReference'], $row['warehouseName'], $row['number'], $row['expiryDate'], $row['quantity'], $row['itemUnitName'], $row['description'], $row['quantity'] * $row['description'], $row['vvmStage']));
         }
 
 // generate file (constructor parameters are optional)
         $xls = new App_PhpExcel('UTF-8', false, 'Issue List');
         $xls->addArray($export_array);
         $xls->generateXML('issue-list');
+    }
+
+    public function exportExcelReceiveAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(TRUE);
+        $export_array = array();
+
+        $stock_master = new Model_StockMaster();
+        $stock_master->form_values['searchby'] = $this->_request->searchby;
+        $stock_master->form_values['number'] = $this->_request->number;
+        $stock_master->form_values['warehouses'] = $this->_request->warehouses;
+        $stock_master->form_values['product'] = $this->_request->product;
+        $stock_master->form_values['date_from'] = $this->_request->date_from;
+        $stock_master->form_values['date_to'] = $this->_request->date_to;
+        $data = $stock_master->getTempStockReceive();
+
+        array_push($export_array, array("Item Name", "Transaction Date", "Transaction Number", "Transaction Reference", "Warehouse Name", "Batch no.", "Expiry date", "Quantity", "Item Unit", "Doses per vial", "Total doses", "VVM Stage"));
+        foreach ($data as $row) {
+            array_push($export_array, array($row['itemName'], $row['transactionDate'], $row['transactionNumber'], $row['transactionReference'], $row['warehouseName'], $row['number'], $row['expiryDate'], $row['quantity'], $row['itemUnitName'], $row['description'], $row['quantity'] * $row['description'], $row['vvmStage']));
+        }
+
+// generate file (constructor parameters are optional)
+        $xls = new App_PhpExcel('UTF-8', false, 'Receive List');
+        $xls->addArray($export_array);
+        $xls->generateXML('receive-list');
     }
 
     public function vaccinePlacementIssueSummaryAction() {
@@ -1861,14 +1790,9 @@ class StockController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
-    public function explorer2Action() {
-        $base_url = Zend_Registry::get('baseurl');
-        $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
-    }
-
     public function ajaxExplorerAction() {
         $this->_helper->layout->setLayout('ajax');
-        $warehouse_data = new Model_WarehousesData();
+        $warehouse_data = new Model_HfDataMaster();
 
         if (isset($this->_request->do) && !empty($this->_request->do)) {
             $base_url = Zend_Registry::get('baseurl');
@@ -1907,7 +1831,7 @@ class StockController extends App_Controller_Base {
 
     public function ajaxExplorer2Action() {
         $this->_helper->layout->setLayout('ajax');
-        $warehouse_data = new Model_WarehousesData();
+        $warehouse_data = new Model_HfDataMaster();
 
         if (isset($this->_request->do) && !empty($this->_request->do)) {
             $base_url = Zend_Registry::get('baseurl');
@@ -1957,7 +1881,7 @@ class StockController extends App_Controller_Base {
             $this->view->inlineScript()->appendFile($base_url . '/common/theme/scripts/demo/tables.js');
 
             $temp = $this->_request->do;
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->temp = $temp;
 
             $arr_temp = $warehouse_data->monthlyConsumtionTemp();
@@ -2025,7 +1949,7 @@ class StockController extends App_Controller_Base {
             $this->view->inlineScript()->appendFile($base_url . '/common/theme/scripts/demo/tables.js');
 
             $temp = $this->_request->do;
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->temp = $temp;
 
             $arr_temp = $warehouse_data->monthlyConsumtionTemp();
@@ -2068,7 +1992,7 @@ class StockController extends App_Controller_Base {
     public function printExplorerAction() {
         $this->_helper->layout->setLayout('print');
 // $this->_helper->layout->disableLayout();
-        $warehouse_data = new Model_WarehousesData();
+        $warehouse_data = new Model_HfDataMaster();
 
         if (isset($this->_request->do) && !empty($this->_request->do)) {
             $temp = $this->_request->do;
@@ -2099,7 +2023,7 @@ class StockController extends App_Controller_Base {
     public function ajaxReportComboAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->warehouse_id) && !empty($this->_request->warehouse_id)) {
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
 //$warehouse_id = $this->_request->wharehouse_id;
             $warehouse_id = $this->_request->warehouse_id;
             $warehouse_data->form_values = array('warehouse_id' => $warehouse_id);
@@ -2671,7 +2595,7 @@ class StockController extends App_Controller_Base {
         $form = new Form_TransferStock();
         $form->addHidden();
         $form->readFields();
-        $placement = new Model_Placements();
+        //$placement = new Model_Placements();
         $non_ccm_loc = new Model_NonCcmLocations();
 
 
@@ -2878,8 +2802,10 @@ class StockController extends App_Controller_Base {
         $this->_helper->layout->disableLayout();
         $sips = new Model_StakeholderItemPackSizes();
         $type = $this->_request->getParam('type', '');
-        $sips->form_values['stakeholder_id'] = $this->_request->getParam('activity_id', '');
-
+        $sips->form_values = array(
+            'stakeholder_id' => $this->_request->getParam('activity_id', ''),
+            'trans_date' => $this->_request->getParam('tran_date', date("d/m/Y h:i:s A"))
+        );
         if (!empty($type) && $type == 2) {
             $result = $sips->getAllIssueProductsByStakeholder();
         } else {
@@ -2924,7 +2850,7 @@ class StockController extends App_Controller_Base {
 
             $temp = $this->_request->do;
 // App_Controller_Functions::pr(base64_decode(substr($temp, 1, strlen($temp) - 1)));
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->temp = $temp;
             $arr_temp = $warehouse_data->monthlyConsumtionTemp();
 
@@ -3015,7 +2941,7 @@ class StockController extends App_Controller_Base {
 
             $temp = $this->_request->do;
 // App_Controller_Functions::pr(base64_decode(substr($temp, 1, strlen($temp) - 1)));
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->temp = $temp;
             $arr_temp = $warehouse_data->monthlyConsumtionTemp();
 
@@ -3120,7 +3046,7 @@ class StockController extends App_Controller_Base {
         $obj_item = new Model_ItemPackSizes();
         $items = $obj_item->getAllItems();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $wh_data->form_values = array(
             'reporting_start_date' => $params['year'] . "-" . $params['month'] . "-01",
             'warehouse_id' => $params['wh_id']
@@ -3211,11 +3137,6 @@ class StockController extends App_Controller_Base {
         $batch_form = new Form_AddBatch();
         $form = new Form_AutoAdjustment();
         $form->addRows($start, $end);
-
-
-
-
-
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_request->getPost())) {
                 $em = Zend_Registry::get('doctrine');
@@ -3263,10 +3184,6 @@ class StockController extends App_Controller_Base {
         $this->view->role = $this->_identity->getRoleId();
         $this->view->form = $form;
         $this->view->batch_form = $batch_form;
-
-
-
-
         $this->view->start = $start;
         $this->view->end = $end;
     }
@@ -4067,7 +3984,7 @@ class StockController extends App_Controller_Base {
 
                     $stock_ID = $stock_master->getPkId();
                     $stock_batch = new Model_StockBatch();
-                    $warehouse_data = new Model_WarehousesData();
+                    $warehouse_data = new Model_HfDataMaster();
                     $stock_batch->adjustQuantityBywarehouse($batch_id);
                     $warehouse_data->addReport($stock_ID, $type);
 
@@ -4306,7 +4223,7 @@ class StockController extends App_Controller_Base {
         $dd = $tt[2];
         if (isset($this->_request->do) && !empty($this->_request->do)) {
             $temp1 = $this->_request->do;
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->form_values = array('warehouse_id' => $warehouse_id);
             $result = $warehouse_data->getMonthYearByWarehouseIdLogBook();
 
@@ -4348,7 +4265,7 @@ class StockController extends App_Controller_Base {
 
                     $temp = $this->_request->do;
 
-                    $log_book = new Model_WarehousesData();
+                    $log_book = new Model_HfDataMaster();
                     $log_book->form_values = $this->_request->getPost();
 // App_Controller_Functions::pr($_REQUEST);
                     $log_book->form_values['temp'] = $temp;
@@ -4700,7 +4617,7 @@ class StockController extends App_Controller_Base {
     public function ajaxReportCombo2Action() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->warehouse_id) && !empty($this->_request->warehouse_id)) {
-            $warehouse_data = new Model_WarehousesData();
+            $warehouse_data = new Model_HfDataMaster();
             //$warehouse_id = $this->_request->wharehouse_id;
             $warehouse_id = $this->_request->warehouse_id;
             $warehouse_data->form_values = array('warehouse_id' => $warehouse_id);
@@ -4941,7 +4858,7 @@ class StockController extends App_Controller_Base {
                         list($batchid, $vvmid, $locationid, $activity_id) = explode("_", $key);
                         $batch_detail = $this->_em->getRepository("StockBatch")->find($batchid);
                         $microtime = strtotime(date("Y-m-d H:i:s"));
-                        
+
                         $stock_master = new Model_StockMaster();
 
                         $data = array(
@@ -5105,7 +5022,7 @@ class StockController extends App_Controller_Base {
         $stock_batch = new Model_StockBatch();
         $placements = new Model_Placements();
         $stock_detail = new Model_StockDetail();
-        $warehouse_data = new Model_WarehousesData();
+        $warehouse_data = new Model_HfDataMaster();
         $form_values = array();
         $temp = array();
         $batch = array();
@@ -5305,8 +5222,10 @@ class StockController extends App_Controller_Base {
         $this->_helper->layout->disableLayout();
         $sips = new Model_StakeholderItemPackSizes();
         $type = $this->_request->getParam('type', '');
-        $sips->form_values['stakeholder_id'] = $this->_request->getParam('activity_id', '');
-
+        $sips->form_values = array(
+            'stakeholder_id' => $this->_request->getParam('activity_id', ''),
+            'trans_date' => $this->_request->getParam('tran_date', date("d/m/Y h:i:s A"))
+        );
         if (!empty($type) && $type == 2) {
             $result = $sips->getAllIssueProductsByStakeholder();
         } else {
@@ -5477,7 +5396,7 @@ class StockController extends App_Controller_Base {
         $stock_master = new Model_StockMaster();
         $stock_batch = new Model_StockBatch();
         $stock_detail = new Model_StockDetail();
-        $warehouse_data = new Model_WarehousesData();
+        $warehouse_data = new Model_HfDataMaster();
         $form = new Form_MultipleAdjustment();
         $form_values = array();
         $temp = array();

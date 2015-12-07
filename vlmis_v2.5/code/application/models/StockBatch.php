@@ -520,10 +520,10 @@ ORDER BY
                 ->join("sb.itemPackSize", "ips")
                 ->join("ips.itemUnit", "iu")
                 ->where("ips.itemCategory = 1")
-                ->andWhere("sb.warehouse = " . $wh_id);
+                ->andWhere("sb.warehouse = " . $wh_id)
+                ->andWhere("sb.expiryDate >= '" . date("Y-m-d") . "'");
 
         if ($wh_id == 159) {
-            $str_sql->andWhere("sb.expiryDate >= '" . date("Y-m-d") . "'");
             $str_sql->andWhere("ips.pkId NOT IN(35,10,38)");
         }
 
@@ -676,15 +676,16 @@ ORDER BY
                 ->innerJoin("sb.itemPackSize", "ips")
                 ->innerJoin("sips.stakeholder", "s")
                 ->where("s.stakeholderType = 3")
-                ->andWhere("sb.warehouse = " . $wh_id)
-                ->andWhere("sb.expiryDate >= '" . date("Y-m-d") . "'")
+                ->andWhere("sb.warehouse = " . $wh_id)                
                 ->groupBy("ips.itemName")
                 ->orderBy("ips.listRank", "ASC")
                 ->having("Vials > 0");
 
         $result = $str_sql->getQuery()->getResult();
+        //->andWhere("sb.expiryDate >= '" . date("Y-m-d") . "'")
 //        echo $str_sql->getQuery()->getSql()."<br>";
 //        exit();
+        
         return $result;
     }
 
@@ -711,8 +712,6 @@ INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk
 LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
 WHERE
 	stock_batch.warehouse_id = $wh_id
-AND stock_batch.expiry_date >= '" . date("Y-m-d") . "'
-
 GROUP BY
 	item_pack_sizes.pk_id
 
@@ -747,8 +746,7 @@ ORDER BY
                 INNER JOIN item_units i2_ ON i0_.item_unit_id = i2_.pk_id
             WHERE
                 i0_.item_category_id IN (2, 3)
-                AND s1_.warehouse_id = $wh_id
-                AND s1_.expiry_date >= '" . date("Y-m-d") . "'
+                AND s1_.warehouse_id = $wh_id              
                 AND i0_.pk_id NOT IN (35, 10, 38)
             GROUP BY
                 i0_.pk_id
@@ -1300,6 +1298,8 @@ UNION
 
         $current_date = new DateTime(date("Y-m-d"));
         $today = $current_date->format("Y-m-d");
+        $todaymin1 = $current_date->modify("yesterday");
+        $todaymin1date = $todaymin1->format("Y-m-d");
         $month3 = $current_date->modify("+3 months");
         $after3month = $month3->format("Y-m-d");
         $month12 = $current_date->modify("+9 months");
@@ -1422,7 +1422,38 @@ UNION
 		ORDER BY
 			item_pack_sizes.list_rank,
 			stock_batch.expiry_date
-	)";
+	)  UNION
+(
+	SELECT
+		stock_batch.expiry_date AS expiryDate,
+		stock_batch.number,
+		SUM(placements.quantity) AS quantity,
+		stock_batch.pk_id AS pkId,
+		'Expired' AS priority
+	FROM
+		stock_batch
+	INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+	LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+	INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
+	INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
+	INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
+	WHERE
+		stock_batch.warehouse_id = $wh_id
+	AND item_pack_sizes.item_category_id = 1
+	AND DATE_FORMAT(
+				stock_batch.expiry_date,
+				'%Y-%m-%d'
+			) BETWEEN '$trans_date'
+			AND '$todaymin1date'
+	AND stock_batch.item_pack_size_id = $item_id
+	GROUP BY
+		placements.stock_batch_id
+	HAVING
+		quantity > 0
+	ORDER BY
+		item_pack_sizes.list_rank,
+		stock_batch.expiry_date
+)";
 
         $this->_em = Zend_Registry::get('doctrine');
         $row = $this->_em->getConnection()->prepare($str_sql);
@@ -2625,7 +2656,7 @@ UNION
                 ->andWhere("sb.warehouse = " . $wh_id);
 
         if ($wh_id == 159) {
-            $str_sql->andWhere("sb.expiryDate >= '" . date("Y-m-d") . "'");
+            //$str_sql->andWhere("sb.expiryDate >= '" . date("Y-m-d") . "'");
             $str_sql->andWhere("ips.pkId NOT IN(35,10,38)");
         }
 

@@ -33,7 +33,7 @@ class Reports_DashletController extends App_Controller_Base {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = "2014-05";
         $params["item"] = 3;
         $wh_data->form_values = $params;
@@ -56,7 +56,7 @@ class Reports_DashletController extends App_Controller_Base {
         }
         $params["item"] = $item;
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $wh_data->form_values = $params;
         $xmlstore = $wh_data->stockStatusRoutine();
         $this->view->xmlstore = $xmlstore;
@@ -76,7 +76,7 @@ class Reports_DashletController extends App_Controller_Base {
         $date = $this->_request->getParam("date");
         $item = $this->_request->getParam("item");
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $date;
         $params["item"] = $item;
         $params["level"] = $level;
@@ -129,7 +129,7 @@ class Reports_DashletController extends App_Controller_Base {
         $items = $obj_item->getProductById($item);
         $allowed = $items->getWastageRateAllowed();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $date;
         $params["item"] = $item;
         $params["allowed"] = $allowed;
@@ -159,7 +159,7 @@ class Reports_DashletController extends App_Controller_Base {
             "N" => "more then $allowed%"
         );
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $wh_data->form_values = array(
             'prov_id' => $province,
             'dist_id' => $district,
@@ -168,7 +168,7 @@ class Reports_DashletController extends App_Controller_Base {
             'option' => "N",
             'allowed' => $allowed
         );
-        
+
         $xmlstore = $wh_data->wastagesComparison();
         $this->view->xmlstore = $xmlstore;
         $this->view->combo = $combo;
@@ -185,7 +185,7 @@ class Reports_DashletController extends App_Controller_Base {
         $prod_result = $obj_product->getProductById($item);
         $allowed = $prod_result->getWastageRateAllowed();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $wh_data->form_values = array(
             'prov_id' => $province,
             'dist_id' => $district,
@@ -209,7 +209,7 @@ class Reports_DashletController extends App_Controller_Base {
         $date = $this->_request->getParam("date");
         $item = $this->_request->getParam("item");
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $date;
         $params["item"] = $item;
         $params["level"] = $level;
@@ -238,7 +238,7 @@ class Reports_DashletController extends App_Controller_Base {
         $date = $this->_request->getParam("date");
         $item = $this->_request->getParam("item");
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $date;
         $params["item"] = $item;
 
@@ -257,7 +257,7 @@ class Reports_DashletController extends App_Controller_Base {
         $date = $data_arr[2];
         $type = $data_arr[3];
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $date;
         $params["item"] = $item;
         $params["loc_id"] = $district;
@@ -288,7 +288,7 @@ class Reports_DashletController extends App_Controller_Base {
         );
         $wh_id = $warehouse->getWarehouseByLevel();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $date;
         $params["item"] = $item;
         $params["wh_id"] = $wh_id;
@@ -308,7 +308,7 @@ class Reports_DashletController extends App_Controller_Base {
         $date = $data_arr[2];
         $type = $data_arr[3];
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $date;
         $params["item"] = $item;
         $params["wh_id"] = $wh_id;
@@ -339,7 +339,7 @@ class Reports_DashletController extends App_Controller_Base {
         );
         $wh_id = $warehouse->getWarehouseByLevel();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $date;
         $params["item"] = $item;
         $params["wh_id"] = $wh_id;
@@ -360,7 +360,7 @@ class Reports_DashletController extends App_Controller_Base {
         $date = $data_arr[2];
         $type = $data_arr[3];
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $date;
         $params["item"] = $item;
         $params["wh_id"] = $wh_id;
@@ -379,7 +379,7 @@ class Reports_DashletController extends App_Controller_Base {
         $date = $this->_request->getParam("date");
         $item = $this->_request->getParam("item");
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $date;
         $params["item"] = $item;
         $params["province"] = $province;
@@ -406,7 +406,7 @@ class Reports_DashletController extends App_Controller_Base {
         $date = $data_arr[2];
         $type = $data_arr[3];
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $date;
         $params["item"] = $item;
         $params["province"] = $province;
@@ -485,7 +485,7 @@ class Reports_DashletController extends App_Controller_Base {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $this->_request->getParam("date");
         $params["item"] = $this->_request->getParam("item");
         $level = $this->_request->getParam("level");
@@ -505,7 +505,7 @@ class Reports_DashletController extends App_Controller_Base {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $this->_request->getParam("date");
         $params["item"] = $this->_request->getParam("item");
         $wh_data->form_values = $params;
@@ -517,7 +517,7 @@ class Reports_DashletController extends App_Controller_Base {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $this->_request->getParam("date");
         $params["item"] = $this->_request->getParam("item");
         $wh_data->form_values = $params;
@@ -526,7 +526,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     public function getMosAction() {
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $this->_request->getParam("date");
         $params["item"] = $this->_request->getParam("item");
         $level = $this->_request->getParam("level");
@@ -564,10 +564,10 @@ class Reports_DashletController extends App_Controller_Base {
 
     public function ajaxGetMosAction() {
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $this->_request->getParam("date");
         $params["item"] = $this->_request->getParam("item");
-         $params["province"] = $this->_request->getParam("province");
+        $params["province"] = $this->_request->getParam("province");
         $level = $this->_request->getParam("level");
         $province = $this->_request->getParam("province");
         $district = $this->_request->getParam("district");
@@ -597,7 +597,7 @@ class Reports_DashletController extends App_Controller_Base {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $this->_request->getParam("date");
         $params["item"] = $this->_request->getParam("item");
         $level = $this->_request->getParam("level");
@@ -625,7 +625,7 @@ class Reports_DashletController extends App_Controller_Base {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $this->_request->getParam("date");
         $params["item"] = $this->_request->getParam("item");
         $params["province"] = $this->_request->getParam("province");
@@ -649,7 +649,7 @@ class Reports_DashletController extends App_Controller_Base {
         }
 
         $wh_data->form_values = $params;
- 
+
 
         switch ($level) {
             case 1:
@@ -672,7 +672,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     public function ajaxGetConsumptionAction() {
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = $this->_request->getParam("date");
         $params["item"] = $this->_request->getParam("item");
         $level = $this->_request->getParam("level");
@@ -708,7 +708,7 @@ class Reports_DashletController extends App_Controller_Base {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
 
         $date = $this->_request->getParam("date");
         $item = $this->_request->getParam("item");
@@ -755,7 +755,7 @@ class Reports_DashletController extends App_Controller_Base {
             $params["item"] = 6;
         }
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $wh_data->form_values = $params;
         $xmlstore = $wh_data->stockIssue();
         $this->view->xmlstore = $xmlstore;
@@ -768,7 +768,7 @@ class Reports_DashletController extends App_Controller_Base {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = "2014-05";
         $params["item"] = 6;
         $params["loc_id"] = $this->_request->getParam("district");
@@ -795,7 +795,7 @@ class Reports_DashletController extends App_Controller_Base {
         }
         $params["item"] = $item;
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $wh_data->form_values = $params;
         $xmlstore = $wh_data->stockReceive();
         $this->view->xmlstore = $xmlstore;
@@ -808,7 +808,7 @@ class Reports_DashletController extends App_Controller_Base {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["date"] = "2014-05";
         $params["item"] = 6;
         $wh_data->form_values = $params;
@@ -831,7 +831,7 @@ class Reports_DashletController extends App_Controller_Base {
         }
         $params["item"] = $item;
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $wh_data->form_values = $params;
         $xmlstore = $wh_data->wastagesRate();
         $this->view->xmlstore = $xmlstore;
@@ -856,7 +856,7 @@ class Reports_DashletController extends App_Controller_Base {
      * Routine Immunization Dashlet Late
      */
     public function stockPositionAction() {
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $xmlstore = $wh_data->stockPosition();
         $this->view->xmlstore = $xmlstore;
     }
@@ -870,7 +870,7 @@ class Reports_DashletController extends App_Controller_Base {
         $location = new Model_Locations();
         $this->view->provinces = $location->getProvincesName();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["level"] = $this->_request->getParam("level");
         $params["loc_id"] = $this->_request->getParam("district");
         $params["prov_id"] = $this->_request->getParam("province");
@@ -889,7 +889,7 @@ class Reports_DashletController extends App_Controller_Base {
         $campaign = new Model_Campaigns();
         $this->view->campaigns = $campaign->getAllCampaigns();
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["level"] = $this->_request->getParam("level");
         $params["loc_id"] = $this->_request->getParam("district");
         $params["prov_id"] = $this->_request->getParam("province");
@@ -904,7 +904,7 @@ class Reports_DashletController extends App_Controller_Base {
      * Campaign Management Dashlet
      */
     public function dataEntryStatusAction() {
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["level"] = $this->_request->getParam("level");
         $params["loc_id"] = $this->_request->getParam("district");
         $params["prov_id"] = $this->_request->getParam("province");
@@ -995,7 +995,7 @@ class Reports_DashletController extends App_Controller_Base {
         }
         $item = $this->_request->getParam('item');
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["item"] = $item;
         $params["level"] = $level;
         $wh_data->form_values = $params;
@@ -1003,7 +1003,7 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->xmlstore = $xmlstore;
 
         $title = "Stock Expiring in <= 6 Months";
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["level"] = $level;
         $params["item_id"] = $item;
         $params["type"] = 1;
@@ -1031,7 +1031,7 @@ class Reports_DashletController extends App_Controller_Base {
             $title = "Stock Expiring in > 18 Months";
         }
 
-        $wh_data = new Model_WarehousesData();
+        $wh_data = new Model_HfDataMaster();
         $params["level"] = $level;
         $params["item_id"] = $item;
         $params["loc_id"] = $location;

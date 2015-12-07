@@ -23,7 +23,7 @@ class Api_GeoController extends App_Controller_Base {
         $type = $this->_request->getParam('type', '');
 
         $geoModel = new Model_Geo();
-        if ($type == 4) {
+        if ($type == 2) {
             $result = $geoModel->getDistrictMos($year, $month, $province, $product, $level);
         } else {
             $result = $geoModel->getTehsilMos($year, $month, $province, $district, $product);

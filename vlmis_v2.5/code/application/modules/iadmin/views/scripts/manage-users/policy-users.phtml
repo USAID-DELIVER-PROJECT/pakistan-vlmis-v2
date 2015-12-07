@@ -96,7 +96,7 @@
                                             <tr class="<?php if ($i % 2 == 0) { ?>gradeX even<?php } else { ?> gradeA odd<?php } ?>">
                                                 <td><?php echo $row->getLoginId(); ?></td>
                                                 <td><?php echo $row->getRole()->getRoleName(); ?></td>
-                                                <td><?php echo (!empty($row->getLocation()) ? $row->getLocation()->getProvince()->getLocationName() : '-'); ?></td>
+                                                <td><?php echo (!($row->getLocation()) ? $row->getLocation()->getProvince()->getLocationName() : '-'); ?></td>
                                                 <td><?php echo ($row->getLocation() != '' ? $row->getLocation()->getDistrict()->getLocationName() : '-' ); ?></td>
                                                 <td><a itemid="<?php echo $row->getPkId(); ?>" class="btn update-stores btn-link btn-success input-sm" data-toggle="modal" href="#modal-update-stores"><?php echo $this->translate("Edit") ?></a></td>
                                                 <!-- // Table row END --><?php

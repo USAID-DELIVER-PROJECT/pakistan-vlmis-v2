@@ -6,6 +6,9 @@ class Model_Base {
     protected $_em;
     protected $_user_id;
     public $form_values;
+    
+    CONST ACTIVE = 1;
+    CONST INACTIVE = 0;    
 
     function __construct() {
         $this->_identity = App_Auth::getInstance();

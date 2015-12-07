@@ -56,21 +56,20 @@
                                         <?php echo $this->form->item_gtin; ?>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="control-label" for="batch_length"><?php echo $this->translate("Lot/Batch Length"); ?><span class="red">*</span></label>
-                                        <?php echo $this->form->batch_length; ?>
-                                    </div>
-                                    <div class="col-md-3"></div>
-                                </div>
-                                <div id="ajax_barcode">
-                                </div>
-                                <div class="row">
-
-                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="control-label" for="pack_size"><?php echo $this->translate("Pack Size"); ?></label>
                                             <?php echo $this->form->pack_size_description; ?>
                                         </div>
                                     </div>
+                                    <!--                                    <div class="col-md-3">
+                                                                            <label class="control-label" for="batch_length"><?php echo $this->translate("Lot/Batch Length"); ?><span class="red">*</span></label>
+                                    <?php echo $this->form->batch_length; ?>
+                                                                        </div>-->
+                                    <div class="col-md-3"></div>
+                                </div>
+                                <div id="ajax_barcode">
+                                </div>
+                                <div class="row">                                    
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="control-label" for="length"><?php echo $this->translate("Length(cm)"); ?><span class="red">*</span></label>
@@ -104,7 +103,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="control-label" for="volume"><?php echo $this->translate("Volume CM3"); ?><span class="red">*</span></label>
-                                            <?php echo ($this->form->volume_per_unit_net); ?> Per Vial/PC
+                                            <?php echo ($this->form->volum_per_vial); ?> Per Vial/PC
                                         </div>
                                     </div>
 
@@ -127,8 +126,7 @@
                                     <th><?php echo $this->translate("Product"); ?></th>
                                     <th><?php echo $this->translate("Manufacturer"); ?></th>
                                     <th><?php echo $this->translate("Pack Type"); ?></th>
-                                    <th><?php echo $this->translate("GTIN"); ?></th>
-                                    <th><?php echo $this->translate("Batch Length"); ?></th>
+                                    <th><?php echo $this->translate("GTIN"); ?></th>                                   
                                     <th><?php echo $this->translate("Vials/PCs Per Pack"); ?></th>
                                     <th><?php echo $this->translate("Volume"); ?></th>
                                     <th><?php echo $this->translate("Action"); ?></th>
@@ -149,13 +147,12 @@
                                             <td class="left"><?php echo $row['itemName']; ?></td>
                                             <td class="left"><?= $row['stakeholderName']; ?></td>
                                             <td class="left"><?= $row['listValue']; ?></td>
-                                            <td class="right"><?= $row['itemGtin']; ?></td>
-                                            <td class="right"><?= $row['batchLength']; ?></td>
+                                            <td class="right"><?= $row['itemGtin']; ?></td>                                          
                                             <td class="right"><?= $row['quantityPerPack']; ?></td>
-                                            <td class="right"><?= $row['volumePerUnitNet']; ?></td>
+                                            <td class="right"><?= $row['volumPerVial']; ?></td>
                                             <td class="left">
                                                 <a editid="<?php echo $row['pkId'] ?>" class="btn update-barcode btn-link btn-success input-sm" data-toggle="modal" href="#modal-update-barcode"><?php echo $this->translate("Edit") ?></a>
-        <!--                                                <a editid="<?php //echo $row['pkId']     ?>" class="btn detail-barcode btn-link btn-success input-sm" data-toggle="modal" href="#modal-detail-barcode"><?php //echo $this->translate("Detail")     ?></a>-->
+        <!--                                                <a editid="<?php //echo $row['pkId']      ?>" class="btn detail-barcode btn-link btn-success input-sm" data-toggle="modal" href="#modal-detail-barcode"><?php //echo $this->translate("Detail")      ?></a>-->
                                                 <a data-bind="<?php echo $row['pkId'] ?>" data-toggle="notyfy" data-type="confirm" data-layout="top" class="btn btn-danger btn-link input-sm"><?php echo $this->translate("Delete") ?></a>
                                         </tr>
                                         <?php

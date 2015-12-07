@@ -169,6 +169,12 @@ $(function () {
                 });
             }
 
+            if (adjqty > 0 && $('#' + id + '-types').val() == '') {
+                alert("Reason must be selected.");
+                $($('#' + id + '-types')).focus();
+                flag = 'false';
+            }
+
             if (adjqty > qty) {
                 alert("Adjustment quantity should not be greater than available quantity.");
                 $(this).focus();
@@ -187,7 +193,6 @@ $(function () {
             }
         });
 
-
         if (flag == 'true') {
             if (confirm('Are you sure you received all the items?')) {
                 var checkedAtLeastOne = false;
@@ -199,7 +204,6 @@ $(function () {
                 });
             }
         }
-
     });
 
     $("input[id$='-missing']").keyup(function (e) {
@@ -223,8 +227,16 @@ $(function () {
                 'background-color': 'red',
                 color: 'yellow'
             });
+            $('#' + id + '-missingdoses').css({
+                'background-color': 'red',
+                color: 'yellow'
+            });
         } else {
             $('#' + id + '-missing').css({
+                'background-color': 'white',
+                color: 'black'
+            });
+            $('#' + id + '-missingdoses').css({
                 'background-color': 'white',
                 color: 'black'
             });
@@ -254,6 +266,28 @@ $(function () {
 
         var vials = adjqty / nod;
         $('#' + id + '-missing').val(vials);
+
+        var result = adjqty % nod;
+
+        if (result != 0) {
+            $('#' + id + '-missingdoses').css({
+                'background-color': 'red',
+                color: 'yellow'
+            });
+            $('#' + id + '-missing').css({
+                'background-color': 'red',
+                color: 'yellow'
+            });
+        } else {
+            $('#' + id + '-missingdoses').css({
+                'background-color': 'white',
+                color: 'black'
+            });
+            $('#' + id + '-missing').css({
+                'background-color': 'white',
+                color: 'black'
+            });
+        }
 
         if (adjqty > qty) {
             alert("Adjustment quantity should not be greater than available quantity.");

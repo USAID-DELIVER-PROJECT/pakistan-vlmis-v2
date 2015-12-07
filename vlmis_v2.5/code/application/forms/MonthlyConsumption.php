@@ -16,16 +16,16 @@ class Form_MonthlyConsumption extends Zend_Form {
     );
 
     public function init() {
-
         $locations = new Model_Locations();
         $uc_warehouses = $locations->getAllUCByUserId();
-        foreach ($uc_warehouses as $locations) {
+        if (is_array($uc_warehouses)) {
+            foreach ($uc_warehouses as $locations) {
 
-            $this->_list["uc"][''] = 'Select';
-            $this->_list["uc"][$locations['pk_id']] = $locations['location_name'];
+                $this->_list["uc"][''] = 'Select';
+                $this->_list["uc"][$locations['pk_id']] = $locations['location_name'];
+            }
         }
-
-        foreach ($this->_fields as $col => $name) {
+        foreach ($this->_fields as $col) {
 
             if (in_array($col, array_keys($this->_list))) {
                 $this->addElement("select", $col, array(

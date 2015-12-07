@@ -26,12 +26,12 @@ class Model_CcmColdRooms extends Model_Base {
         $ccm_model->setAssetDimensionLength($form_values['asset_dimension_length']);
         $ccm_model->setAssetDimensionWidth($form_values['asset_dimension_width']);
         $ccm_model->setAssetDimensionHeight($form_values['asset_dimension_height']);
-        if ($form_values['ccm_asset_sub_type_id'] == 37) {
+        if ($form_values['ccm_asset_sub_type_id'] == Model_CcmAssetTypes::SUBFREEZERROOM) {
             //for -20'C Freezer room
             $ccm_model->setTemperatureType(1);
             $ccm_model->setNetCapacity20($form_values['net_capacity']);
             $ccm_model->setGrossCapacity20($form_values['gross_capacity']);
-        } elseif ($form_values['ccm_asset_sub_type_id'] == 36) {
+        } elseif ($form_values['ccm_asset_sub_type_id'] == Model_CcmAssetTypes::SUBCOLDROOM) {
             //for +4'C Cold room
             $ccm_model->setTemperatureType(0);
             $ccm_model->setNetCapacity4($form_values['net_capacity']);
@@ -207,12 +207,12 @@ class Model_CcmColdRooms extends Model_Base {
         $ccm_model->setAssetDimensionLength($form_values['asset_dimension_length']);
         $ccm_model->setAssetDimensionWidth($form_values['asset_dimension_width']);
         $ccm_model->setAssetDimensionHeight($form_values['asset_dimension_height']);
-        if ($form_values['ccm_asset_sub_type_id'] == 37) {
+        if ($form_values['ccm_asset_sub_type_id'] == Model_CcmAssetTypes::SUBFREEZERROOM) {
             //for -20'C Freezer room
             $ccm_model->setTemperatureType(1);
             $ccm_model->setNetCapacity20($form_values['net_capacity']);
             $ccm_model->setGrossCapacity20($form_values['gross_capacity']);
-        } elseif ($form_values['ccm_asset_sub_type_id'] == 36) {
+        } elseif ($form_values['ccm_asset_sub_type_id'] == Model_CcmAssetTypes::SUBCOLDROOM) {
             //for +4'C Cold room
             $ccm_model->setTemperatureType(0);
             $ccm_model->setNetCapacity4($form_values['net_capacity']);
@@ -281,11 +281,11 @@ class Model_CcmColdRooms extends Model_Base {
         if (!empty($this->form_values['ccm_asset_sub_type_id'])) {
             $where[] = "ccr.ccmAssetSubType  = '" . $this->form_values['ccm_asset_sub_type_id'] . "'";
         }
-        if (!empty($this->form_values['ccm_asset_sub_type_id']) && $this->form_values['ccm_asset_sub_type_id'] == 36 && !empty($this->form_values['capacity_from']) && !empty($this->form_values['capacity_to'])) {
+        if (!empty($this->form_values['ccm_asset_sub_type_id']) && $this->form_values['ccm_asset_sub_type_id'] == Model_CcmAssetTypes::SUBCOLDROOM && !empty($this->form_values['capacity_from']) && !empty($this->form_values['capacity_to'])) {
             $where[] = "ccm.grossCapacity4  Between '" . $this->form_values['capacity_from'] . "'   AND '" . $this->form_values['capacity_to'] . "'";
         }
 
-        if (!empty($this->form_values['ccm_asset_sub_type_id']) && $this->form_values['ccm_asset_sub_type_id'] == 37 && !empty($this->form_values['capacity_from']) && !empty($this->form_values['capacity_to'])) {
+        if (!empty($this->form_values['ccm_asset_sub_type_id']) && $this->form_values['ccm_asset_sub_type_id'] == Model_CcmAssetTypes::SUBFREEZERROOM && !empty($this->form_values['capacity_from']) && !empty($this->form_values['capacity_to'])) {
             $where[] = "ccm.grossCapacity20  Between '" . $this->form_values['capacity_from'] . "'   AND '" . $this->form_values['capacity_to'] . "'";
         }
         //Working status

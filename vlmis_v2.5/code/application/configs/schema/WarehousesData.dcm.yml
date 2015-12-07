@@ -69,15 +69,6 @@ WarehousesData:
       nullable: true
       column: is_calculated
   oneToOne:
-    modifiedBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        modified_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     itemPackSize:
       targetEntity: ItemPackSizes
       cascade: {  }
@@ -94,6 +85,15 @@ WarehousesData:
       inversedBy: null
       joinColumns:
         warehouse_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

@@ -35,26 +35,6 @@ class CcmStatusHistory
     private $statusDate;
 
     /**
-     * @var integer $ccmStatusListId
-     */
-    private $ccmStatusListId;
-
-    /**
-     * @var integer $ccmAssetTypeId
-     */
-    private $ccmAssetTypeId;
-
-    /**
-     * @var integer $reasonId
-     */
-    private $reasonId;
-
-    /**
-     * @var integer $utilizationId
-     */
-    private $utilizationId;
-
-    /**
      * @var datetime $createdDate
      */
     private $createdDate;
@@ -65,9 +45,19 @@ class CcmStatusHistory
     private $modifiedDate;
 
     /**
+     * @var CcmStatusList
+     */
+    private $utilization;
+
+    /**
      * @var ColdChain
      */
     private $ccm;
+
+    /**
+     * @var CcmStatusList
+     */
+    private $reason;
 
     /**
      * @var Warehouses
@@ -83,6 +73,16 @@ class CcmStatusHistory
      * @var Users
      */
     private $modifiedBy;
+
+    /**
+     * @var CcmStatusList
+     */
+    private $ccmStatusList;
+
+    /**
+     * @var CcmAssetTypes
+     */
+    private $ccmAssetType;
 
 
     /**
@@ -176,86 +176,6 @@ class CcmStatusHistory
     }
 
     /**
-     * Set ccmStatusListId
-     *
-     * @param integer $ccmStatusListId
-     */
-    public function setCcmStatusListId($ccmStatusListId)
-    {
-        $this->ccmStatusListId = $ccmStatusListId;
-    }
-
-    /**
-     * Get ccmStatusListId
-     *
-     * @return integer 
-     */
-    public function getCcmStatusListId()
-    {
-        return $this->ccmStatusListId;
-    }
-
-    /**
-     * Set ccmAssetTypeId
-     *
-     * @param integer $ccmAssetTypeId
-     */
-    public function setCcmAssetTypeId($ccmAssetTypeId)
-    {
-        $this->ccmAssetTypeId = $ccmAssetTypeId;
-    }
-
-    /**
-     * Get ccmAssetTypeId
-     *
-     * @return integer 
-     */
-    public function getCcmAssetTypeId()
-    {
-        return $this->ccmAssetTypeId;
-    }
-
-    /**
-     * Set reasonId
-     *
-     * @param integer $reasonId
-     */
-    public function setReasonId($reasonId)
-    {
-        $this->reasonId = $reasonId;
-    }
-
-    /**
-     * Get reasonId
-     *
-     * @return integer 
-     */
-    public function getReasonId()
-    {
-        return $this->reasonId;
-    }
-
-    /**
-     * Set utilizationId
-     *
-     * @param integer $utilizationId
-     */
-    public function setUtilizationId($utilizationId)
-    {
-        $this->utilizationId = $utilizationId;
-    }
-
-    /**
-     * Get utilizationId
-     *
-     * @return integer 
-     */
-    public function getUtilizationId()
-    {
-        return $this->utilizationId;
-    }
-
-    /**
      * Set createdDate
      *
      * @param datetime $createdDate
@@ -296,6 +216,26 @@ class CcmStatusHistory
     }
 
     /**
+     * Set utilization
+     *
+     * @param CcmStatusList $utilization
+     */
+    public function setUtilization(\CcmStatusList $utilization)
+    {
+        $this->utilization = $utilization;
+    }
+
+    /**
+     * Get utilization
+     *
+     * @return CcmStatusList 
+     */
+    public function getUtilization()
+    {
+        return $this->utilization;
+    }
+
+    /**
      * Set ccm
      *
      * @param ColdChain $ccm
@@ -313,6 +253,26 @@ class CcmStatusHistory
     public function getCcm()
     {
         return $this->ccm;
+    }
+
+    /**
+     * Set reason
+     *
+     * @param CcmStatusList $reason
+     */
+    public function setReason(\CcmStatusList $reason)
+    {
+        $this->reason = $reason;
+    }
+
+    /**
+     * Get reason
+     *
+     * @return CcmStatusList 
+     */
+    public function getReason()
+    {
+        return $this->reason;
     }
 
     /**
@@ -373,5 +333,45 @@ class CcmStatusHistory
     public function getModifiedBy()
     {
         return $this->modifiedBy;
+    }
+
+    /**
+     * Set ccmStatusList
+     *
+     * @param CcmStatusList $ccmStatusList
+     */
+    public function setCcmStatusList(\CcmStatusList $ccmStatusList)
+    {
+        $this->ccmStatusList = $ccmStatusList;
+    }
+
+    /**
+     * Get ccmStatusList
+     *
+     * @return CcmStatusList 
+     */
+    public function getCcmStatusList()
+    {
+        return $this->ccmStatusList;
+    }
+
+    /**
+     * Set ccmAssetType
+     *
+     * @param CcmAssetTypes $ccmAssetType
+     */
+    public function setCcmAssetType(\CcmAssetTypes $ccmAssetType)
+    {
+        $this->ccmAssetType = $ccmAssetType;
+    }
+
+    /**
+     * Get ccmAssetType
+     *
+     * @return CcmAssetTypes 
+     */
+    public function getCcmAssetType()
+    {
+        return $this->ccmAssetType;
     }
 }

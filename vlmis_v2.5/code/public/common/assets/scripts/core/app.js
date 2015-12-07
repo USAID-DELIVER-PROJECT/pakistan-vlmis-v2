@@ -1311,3 +1311,7 @@ var App = function () {
 //        $('body').attr('class', cursor);
 //    });
 //});
+
+function changeColor() {
+    $('select').css('backgroundColor', 'White');
+}

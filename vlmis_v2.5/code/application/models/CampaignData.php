@@ -377,7 +377,7 @@ class Model_CampaignData extends Model_Base {
 	SUM(IF(A.coveragePer >= 30 AND A.coveragePer < 50, 1, 0)) AS fityPer,
 	SUM(IF(A.coveragePer >= 50 AND A.coveragePer < 70, 1, 0)) AS seventyPer,
 	SUM(IF(A.coveragePer >= 70 AND A.coveragePer < 90, 1, 0)) AS nintyPer
-FROM
+        FROM
 	(
 		SELECT
 			campaign_data.union_council_id,
@@ -391,31 +391,31 @@ FROM
 		GROUP BY
 			campaign_data.union_council_id
 	) A
-JOIN (
-	SELECT
-		Province.location_name,
-		locations.pk_id,
-		Province.pk_id AS ProvinceId
-	FROM
-		locations
-	INNER JOIN locations AS Province ON locations.province_id = Province.pk_id
-	WHERE
-		locations.geo_level_id = 4
-)B
-ON A.district_id = B.pk_id
-GROUP BY B.ProvinceId ";
+        JOIN (
+                SELECT
+                        Province.location_name,
+                        locations.pk_id,
+                        Province.pk_id AS ProvinceId
+                FROM
+                        locations
+                INNER JOIN locations AS Province ON locations.province_id = Province.pk_id
+                WHERE
+                        locations.geo_level_id = 4
+        )B
+        ON A.district_id = B.pk_id
+        GROUP BY B.ProvinceId ";
         } else if ($office == 2) {
             $str_qry = "SELECT
-	B.location_name,
-	SUM(A.totalTarget) AS totalTarget,
-	SUM(A.totalCoverage) AS totalCoverage,
-	ROUND((SUM(A.totalCoverage) / SUM(A.totalTarget) * 100), 1) AS coveragePer,
-	COUNT(A.union_council_id) as noOfUc,
-	SUM(IF(A.coveragePer < 30, 1, 0)) AS thiryPer,
-	SUM(IF(A.coveragePer >= 30 AND A.coveragePer < 50, 1, 0)) AS fityPer,
-	SUM(IF(A.coveragePer >= 50 AND A.coveragePer < 70, 1, 0)) AS seventyPer,
-	SUM(IF(A.coveragePer >= 70 AND A.coveragePer < 90, 1, 0)) AS nintyPer
-FROM
+                B.location_name,
+                SUM(A.totalTarget) AS totalTarget,
+                SUM(A.totalCoverage) AS totalCoverage,
+                ROUND((SUM(A.totalCoverage) / SUM(A.totalTarget) * 100), 1) AS coveragePer,
+                COUNT(A.union_council_id) as noOfUc,
+                SUM(IF(A.coveragePer < 30, 1, 0)) AS thiryPer,
+                SUM(IF(A.coveragePer >= 30 AND A.coveragePer < 50, 1, 0)) AS fityPer,
+                SUM(IF(A.coveragePer >= 50 AND A.coveragePer < 70, 1, 0)) AS seventyPer,
+                SUM(IF(A.coveragePer >= 70 AND A.coveragePer < 90, 1, 0)) AS nintyPer
+        FROM
 	(
 		SELECT
 			campaign_data.union_council_id,
@@ -429,19 +429,19 @@ FROM
 		GROUP BY
 			campaign_data.district_id
 	) A
-JOIN (
-SELECT
-	locations.pk_id,
-	locations.location_name
-FROM
-	locations
-WHERE
-	locations.geo_level_id = 4
-        and
-  locations.province_id = '" . $this->form_values['combo1'] . "'
-)B
-ON A.district_id = B.pk_id
-GROUP BY A.district_id";
+        JOIN (
+        SELECT
+                locations.pk_id,
+                locations.location_name
+        FROM
+                locations
+        WHERE
+                locations.geo_level_id = 4
+                and
+          locations.province_id = '" . $this->form_values['combo1'] . "'
+        )B
+        ON A.district_id = B.pk_id
+        GROUP BY A.district_id";
         } else {
             $str_qry = "";
         }
@@ -502,7 +502,7 @@ GROUP BY A.district_id";
 	B.location_name,
 	SUM(A.reported) AS reported,
 	SUM(IF(A.coveragePer < 90, 1, 0)) AS less90PerCoverage
-FROM
+        FROM
 	(
 		SELECT
 			campaign_data.district_id,
@@ -517,19 +517,19 @@ FROM
 		GROUP BY
 			locations.pk_id
 	) A
-RIGHT JOIN (
-SELECT DISTINCT
-	Province.pk_id,
-	Province.location_name
-FROM
-	campaign_districts
-INNER JOIN locations AS District ON campaign_districts.district_id = District.pk_id
-INNER JOIN locations AS Province ON District.province_id = Province.pk_id
-" . $arr_where_d . "
-) B
-ON A.province_id = B.pk_id
-GROUP BY
-	A.province_id";
+        RIGHT JOIN (
+        SELECT DISTINCT
+                Province.pk_id,
+                Province.location_name
+        FROM
+                campaign_districts
+        INNER JOIN locations AS District ON campaign_districts.district_id = District.pk_id
+        INNER JOIN locations AS Province ON District.province_id = Province.pk_id
+        " . $arr_where_d . "
+        ) B
+        ON A.province_id = B.pk_id
+        GROUP BY
+                A.province_id";
 
 
         $row = $this->_em->getConnection()->prepare($str_qry);
@@ -584,9 +584,6 @@ GROUP BY
             $arr_where = "where campaign_data.campaign_id = " . $form_values['campaign_id'] . "";
         }
 
-
-
-
         $str_qry = "SELECT
 	Province.pk_id,
 	Province.location_name,
@@ -594,14 +591,13 @@ GROUP BY
 	SUM(campaign_data.vials_used) AS vials_used,
 	SUM(campaign_data.vials_returned) AS vials_returned,
 	SUM(campaign_data.vials_expired) AS vials_expired
-FROM
-campaign_data
-INNER JOIN locations AS District ON campaign_data.district_id = District.pk_id
-INNER JOIN locations AS Province ON District.province_id = Province.pk_id
-$arr_where
-GROUP BY
-Province.pk_id
-";
+        FROM
+        campaign_data
+        INNER JOIN locations AS District ON campaign_data.district_id = District.pk_id
+        INNER JOIN locations AS Province ON District.province_id = Province.pk_id
+        $arr_where
+        GROUP BY
+        Province.pk_id";
 
 
         $row = $this->_em->getConnection()->prepare($str_qry);
