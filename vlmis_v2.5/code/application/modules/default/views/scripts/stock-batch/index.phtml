@@ -83,7 +83,7 @@
                                             </div>                                                        
                                         </div>  
                                         <!--<div class="col-md-3">
-                                            <div class="control-group" style="<?php //echo (!empty($product)) ? 'display:block' : 'display:none';   ?>" id="priorityBatches">
+                                            <div class="control-group" style="<?php //echo (!empty($product)) ? 'display:block' : 'display:none';     ?>" id="priorityBatches">
                                                 <label class="control-label">
                                                     &nbsp;
                                                 </label>
@@ -188,7 +188,6 @@
                                                 }
 
                                                 $placement_history = $row['pkId'] . '|' . $row['itemName'] . '|' . $row['number'] . '|' . $row['expiryDate'];
-
                                                 if ($row['BatchQty'] < 0) {
                                                     $row['BatchQty'] = 0;
                                                 }
@@ -204,15 +203,16 @@
                                                             <?php $this->batchVvmStage($row['pkId']); ?> 
                                                         </a>
                                                     </td>
-                                                    <td <?php if ($this->isExpiryEdit($row['pkId'])) { ?>class="editableSingle expiry id<?php echo $row['pkId']; ?>" <?php } ?> style="<?php
-                                                    $current_date = date("y/m/d");
-                                                    $expiray_date = date("y/m/d", strtotime($row['expiryDate']));
-                                                    if ($expiray_date < $current_date) {
-                                                        echo 'color:red';
-                                                    } else {
-                                                        echo 'color:green';
-                                                    }
-                                                    ?>"><?php echo date("d/m/Y", strtotime($row['expiryDate'])); ?></td>
+                                                    <td <?php /* if ($this->isExpiryEdit($row['pkId'])) { ?> class="editableSingle expiry id<?php echo $row['pkId']; ?>" <?php } */ ?> 
+                                                        style="<?php
+                                                        $current_date = date("y/m/d");
+                                                        $expiray_date = date("y/m/d", strtotime($row['expiryDate']));
+                                                        if ($expiray_date < $current_date) {
+                                                            echo 'color:red';
+                                                        } else {
+                                                            echo 'color:green';
+                                                        }
+                                                        ?>"><?php echo date("d/m/Y", strtotime($row['expiryDate'])); ?></td>
                                                     <td class="right col-md-1"><?php echo number_format($row['BatchQty']); ?></td>
                                                     <td class="right col-md-1"><?php echo number_format($row['BatchQty'] * $row['description']); ?></td>
                                                     <td id="batch<?php echo $row['pkId']; ?>-status"> &nbsp; <?php echo ($this->status == 5 ? 'Expired' : $new_status ); ?></td>
@@ -225,12 +225,12 @@
                                                             echo '';
                                                         } else {
                                                             ?>
-                                                                                                                                                <!--<button class="btn <?php echo ($new_status == 'Stacked') ? "btn-success" : "btn-danger"; ?> input-sm" id="batch<?php echo $row['pkId']; ?>-makeit">
+                                                                                                                                                                        <!--<button class="btn <?php echo ($new_status == 'Stacked') ? "btn-success" : "btn-danger"; ?> input-sm" id="batch<?php echo $row['pkId']; ?>-makeit">
                                                             <?php echo $this->translate("Make it"); ?>
-                                                                                                                                                    <span id="batch<?php echo $row['pkId']; ?>-button">
+                                                                                                                                                                            <span id="batch<?php echo $row['pkId']; ?>-button">
                                                             <?php echo ($new_status == 'Stacked') ? "Running" : "Stacked"; ?>
-                                                                                                                                                    </span>
-                                                                                                                                                </button> -->
+                                                                                                                                                                            </span>
+                                                                                                                                                                        </button> -->
                                                             <?php
                                                         }
                                                         ?>
@@ -278,7 +278,7 @@
                     </tr>
                     <tr>
                         <td class="bg-priority1"><b>Priority 1</b></td>
-                        <td class="bg-priority1">If VVM stage is 2 or expiry is less then 3 Months.</td>
+                        <td class="bg-priority1">If VVM stage is 2 or expiry is less then 3 months.</td>
                     </tr>
                     <tr>
                         <td class="bg-priority2"><b>Priority 2</b></td>

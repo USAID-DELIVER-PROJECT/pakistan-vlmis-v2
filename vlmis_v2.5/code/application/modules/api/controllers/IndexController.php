@@ -194,9 +194,12 @@ class Api_IndexController extends App_Controller_Base {
         $em = Zend_Registry::get('doctrine');
         $em->getConnection()->beginTransaction();
         try {
-            if ($type == 3) {
-                $params = $this->_request->getParams();
-
+            $params = $this->_request->getParams();
+            
+//            echo $created_by->getPkId().'Auth'.$params['auth'];
+//            exit;
+            
+            if ($type == 3) {                
                 $stock_master = new Model_StockMaster();
                 $stock_master->form_values = $params;
                 $result = $stock_master->uploadReceivedQuantityViaScanner();

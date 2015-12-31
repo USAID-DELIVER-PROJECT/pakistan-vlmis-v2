@@ -49,22 +49,22 @@ PurposeTransferHistory:
         to_activity_id:
           referencedColumnName: pk_id
       orphanRemoval: false
-    fromBatch:
-      targetEntity: StockBatch
+    fromStockBatchWarehouse:
+      targetEntity: StockBatchWarehouses
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        from_batch_id:
+        from_stock_batch_warehouse_id:
           referencedColumnName: pk_id
       orphanRemoval: false
-    toBatch:
-      targetEntity: StockBatch
+    toStockBatchWarehouse:
+      targetEntity: StockBatchWarehouses
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        to_batch_id:
+        to_stock_batch_warehouse_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     transactionType:

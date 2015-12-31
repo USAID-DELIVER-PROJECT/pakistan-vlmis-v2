@@ -70,39 +70,9 @@ class HfDataMasterDraft
     private $modifiedDate;
 
     /**
-     * @var integer $childrenLiveBirth
-     */
-    private $childrenLiveBirth;
-
-    /**
-     * @var integer $survivingChildren011
-     */
-    private $survivingChildren011;
-
-    /**
-     * @var integer $childrenAged1223
-     */
-    private $childrenAged1223;
-
-    /**
-     * @var integer $pregnantWomen
-     */
-    private $pregnantWomen;
-
-    /**
      * @var integer $itemAmc
      */
     private $itemAmc;
-
-    /**
-     * @var integer $cbas
-     */
-    private $cbas;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
 
     /**
      * @var ItemPackSizes
@@ -118,6 +88,11 @@ class HfDataMasterDraft
      * @var Users
      */
     private $createdBy;
+
+    /**
+     * @var Users
+     */
+    private $modifiedBy;
 
 
     /**
@@ -351,86 +326,6 @@ class HfDataMasterDraft
     }
 
     /**
-     * Set childrenLiveBirth
-     *
-     * @param integer $childrenLiveBirth
-     */
-    public function setChildrenLiveBirth($childrenLiveBirth)
-    {
-        $this->childrenLiveBirth = $childrenLiveBirth;
-    }
-
-    /**
-     * Get childrenLiveBirth
-     *
-     * @return integer 
-     */
-    public function getChildrenLiveBirth()
-    {
-        return $this->childrenLiveBirth;
-    }
-
-    /**
-     * Set survivingChildren011
-     *
-     * @param integer $survivingChildren011
-     */
-    public function setSurvivingChildren011($survivingChildren011)
-    {
-        $this->survivingChildren011 = $survivingChildren011;
-    }
-
-    /**
-     * Get survivingChildren011
-     *
-     * @return integer 
-     */
-    public function getSurvivingChildren011()
-    {
-        return $this->survivingChildren011;
-    }
-
-    /**
-     * Set childrenAged1223
-     *
-     * @param integer $childrenAged1223
-     */
-    public function setChildrenAged1223($childrenAged1223)
-    {
-        $this->childrenAged1223 = $childrenAged1223;
-    }
-
-    /**
-     * Get childrenAged1223
-     *
-     * @return integer 
-     */
-    public function getChildrenAged1223()
-    {
-        return $this->childrenAged1223;
-    }
-
-    /**
-     * Set pregnantWomen
-     *
-     * @param integer $pregnantWomen
-     */
-    public function setPregnantWomen($pregnantWomen)
-    {
-        $this->pregnantWomen = $pregnantWomen;
-    }
-
-    /**
-     * Get pregnantWomen
-     *
-     * @return integer 
-     */
-    public function getPregnantWomen()
-    {
-        return $this->pregnantWomen;
-    }
-
-    /**
      * Set itemAmc
      *
      * @param integer $itemAmc
@@ -448,46 +343,6 @@ class HfDataMasterDraft
     public function getItemAmc()
     {
         return $this->itemAmc;
-    }
-
-    /**
-     * Set cbas
-     *
-     * @param integer $cbas
-     */
-    public function setCbas($cbas)
-    {
-        $this->cbas = $cbas;
-    }
-
-    /**
-     * Get cbas
-     *
-     * @return integer 
-     */
-    public function getCbas()
-    {
-        return $this->cbas;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
     }
 
     /**
@@ -548,5 +403,25 @@ class HfDataMasterDraft
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
     }
 }

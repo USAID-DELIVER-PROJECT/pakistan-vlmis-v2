@@ -42,6 +42,7 @@ var batchManagement = function () {
             [20, 50, 100, -1],
             [20, 50, 100, "All"] // change per page values here
         ],
+        "oSearch": { "bSmart": false, "bRegex": true },
         "sDom": "<'row'<'col-md-4 col-sm-12'l><'col-md-4 col-sm-12'T><'col-md-4 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
         //
         //"sDom ": 'T<"clear ">lfrtip',
@@ -246,13 +247,24 @@ $(".placement-history").click(function () {
 });
 //$('input:radio[id=status-1]').prop('checked', true);
 
-var search_by = $("#searchby").val();
-if (search_by != '') {
-    $("#searchby").trigger("change");
-}
-$("#searchby").change(function () {
-    $("#searchinput").val('');
+$("#searchby").change(function (e) {
     var val = $(this).val();
 
     searchInputFtn(val);
+
+    if (val == 'expired_before' || val == 'expired_after') {
+        $("input[type=radio][value=5]").attr("disabled", true);
+       
+        $("#searchinput").val("");
+    } else {
+        $("input[type=radio][value=5]").attr("disabled", false);
+    }
+    if (val == 'number') {     
+        $("#searchinput").val("");
+    }
 });
+
+//var search_by = $("#searchby").val();
+//if (search_by != '') {
+//    $("#searchby").trigger("change");
+//}

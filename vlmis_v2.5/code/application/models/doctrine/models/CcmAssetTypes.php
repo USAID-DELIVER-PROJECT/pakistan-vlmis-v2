@@ -25,11 +25,6 @@ class CcmAssetTypes
     private $status;
 
     /**
-     * @var integer $parentId
-     */
-    private $parentId;
-
-    /**
      * @var integer $ccmEquipmentTypeId
      */
     private $ccmEquipmentTypeId;
@@ -43,6 +38,11 @@ class CcmAssetTypes
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
+
+    /**
+     * @var CcmAssetTypes
+     */
+    private $parent;
 
     /**
      * @var Users
@@ -106,26 +106,6 @@ class CcmAssetTypes
     }
 
     /**
-     * Set parentId
-     *
-     * @param integer $parentId
-     */
-    public function setParentId($parentId)
-    {
-        $this->parentId = $parentId;
-    }
-
-    /**
-     * Get parentId
-     *
-     * @return integer 
-     */
-    public function getParentId()
-    {
-        return $this->parentId;
-    }
-
-    /**
      * Set ccmEquipmentTypeId
      *
      * @param integer $ccmEquipmentTypeId
@@ -183,6 +163,26 @@ class CcmAssetTypes
     public function getModifiedDate()
     {
         return $this->modifiedDate;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param CcmAssetTypes $parent
+     */
+    public function setParent(\CcmAssetTypes $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return CcmAssetTypes 
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 
     /**

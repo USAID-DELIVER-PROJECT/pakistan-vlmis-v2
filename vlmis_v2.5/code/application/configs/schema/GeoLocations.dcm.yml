@@ -24,15 +24,6 @@ GeoLocations:
       nullable: false
       column: modified_date
   oneToOne:
-    location:
-      targetEntity: Locations
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        location_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     modifiedBy:
       targetEntity: Users
       cascade: {  }
@@ -40,6 +31,15 @@ GeoLocations:
       inversedBy: null
       joinColumns:
         modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    location:
+      targetEntity: Locations
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        location_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     geoMap:

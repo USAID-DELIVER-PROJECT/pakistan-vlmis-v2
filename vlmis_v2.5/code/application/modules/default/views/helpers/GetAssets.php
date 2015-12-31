@@ -77,7 +77,8 @@ class Zend_View_Helper_GetAssets extends Zend_View_Helper_Abstract {
 	cat.pk_id AS ccmAssetId,
 	cat.asset_type_name As assetTypeName,
 	csh.working_quantity AS quantity,
-	cm.ccm_model_name AS ccmModelName
+	cm.ccm_model_name AS ccmModelName,
+        csh.comments
         FROM
                 cold_chain cc
         INNER JOIN ccm_models cm ON cc.ccm_model_id = cm.pk_id
@@ -89,6 +90,7 @@ class Zend_View_Helper_GetAssets extends Zend_View_Helper_Abstract {
         AND cat.pk_id IN (2, 4, 5)
         GROUP BY
                 cm.ccm_model_name";
+
 
 
         $this->_em = Zend_Registry::get('doctrine');

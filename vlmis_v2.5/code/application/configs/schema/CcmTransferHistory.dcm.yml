@@ -32,15 +32,6 @@ CcmTransferHistory:
       nullable: false
       column: modified_date
   oneToOne:
-    ccm:
-      targetEntity: ColdChain
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        ccm_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     modifiedBy:
       targetEntity: Users
       cascade: {  }
@@ -48,6 +39,15 @@ CcmTransferHistory:
       inversedBy: null
       joinColumns:
         modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    ccm:
+      targetEntity: ColdChain
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        ccm_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     fromWarehouse:

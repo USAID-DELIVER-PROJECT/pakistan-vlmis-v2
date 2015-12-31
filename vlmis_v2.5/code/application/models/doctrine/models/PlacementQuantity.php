@@ -20,14 +20,14 @@ class PlacementQuantity
     private $quantity;
 
     /**
+     * @var StockBatchWarehouses
+     */
+    private $stockBatchWarehouse;
+
+    /**
      * @var ColdChain
      */
     private $ccm;
-
-    /**
-     * @var StockBatch
-     */
-    private $stockBatch;
 
 
     /**
@@ -61,6 +61,26 @@ class PlacementQuantity
     }
 
     /**
+     * Set stockBatchWarehouse
+     *
+     * @param StockBatchWarehouses $stockBatchWarehouse
+     */
+    public function setStockBatchWarehouse(\StockBatchWarehouses $stockBatchWarehouse)
+    {
+        $this->stockBatchWarehouse = $stockBatchWarehouse;
+    }
+
+    /**
+     * Get stockBatchWarehouse
+     *
+     * @return StockBatchWarehouses 
+     */
+    public function getStockBatchWarehouse()
+    {
+        return $this->stockBatchWarehouse;
+    }
+
+    /**
      * Set ccm
      *
      * @param ColdChain $ccm
@@ -78,25 +98,5 @@ class PlacementQuantity
     public function getCcm()
     {
         return $this->ccm;
-    }
-
-    /**
-     * Set stockBatch
-     *
-     * @param StockBatch $stockBatch
-     */
-    public function setStockBatch(\StockBatch $stockBatch)
-    {
-        $this->stockBatch = $stockBatch;
-    }
-
-    /**
-     * Get stockBatch
-     *
-     * @return StockBatch 
-     */
-    public function getStockBatch()
-    {
-        return $this->stockBatch;
     }
 }

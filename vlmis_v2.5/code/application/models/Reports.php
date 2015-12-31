@@ -156,6 +156,28 @@ class Model_Reports extends Model_Base {
         }
     }
 
+    public function getLastCreatedDateIm() {
+        if ($this->form_values['wh_id'] != 'null') {
+            $d = Zend_Registry::get('first_month');
+
+            $str_sql = $this->_em->createQueryBuilder()
+                    ->select("IF(max(wd.transactionDate) > 0,max(wd.transactionDate), 0) as MaxDate")
+                    ->from("StockDetail", "sd")
+                    ->join("sd.stockMaster", "wd")
+                    ->join("sd.stockBatchWarehouse", "sbw")
+                    ->where("sbw.warehouse = " . $this->form_values['wh_id']);
+
+            // echo $str_sql->getQuery()->getSql();
+            $row = $str_sql->getQuery()->getResult();
+            //echo $row[0]['MaxDate'];
+            if ($row[0]['MaxDate'] != 0) {
+                return $row[0]['MaxDate'];
+            } else {
+                return false;
+            }
+        }
+    }
+
     public function getLastCreatedDate2() {
         if ($this->form_values['wh_id'] != 'null') {
             $d = Zend_Registry::get('first_month');
@@ -612,49 +634,12 @@ class Model_Reports extends Model_Base {
             $L3M_dt = new DateTime($last_3months[$i]['MaxDate']);
             $dataMonthArr[] = $L3M_dt->format('Y-m-d');
         }
-//
-//        if (isset($dataMonthArr)) {
-//            foreach ($dataMonthArr as $mon) {
-//                //$mon = $date->format( "Y-m-d" );
-//                $L3M_dt = new DateTime($mon);
-//                $do3Months = "Z" . base64_encode($wh_Id . '|' . $mon . '|0');
-//                $rows = $this->_em->getRepository('LogBook')->findBy(array('warehouse' => $wh_Id, 'vaccinationDate' => $L3M_dt->format("Y-m-d")));
-//                if (count($rows) > 0) {
-//                    $months[] = "<a href=log-book-add?do=" . $do3Months . " class='btn btn-xs green'>" . $L3M_dt->format('M-y') . "</a>";
-//                } else {
-//                    $months[] = "<a href=log-book-add?do=" . $do3Months . " class='btn btn-xs green'>" . $L3M_dt->format('M-y') . "</a>";
-//                }
-//            }
-//            $months = array_reverse($months);
-//        }
-//
-//        $L3M_dt = new DateTime();
-//        // $curr_date =  date("Y-m-d");
-//        /// echo $curr_date;
-//        echo $L3M_dt->format('Y-m');
-//        echo substr($last_report_date, 0, 7);
-//        exit;
-//
-//        if (substr($last_report_date, 0, 7) < $L3M_dt->format('Y-m')) {
-//            $L3M_dt = new DateTime($last_report_date . "-01");
-//            $L3M_dt->modify("+1 month");
-//
-//            // Check if exist in draft
-//            $rows = $this->_em->getRepository('LogBook')->findBy(array('warehouse' => $wh_Id, 'vaccinationDate' => $L3M_dt->format("Y-m-d")));
-//            if (count($rows) > 0) {
-//                $do3Months = "Z" . base64_encode($wh_Id . '|' . $L3M_dt->format("Y-m-d") . '|0'); // It should be 0 in case of new report as well
-//                $months[] = "<a href=log-book-add?do=" . $do3Months . " class='btn btn-xs blue' >Add " . $L3M_dt->format('M-y') . " </a>";
-//            } else {
-//                $do3Months = "Z" . base64_encode($wh_Id . '|' . $L3M_dt->format("Y-m-d") . '|1');
-//                $months[] = "<a href=log-book-add?do=" . $do3Months . " class='btn btn-xs blue' >Add " . $L3M_dt->format('M-y') . " </a>";
-//            }
-//        }
-//        echo implode('', $months);
+
 
         $end_date = date('Y') . '-' . date('m') . '-01';
-//exit;
+
         $end_date = date('Y-m-d', strtotime("-1 days", strtotime("+1 month", strtotime($end_date))));
-        //  $start_date = date('Y-m-d', strtotime("-364 days", strtotime($end_date)));
+
         $start_date = '2015-05-01';
         // Start date and End date
         $begin = new DateTime($start_date);

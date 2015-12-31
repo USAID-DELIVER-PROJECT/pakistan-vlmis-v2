@@ -138,6 +138,9 @@
                                         $i = 1;
                                         if ($this->result && count($this->result) > 0) :
                                             foreach ($this->result as $row):
+                                                // batch_id|placement_loc_id|vvm_stage_id|qty, batch_id|placement_loc_id|vvm_stage_id|qty,batch_id|placement_loc_id|vvm_stage_id|qty
+
+                                                $placement_detail = $row['batchId'] . '|' . $row['itemName'] . '|' . $row['number'] . '|' . $row['expiryDate'] . '|' . $row['quantity'];
                                                 ?>
                                                 <tr class="gradeX">
                                                     <td><?php echo date("d/m/Y", strtotime($row['transactionDate'])); ?></td>
@@ -151,13 +154,16 @@
                                                     <td><?php echo number_format($row['description']); ?></td>
                                                     <td><?php echo $row['itemUnitName']; ?></td>                                                    
                                                     <td><?php echo date("d/m/Y", strtotime($row['expiryDate'])); ?></td>
-                                                    <td>
+                                                    <td style="text-align:center;">
                                                         <?php if ($this->role_id != 23) { ?>
-                                                            <!-- <a itemid="<?php echo $row['detailId'] ?>" class="btn stock-placement btn-link btn-success btn-mini" data-toggle="modal" href="#modal-stock-placement"><?php echo $this->translate("Placement") ?></a>&nbsp;-->
-                                                            <?php if ($this->isReceiveDelete($row['detailId'], $row['fromWarehouseId'])) { ?>   <a data-toggle="notyfy" id="<?php echo $row['detailId']; ?>" data-type="confirm" data-layout="top" class="fa fa-times cursor-hand"></a> <?php } ?>
-                                                            <!-- <?php //if ($this->isReceiveEdit($row['detailId'],$this->wh_id)) {          ?>| <a id="<?php //echo $row['detailId'];          ?>-stockedit" class="fa fa-edit cursor-hand"></a> <?php //}          ?> -->
-                                                            <!--<a id="<?php echo $row['detailId']; ?>-stockedit" class="fa fa-edit cursor-hand"></a> -->
-                                                        <?php } ?>
+                                                          <!-- <a itemid="<?php //echo $row['detailId'] ?>" class="btn stock-placement btn-link btn-success btn-mini" data-toggle="modal" href="#modal-stock-placement"><?php //echo $this->translate("Placement") ?></a>&nbsp; -->
+                                                          <?php if ($this->isReceiveDelete($row['detailId'], $row['fromWarehouseId'])) { ?>   <a data-toggle="notyfy" id="<?php echo $row['detailId']; ?>" data-type="confirm" data-layout="top" class="fa fa-times cursor-hand"></a> <?php } ?>
+                                                          <!-- <?php //if ($this->isReceiveEdit($row['detailId'],$this->wh_id)) {            ?>| <a id="<?php //echo $row['detailId'];            ?>-stockedit" class="fa fa-edit cursor-hand"></a> <?php //}            ?> -->
+                                                          <!--<a id="<?php echo $row['detailId']; ?>-stockedit" class="fa fa-edit cursor-hand"></a> -->
+                                                          <?php } ?>
+                                                        <!-- <a id="<?php //echo $row['detailId']; ?>" pkid="<?php //echo $placement_detail; ?>" class="placement-detail"  data-toggle="modal" title="Placement Info" href="#modal-placement-detail">
+                                                            <i class="fa fa-times cursor-hand">  </i>   
+                                                        </a> -->
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -195,25 +201,30 @@
                 </div>
             </div>
         </div>
-        <form method="post" action="<?php echo $this->baseUrl(); ?>/stock/place-stock" id="form-stock-placement">
-            <div class="modal fade" id="modal-stock-placement" tabindex="-1" role="basic" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h3><?php echo $this->translate("Stock Placement"); ?></h3>
-                        </div>
-                        <div class="modal-body" id="modal-body-contents">
-                            <div style="text-align: center; "><img src="<?php echo $this->baseUrl(); ?>/images/loader.gif"/></div>
-                        </div>
-                        <div class="modal-footer hide" id="update-button">
-                            <button data-loading-text="Please Wait ..." class="btn btn-primary" id="btn-loading" type="submit"><?php echo $this->translate("Update"); ?></button>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-        </form>
+
     </div>
 </div>
 <!-- // Content END -->
+
+<!-- Modal -->
+<!-- /stock/delete-batch-placement  -->
+<form method="post" action="<?php echo $this->baseUrl(); ?>/stock/delete" id="form-delete-placement">
+    <div class="modal fade" id="modal-placement-detail" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3>Delete Batch Placement</h3>
+                </div>
+                <div class="modal-body" id="modal-body-contents">
+
+                </div>
+                <div class="modal-footer " id="update-button">
+                    <input id="delete-placement" class="btn btn-primary" type="submit" value="<?php echo $this->translate("Delete"); ?>">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- End Modal -->

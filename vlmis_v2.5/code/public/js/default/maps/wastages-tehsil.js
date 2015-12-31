@@ -330,8 +330,8 @@ function drawGrid(){
     jsonData.length = 0;
     var features = vLMIS.features;
     
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>Tehsil</th><th>Total UCs</th><th>Reported UCs</th><th>Wastages UCs</th><th>Wastages Rate(%)</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>Tehsil</th><th>Total UCs</th><th>Reported UCs</th><th>Wastages UCs</th><th colspan='2' class='center'>Wastages Rate(%)</th></thead>";
     for (var i = 0; i < features.length; i++) {
         table += "<tr><td>" + features[i].attributes.tehsilName + "</td><td align='right'>" + features[i].attributes.total_ucs + "</td><td align='right'>" + features[i].attributes.reported + "</td><td align='right'>" + features[i].attributes.wastages + "</td><td align='right'>" + features[i].attributes.wastages_rate + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
         jsonData.push({
@@ -405,7 +405,7 @@ function districtCountGraph() {
         type: 'column2D',
         renderAt: 'chart-container',
         width: '100%',
-        height: '100%',
+        height: '98%',
         dataFormat: 'json',
         dataSource: {
             "chart": {
@@ -460,7 +460,7 @@ function lastMonthsStats(tehsil_id,province_id){
         chart = response;
         $("#ucs_list").html("");
 
-        table = "<table class='table table-condensed table-hover'>";
+        table = "<table class='table table-condensed table-bordered table-hover'>";
         table += "<thead><th>S.No</th><th>UC Name</th><th>Wastages(%)</th></thead>";
         for (var i = 0; i < chart.length; i++) {
             table += "<tr><td>" + (i+1) + "</td><td>" + chart[i].location_name + "</td><td align='center'>" + chart[i].wastages_rate + "</td>";
@@ -476,8 +476,8 @@ function gridFilter(color){
     $("#attributeGrid").html("");
     dataDownload.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>Tehsil</th><th>Total UCs</th><th>Reported UCs</th><th>Wastages UCs</th><th>Wastages Rate(%)</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>Tehsil</th><th>Total UCs</th><th>Reported UCs</th><th class='right'>Wastages UCs</th><th class='center' colspan='2'>Wastages Rate(%)</th></thead>";
     for (var i = 0; i < features.length; i++) {
         if (features[i].attributes.color == color) {
              table += "<tr><td>" + features[i].attributes.tehsilName + "</td><td align='right'>" + features[i].attributes.total_ucs + "</td><td align='right'>" + features[i].attributes.reported + "</td><td align='right'>" + features[i].attributes.wastages + "</td><td align='right'>" + features[i].attributes.wastages_rate + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";

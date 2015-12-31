@@ -32,13 +32,13 @@ VvmTransferHistory:
         modified_by:
           referencedColumnName: pk_id
       orphanRemoval: false
-    batch:
-      targetEntity: StockBatch
+    stockBatchWarehouse:
+      targetEntity: StockBatchWarehouses
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        batch_id:
+        stock_batch_warehouse_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     fromVvmStage:

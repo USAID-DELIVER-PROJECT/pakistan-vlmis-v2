@@ -54,13 +54,13 @@ ItemPackSizes:
       nullable: false
       column: modified_date
   oneToOne:
-    stakeholderActivity:
-      targetEntity: StakeholderActivities
+    modifiedBy:
+      targetEntity: Users
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        stakeholder_activity_id:
+        modified_by:
           referencedColumnName: pk_id
       orphanRemoval: false
     itemCategory:
@@ -90,24 +90,6 @@ ItemPackSizes:
         item_id:
           referencedColumnName: pk_id
       orphanRemoval: false
-    createdBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        created_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    modifiedBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        modified_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     vvmGroup:
       targetEntity: VvmGroups
       cascade: {  }
@@ -115,6 +97,15 @@ ItemPackSizes:
       inversedBy: null
       joinColumns:
         vvm_group_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    createdBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        created_by:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

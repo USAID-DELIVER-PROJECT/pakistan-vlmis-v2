@@ -42,114 +42,6 @@ class StakeholderItemPackSizesProxy extends \StakeholderItemPackSizes implements
         return parent::getPkId();
     }
 
-    public function setPackSizeDescription($packSizeDescription)
-    {
-        $this->__load();
-        return parent::setPackSizeDescription($packSizeDescription);
-    }
-
-    public function getPackSizeDescription()
-    {
-        $this->__load();
-        return parent::getPackSizeDescription();
-    }
-
-    public function setLength($length)
-    {
-        $this->__load();
-        return parent::setLength($length);
-    }
-
-    public function getLength()
-    {
-        $this->__load();
-        return parent::getLength();
-    }
-
-    public function setWidth($width)
-    {
-        $this->__load();
-        return parent::setWidth($width);
-    }
-
-    public function getWidth()
-    {
-        $this->__load();
-        return parent::getWidth();
-    }
-
-    public function setHeight($height)
-    {
-        $this->__load();
-        return parent::setHeight($height);
-    }
-
-    public function getHeight()
-    {
-        $this->__load();
-        return parent::getHeight();
-    }
-
-    public function setQuantityPerPack($quantityPerPack)
-    {
-        $this->__load();
-        return parent::setQuantityPerPack($quantityPerPack);
-    }
-
-    public function getQuantityPerPack()
-    {
-        $this->__load();
-        return parent::getQuantityPerPack();
-    }
-
-    public function setStatus($status)
-    {
-        $this->__load();
-        return parent::setStatus($status);
-    }
-
-    public function getStatus()
-    {
-        $this->__load();
-        return parent::getStatus();
-    }
-
-    public function setListRank($listRank)
-    {
-        $this->__load();
-        return parent::setListRank($listRank);
-    }
-
-    public function getListRank()
-    {
-        $this->__load();
-        return parent::getListRank();
-    }
-
-    public function setVolumPerVial($volumPerVial)
-    {
-        $this->__load();
-        return parent::setVolumPerVial($volumPerVial);
-    }
-
-    public function getVolumPerVial()
-    {
-        $this->__load();
-        return parent::getVolumPerVial();
-    }
-
-    public function setItemGtin($itemGtin)
-    {
-        $this->__load();
-        return parent::setItemGtin($itemGtin);
-    }
-
-    public function getItemGtin()
-    {
-        $this->__load();
-        return parent::getItemGtin();
-    }
-
     public function setCreatedDate($createdDate)
     {
         $this->__load();
@@ -198,18 +90,6 @@ class StakeholderItemPackSizesProxy extends \StakeholderItemPackSizes implements
         return parent::getStakeholder();
     }
 
-    public function setPackagingLevel(\ListDetail $packagingLevel)
-    {
-        $this->__load();
-        return parent::setPackagingLevel($packagingLevel);
-    }
-
-    public function getPackagingLevel()
-    {
-        $this->__load();
-        return parent::getPackagingLevel();
-    }
-
     public function setCreatedBy(\Users $createdBy)
     {
         $this->__load();
@@ -237,7 +117,7 @@ class StakeholderItemPackSizesProxy extends \StakeholderItemPackSizes implements
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'packSizeDescription', 'length', 'width', 'height', 'quantityPerPack', 'status', 'listRank', 'volumPerVial', 'itemGtin', 'createdDate', 'modifiedDate', 'itemPackSize', 'stakeholder', 'packagingLevel', 'createdBy', 'modifiedBy');
+        return array('__isInitialized__', 'pkId', 'createdDate', 'modifiedDate', 'itemPackSize', 'stakeholder', 'createdBy', 'modifiedBy');
     }
 
     public function __clone()

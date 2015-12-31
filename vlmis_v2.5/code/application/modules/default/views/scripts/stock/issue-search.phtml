@@ -336,6 +336,7 @@
                                         $i = 1;
                                         if ($this->result && count($this->result) > 0) :
                                             foreach ($this->result as $row):
+                                                
                                                 ?>
                                                 <tr class="gradeX">
                                                     <td><?php echo date("d/m/Y", strtotime($row['transactionDate'])); ?></td>
@@ -356,9 +357,14 @@
                                                     <td><?php echo $row['createdDate']; ?></td>
                                                     <td class="nonprint">                                                     
                                                         <?php if ($this->isIssueDelete($row['detailId'])) { ?>
-                                                            <a data-toggle="notyfy" id="<?php echo $row['detailId']; ?>" data-type="confirm" data-layout="top" class="fa fa-times cursor-hand"></a>
-                                                        <?php } ?>
-                                                        <!-- <?php //if ($this->isIssueEdit($row['detailId'])) {   ?> | <a id="<?php //echo $row['detailId'];   ?>-stockedit" class="fa fa-edit cursor-hand"></a> <?php //}   ?> -->
+                                                          <a data-toggle="notyfy" id="<?php echo $row['detailId']; ?>" data-type="confirm" data-layout="top" class="fa fa-times cursor-hand"></a>
+                                                          <?php } ?>
+                                                        <!-- <?php //if ($this->isIssueEdit($row['detailId'])) {    ?> | <a id="<?php //echo $row['detailId'];    ?>-stockedit" class="fa fa-edit cursor-hand"></a> <?php //}    ?> -->
+
+                                                        <!-- <a id="<?php echo $row['detailId']; ?>" class="delete-issue"  data-toggle="modal" title="Delete Issue" href="#modal-delete-issue">
+                                                            <i class="fa fa-times cursor-hand">  </i>   
+                                                        </a> -->
+
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -395,3 +401,25 @@
     </div>
 </div>
 <!-- // Content END -->
+
+<!-- Modal --> <!-- /stock/delete-stock-issue     -->
+<form method="post" action="<?php echo $this->baseUrl(); ?>/stock/delete-issue" id="form_delete_issue">
+    <div class="modal fade" id="modal-delete-issue" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3>Delete Issue</h3>
+                </div>
+                <div class="modal-body" id="modal-body-contents">
+
+                </div>
+                <div class="modal-footer " id="delete-issue">
+                    <input class="btn btn-primary" type="submit" value="<?php echo $this->translate("Delete"); ?>">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- End Modal -->

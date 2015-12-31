@@ -184,7 +184,7 @@
                                                                 <input class="working_quantity form-control"  type="text" id="<?= $i ?>-work_quantity" name="work_quantity[<?= $i ?>]"  value="<?= $qu ?>">
                                                             </td>
                                                             <td>
-                                                                <input class="comments form-control"  type="text" name="comments[<?= $i ?>]" value="">
+                                                                <input class="comments form-control"  type="text" name="comments[<?= $i ?>]" value="<?php echo $row['comments'];?>">
                                                             </td>
                                                             </tr>
 
@@ -227,7 +227,7 @@
                                                                 <input class="working_quantity form-control" type="text" id="<?= $i ?>-work_quantity" name="work_quantity[<?= $i ?>]"  value="<?= $qu ?>">
                                                             </td>
                                                             <td>
-                                                                <input class="comments form-control" type="text" name="comments[<?= $i ?>]" value="">
+                                                                <input class="comments form-control" type="text" name="comments[<?= $i ?>]" value="<?php echo $row['comments'];?>">
                                                             </td>
                                                             </tr>
 

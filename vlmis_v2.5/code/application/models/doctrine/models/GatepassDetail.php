@@ -30,6 +30,11 @@ class GatepassDetail
     private $modifiedDate;
 
     /**
+     * @var Users
+     */
+    private $modifiedBy;
+
+    /**
      * @var StockDetail
      */
     private $stockDetail;
@@ -43,11 +48,6 @@ class GatepassDetail
      * @var Users
      */
     private $createdBy;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
 
 
     /**
@@ -121,6 +121,26 @@ class GatepassDetail
     }
 
     /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+
+    /**
      * Set stockDetail
      *
      * @param StockDetail $stockDetail
@@ -178,25 +198,5 @@ class GatepassDetail
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
     }
 }

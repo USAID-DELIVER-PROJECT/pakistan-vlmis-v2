@@ -63,14 +63,22 @@ HfDataDetailDraft:
       type: datetime
       nullable: false
       column: modified_date
+    outreachOutsideMale:
+      type: decimal
+      nullable: true
+      column: outreach_outside_male
+    outreachOutsideFemale:
+      type: decimal
+      nullable: true
+      column: outreach_outside_female
   oneToOne:
-    createdBy:
-      targetEntity: Users
+    hfDataMaster:
+      targetEntity: HfDataMasterDraft
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        created_by:
+        hf_data_master_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     modifiedBy:
@@ -91,13 +99,13 @@ HfDataDetailDraft:
         age_group_id:
           referencedColumnName: pk_id
       orphanRemoval: false
-    hfDataMaster:
-      targetEntity: HfDataMasterDraft
+    createdBy:
+      targetEntity: Users
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        hf_data_master_id:
+        created_by:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

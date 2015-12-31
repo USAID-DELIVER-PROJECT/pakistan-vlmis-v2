@@ -60,14 +60,14 @@ class DashboardController extends App_Controller_Base {
             $this->view->district = $district;
             $this->view->level = 1;
         }
-        if ($role_id == 27) {
+        /*if ($role_id == 27) {
             $province = 2;
             $district = 87;
             $this->view->province = $province;
             $this->view->district = $district;
             $this->view->level = 1;
-        }
-        if ($role_id == 30) {
+        }*/
+        if ($role_id == 30 || $role_id == 27) {
 
             $province = $this->_identity->getProvinceId();
             $district = $this->_identity->getDistrictId();
@@ -145,7 +145,7 @@ class DashboardController extends App_Controller_Base {
 
         $this->view->provinces = $location->getProvincesName();
         $item = new Model_ItemPackSizes();
-        $this->view->items = $item->getAllVaccines();
+        $this->view->items = $item->getAllItemsByCategoryAndActivity("1","1");
 
         // Default Filters for IM
         $this->view->item = 6;
@@ -200,7 +200,7 @@ class DashboardController extends App_Controller_Base {
 
         if ($role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7) {
             $stock_master = new Model_StockMaster();
-            $this->view->pending_receive = $stock_master->getPendingReceive();
+            $this->view->pending_receive1 = $stock_master->getPendingReceive();
             $this->view->warehouse_name = $auth->getWarehouseName();
         }
 
@@ -350,7 +350,7 @@ class DashboardController extends App_Controller_Base {
 
         $this->view->provinces = $location->getProvincesName();
         $item = new Model_ItemPackSizes();
-        $this->view->items = $item->getAllVaccines();
+        $this->view->items = $item->getAllItemsByCategoryAndActivity("1","1");
         // Default Filters for IM
         $this->view->item = 6;
         $this->view->date = Zend_Registry::get('report_month');

@@ -40,13 +40,13 @@ StockBatchVvmHistory:
         stock_batch_vvm_id:
           referencedColumnName: pk_id
       orphanRemoval: false
-    stockBatch:
-      targetEntity: StockBatch
+    stockBatchWarehouse:
+      targetEntity: StockBatchWarehouses
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        stock_batch_id:
+        stock_batch_warehouse_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     vvmStage:

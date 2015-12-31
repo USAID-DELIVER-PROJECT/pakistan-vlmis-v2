@@ -10,11 +10,11 @@ StockBatchVvm:
       column: pk_id
       generator:
         strategy: IDENTITY
-    stockBatchId:
+    stockBatchWarehouseId:
       type: integer
       unsigned: false
       nullable: true
-      column: stock_batch_id
+      column: stock_batch_warehouse_id
     vvmStage:
       type: integer
       unsigned: false

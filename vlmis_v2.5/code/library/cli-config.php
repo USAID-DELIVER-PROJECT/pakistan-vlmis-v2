@@ -32,7 +32,7 @@ $connectionOptions = array(
     'driver' => 'pdo_mysql',
     'user' => 'vlmis',
     'password' => 'v123lmis',
-    'dbname' => 'vlmis_zr2',
+    'dbname' => 'vlmis_zr3',
     'host' => '192.168.1.72');
 
 $em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);

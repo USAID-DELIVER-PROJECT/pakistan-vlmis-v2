@@ -35,6 +35,11 @@ class HelpMessages
     private $modifiedDate;
 
     /**
+     * @var Users
+     */
+    private $modifiedBy;
+
+    /**
      * @var Resources
      */
     private $resource;
@@ -43,11 +48,6 @@ class HelpMessages
      * @var Users
      */
     private $createdBy;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
 
 
     /**
@@ -141,6 +141,26 @@ class HelpMessages
     }
 
     /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+
+    /**
      * Set resource
      *
      * @param Resources $resource
@@ -178,25 +198,5 @@ class HelpMessages
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
     }
 }

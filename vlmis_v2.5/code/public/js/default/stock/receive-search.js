@@ -50,7 +50,7 @@ $(function () {
         }
     });
 
-    $('#print_vaccine_receive').click(function() {
+    $('#print_vaccine_receive').click(function () {
         var searchby, number, warehouses, product, date_from, date_to, all_arguments;
         searchby = $('#searchby').val();
         number = $('#number').val();
@@ -58,7 +58,8 @@ $(function () {
         product = $('#product').val();
         date_from = $('#date_from').val();
         date_to = $('#date_to').val();
-        all_arguments = "searchby=" + searchby + "&number=" + number + "&warehouses=" + warehouses + "&product=" + product + "&date_from=" + date_from + "&date_to=" + date_to;
+        activity_id = $('#activity_id').val();
+        all_arguments = "searchby=" + searchby + "&number=" + number + "&warehouses=" + warehouses + "&product=" + product + "&date_from=" + date_from + "&date_to=" + date_to + "&activity_id=" + activity_id;
 
         var val = $('input[name="groupBy"]:checked').val();
         window.open('vaccine-placement-receive?grpBy=' + val + '&' + all_arguments, '_blank', 'scrollbars=1,width=860,height=595');
@@ -74,8 +75,8 @@ $(function () {
                 product = $('#product').val();
                 date_from = $('#date_from').val();
                 date_to = $('#date_to').val();
-                all_arguments = "searchby=" + searchby + "&number=" + number + "&warehouses=" + warehouses + "&product=" + product + "&date_from=" + date_from + "&date_to=" + date_to;
-
+                activity_id = $('#activity_id').val();
+                all_arguments = "searchby=" + searchby + "&number=" + number + "&warehouses=" + warehouses + "&product=" + product + "&date_from=" + date_from + "&date_to=" + date_to + "&activity_id=" + activity_id;
 
                 var val = $('input[name="summary"]:checked').val();
                 window.open('vaccine-placement-receive-summary?type=' + val + '&' + all_arguments, '_blank', 'scrollbars=1,width=860,height=595');
@@ -219,4 +220,102 @@ $("a[id$='-stockedit']").click(function () {
     var value = $(this).attr("id");
     var id = value.replace("-stockedit", "");
     document.location = appName + "/stock/receive-supplier/id/" + id + "/t/s";
+});
+
+
+$("a[id$='-batchdetail']").click(function () {
+    $('#batchdetailbody').html('');
+    var batch_id = $(this).data("id");
+
+    $.ajax({
+        type: "POST",
+        url: appName + "/stock-batch/ajax-get-placement-history",
+        data: {id: batch_id},
+        dataType: 'html',
+        success: function (data) {
+            $('#batchdetailbody').html(data);
+        }
+    });
+});
+
+$(".placement-detail").click(function () {
+    $('#modal-body-contents').html("<div style='text-align: center; '><img src='" + appName + "/images/loader.gif' style='margin:30px;'  /></div>");
+    $.ajax({
+        type: "POST",
+        url: appName + "/stock/ajax-get-placement-detail",
+        data: {id: $(this).attr('pkid')},
+        dataType: 'html',
+        success: function (data) {
+            $('#modal-body-contents').html(data);
+
+            $('input[type="text"]').keydown(function (e) {
+                if (e.shiftKey || e.ctrlKey || e.altKey) { // if shift, ctrl or alt keys held down
+                    e.preventDefault();         // Prevent character input
+                } else {
+                    var n = e.keyCode;
+                    if (!((n == 8)              // backspace
+                            || (n == 9)                // Tab
+                            || (n == 46)                // delete
+                            || (n >= 35 && n <= 40)     // arrow keys/home/end
+                            || (n >= 48 && n <= 57)     // numbers on keyboard
+                            || (n >= 96 && n <= 105))   // number on keypad
+                            ) {
+                        e.preventDefault();     // Prevent character input
+                    }
+                }
+            });
+
+        }
+    });
+});
+
+$("#delete-placement").click(function (e) {
+
+    Metronic.startPageLoading('Please wait...');
+    e.preventDefault();
+    var flag = true;
+
+    var qty_r = $('#qty-r').attr("value");
+    var del_total_qty = 0;
+
+    $("input[id$='-qty-del']").each(function () {
+        //var del_qty = $(this).attr("value");
+        //alert(del_qty);
+
+        var available_qty = $(this).attr("data-aqty");
+        var del_qty = $(this).attr("value");
+        del_total_qty = del_total_qty + parseInt(del_qty);
+
+        if (isNaN(del_qty)) {
+
+            alert("Quantity to be deleted must be a positive integer.");
+            $(this).focus();
+
+            flag = false;
+            return false;
+        } else if (((parseInt(del_qty) > parseInt(available_qty)))) {
+            alert("Quantity to be deleted ( " + del_qty + " ) must be less than or equal to the available quantity ( " + available_qty + " ).");
+            $(this).focus();
+
+            flag = false;
+            return false;
+        }
+    });
+
+    if (flag == true) {
+        if (del_total_qty != qty_r) {
+            alert("Total quantity to be deleted ( " + del_total_qty + " ) shoulde be equal to the received quantity ( " + qty_r + " ).");
+            flag = false;
+            return false;
+        }
+    }
+
+
+    if (flag == true) {
+//                clearInterval(interval);
+        $("#form-delete-placement").submit();
+    } else {
+        Metronic.stopPageLoading();
+    }
+
 });

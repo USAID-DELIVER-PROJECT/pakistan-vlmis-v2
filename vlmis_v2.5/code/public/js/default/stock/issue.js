@@ -378,6 +378,9 @@ $("#new_issue_form").validate({
         },
         activity_id: {
             required: true
+        },
+        transaction_reference:{
+            refnum: true
         }
     },
     messages: {
@@ -404,6 +407,9 @@ $("#new_issue_form").validate({
         },
         activity_id: {
             required: "Please select purpose"
+        },
+        transaction_reference:{
+            refnum: "Only these characters are allowed: Alphanumeric space * , .-_=/# |()"
         }
     },
     submitHandler: function (form) {
@@ -412,6 +418,25 @@ $("#new_issue_form").validate({
         form.submit();
     }
 });
+
+/* Characters allowed for Reference No: 
+ * Alphanumeric
+ * Space
+ * ,
+ * .
+ * -
+ * _
+ * =
+ * /
+ * # 
+ * |
+ * (
+ * )
+ */
+
+$.validator.addMethod("refnum", function (value, element) {
+        return this.optional(element) || value == value.match(/^[a-zA-Z0-9-\s\#\_/,/./=/|/(/)]+$/);
+    });
 
 // validate signup form on keyup and submit
 $("#issue_stock").validate({

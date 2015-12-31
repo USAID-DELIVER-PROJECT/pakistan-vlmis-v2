@@ -312,8 +312,8 @@ function drawGrid(){
     $("#attributeGrid").html("");
     dataDownload.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>District</th><th>Tehsil</th><th>Total Quantity(vials)</th><th>Expire within 6 Months(vials)</th><th>Expiry Rate(%)</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>District</th><th>Tehsil</th><th>Total Quantity(vials)</th><th>Expire within 6 Months(vials)</th><th class='center' colspan='2'>Expiry Rate(%)</th></thead>";
     for (var i = 0; i < features.length; i++) {
         table += "<tr><td>" + features[i].attributes.district + "</td><td>" + features[i].attributes.tehsilName + "</td><td align='right'>" + features[i].attributes.quantity + "</td><td align='right'>" + features[i].attributes.quantity6Months + "</td><td align='right'>" + features[i].attributes.expiryRate + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
         jsonData.push({
@@ -412,8 +412,8 @@ function gridFilter(color){
     $("#attributeGrid").html("");
     dataDownload.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>District</th><th>Tehsil</th><th>Total Quantity(vials)</th><th>Expire within 6 Months(vials)</th><th>Expiry Rate(%)</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>District</th><th>Tehsil</th><th>Total Quantity(vials)</th><th>Expire within 6 Months(vials)</th><th class='center' colspan='2'>Expiry Rate(%)</th></thead>";
     for (var i = 0; i < features.length; i++) {
         if (features[i].attributes.color == color) {
            table += "<tr><td>" + features[i].attributes.district + "</td><td>" + features[i].attributes.tehsilName + "</td><td align='right'>" + features[i].attributes.quantity + "</td><td align='right'>" + features[i].attributes.quantity6Months + "</td><td align='right'>" + features[i].attributes.expiryRate + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
@@ -458,7 +458,7 @@ function lastMonthsStats(tehsil_id,product){
         chart = response;
         $("#batch_list").html("");
 
-        table = "<table class='table table-condensed table-hover'>";
+        table = "<table class='table table-condensed table-bordered table-hover'>";
         table += "<thead><th>S.No</th><th>Tehsil</th><th>Batch</th><th>Quantity</th><th>Expiry</th></thead>";
         for (var i = 0; i < chart.length; i++) {
             table += "<tr><td>" + (i+1) + "</td><td>" + chart[i].tehsil_name + "</td><td>" + chart[i].number + "</td><td align='center'>" + chart[i].quantity + "</td><td align='center'>" + chart[i].expiry_date + "</td>";

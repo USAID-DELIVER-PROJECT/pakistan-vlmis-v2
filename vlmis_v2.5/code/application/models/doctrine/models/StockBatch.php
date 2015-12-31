@@ -20,24 +20,9 @@ class StockBatch
     private $number;
 
     /**
-     * @var integer $batchMasterId
-     */
-    private $batchMasterId;
-
-    /**
-     * @var datetime $expiryDate
+     * @var date $expiryDate
      */
     private $expiryDate;
-
-    /**
-     * @var bigint $quantity
-     */
-    private $quantity;
-
-    /**
-     * @var string $status
-     */
-    private $status;
 
     /**
      * @var float $unitPrice
@@ -45,14 +30,9 @@ class StockBatch
     private $unitPrice;
 
     /**
-     * @var datetime $productionDate
+     * @var date $productionDate
      */
     private $productionDate;
-
-    /**
-     * @var datetime $lastUpdate
-     */
-    private $lastUpdate;
 
     /**
      * @var datetime $createdDate
@@ -65,34 +45,24 @@ class StockBatch
     private $modifiedDate;
 
     /**
-     * @var Users
-     */
-    private $modifiedBy;
-
-    /**
-     * @var ItemPackSizes
-     */
-    private $itemPackSize;
-
-    /**
      * @var VvmTypes
      */
     private $vvmType;
 
     /**
-     * @var Warehouses
+     * @var Users
      */
-    private $warehouse;
-
-    /**
-     * @var StakeholderItemPackSizes
-     */
-    private $stakeholderItemPackSize;
+    private $createdBy;
 
     /**
      * @var Users
      */
-    private $createdBy;
+    private $modifiedBy;
+
+    /**
+     * @var PackInfo
+     */
+    private $packInfo;
 
 
     /**
@@ -126,29 +96,9 @@ class StockBatch
     }
 
     /**
-     * Set batchMasterId
-     *
-     * @param integer $batchMasterId
-     */
-    public function setBatchMasterId($batchMasterId)
-    {
-        $this->batchMasterId = $batchMasterId;
-    }
-
-    /**
-     * Get batchMasterId
-     *
-     * @return integer 
-     */
-    public function getBatchMasterId()
-    {
-        return $this->batchMasterId;
-    }
-
-    /**
      * Set expiryDate
      *
-     * @param datetime $expiryDate
+     * @param date $expiryDate
      */
     public function setExpiryDate($expiryDate)
     {
@@ -158,51 +108,11 @@ class StockBatch
     /**
      * Get expiryDate
      *
-     * @return datetime 
+     * @return date 
      */
     public function getExpiryDate()
     {
         return $this->expiryDate;
-    }
-
-    /**
-     * Set quantity
-     *
-     * @param bigint $quantity
-     */
-    public function setQuantity($quantity)
-    {
-        $this->quantity = $quantity;
-    }
-
-    /**
-     * Get quantity
-     *
-     * @return bigint 
-     */
-    public function getQuantity()
-    {
-        return $this->quantity;
-    }
-
-    /**
-     * Set status
-     *
-     * @param string $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    /**
-     * Get status
-     *
-     * @return string 
-     */
-    public function getStatus()
-    {
-        return $this->status;
     }
 
     /**
@@ -228,7 +138,7 @@ class StockBatch
     /**
      * Set productionDate
      *
-     * @param datetime $productionDate
+     * @param date $productionDate
      */
     public function setProductionDate($productionDate)
     {
@@ -238,31 +148,11 @@ class StockBatch
     /**
      * Get productionDate
      *
-     * @return datetime 
+     * @return date 
      */
     public function getProductionDate()
     {
         return $this->productionDate;
-    }
-
-    /**
-     * Set lastUpdate
-     *
-     * @param datetime $lastUpdate
-     */
-    public function setLastUpdate($lastUpdate)
-    {
-        $this->lastUpdate = $lastUpdate;
-    }
-
-    /**
-     * Get lastUpdate
-     *
-     * @return datetime 
-     */
-    public function getLastUpdate()
-    {
-        return $this->lastUpdate;
     }
 
     /**
@@ -306,46 +196,6 @@ class StockBatch
     }
 
     /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
-     * Set itemPackSize
-     *
-     * @param ItemPackSizes $itemPackSize
-     */
-    public function setItemPackSize(\ItemPackSizes $itemPackSize)
-    {
-        $this->itemPackSize = $itemPackSize;
-    }
-
-    /**
-     * Get itemPackSize
-     *
-     * @return ItemPackSizes 
-     */
-    public function getItemPackSize()
-    {
-        return $this->itemPackSize;
-    }
-
-    /**
      * Set vvmType
      *
      * @param VvmTypes $vvmType
@@ -366,46 +216,6 @@ class StockBatch
     }
 
     /**
-     * Set warehouse
-     *
-     * @param Warehouses $warehouse
-     */
-    public function setWarehouse(\Warehouses $warehouse)
-    {
-        $this->warehouse = $warehouse;
-    }
-
-    /**
-     * Get warehouse
-     *
-     * @return Warehouses 
-     */
-    public function getWarehouse()
-    {
-        return $this->warehouse;
-    }
-
-    /**
-     * Set stakeholderItemPackSize
-     *
-     * @param StakeholderItemPackSizes $stakeholderItemPackSize
-     */
-    public function setStakeholderItemPackSize(\StakeholderItemPackSizes $stakeholderItemPackSize)
-    {
-        $this->stakeholderItemPackSize = $stakeholderItemPackSize;
-    }
-
-    /**
-     * Get stakeholderItemPackSize
-     *
-     * @return StakeholderItemPackSizes 
-     */
-    public function getStakeholderItemPackSize()
-    {
-        return $this->stakeholderItemPackSize;
-    }
-
-    /**
      * Set createdBy
      *
      * @param Users $createdBy
@@ -423,5 +233,45 @@ class StockBatch
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+
+    /**
+     * Set packInfo
+     *
+     * @param PackInfo $packInfo
+     */
+    public function setPackInfo(\PackInfo $packInfo)
+    {
+        $this->packInfo = $packInfo;
+    }
+
+    /**
+     * Get packInfo
+     *
+     * @return PackInfo 
+     */
+    public function getPackInfo()
+    {
+        return $this->packInfo;
     }
 }

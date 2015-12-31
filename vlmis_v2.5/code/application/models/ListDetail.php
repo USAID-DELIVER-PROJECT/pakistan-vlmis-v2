@@ -16,8 +16,12 @@ class Model_ListDetail extends Model_Base {
 
     const Non_CCM = 100;
     const STOCK_PLACEMENT = 114;
-    const AGE_0_11 = 145;
-    const AGE_12_23 = 146;
+    const AGE_0_11 = 160;
+    const AGE_12_23 = 161;
+    const AGE_24 = 162;
+    const WAREHOUSE_STATUS_FUNCTIONING = 163;
+    const WAREHOUSE_STATUS_NONFUNCTIONING = 164;
+    const WAREHOUSE_STATUS_REPORTING = 165;
 
     public function __construct() {
         parent::__construct();
@@ -82,7 +86,7 @@ class Model_ListDetail extends Model_Base {
             } else {
                 $qry->orderBy("lm.pkId", 'ASC');
             }
-   
+
             return $qry->getQuery()->getResult();
         }
     }

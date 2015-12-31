@@ -21,7 +21,7 @@ class Model_StockDetail extends Model_Base {
 
     public function addStockDetail($array) {
 
-        $em = Zend_Registry::get('doctrine');
+        //$em = Zend_Registry::get('doctrine');
         $action = Zend_Registry::get("action");
 
         if ($array['rcvedit'] == "Yes") {
@@ -81,22 +81,35 @@ class Model_StockDetail extends Model_Base {
         //$stock_detail->setStakeholderItem($array['manufacturer_id']);
 
         if ($type == 1) {
-            //this IF is for stock receive
-            $stock_batch_id = $this->_em->getRepository('StockBatch')->find(
-                    array('number' => $array['number'],
-                        'itemPackSize' => $array['item_id'],
-                        'warehouse' => $this->_identity->getWarehouseId())
-            );
+            $str_sql = $this->_em->createQueryBuilder()
+                    ->select("sbw.pkId")
+                    ->from('StockBatchWarehouses', 'sbw')
+                    ->join('sbw.stockBatch', 'sb')
+                    ->join('sb.packInfo', 'pi')
+                    ->join('pi.stakeholderItemPackSize', 'sip')
+                    ->where("sip.itemPackSize = '" . $array['item_id'] . "' ")
+                    ->andWhere("sb.number = '" . $array['number'] . "'  ")
+                    ->andWhere("sbw.warehouse =  '" . $this->_identity->getWarehouseId() . "' ");
+
+
+//this IF is for stock receive
+            $row = $str_sql->getQuery()->getResult();
+//            $stock_batch_id = $this->_em->getRepository('StockBatch')->find(
+//                    array('number' => $array['number'],
+//                        'itemPackSize' => $array['item_id'],
+//                        'warehouse' => $this->_identity->getWarehouseId())
+//            );
             // echo $stock_batch_id->getPkId();
             // exit;
             // App_Controller_Functions::pr($stock_batch_id);
-            $stock_detail->setStockBatch($stock_batch_id);
+            $stock_batch_id = $this->_em->getRepository('StockBatchWarehouses')->find($row['0']['pkId']);
+            $stock_detail->setStockBatchWarehouse($stock_batch_id);
 
             $stock_detail->setIsReceived(1);
         } else if ($type == 2) {
             //this ELSE IF is for stock issue
-            $stock_batch_id = $this->_em->getRepository('StockBatch')->find($array['stock_batch_id']);
-            $stock_detail->setStockBatch($stock_batch_id);
+            $stock_batch_id = $this->_em->getRepository('StockBatchWarehouses')->find($array['stock_batch_id']);
+            $stock_detail->setStockBatchWarehouse($stock_batch_id);
             $stock_detail->setIsReceived(0);
         }
 
@@ -107,9 +120,9 @@ class Model_StockDetail extends Model_Base {
         $stock_detail->setCreatedDate(App_Tools_Time::now());
         $this->_em->persist($stock_detail);
         $this->_em->flush();
-        $query = "SELECT AdjustQty(" . $stock_batch_id->getPkId() . "," . $this->_identity->getWarehouseId() . ") FROM DUAL";
-        $str_sql = $em->getConnection()->prepare($query);
-        $str_sql->execute();
+
+        //$stock_batch = new Model_StockBatch();
+        //$stock_batch->adjustQuantityByWarehouse($stock_batch_id->getPkId());
 
         if ($action == 'issue' && !empty($location)) {
             $placements = new Model_Placements();
@@ -135,13 +148,15 @@ class Model_StockDetail extends Model_Base {
 
     public function getQuantityById($id) {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select('sd.pkId as stockDetail,sd.quantity,sb.pkId as stockBatchId,sb.number,s.pkId as stockMasterId,ips.pkId as itemPackSize,sb.expiryDate,vt.pkId as vvmTypeId,sips.pkId as stakeholderItemPackSizeId,sb.unitPrice')
+                ->select('sd.pkId as stockDetail,sd.quantity,sbw.pkId as stockBatchId,sb.number,s.pkId as stockMasterId,ips.pkId as itemPackSize,sb.expiryDate,vt.pkId as vvmTypeId,sips.pkId as stakeholderItemPackSizeId,sb.unitPrice')
                 ->from('StockDetail', 'sd')
                 ->join('sd.stockMaster', 's')
-                ->join('sd.stockBatch', 'sb')
+                ->join('sd.stockBatchWarehouse', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->leftjoin('pi.stakeholderItemPackSize', 'sips')
+                ->join('sips.itemPackSize', 'ips')
                 ->leftjoin('sb.vvmType', 'vt')
-                ->leftjoin('sb.stakeholderItemPackSize', 'sips')
-                ->join('sb.itemPackSize', 'ips')
                 ->where('sd.pkId =' . $id);
         $row = $str_sql->getQuery()->getResult();
 
@@ -226,13 +241,17 @@ class Model_StockDetail extends Model_Base {
 
     public function findByStockId() {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select('d.pkId,sb.pkId as batchId,'
+                ->select('d.pkId,sbw.pkId as batchId,'
                         . 'iu.pkId as itemUnit,d.quantity,d.temporary,vvm.pkId as vvmStage,vvm.vvmStageValue,'
                         . 'd.isReceived,d.adjustmentType,w.pkId as toWarehouse,fw.pkId as fromWarehouse,sa.pkId as stakeholderActivity')
                 ->from("StockDetail", "d")
                 ->join("d.vvmStage", "vvm")
-                ->join("d.stockBatch", "sb")
-                ->join("d.itemUnit", "iu")
+                ->join("d.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", 'ips')
+                ->join("ips.itemUnit", "iu")
                 ->join("d.stockMaster", "m")
                 ->leftJoin("m.stakeholderActivity", "sa")
                 ->join("m.toWarehouse", "w")
@@ -249,12 +268,16 @@ class Model_StockDetail extends Model_Base {
 
     public function findByDetailId($id) {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select('d.pkId,sb.pkId as stockBatch,'
+                ->select('d.pkId,sbw.pkId as stockBatch,'
                         . 'iu.pkId as itemUnit,d.quantity,d.temporary,vvm.pkId as vvmStage,vvm.vvmStageValue,'
                         . 'd.isReceived,d.adjustmentType,w.pkId as toWarehouse')
                 ->from('StockDetail', 'd')
                 ->join("d.vvmStage", "vvm")
-                ->join("d.stockBatch", "sb")
+                ->join("d.stockBatchWarehouse", 'sbw')
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "ips")
                 ->join("d.itemUnit", "iu")
                 ->join("d.stockMaster", "m")
                 ->join("m.toWarehouse", "w")
@@ -279,12 +302,14 @@ class Model_StockDetail extends Model_Base {
 
     public function getBatchDetail($id) {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select('sb.batchMasterId, sb.number,sb.expiryDate,ips.pkId as itemPackSize,
+                ->select('sb.pkId as batchMasterId, sb.number,sb.expiryDate,ips.pkId as itemPackSize,
                         sb.unitPrice,sb.productionDate,vt.pkId as vvmType ,sd.quantity, sips.pkId as stakeholderItemPackSize')
                 ->from("StockDetail", "sd")
-                ->join("sd.stockBatch", "sb")
-                ->join("sb.stakeholderItemPackSize", "sips")
-                ->join("sb.itemPackSize", "ips")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sips")
+                ->join("sips.itemPackSize", "ips")
                 ->leftJoin("sb.vvmType", "vt")
                 ->where("sd.pkId =  $id ");
 
@@ -301,11 +326,14 @@ class Model_StockDetail extends Model_Base {
         // App_Controller_Functions::pr($this->form_values);
         $str_sql = $this->_em->createQueryBuilder()
                 ->select('Sum(sd.quantity) AS total,
-                        ips.quantityPerPack')
+                        pi.quantityPerPack')
                 ->from("StockDetail", "sd")
-                ->join("sd.stockBatch", "sb")
-                ->join("sb.itemPackSize", "ips")
-                ->where("sb.pkId ='  " . $this->form_values['batchId'] . "'")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "ips")
+                ->where("sbw.pkId ='  " . $this->form_values['batchId'] . "'")
                 ->andwhere("sd.pkId =" . $id);
         $result = $str_sql->getQuery()->getResult();
         $sql = "SELECT
@@ -314,7 +342,7 @@ class Model_StockDetail extends Model_Base {
                         placements
                         INNER JOIN stock_detail ON placements.stock_detail_id = stock_detail.pk_id
                         WHERE
-                        placements.stock_batch_id ='" . $this->form_values['batchId'] . "' AND
+                        placements.stock_batch_warehouse_id ='" . $this->form_values['batchId'] . "' AND
                         placements.stock_detail_id = " . $id;
         $em = Zend_Registry::get('doctrine');
         $row = $em->getConnection()->prepare($sql);
@@ -333,7 +361,7 @@ class Model_StockDetail extends Model_Base {
                 ->select('Sum(sd.quantity) AS total,
                         ips.quantityPerPack')
                 ->from("StockDetail", "sd")
-                ->join("sd.stockBatch", "sb")
+                ->join("sd.stockBatchWarehouse", "sb")
                 ->join("sb.itemPackSize", "ips")
                 ->where("sb.pkId ='" . $this->form_values['batchId'] . "'")
                 ->andwhere("sd.pkId =" . $id);
@@ -344,7 +372,7 @@ class Model_StockDetail extends Model_Base {
                     placements
                 INNER JOIN stock_detail ON placements.stock_detail_id = stock_detail.pk_id
                 WHERE
-                    placements.stock_batch_id ='" . $this->form_values['batchId'] . "' AND
+                    placements.stock_batch_warehouse_id ='" . $this->form_values['batchId'] . "' AND
                     placements.stock_detail_id = " . $id;
         $em = Zend_Registry::get('doctrine');
         $row = $em->getConnection()->prepare($str_qry);
@@ -364,7 +392,7 @@ class Model_StockDetail extends Model_Base {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select('sum(sd.quantity) quantity')
                 ->from("StockDetail", "sd")
-                ->where("sd.stockBatch =" . $this->form_values['stock_batch_id']);
+                ->where("sd.stockBatchWarehouse =" . $this->form_values['stock_batch_id']);
         $result = $str_sql->getQuery()->getResult();
         return $result[0]['quantity'];
     }
@@ -374,7 +402,7 @@ class Model_StockDetail extends Model_Base {
 //        $str_sql = $this->_em->createQueryBuilder()
 //                ->select('sd.pkId,sd.quantity,sb.pkId as stcbacPk,sb.number,ips.pkId as itmPk,ips.itemName,sm.pkId as stcmasPk')
 //                ->from('StockDetail', 'sd')
-//                ->join("sd.stockBatch", "sb")
+//                ->join("sd.stockBatchWarehouse", "sb")
 //               ->join("sb.itemPackSize", "ips")
 //                ->join("sd.stockMaster", "sm")
 //                ->where('sd.stockMaster =' . 18);
@@ -401,7 +429,7 @@ class Model_StockDetail extends Model_Base {
 //    sum(stock_detail.quantity) as qty
 //    FROM
 //    stock_detail
-//    INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+//    INNER JOIN stock_batch ON stock_detail.stock_batch_warehouse_id = stock_batch.pk_id
 //    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
 //    INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
 //    WHERE
@@ -415,7 +443,7 @@ class Model_StockDetail extends Model_Base {
 //item_pack_sizes.item_name
 //FROM
 //stock_detail
-//INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+//INNER JOIN stock_batch ON stock_detail.stock_batch_warehouse_id = stock_batch.pk_id
 //INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
 //INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 //INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
@@ -426,7 +454,7 @@ class Model_StockDetail extends Model_Base {
 
         $str_qry = "SELECT * FROM (SELECT
 				stock_master.pk_id AS masterId,
-				stock_batch.pk_id,
+				stock_batch_warehouses.pk_id,
                                 stock_detail.pk_id as pkId,
 				stock_batch.number,
                                 item_pack_sizes.item_name,
@@ -443,15 +471,17 @@ class Model_StockDetail extends Model_Base {
 			FROM
 				stock_master
 			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-			INNER JOIN stock_batch ON stock_batch.pk_id = stock_detail.stock_batch_id
-                        INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
-                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
-			WHERE
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id   
+                       WHERE
 				stock_master.from_warehouse_id = $wh_id
 			AND stock_master.transaction_type_id =" . Model_TransactionTypes:: TRANSACTION_ISSUE . "
 			AND stock_master.pk_id IN ($qr)
 			GROUP BY
-				stock_batch.pk_id) A
+				stock_batch_warehouses.pk_id) A
 			WHERE A.Qty > 0";
 
 
@@ -498,14 +528,17 @@ class Model_StockDetail extends Model_Base {
     public function quantityDataByStcMaster($stm_id) {
 
         $str_qry = "SELECT
-                            stock_detail.pk_id as pkId,stock_batch.pk_id as stckbatch_id,
+                            stock_detail.pk_id as pkId,stock_batch_warehouses.pk_id as stckbatch_id,
                 stock_batch.number,
                 item_pack_sizes.item_name,
                 stock_detail.quantity as qty
                 FROM
                 stock_detail
-                INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-                INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id 
                 INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
                 WHERE
                 stock_detail.stock_master_id = $stm_id";
@@ -520,7 +553,7 @@ class Model_StockDetail extends Model_Base {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select('sd.pkId,sd.quantity')
                 ->from("StockDetail", "sd")
-                ->where("sd.stockBatch =" . $stb_id)
+                ->where("sd.stockBatchWarehouse =" . $stb_id)
                 ->andwhere("sd.stockMaster =" . $stm_id);
         //echo $str_sql->getQuery()->getSql();
         $result = $str_sql->getQuery()->getResult();
@@ -536,7 +569,7 @@ class Model_StockDetail extends Model_Base {
 //    FROM
 //    stock_detail
 //    WHERE
-//    stock_detail.stock_batch_id = $stb_id and stock_detail.stock_master_id = $stm_id";exit;
+//    stock_detail.stock_batch_warehouse_id = $stb_id and stock_detail.stock_master_id = $stm_id";exit;
 //        $em = Zend_Registry::get('doctrine');
 //        $row = $em->getConnection()->prepare($str_qry);
 //        $row->execute();
@@ -583,29 +616,32 @@ class Model_StockDetail extends Model_Base {
 
     public function purposeTransferManagement($batch_id) {
         $str_sql = "SELECT
-                            stakeholder_activities.activity,
-                            placement_summary.batch_number,
-                            placement_summary.stock_batch_id,
-                            placement_summary.vvm_stage,
-                            placement_summary.quantity,
-                            placement_summary.placement_location_id,
-                            placement_locations.location_type,
-                            placement_locations.location_id,
-                            vvm_stages.vvm_stage_value,
-                            item_pack_sizes.vvm_group_id,
-                            item_pack_sizes.stakeholder_activity_id
-                    FROM
-                            placement_summary
-                    INNER JOIN stock_batch ON placement_summary.stock_batch_id = stock_batch.pk_id
-                    INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
-                    INNER JOIN stakeholders ON stakeholder_item_pack_sizes.stakeholder_id = stakeholders.pk_id
-                    INNER JOIN placement_locations ON placement_summary.placement_location_id = placement_locations.pk_id
-                    INNER JOIN vvm_stages ON placement_summary.vvm_stage = vvm_stages.pk_id
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-                    INNER JOIN stakeholder_activities ON item_pack_sizes.stakeholder_activity_id = stakeholder_activities.pk_id
-                    WHERE
-                            stock_batch.pk_id = $batch_id";
-        
+                        stakeholder_activities.pk_id AS activity,
+                        placement_summary.batch_number,
+                        placement_summary.stock_batch_warehouse_id,
+                        placement_summary.vvm_stage,
+                        placement_summary.quantity,
+                        placement_summary.placement_location_id,
+                        placement_locations.location_type,
+                        placement_locations.location_id,
+                        vvm_stages.vvm_stage_value,
+                        item_pack_sizes.vvm_group_id,
+                        item_activities.stakeholder_activity_id
+                        FROM
+                                placement_summary
+                        INNER JOIN stock_batch_warehouses ON placement_summary.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                        INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                        INNER JOIN stakeholders ON stakeholder_item_pack_sizes.stakeholder_id = stakeholders.pk_id
+                        INNER JOIN item_activities ON item_activities.item_pack_size_id = item_pack_sizes.pk_id
+                        INNER JOIN stakeholder_activities ON item_activities.stakeholder_activity_id = stakeholder_activities.pk_id
+                        INNER JOIN placement_locations ON placement_summary.placement_location_id = placement_locations.pk_id
+                        INNER JOIN vvm_stages ON placement_summary.vvm_stage = vvm_stages.pk_id
+                        WHERE
+                        stock_batch_warehouses.pk_id =  $batch_id";
+
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
         $rec->execute();
@@ -707,21 +743,31 @@ class Model_StockDetail extends Model_Base {
                 $stock_detail->setAdjustmentType("$type");
 
 
-                if ($type == 1) {
-                    //this IF is for stock receive
-                    $stock_batch_id = $this->_em->getRepository('StockBatch')->find(
-                            array('number' => $row['number'],
-                                'itemPackSize' => $row['item_pack_size_id'],
-                                'warehouse' => $this->_identity->getWarehouseId())
-                    );
 
-                    $stock_detail->setStockBatch($stock_batch_id);
+
+                if ($type == 1) {
+                    $str_sql = $this->_em->createQueryBuilder()
+                            ->select("sbw.pkId")
+                            ->from('StockBatchWarehouses', 'sbw')
+                            ->join('sbw.stockBatch', 'sb')
+                            ->join('sb.packInfo', 'pi')
+                            ->join('pi.stakeholderItemPackSize', 'sip')
+                            ->where("sip.itemPackSize = '" . $row['item_id'] . "' ")
+                            ->andWhere("sb.number = '" . $row['number'] . "'  ")
+                            ->andWhere("sbw.warehouse =  '" . $this->_identity->getWarehouseId() . "' ");
+
+
+//this IF is for stock receive
+                    $row_q = $str_sql->getQuery()->getResult();
+
+                    $stock_batch_id = $this->_em->getRepository('StockBatchWarehouses')->find($row_q['0']['pkId']);
+                    $stock_detail->setStockBatchWarehouse($stock_batch_id);
 
                     $stock_detail->setIsReceived(1);
                 } else if ($type == 2) {
                     //this ELSE IF is for stock issue
-                    $stock_batch_id = $this->_em->getRepository('StockBatch')->find($row['number']);
-                    $stock_detail->setStockBatch($stock_batch_id);
+                    $stock_batch_id = $this->_em->getRepository('StockBatchWarehouses')->find($row['number']);
+                    $stock_detail->setStockBatchWarehouse($stock_batch_id);
                     $stock_detail->setIsReceived(0);
                 }
 
@@ -767,7 +813,7 @@ class Model_StockDetail extends Model_Base {
         $action = Zend_Registry::get("action");
         $form_values = $array;
         $end = $form_values['counter'];
-        //  App_Controller_Functions::pr($form_values);
+        //App_Controller_Functions::pr($form_values);
         $number = array();
         $error_array_batch = array();
         $error_array_quantity = array();
@@ -859,24 +905,33 @@ class Model_StockDetail extends Model_Base {
                 //$stock_detail->setStakeholderItem($array['manufacturer_id']);
 
                 if ($type == 1) {
-                    //this IF is for stock receive
-                    $stock_batch_id = $this->_em->getRepository('StockBatch')->find(
-                            array('number' => $row['number'],
-                                'itemPackSize' => $row['item_pack_size_id'],
-                                'warehouse' => $this->_identity->getWarehouseId())
-                    );
-                    // echo $stock_batch_id->getPkId();
-                    // exit;
-                    // App_Controller_Functions::pr($stock_batch_id);
-                    $stock_detail->setStockBatch($stock_batch_id);
+                    $str_sql = $this->_em->createQueryBuilder()
+                            ->select("sbw.pkId")
+                            ->from('StockBatchWarehouses', 'sbw')
+                            ->join('sbw.stockBatch', 'sb')
+                            ->join('sb.packInfo', 'pi')
+                            ->join('pi.stakeholderItemPackSize', 'sip')
+                            ->where("sip.itemPackSize = '" . $row['item_id'] . "' ")
+                            ->andWhere("sb.number = '" . $row['number'] . "'  ")
+                            ->andWhere("sbw.warehouse =  '" . $this->_identity->getWarehouseId() . "' ");
+
+
+//this IF is for stock receive
+                    $row_q = $str_sql->getQuery()->getResult();
+
+                    $stock_batch_id = $this->_em->getRepository('StockBatchWarehouses')->find($row_q['0']['pkId']);
+                    $stock_detail->setStockBatchWarehouse($stock_batch_id);
 
                     $stock_detail->setIsReceived(1);
                 } else if ($type == 2) {
                     //this ELSE IF is for stock issue
-                    $stock_batch_id = $this->_em->getRepository('StockBatch')->find($row['number']);
-                    $stock_detail->setStockBatch($stock_batch_id);
+                    $stock_batch_id = $this->_em->getRepository('StockBatchWarehouses')->find($row['number']);
+                    $stock_detail->setStockBatchWarehouse($stock_batch_id);
                     $stock_detail->setIsReceived(0);
                 }
+
+
+
 
                 $created_by = $this->_em->getRepository('Users')->find($this->_user_id);
                 $stock_detail->setModifiedBy($created_by);
@@ -892,6 +947,8 @@ class Model_StockDetail extends Model_Base {
                 $str_sql->execute();
             }
         }
+        
+        
 
 //   App_Controller_Functions::pr($row_array);
         return $stock_detail->getPkId();
@@ -908,19 +965,25 @@ class Model_StockDetail extends Model_Base {
                         purpose_transfer_history.quantity,
                         transaction_types.transaction_type_name,
                         DATE_FORMAT(purpose_transfer_history.created_date, '%d/%m/%Y') AS date,
-                        to_batch.number
+                        to_stock_batch.number
                     FROM
                         purpose_transfer_history
                         INNER JOIN stakeholder_activities AS `from` ON purpose_transfer_history.from_activity_id = `from`.pk_id
                         INNER JOIN stakeholder_activities AS `to` ON purpose_transfer_history.to_activity_id = `to`.pk_id
-                        INNER JOIN stock_batch AS from_batch ON purpose_transfer_history.from_batch_id = from_batch.pk_id
-                        INNER JOIN stock_batch AS to_batch ON purpose_transfer_history.to_batch_id = to_batch.pk_id
-                        INNER JOIN item_pack_sizes AS from_item ON from_batch.item_pack_size_id = from_item.pk_id
-                        INNER JOIN item_pack_sizes AS to_item ON to_batch.item_pack_size_id = to_item.pk_id
+                        INNER JOIN stock_batch_warehouses AS from_batch ON purpose_transfer_history.from_stock_batch_warehouse_id = from_batch.pk_id
+                        INNER JOIN stock_batch as from_stock_batch ON from_stock_batch.pk_id = from_batch.stock_batch_id
+                        INNER JOIN pack_info as from_pack_info  ON from_stock_batch.pack_info_id = from_pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes as from_stakeholder  ON from_pack_info.stakeholder_item_pack_size_id = from_stakeholder.pk_id
+                        INNER JOIN item_pack_sizes as from_item ON from_stakeholder.item_pack_size_id = from_item.pk_id     
+                        INNER JOIN stock_batch_warehouses AS to_batch ON purpose_transfer_history.to_stock_batch_warehouse_id = to_batch.pk_id
+                        INNER JOIN stock_batch as to_stock_batch ON to_stock_batch.pk_id = to_batch.stock_batch_id
+                        INNER JOIN pack_info as to_pack_info  ON to_stock_batch.pack_info_id = to_pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes as to_stakeholder  ON to_pack_info.stakeholder_item_pack_size_id = to_stakeholder.pk_id
+                        INNER JOIN item_pack_sizes as to_item ON to_stakeholder.item_pack_size_id = to_item.pk_id  
                         INNER JOIN transaction_types ON purpose_transfer_history.transaction_type_id = transaction_types.pk_id
                     WHERE
-                        from_batch.item_pack_size_id = '$product_id'
-                        OR to_batch.item_pack_size_id = '$product_id'            
+                        from_stakeholder.item_pack_size_id = '$product_id'
+                        OR to_stakeholder.item_pack_size_id = '$product_id'            
                     ";
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
@@ -940,7 +1003,7 @@ class Model_StockDetail extends Model_Base {
                 FROM
                         purpose_transfer_history
                 WHERE
-                        purpose_transfer_history.from_batch_id = '$batch_id'
+                        purpose_transfer_history.from_stock_batch_warehouse_id = '$batch_id'
                
                 ORDER BY
                         purpose_transfer_history.pk_id
@@ -959,17 +1022,20 @@ class Model_StockDetail extends Model_Base {
         $str_sql = "SELECT
 	sum(stock_detail.quantity) as opening_balance
         FROM
-	stock_batch
-        INNER JOIN stock_detail ON stock_detail.stock_batch_id = stock_batch.pk_id
+        stock_detail
+	INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id= stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
         INNER JOIN stock_master ON stock_master.pk_id = stock_detail.stock_master_id
         WHERE
-                stock_batch.item_pack_size_id = '$product_id'
+                stakeholder_item_pack_sizes.item_pack_size_id = '$product_id'
         AND DATE_FORMAT(
                 stock_master.created_date,
                 '%Y-%m-%d'
         ) < '$date_purpose'
-        
-        AND stock_batch.pk_id = '$batch_id'";
+        AND stock_batch_warehouses.pk_id = '$batch_id'";
 
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
@@ -985,14 +1051,13 @@ class Model_StockDetail extends Model_Base {
     public function getClosingBalancePurpose($product_id, $batch_id) {
 
         $str_sql = "SELECT
-SUM(if(purpose_transfer_history.from_batch_id = '$batch_id',purpose_transfer_history.quantity,0)) as minus_quantity,
-SUM(if(purpose_transfer_history.to_batch_id = '$batch_id',purpose_transfer_history.quantity,0)) as sum_quantity
-FROM
-purpose_transfer_history
-WHERE
-(purpose_transfer_history.from_batch_id = $batch_id OR
-purpose_transfer_history.to_batch_id = $batch_id)
-";
+            SUM(if(purpose_transfer_history.from_stock_batch_warehouse_id = '$batch_id',purpose_transfer_history.quantity,0)) as minus_quantity,
+            SUM(if(purpose_transfer_history.to_stock_batch_warehouse_id = '$batch_id',purpose_transfer_history.quantity,0)) as sum_quantity
+            FROM
+            purpose_transfer_history
+            WHERE
+            (purpose_transfer_history.from_stock_batch_warehouse_id = $batch_id OR
+            purpose_transfer_history.to_stock_batch_warehouse_id = $batch_id)";
 
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
@@ -1015,13 +1080,15 @@ purpose_transfer_history.to_batch_id = $batch_id)
                         DATE_FORMAT(vvm_transfer_history.created_date,'%d/%m/%Y') created_date
                     FROM
                         vvm_transfer_history
-                        INNER JOIN stock_batch ON vvm_transfer_history.batch_id = stock_batch.pk_id
-                        INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                        INNER JOIN stock_batch_warehouses ON vvm_transfer_history.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id   
                         INNER JOIN vvm_stages AS from_vvm ON vvm_transfer_history.from_vvm_stage_id = from_vvm.pk_id
                         INNER JOIN vvm_stages AS to_vvm ON vvm_transfer_history.to_vvm_stage_id = to_vvm.pk_id
                     WHERE
-                        stock_batch.item_pack_size_id = '$product_id'
-                    ";
+                        stakeholder_item_pack_sizes.item_pack_size_id = '$product_id'";
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
         $rec->execute();

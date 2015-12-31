@@ -45,6 +45,11 @@ class StockDetail
     private $modifiedDate;
 
     /**
+     * @var Users
+     */
+    private $modifiedBy;
+
+    /**
      * @var VvmStages
      */
     private $vvmStage;
@@ -55,9 +60,9 @@ class StockDetail
     private $stockMaster;
 
     /**
-     * @var StockBatch
+     * @var StockBatchWarehouses
      */
-    private $stockBatch;
+    private $stockBatchWarehouse;
 
     /**
      * @var ItemUnits
@@ -68,11 +73,6 @@ class StockDetail
      * @var Users
      */
     private $createdBy;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
 
 
     /**
@@ -206,6 +206,26 @@ class StockDetail
     }
 
     /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+
+    /**
      * Set vvmStage
      *
      * @param VvmStages $vvmStage
@@ -246,23 +266,23 @@ class StockDetail
     }
 
     /**
-     * Set stockBatch
+     * Set stockBatchWarehouse
      *
-     * @param StockBatch $stockBatch
+     * @param StockBatchWarehouses $stockBatchWarehouse
      */
-    public function setStockBatch(\StockBatch $stockBatch)
+    public function setStockBatchWarehouse(\StockBatchWarehouses $stockBatchWarehouse)
     {
-        $this->stockBatch = $stockBatch;
+        $this->stockBatchWarehouse = $stockBatchWarehouse;
     }
 
     /**
-     * Get stockBatch
+     * Get stockBatchWarehouse
      *
-     * @return StockBatch 
+     * @return StockBatchWarehouses 
      */
-    public function getStockBatch()
+    public function getStockBatchWarehouse()
     {
-        return $this->stockBatch;
+        return $this->stockBatchWarehouse;
     }
 
     /**
@@ -303,25 +323,5 @@ class StockDetail
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
     }
 }

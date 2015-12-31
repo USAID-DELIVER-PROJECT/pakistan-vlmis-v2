@@ -45,7 +45,7 @@ class Model_VvmTypes extends Model_Base {
         if ($this->form_values['status'] == '2') {
             $str_sql->where("vt.status = '0'  ");
         }
-        //echo $str_sql->getQuery()->getSql();exit;
+        echo $str_sql->getQuery()->getSql();exit;
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;

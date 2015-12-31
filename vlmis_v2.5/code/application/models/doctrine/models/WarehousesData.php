@@ -60,6 +60,16 @@ class WarehousesData
     private $nearestExpiry;
 
     /**
+     * @var integer $itemPackSizeId
+     */
+    private $itemPackSizeId;
+
+    /**
+     * @var integer $warehouseId
+     */
+    private $warehouseId;
+
+    /**
      * @var integer $createdBy
      */
     private $createdBy;
@@ -78,21 +88,6 @@ class WarehousesData
      * @var boolean $isCalculated
      */
     private $isCalculated;
-
-    /**
-     * @var ItemPackSizes
-     */
-    private $itemPackSize;
-
-    /**
-     * @var Warehouses
-     */
-    private $warehouse;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
 
 
     /**
@@ -286,6 +281,46 @@ class WarehousesData
     }
 
     /**
+     * Set itemPackSizeId
+     *
+     * @param integer $itemPackSizeId
+     */
+    public function setItemPackSizeId($itemPackSizeId)
+    {
+        $this->itemPackSizeId = $itemPackSizeId;
+    }
+
+    /**
+     * Get itemPackSizeId
+     *
+     * @return integer 
+     */
+    public function getItemPackSizeId()
+    {
+        return $this->itemPackSizeId;
+    }
+
+    /**
+     * Set warehouseId
+     *
+     * @param integer $warehouseId
+     */
+    public function setWarehouseId($warehouseId)
+    {
+        $this->warehouseId = $warehouseId;
+    }
+
+    /**
+     * Get warehouseId
+     *
+     * @return integer 
+     */
+    public function getWarehouseId()
+    {
+        return $this->warehouseId;
+    }
+
+    /**
      * Set createdBy
      *
      * @param integer $createdBy
@@ -363,65 +398,5 @@ class WarehousesData
     public function getIsCalculated()
     {
         return $this->isCalculated;
-    }
-
-    /**
-     * Set itemPackSize
-     *
-     * @param ItemPackSizes $itemPackSize
-     */
-    public function setItemPackSize(\ItemPackSizes $itemPackSize)
-    {
-        $this->itemPackSize = $itemPackSize;
-    }
-
-    /**
-     * Get itemPackSize
-     *
-     * @return ItemPackSizes 
-     */
-    public function getItemPackSize()
-    {
-        return $this->itemPackSize;
-    }
-
-    /**
-     * Set warehouse
-     *
-     * @param Warehouses $warehouse
-     */
-    public function setWarehouse(\Warehouses $warehouse)
-    {
-        $this->warehouse = $warehouse;
-    }
-
-    /**
-     * Get warehouse
-     *
-     * @return Warehouses 
-     */
-    public function getWarehouse()
-    {
-        return $this->warehouse;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
     }
 }

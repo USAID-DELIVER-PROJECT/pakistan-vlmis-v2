@@ -287,7 +287,7 @@ function lastMonthsStats(district_id){
         chart = response;
         $("#_list").html("");
 
-        table = "<table class='table table-condensed table-hover'>";
+        table = "<table class='table table-condensed table-bordered table-hover'>";
         table += "<thead><th>S.No</th><th>District</th><th>Asset Type</th><th>Capacity</th></thead>";
         for (var i = 0; i < chart.length; i++) {
             table += "<tr><td>" + (i+1) + "</td><td>" + chart[i].district_name + "</td><td>" + chart[i].asset_type_name + "</td><td align='center'>" + chart[i].capacity + "</td>";
@@ -357,8 +357,8 @@ function drawGrid() {
     dataDownload.length = 0;
     jsonData.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>Province</th><th>District</th><th>Capacity</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>Province</th><th>District</th><th class='center' colspan='2'>Capacity</th></thead>";
     for (var i = 0; i < features.length; i++) {
         table += "<tr><td>" + features[i].attributes.province + "</td><td>" + features[i].attributes.district + "</td><td align='right'>" + features[i].attributes.capacity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
         jsonData.push({
@@ -398,7 +398,7 @@ function districtRanking(records,title) {
         type: 'column2d',
         renderAt: 'chart-container',
         width: width,
-        height: '100%',
+        height: '98%',
         dataFormat: 'json',
         dataSource: {
             "chart": {
@@ -442,8 +442,8 @@ function gridFilter(color) {
     $("#attributeGrid").html("");
     dataDownload.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>Province</th><th>District</th><th>Capacity</th><th></th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>Province</th><th>District</th><th class='center' colspan='2'>Capacity</th></thead>";
     for (var i = 0; i < features.length; i++) {
         if (features[i].attributes.color == color) {
             table += "<tr><td>" + features[i].attributes.province + "</td><td>" + features[i].attributes.district + "</td><td align='right'>" + features[i].attributes.capacity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";

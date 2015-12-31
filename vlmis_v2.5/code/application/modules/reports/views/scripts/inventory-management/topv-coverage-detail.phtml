@@ -149,7 +149,7 @@ $xml_store .= "<rows>";
 
 $sum_arr = array();
 
-$query = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 145, 0,0,23);
+$query = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 0,0,23);
 $j = 1;
 
 
@@ -174,7 +174,7 @@ foreach ($query as $row) {
     $j++;
 // end
 }
-$query1 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 145, 1,0,11);
+$query1 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 1,0,11);
 
 
 foreach ($query1 as $row) {
@@ -194,7 +194,7 @@ foreach ($query1 as $row) {
 // end
 }
 
-$query2 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 145, 2,0,11);
+$query2 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 2,0,11);
 
 foreach ($query2 as $row) {
 
@@ -213,7 +213,7 @@ foreach ($query2 as $row) {
 // end
 }
 
-$query3 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 145, 3,0,11);
+$query3 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 3,0,11);
 
 
 foreach ($query3 as $row) {
@@ -235,7 +235,7 @@ foreach ($query3 as $row) {
 // end
 }
 
-$query4 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 146, 1,12,23);
+$query4 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 1,12,23);
 
 
 foreach ($query4 as $row) {
@@ -254,7 +254,7 @@ foreach ($query4 as $row) {
     // Target
 // end
 }
-$query5 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 146, 2,12,23);
+$query5 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 2,12,23);
 
 foreach ($query5 as $row) {
 
@@ -272,7 +272,7 @@ foreach ($query5 as $row) {
     // Target
 // end
 }
-$query6 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 146, 3,12,23);
+$query6 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 3,12,23);
 
 foreach ($query6 as $row) {
 

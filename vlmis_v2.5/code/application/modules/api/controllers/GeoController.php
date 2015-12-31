@@ -23,18 +23,18 @@ class Api_GeoController extends App_Controller_Base {
         $type = $this->_request->getParam('type', '');
 
         $geoModel = new Model_Geo();
-        if ($type == 2) {
+        if ($type == 4) {
             $result = $geoModel->getDistrictMos($year, $month, $province, $product, $level);
-        } else {
+        } else if ($type == 5) {
             $result = $geoModel->getTehsilMos($year, $month, $province, $district, $product);
+        }else{
+            $result = $geoModel->getProvinceMos($year, $month, $province, $product, $level);
         }
 
         echo Zend_Json::encode($result);
     }
 
     public function getAmcMapDataAction() {
-
-
         $year = $this->_request->getParam('year', '');
         $month = $this->_request->getParam('month', '');
         $product = $this->_request->getParam('product', '');
@@ -46,7 +46,7 @@ class Api_GeoController extends App_Controller_Base {
         $geoModel = new Model_Geo();
         if ($level == 4) {
             $result = $geoModel->getAmcMapData($year, $month, $product, $province, $amctype);
-        } else {
+        } else if ($level == 5) {
             $result = $geoModel->getAmcTehsilMapData($year, $month, $province, $district, $product, $amctype);
         }
 
@@ -155,9 +155,12 @@ class Api_GeoController extends App_Controller_Base {
         $district = $this->_request->getParam('district', '');
         $type = $this->_request->getParam('type', '');
         $level = $this->_request->getParam('level', '');
+        $level = (empty($level)) ? 1 : $level;
 
         $geoModel = new Model_Geo();
-        if ($level == 4) {
+        if ($level == 1) {
+            $return = $geoModel->getColdChainProvince($type);
+        }else if ($level == 4) {
             $return = $geoModel->getColdChainDistrict($province, $type);
         } else {
             $return = $geoModel->getColdchainTehsil($province, $district, $type);

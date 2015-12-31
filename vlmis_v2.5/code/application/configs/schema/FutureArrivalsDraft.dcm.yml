@@ -54,6 +54,15 @@ FutureArrivalsDraft:
       nullable: false
       column: modified_date
   oneToOne:
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
     stakeholderActivity:
       targetEntity: StakeholderActivities
       cascade: {  }
@@ -61,6 +70,15 @@ FutureArrivalsDraft:
       inversedBy: null
       joinColumns:
         stakeholder_activity_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    itemPackSize:
+      targetEntity: ItemPackSizes
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        item_pack_size_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     manufacturer:
@@ -106,24 +124,6 @@ FutureArrivalsDraft:
       inversedBy: null
       joinColumns:
         created_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    modifiedBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        modified_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    itemPackSize:
-      targetEntity: ItemPackSizes
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        item_pack_size_id:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

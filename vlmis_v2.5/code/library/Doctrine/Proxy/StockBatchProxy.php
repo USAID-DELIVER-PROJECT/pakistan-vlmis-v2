@@ -54,18 +54,6 @@ class StockBatchProxy extends \StockBatch implements \Doctrine\ORM\Proxy\Proxy
         return parent::getNumber();
     }
 
-    public function setBatchMasterId($batchMasterId)
-    {
-        $this->__load();
-        return parent::setBatchMasterId($batchMasterId);
-    }
-
-    public function getBatchMasterId()
-    {
-        $this->__load();
-        return parent::getBatchMasterId();
-    }
-
     public function setExpiryDate($expiryDate)
     {
         $this->__load();
@@ -76,30 +64,6 @@ class StockBatchProxy extends \StockBatch implements \Doctrine\ORM\Proxy\Proxy
     {
         $this->__load();
         return parent::getExpiryDate();
-    }
-
-    public function setQuantity($quantity)
-    {
-        $this->__load();
-        return parent::setQuantity($quantity);
-    }
-
-    public function getQuantity()
-    {
-        $this->__load();
-        return parent::getQuantity();
-    }
-
-    public function setStatus($status)
-    {
-        $this->__load();
-        return parent::setStatus($status);
-    }
-
-    public function getStatus()
-    {
-        $this->__load();
-        return parent::getStatus();
     }
 
     public function setUnitPrice($unitPrice)
@@ -126,18 +90,6 @@ class StockBatchProxy extends \StockBatch implements \Doctrine\ORM\Proxy\Proxy
         return parent::getProductionDate();
     }
 
-    public function setLastUpdate($lastUpdate)
-    {
-        $this->__load();
-        return parent::setLastUpdate($lastUpdate);
-    }
-
-    public function getLastUpdate()
-    {
-        $this->__load();
-        return parent::getLastUpdate();
-    }
-
     public function setCreatedDate($createdDate)
     {
         $this->__load();
@@ -162,30 +114,6 @@ class StockBatchProxy extends \StockBatch implements \Doctrine\ORM\Proxy\Proxy
         return parent::getModifiedDate();
     }
 
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->__load();
-        return parent::setModifiedBy($modifiedBy);
-    }
-
-    public function getModifiedBy()
-    {
-        $this->__load();
-        return parent::getModifiedBy();
-    }
-
-    public function setItemPackSize(\ItemPackSizes $itemPackSize)
-    {
-        $this->__load();
-        return parent::setItemPackSize($itemPackSize);
-    }
-
-    public function getItemPackSize()
-    {
-        $this->__load();
-        return parent::getItemPackSize();
-    }
-
     public function setVvmType(\VvmTypes $vvmType)
     {
         $this->__load();
@@ -196,30 +124,6 @@ class StockBatchProxy extends \StockBatch implements \Doctrine\ORM\Proxy\Proxy
     {
         $this->__load();
         return parent::getVvmType();
-    }
-
-    public function setWarehouse(\Warehouses $warehouse)
-    {
-        $this->__load();
-        return parent::setWarehouse($warehouse);
-    }
-
-    public function getWarehouse()
-    {
-        $this->__load();
-        return parent::getWarehouse();
-    }
-
-    public function setStakeholderItemPackSize(\StakeholderItemPackSizes $stakeholderItemPackSize)
-    {
-        $this->__load();
-        return parent::setStakeholderItemPackSize($stakeholderItemPackSize);
-    }
-
-    public function getStakeholderItemPackSize()
-    {
-        $this->__load();
-        return parent::getStakeholderItemPackSize();
     }
 
     public function setCreatedBy(\Users $createdBy)
@@ -234,10 +138,34 @@ class StockBatchProxy extends \StockBatch implements \Doctrine\ORM\Proxy\Proxy
         return parent::getCreatedBy();
     }
 
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->__load();
+        return parent::setModifiedBy($modifiedBy);
+    }
+
+    public function getModifiedBy()
+    {
+        $this->__load();
+        return parent::getModifiedBy();
+    }
+
+    public function setPackInfo(\PackInfo $packInfo)
+    {
+        $this->__load();
+        return parent::setPackInfo($packInfo);
+    }
+
+    public function getPackInfo()
+    {
+        $this->__load();
+        return parent::getPackInfo();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'number', 'batchMasterId', 'expiryDate', 'quantity', 'status', 'unitPrice', 'productionDate', 'lastUpdate', 'createdDate', 'modifiedDate', 'modifiedBy', 'itemPackSize', 'vvmType', 'warehouse', 'stakeholderItemPackSize', 'createdBy');
+        return array('__isInitialized__', 'pkId', 'number', 'expiryDate', 'unitPrice', 'productionDate', 'createdDate', 'modifiedDate', 'vvmType', 'createdBy', 'modifiedBy', 'packInfo');
     }
 
     public function __clone()

@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : remote
-Source Server Version : 50534
+Source Server         : vlmis
+Source Server Version : 50546
 Source Host           : localhost:3306
-Source Database       : vlmis_zr2
+Source Database       : vlmisr2
 
 Target Server Type    : MYSQL
-Target Server Version : 50534
+Target Server Version : 50546
 File Encoding         : 65001
 
-Date: 2015-11-27 19:19:10
+Date: 2015-12-31 18:57:10
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -32,10 +32,10 @@ CREATE TABLE `barcode_scanner_warehouses` (
   KEY `warehouse_id` (`warehouse_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `barcode_scanner_warehouses_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `barcode_scanner_warehouses_ibfk_1` FOREIGN KEY (`scanner_id`) REFERENCES `barcode_scanners` (`pk_id`),
   CONSTRAINT `barcode_scanner_warehouses_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `barcode_scanner_warehouses_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `barcode_scanner_warehouses_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `barcode_scanner_warehouses_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -53,8 +53,8 @@ CREATE TABLE `barcode_scanners` (
   PRIMARY KEY (`pk_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `barcode_scanners_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `barcode_scanners_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `barcode_scanners_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `barcode_scanners_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -106,12 +106,12 @@ CREATE TABLE `campaign_data` (
   KEY `campaign_data_locations_fk5` (`union_council_id`) USING BTREE,
   KEY `campaign_data_warehouses_fk1` (`warehouse_id`) USING BTREE,
   KEY `campaign_data_item_pack_sizes_fk2` (`item_pack_size_id`) USING BTREE,
-  CONSTRAINT `campaign_data_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `campaign_data_ibfk_1` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `campaign_data_ibfk_2` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
   CONSTRAINT `campaign_data_ibfk_3` FOREIGN KEY (`campaign_id`) REFERENCES `campaigns` (`pk_id`),
   CONSTRAINT `campaign_data_ibfk_4` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`),
-  CONSTRAINT `campaign_data_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `campaign_data_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `campaign_data_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5340 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -131,10 +131,10 @@ CREATE TABLE `campaign_districts` (
   KEY `campaign_districts_locations_fk2` (`district_id`) USING BTREE,
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `campaign_districts_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `campaign_districts_ibfk_1` FOREIGN KEY (`campaign_id`) REFERENCES `campaigns` (`pk_id`),
   CONSTRAINT `campaign_districts_ibfk_2` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`),
-  CONSTRAINT `campaign_districts_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `campaign_districts_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `campaign_districts_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=548 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -154,10 +154,10 @@ CREATE TABLE `campaign_item_pack_sizes` (
   KEY `campaign_item_pack_sizes_campaigns_fk2` (`campaign_id`) USING BTREE,
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `campaign_item_pack_sizes_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `campaign_item_pack_sizes_ibfk_1` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
   CONSTRAINT `campaign_item_pack_sizes_ibfk_2` FOREIGN KEY (`campaign_id`) REFERENCES `campaigns` (`pk_id`),
-  CONSTRAINT `campaign_item_pack_sizes_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `campaign_item_pack_sizes_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `campaign_item_pack_sizes_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -183,10 +183,10 @@ CREATE TABLE `campaign_lqas_data` (
   KEY `campaign_lqas_data_users_fk4` (`created_by`) USING BTREE,
   KEY `campaign_lqas_data_users_fk5` (`modified_by`) USING BTREE,
   KEY `campaign_lqas_data_warehouses_fk3` (`union_council_id`) USING BTREE,
-  CONSTRAINT `campaign_lqas_data_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `campaign_lqas_data_ibfk_1` FOREIGN KEY (`campaign_id`) REFERENCES `campaigns` (`pk_id`),
   CONSTRAINT `campaign_lqas_data_ibfk_2` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`),
-  CONSTRAINT `campaign_lqas_data_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `campaign_lqas_data_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `campaign_lqas_data_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -215,10 +215,10 @@ CREATE TABLE `campaign_readiness` (
   KEY `campaign_readiness_locations_fk2` (`district_id`) USING BTREE,
   KEY `campaign_readiness_users_fk4` (`modified_by`) USING BTREE,
   KEY `campaign_readiness_users_fk3` (`created_by`) USING BTREE,
-  CONSTRAINT `campaign_readiness_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `campaign_readiness_ibfk_1` FOREIGN KEY (`campaign_id`) REFERENCES `campaigns` (`pk_id`),
   CONSTRAINT `campaign_readiness_ibfk_2` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`),
-  CONSTRAINT `campaign_readiness_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `campaign_readiness_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `campaign_readiness_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -247,9 +247,9 @@ CREATE TABLE `campaign_readiness_union_council` (
   KEY `campaign_readiness_union_council_users_fk4` (`modified_by`) USING BTREE,
   KEY `campaign_readiness_union_council_campaigns_fk2` (`campaign_id`) USING BTREE,
   KEY `campaign_readiness_union_council_warehouses_fk1` (`union_council_id`) USING BTREE,
-  CONSTRAINT `campaign_readiness_union_council_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `campaign_readiness_union_council_ibfk_1` FOREIGN KEY (`campaign_id`) REFERENCES `campaigns` (`pk_id`),
-  CONSTRAINT `campaign_readiness_union_council_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `campaign_readiness_union_council_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `campaign_readiness_union_council_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -272,9 +272,9 @@ CREATE TABLE `campaign_targets` (
   KEY `campaign_targets_users_fk4` (`modified_by`) USING BTREE,
   KEY `campaign_targets_locations_fk2` (`warehouse_id`) USING BTREE,
   KEY `item_pack_size_id` (`item_pack_size_id`),
-  CONSTRAINT `campaign_targets_ibfk_3` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
   CONSTRAINT `campaign_targets_ibfk_1` FOREIGN KEY (`campaign_id`) REFERENCES `campaigns` (`pk_id`),
-  CONSTRAINT `campaign_targets_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`)
+  CONSTRAINT `campaign_targets_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
+  CONSTRAINT `campaign_targets_ibfk_3` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2286 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -292,8 +292,8 @@ CREATE TABLE `campaign_types` (
   PRIMARY KEY (`pk_id`),
   KEY `campaign_types_users_fk1` (`created_by`) USING BTREE,
   KEY `campaign_types_users_fk2` (`modified_by`) USING BTREE,
-  CONSTRAINT `campaign_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `campaign_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `campaign_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `campaign_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -316,9 +316,9 @@ CREATE TABLE `campaigns` (
   KEY `campaigns_campaign_types_fk1` (`campaign_type_id`) USING BTREE,
   KEY `campaigns_users_fk3` (`created_by`) USING BTREE,
   KEY `campaigns_users_fk4` (`modified_by`) USING BTREE,
-  CONSTRAINT `campaigns_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `campaigns_ibfk_1` FOREIGN KEY (`campaign_type_id`) REFERENCES `campaign_types` (`pk_id`),
-  CONSTRAINT `campaigns_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `campaigns_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `campaigns_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -339,9 +339,11 @@ CREATE TABLE `ccm_asset_types` (
   KEY `ccm_asset_types_ccm_equipment_types_fk1` (`ccm_equipment_type_id`) USING BTREE,
   KEY `ccm_asset_types_user_fk2` (`created_by`) USING BTREE,
   KEY `ccm_asset_types_user_fk3` (`modified_by`) USING BTREE,
-  CONSTRAINT `ccm_asset_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `ccm_asset_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
+  KEY `parent_id` (`parent_id`),
+  CONSTRAINT `ccm_asset_types_ibfk_3` FOREIGN KEY (`parent_id`) REFERENCES `ccm_asset_types` (`pk_id`),
+  CONSTRAINT `ccm_asset_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_asset_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for ccm_cold_rooms
@@ -370,30 +372,11 @@ CREATE TABLE `ccm_cold_rooms` (
   KEY `ccm_cold_rooms_type_recording_system_list_detail_fk4` (`type_recording_system`) USING BTREE,
   KEY `ccm_cold_rooms_refrigerator_gas_type_list_detail_fk5` (`refrigerator_gas_type`) USING BTREE,
   KEY `ccm_cold_rooms_backup_generator_list_detail_fk6` (`backup_generator`) USING BTREE,
-  CONSTRAINT `ccm_cold_rooms_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `ccm_cold_rooms_ibfk_1` FOREIGN KEY (`ccm_asset_sub_type_id`) REFERENCES `ccm_asset_types` (`pk_id`),
   CONSTRAINT `ccm_cold_rooms_ibfk_2` FOREIGN KEY (`ccm_id`) REFERENCES `cold_chain` (`pk_id`),
-  CONSTRAINT `ccm_cold_rooms_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `ccm_cold_rooms_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_cold_rooms_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=366 DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Table structure for ccm_equipment_types
--- ----------------------------
-DROP TABLE IF EXISTS `ccm_equipment_types`;
-CREATE TABLE `ccm_equipment_types` (
-  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
-  `equipment_type_name` varchar(100) DEFAULT NULL,
-  `status` tinyint(1) DEFAULT '1' COMMENT '0=inactive, 1=active',
-  `created_by` int(11) NOT NULL,
-  `created_date` datetime NOT NULL,
-  `modified_by` int(11) NOT NULL,
-  `modified_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`pk_id`),
-  KEY `ccm_equipment_types_users_fk2` (`modified_by`) USING BTREE,
-  KEY `ccm_equipment_types_users_fk1` (`created_by`) USING BTREE,
-  CONSTRAINT `ccm_equipment_types_created_by_users_pk_id` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `ccm_equipment_types_modified_by_users_pk_id` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for ccm_generators
@@ -415,9 +398,9 @@ CREATE TABLE `ccm_generators` (
   KEY `ccm_generator_users_fk4` (`modified_by`) USING BTREE,
   KEY `ccm_generator_cold_chain_fk2` (`ccm_id`) USING BTREE,
   KEY `ccm_generator_list_detail_fk1` (`power_source`) USING BTREE,
-  CONSTRAINT `ccm_generators_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `ccm_generators_ibfk_1` FOREIGN KEY (`ccm_id`) REFERENCES `cold_chain` (`pk_id`),
-  CONSTRAINT `ccm_generators_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `ccm_generators_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_generators_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1972 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -440,11 +423,12 @@ CREATE TABLE `ccm_history` (
   KEY `ccm_history_users_fk4` (`created_by`) USING BTREE,
   KEY `ccm_history_list_detail_fk1` (`action`) USING BTREE,
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `ccm_history_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `ccm_history_ibfk_1` FOREIGN KEY (`ccm_id`) REFERENCES `cold_chain` (`pk_id`),
   CONSTRAINT `ccm_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `ccm_history_ibfk_3` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=56210 DEFAULT CHARSET=latin1;
+  CONSTRAINT `ccm_history_ibfk_3` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
+  CONSTRAINT `ccm_history_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_history_ibfk_5` FOREIGN KEY (`action`) REFERENCES `list_detail` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=56310 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for ccm_human_resources
@@ -466,8 +450,8 @@ CREATE TABLE `ccm_human_resources` (
   KEY `ccm_human_resources_list_detail_fk1` (`ccm_person_type`) USING BTREE,
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `ccm_human_resources_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `ccm_human_resources_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `ccm_human_resources_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_human_resources_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -485,8 +469,8 @@ CREATE TABLE `ccm_makes` (
   PRIMARY KEY (`pk_id`),
   KEY `ccm_make_users_fk1` (`created_by`) USING BTREE,
   KEY `ccm_make_users_fk2` (`modified_by`) USING BTREE,
-  CONSTRAINT `ccm_makes_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `ccm_makes_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `ccm_makes_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_makes_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=704 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -533,9 +517,10 @@ CREATE TABLE `ccm_models` (
   KEY `ccm_models_ccm_makes_fk2` (`ccm_make_id`) USING BTREE,
   KEY `ccm_models_ccm_asset_types_fk3` (`ccm_asset_type_id`) USING BTREE,
   KEY `ccm_models_list_detail_fk1` (`gas_type`) USING BTREE,
-  CONSTRAINT `ccm_models_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_models_ibfk_4` FOREIGN KEY (`ccm_make_id`) REFERENCES `ccm_makes` (`pk_id`),
   CONSTRAINT `ccm_models_ibfk_1` FOREIGN KEY (`ccm_asset_type_id`) REFERENCES `ccm_asset_types` (`pk_id`),
-  CONSTRAINT `ccm_models_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `ccm_models_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_models_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13951 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -550,7 +535,7 @@ CREATE TABLE `ccm_status_history` (
   `status_date` datetime DEFAULT NULL,
   `ccm_id` int(11) NOT NULL,
   `warehouse_id` int(11) NOT NULL,
-  `ccm_status_list_id` int(11) DEFAULT NULL,
+  `ccm_status_list_id` int(11) NOT NULL,
   `ccm_asset_type_id` int(11) DEFAULT NULL,
   `reason_id` int(11) DEFAULT NULL,
   `utilization_id` int(11) DEFAULT NULL,
@@ -566,11 +551,15 @@ CREATE TABLE `ccm_status_history` (
   KEY `ccm_status_history_cold_chain_fk1` (`ccm_id`) USING BTREE,
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
+  KEY `utilization_id` (`utilization_id`),
   CONSTRAINT `ccm_status_history_ibfk_1` FOREIGN KEY (`ccm_id`) REFERENCES `cold_chain` (`pk_id`),
-  CONSTRAINT `ccm_status_history_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `ccm_status_history_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `ccm_status_history_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=98173 DEFAULT CHARSET=latin1;
+  CONSTRAINT `ccm_status_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_status_history_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_status_history_ibfk_4` FOREIGN KEY (`ccm_status_list_id`) REFERENCES `ccm_status_list` (`pk_id`),
+  CONSTRAINT `ccm_status_history_ibfk_5` FOREIGN KEY (`reason_id`) REFERENCES `ccm_status_list` (`pk_id`),
+  CONSTRAINT `ccm_status_history_ibfk_6` FOREIGN KEY (`ccm_asset_type_id`) REFERENCES `ccm_asset_types` (`pk_id`),
+  CONSTRAINT `ccm_status_history_ibfk_7` FOREIGN KEY (`utilization_id`) REFERENCES `ccm_status_list` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=98371 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for ccm_status_list
@@ -590,7 +579,7 @@ CREATE TABLE `ccm_status_list` (
   KEY `ccm_status_list_users_fk1` (`created_by`) USING BTREE,
   KEY `ccm_status_list_users_fk2` (`modified_by`) USING BTREE,
   CONSTRAINT `ccm_status_list_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `ccm_status_list_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `warehouses` (`pk_id`)
+  CONSTRAINT `ccm_status_list_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `warehouses` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -619,11 +608,11 @@ CREATE TABLE `ccm_transfer_history` (
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `ccm_transfer_history_ibfk_1` FOREIGN KEY (`ccm_id`) REFERENCES `cold_chain` (`pk_id`),
-  CONSTRAINT `ccm_transfer_history_ibfk_10` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `ccm_transfer_history_ibfk_2` FOREIGN KEY (`from_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `ccm_transfer_history_ibfk_3` FOREIGN KEY (`to_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `ccm_transfer_history_ibfk_4` FOREIGN KEY (`ccm_status_list_id`) REFERENCES `ccm_status_list` (`pk_id`),
-  CONSTRAINT `ccm_transfer_history_ibfk_9` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `ccm_transfer_history_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_transfer_history_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -647,7 +636,12 @@ CREATE TABLE `ccm_vehicles` (
   KEY `ccm_vechicles_users_fk4` (`created_by`) USING BTREE,
   KEY `ccm_vechicles_users_fk5` (`modified_by`) USING BTREE,
   KEY `ccm_vechicles_fuel_type_id_list_detail_fk3` (`fuel_type_id`) USING BTREE,
-  KEY `ccm_vechicles_ccm_asset_types_fk2` (`ccm_asset_sub_type_id`) USING BTREE
+  KEY `ccm_vechicles_ccm_asset_types_fk2` (`ccm_asset_sub_type_id`) USING BTREE,
+  CONSTRAINT `ccm_vehicles_ibfk_5` FOREIGN KEY (`fuel_type_id`) REFERENCES `list_detail` (`pk_id`),
+  CONSTRAINT `ccm_vehicles_ibfk_1` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_vehicles_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_vehicles_ibfk_3` FOREIGN KEY (`ccm_asset_sub_type_id`) REFERENCES `ccm_asset_types` (`pk_id`),
+  CONSTRAINT `ccm_vehicles_ibfk_4` FOREIGN KEY (`ccm_id`) REFERENCES `cold_chain` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9468 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -671,7 +665,7 @@ CREATE TABLE `ccm_voltage_regulators` (
   KEY `ccm_generator_users_fk4` (`modified_by`) USING BTREE,
   KEY `ccm_generator_cold_chain_fk2` (`ccm_id`) USING BTREE,
   CONSTRAINT `ccm_voltage_regulators_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `ccm_voltage_regulators_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `ccm_voltage_regulators_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -696,8 +690,8 @@ CREATE TABLE `ccm_warehouses` (
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `ccm_warehouses_ibfk_1` FOREIGN KEY (`electricity_availability_id`) REFERENCES `list_detail` (`pk_id`),
   CONSTRAINT `ccm_warehouses_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `ccm_warehouses_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `ccm_warehouses_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `ccm_warehouses_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_warehouses_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13121 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -719,8 +713,8 @@ CREATE TABLE `ccm_warehouses_solar_energy` (
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `ccm_warehouses_solar_energy_ibfk_1` FOREIGN KEY (`ccm_warehouse_id`) REFERENCES `ccm_warehouses` (`pk_id`),
   CONSTRAINT `ccm_warehouses_solar_energy_ibfk_2` FOREIGN KEY (`solar_energy_id`) REFERENCES `list_detail` (`pk_id`),
-  CONSTRAINT `ccm_warehouses_solar_energy_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `ccm_warehouses_solar_energy_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `ccm_warehouses_solar_energy_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_warehouses_solar_energy_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -742,8 +736,8 @@ CREATE TABLE `ccm_warehouses_vaccination_staff` (
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `ccm_warehouses_vaccination_staff_ibfk_1` FOREIGN KEY (`ccm_warehouse_id`) REFERENCES `ccm_warehouses` (`pk_id`),
   CONSTRAINT `ccm_warehouses_vaccination_staff_ibfk_2` FOREIGN KEY (`vaccination_staff_id`) REFERENCES `list_detail` (`pk_id`),
-  CONSTRAINT `ccm_warehouses_vaccination_staff_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `ccm_warehouses_vaccination_staff_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `ccm_warehouses_vaccination_staff_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `ccm_warehouses_vaccination_staff_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -781,26 +775,12 @@ CREATE TABLE `cold_chain` (
   KEY `cold_chain_ccm_status_history_fk1` (`ccm_status_history_id`) USING BTREE,
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `cold_chain_ibfk_1` FOREIGN KEY (`ccm_asset_type_id`) REFERENCES `ccm_asset_types` (`pk_id`),
-  CONSTRAINT `cold_chain_ibfk_10` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `cold_chain_ibfk_11` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `cold_chain_ibfk_2` FOREIGN KEY (`ccm_model_id`) REFERENCES `ccm_models` (`pk_id`),
   CONSTRAINT `cold_chain_ibfk_3` FOREIGN KEY (`source_id`) REFERENCES `list_detail` (`pk_id`),
-  CONSTRAINT `cold_chain_ibfk_4` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`)
+  CONSTRAINT `cold_chain_ibfk_4` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
+  CONSTRAINT `cold_chain_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `cold_chain_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=93419 DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Table structure for contact_us
--- ----------------------------
-DROP TABLE IF EXISTS `contact_us`;
-CREATE TABLE `contact_us` (
-  `pk_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `phone` varchar(50) NOT NULL,
-  `department` varchar(50) DEFAULT NULL,
-  `message` text NOT NULL,
-  PRIMARY KEY (`pk_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for countries
@@ -826,7 +806,7 @@ CREATE TABLE `distribution_plan` (
   `pk_id` int(11) NOT NULL AUTO_INCREMENT,
   `sender_warehouse_id` int(11) DEFAULT NULL,
   `receiver_warehouse_id` int(11) DEFAULT NULL,
-  `geo_level_id` int(2) DEFAULT NULL,
+  `geo_level_id` int(11) DEFAULT NULL,
   `status` tinyint(1) DEFAULT NULL,
   `stakeholder_activity_id` int(11) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
@@ -836,17 +816,17 @@ CREATE TABLE `distribution_plan` (
   PRIMARY KEY (`pk_id`),
   KEY `sender_warehouse_id` (`sender_warehouse_id`),
   KEY `receiver_warehouse_id` (`receiver_warehouse_id`),
-  KEY `geo_level_id` (`geo_level_id`),
   KEY `stakeholder_activity_id` (`stakeholder_activity_id`),
+  KEY `level` (`geo_level_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `distribution_plan_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `distribution_plan_ibfk_1` FOREIGN KEY (`sender_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `distribution_plan_ibfk_2` FOREIGN KEY (`receiver_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `distribution_plan_ibfk_3` FOREIGN KEY (`geo_level_id`) REFERENCES `geo_levels` (`pk_id`),
   CONSTRAINT `distribution_plan_ibfk_4` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
-  CONSTRAINT `distribution_plan_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7280 DEFAULT CHARSET=latin1;
+  CONSTRAINT `distribution_plan_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `distribution_plan_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9001 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for document_categories
@@ -863,8 +843,8 @@ CREATE TABLE `document_categories` (
   PRIMARY KEY (`pk_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `document_categories_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `document_categories_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `document_categories_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `document_categories_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -885,8 +865,8 @@ CREATE TABLE `documents` (
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`doc_category_id`) REFERENCES `document_categories` (`pk_id`),
-  CONSTRAINT `documents_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `documents_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `documents_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `documents_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -908,7 +888,7 @@ CREATE TABLE `epi_amc` (
   KEY `item_id` (`item_id`),
   KEY `warehouse_id` (`warehouse_id`),
   CONSTRAINT `epi_amc_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `item_pack_sizes` (`pk_id`),
-  CONSTRAINT `epi_amc_ibfk_4` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`)
+  CONSTRAINT `epi_amc_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -958,8 +938,8 @@ CREATE TABLE `fav_graph_settings` (
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `fav_graph_settings_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `fav_graph_settings_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `fav_graph_settings_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `fav_graph_settings_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -1002,13 +982,13 @@ CREATE TABLE `future_arrivals` (
   KEY `to_warehouse_id` (`to_warehouse_id`),
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `future_arrivals_ibfk_1` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
-  CONSTRAINT `future_arrivals_ibfk_10` FOREIGN KEY (`manufacturer_id`) REFERENCES `stakeholders` (`pk_id`),
-  CONSTRAINT `future_arrivals_ibfk_11` FOREIGN KEY (`vvm_type_id`) REFERENCES `vvm_types` (`pk_id`),
-  CONSTRAINT `future_arrivals_ibfk_12` FOREIGN KEY (`from_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `future_arrivals_ibfk_13` FOREIGN KEY (`to_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `future_arrivals_ibfk_14` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `future_arrivals_ibfk_15` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `future_arrivals_ibfk_2` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`)
+  CONSTRAINT `future_arrivals_ibfk_2` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
+  CONSTRAINT `future_arrivals_ibfk_3` FOREIGN KEY (`manufacturer_id`) REFERENCES `stakeholders` (`pk_id`),
+  CONSTRAINT `future_arrivals_ibfk_4` FOREIGN KEY (`vvm_type_id`) REFERENCES `vvm_types` (`pk_id`),
+  CONSTRAINT `future_arrivals_ibfk_5` FOREIGN KEY (`from_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
+  CONSTRAINT `future_arrivals_ibfk_6` FOREIGN KEY (`to_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
+  CONSTRAINT `future_arrivals_ibfk_7` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `future_arrivals_ibfk_8` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -1047,13 +1027,13 @@ CREATE TABLE `future_arrivals_draft` (
   KEY `to_warehouse_id` (`to_warehouse_id`),
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `future_arrivals_draft_ibfk_1` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
-  CONSTRAINT `future_arrivals_draft_ibfk_10` FOREIGN KEY (`manufacturer_id`) REFERENCES `stakeholders` (`pk_id`),
-  CONSTRAINT `future_arrivals_draft_ibfk_11` FOREIGN KEY (`vvm_type_id`) REFERENCES `vvm_types` (`pk_id`),
-  CONSTRAINT `future_arrivals_draft_ibfk_12` FOREIGN KEY (`from_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `future_arrivals_draft_ibfk_13` FOREIGN KEY (`to_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `future_arrivals_draft_ibfk_14` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `future_arrivals_draft_ibfk_15` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `future_arrivals_draft_ibfk_2` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`)
+  CONSTRAINT `future_arrivals_draft_ibfk_2` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
+  CONSTRAINT `future_arrivals_draft_ibfk_3` FOREIGN KEY (`manufacturer_id`) REFERENCES `stakeholders` (`pk_id`),
+  CONSTRAINT `future_arrivals_draft_ibfk_4` FOREIGN KEY (`vvm_type_id`) REFERENCES `vvm_types` (`pk_id`),
+  CONSTRAINT `future_arrivals_draft_ibfk_5` FOREIGN KEY (`from_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
+  CONSTRAINT `future_arrivals_draft_ibfk_6` FOREIGN KEY (`to_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
+  CONSTRAINT `future_arrivals_draft_ibfk_7` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `future_arrivals_draft_ibfk_8` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -1074,10 +1054,10 @@ CREATE TABLE `gatepass_detail` (
   KEY `gatepass_detail_stock_detail_fk1` (`stock_detail_id`) USING BTREE,
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `gatepass_detail_ibfk_1` FOREIGN KEY (`stock_detail_id`) REFERENCES `stakeholder_activities` (`pk_id`),
+  CONSTRAINT `gatepass_detail_ibfk_1` FOREIGN KEY (`stock_detail_id`) REFERENCES `stock_detail` (`pk_id`),
   CONSTRAINT `gatepass_detail_ibfk_2` FOREIGN KEY (`gatepass_master_id`) REFERENCES `gatepass_master` (`pk_id`),
-  CONSTRAINT `gatepass_detail_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `gatepass_detail_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `gatepass_detail_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `gatepass_detail_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -1101,8 +1081,8 @@ CREATE TABLE `gatepass_master` (
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `gatepass_master_ibfk_1` FOREIGN KEY (`gatepass_vehicle_id`) REFERENCES `gatepass_vehicles` (`pk_id`),
   CONSTRAINT `gatepass_master_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `gatepass_master_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `gatepass_master_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `gatepass_master_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `gatepass_master_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -1122,8 +1102,8 @@ CREATE TABLE `gatepass_vehicles` (
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `gatepass_vehicles_ibfk_1` FOREIGN KEY (`vehicle_type_id`) REFERENCES `list_detail` (`pk_id`),
-  CONSTRAINT `gatepass_vehicles_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `gatepass_vehicles_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `gatepass_vehicles_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `gatepass_vehicles_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -1140,8 +1120,8 @@ CREATE TABLE `geo_color` (
   PRIMARY KEY (`pk_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `geo_color_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `geo_color_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `geo_color_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `geo_color_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -1161,14 +1141,14 @@ CREATE TABLE `geo_indicator_values` (
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `geo_indicator_id` (`geo_indicator_id`),
   KEY `geo_color_id` (`geo_color_id`),
+  KEY `geo_indicator_id` (`geo_indicator_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `geo_indicator_values_ibfk_1` FOREIGN KEY (`geo_indicator_id`) REFERENCES `geo_indicators` (`pk_id`),
   CONSTRAINT `geo_indicator_values_ibfk_2` FOREIGN KEY (`geo_color_id`) REFERENCES `geo_color` (`pk_id`),
-  CONSTRAINT `geo_indicator_values_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `geo_indicator_values_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `geo_indicator_values_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `geo_indicator_values_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -1185,8 +1165,8 @@ CREATE TABLE `geo_indicators` (
   PRIMARY KEY (`pk_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `geo_indicators_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `geo_indicators_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `geo_indicators_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `geo_indicators_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -1206,7 +1186,7 @@ CREATE TABLE `geo_levels` (
   KEY `geo_levels_users_fk1` (`created_by`),
   KEY `geo_levels_users_fk2` (`modified_by`),
   CONSTRAINT `geo_levels_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `geo_levels_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `geo_levels_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='distribution level like district, province, national';
 
 -- ----------------------------
@@ -1232,11 +1212,11 @@ CREATE TABLE `geo_locations` (
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `geo_locations_ibfk_1` FOREIGN KEY (`location_id`) REFERENCES `locations` (`pk_id`),
-  CONSTRAINT `geo_locations_ibfk_10` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `geo_locations_ibfk_2` FOREIGN KEY (`geo_map_id`) REFERENCES `geo_maps` (`pk_id`),
   CONSTRAINT `geo_locations_ibfk_3` FOREIGN KEY (`geo_level_id`) REFERENCES `geo_levels` (`pk_id`),
   CONSTRAINT `geo_locations_ibfk_4` FOREIGN KEY (`stakeholder_id`) REFERENCES `stakeholders` (`pk_id`),
-  CONSTRAINT `geo_locations_ibfk_9` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `geo_locations_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `geo_locations_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -1258,8 +1238,8 @@ CREATE TABLE `geo_maps` (
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `geo_maps_ibfk_1` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`pk_id`),
-  CONSTRAINT `geo_maps_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `geo_maps_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `geo_maps_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `geo_maps_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -1280,8 +1260,8 @@ CREATE TABLE `help_messages` (
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `help_messages_ibfk_1` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`pk_id`),
-  CONSTRAINT `help_messages_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `help_messages_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `help_messages_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `help_messages_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -1307,16 +1287,19 @@ CREATE TABLE `hf_data_detail` (
   `created_date` datetime DEFAULT NULL,
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `outreach_outside_male` decimal(10,0) DEFAULT NULL,
+  `outreach_outside_female` decimal(10,0) DEFAULT NULL,
   PRIMARY KEY (`pk_id`),
   KEY `age_group_id` (`age_group_id`),
+  KEY `vaccine_schedule_id` (`vaccine_schedule_id`),
   KEY `hf_data_master_id` (`hf_data_master_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `hf_data_detail_ibfk_1` FOREIGN KEY (`age_group_id`) REFERENCES `list_detail` (`pk_id`),
-  CONSTRAINT `hf_data_detail_ibfk_3` FOREIGN KEY (`hf_data_master_id`) REFERENCES `hf_data_master` (`pk_id`),
-  CONSTRAINT `hf_data_detail_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `hf_data_detail_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=606621 DEFAULT CHARSET=latin1;
+  CONSTRAINT `hf_data_detail_ibfk_2` FOREIGN KEY (`hf_data_master_id`) REFERENCES `hf_data_master` (`pk_id`),
+  CONSTRAINT `hf_data_detail_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `hf_data_detail_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2217225 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for hf_data_detail_draft
@@ -1341,16 +1324,19 @@ CREATE TABLE `hf_data_detail_draft` (
   `created_date` datetime DEFAULT NULL,
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `outreach_outside_male` decimal(10,0) DEFAULT NULL,
+  `outreach_outside_female` decimal(10,0) DEFAULT NULL,
   PRIMARY KEY (`pk_id`),
-  KEY `modified_by` (`modified_by`),
   KEY `age_group_id` (`age_group_id`),
+  KEY `vaccine_schedule_id` (`vaccine_schedule_id`),
   KEY `hf_data_master_id` (`hf_data_master_id`),
-  KEY `created_by` (`created_by`),
-  CONSTRAINT `hf_data_detail_draft_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  KEY `modified_by` (`modified_by`),
+  KEY `hf_data_detail_draft_ibfk_2` (`created_by`),
   CONSTRAINT `hf_data_detail_draft_ibfk_1` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `hf_data_detail_draft_ibfk_2` FOREIGN KEY (`age_group_id`) REFERENCES `list_detail` (`pk_id`),
-  CONSTRAINT `hf_data_detail_draft_ibfk_3` FOREIGN KEY (`hf_data_master_id`) REFERENCES `hf_data_master_draft` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7443616 DEFAULT CHARSET=latin1;
+  CONSTRAINT `hf_data_detail_draft_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `hf_data_detail_draft_ibfk_4` FOREIGN KEY (`hf_data_master_id`) REFERENCES `hf_data_master_draft` (`pk_id`),
+  CONSTRAINT `hf_data_detail_draft_ibfk_5` FOREIGN KEY (`age_group_id`) REFERENCES `list_detail` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8918475 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for hf_data_master
@@ -1384,11 +1370,11 @@ CREATE TABLE `hf_data_master` (
   KEY `warehouses_data_ibfk_1` (`item_pack_size_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `hf_data_master_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `hf_data_master_ibfk_1` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
   CONSTRAINT `hf_data_master_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `hf_data_master_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1705488 DEFAULT CHARSET=utf8;
+  CONSTRAINT `hf_data_master_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `hf_data_master_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1933254 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for hf_data_master_draft
@@ -1426,7 +1412,7 @@ CREATE TABLE `hf_data_master_draft` (
   CONSTRAINT `hf_data_master_draft_ibfk_1` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
   CONSTRAINT `hf_data_master_draft_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `hf_data_master_draft_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3279597 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3921800 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for item_activities
@@ -1445,11 +1431,11 @@ CREATE TABLE `item_activities` (
   KEY `modified_by` (`modified_by`),
   KEY `item_pack_size_id` (`item_pack_size_id`),
   KEY `stakeholder_activity_id` (`stakeholder_activity_id`),
-  CONSTRAINT `item_activities_ibfk_4` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
-  CONSTRAINT `item_activities_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `item_activities_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `item_activities_ibfk_3` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `item_activities_ibfk_1` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
+  CONSTRAINT `item_activities_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `item_activities_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `item_activities_ibfk_4` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for item_categories
@@ -1468,7 +1454,7 @@ CREATE TABLE `item_categories` (
   KEY `item_categories_users_fk2` (`modified_by`) USING BTREE,
   CONSTRAINT `item_categories_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `item_categories_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for item_pack_sizes
@@ -1488,7 +1474,6 @@ CREATE TABLE `item_pack_sizes` (
   `item_id` int(11) DEFAULT NULL,
   `color` varchar(100) DEFAULT NULL,
   `vvm_group_id` int(11) DEFAULT NULL,
-  `stakeholder_activity_id` int(11) DEFAULT '1',
   `created_by` int(11) NOT NULL DEFAULT '1',
   `created_date` datetime DEFAULT NULL,
   `modified_by` int(11) NOT NULL DEFAULT '1',
@@ -1497,17 +1482,15 @@ CREATE TABLE `item_pack_sizes` (
   KEY `item_pack_sizes_item_categories_fk1` (`item_category_id`) USING BTREE,
   KEY `item_pack_sizes_item_units_fk2` (`item_unit_id`) USING BTREE,
   KEY `item_pack_sizes_items_fk3` (`item_id`) USING BTREE,
+  KEY `vvm_group_id` (`vvm_group_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  KEY `vvm_group_id` (`vvm_group_id`),
-  KEY `stakeholder_activity_id` (`stakeholder_activity_id`),
-  CONSTRAINT `item_pack_sizes_ibfk_7` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
   CONSTRAINT `item_pack_sizes_ibfk_1` FOREIGN KEY (`item_category_id`) REFERENCES `item_categories` (`pk_id`),
   CONSTRAINT `item_pack_sizes_ibfk_2` FOREIGN KEY (`item_unit_id`) REFERENCES `item_units` (`pk_id`),
   CONSTRAINT `item_pack_sizes_ibfk_3` FOREIGN KEY (`item_id`) REFERENCES `items` (`pk_id`),
-  CONSTRAINT `item_pack_sizes_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `item_pack_sizes_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `item_pack_sizes_ibfk_6` FOREIGN KEY (`vvm_group_id`) REFERENCES `vvm_groups` (`pk_id`)
+  CONSTRAINT `item_pack_sizes_ibfk_4` FOREIGN KEY (`vvm_group_id`) REFERENCES `vvm_groups` (`pk_id`),
+  CONSTRAINT `item_pack_sizes_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `item_pack_sizes_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 COMMENT='contain information about product attributes';
 
 -- ----------------------------
@@ -1526,13 +1509,13 @@ CREATE TABLE `item_schedule` (
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
   KEY `item_pack_size_id` (`item_pack_size_id`),
+  KEY `stakeholder_activity_id` (`stakeholder_activity_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  KEY `stakeholder_activity_id` (`stakeholder_activity_id`),
-  CONSTRAINT `item_schedule_ibfk_4` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
   CONSTRAINT `item_schedule_ibfk_1` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
   CONSTRAINT `item_schedule_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `item_schedule_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `item_schedule_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `item_schedule_ibfk_4` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -1550,24 +1533,9 @@ CREATE TABLE `item_units` (
   PRIMARY KEY (`pk_id`),
   KEY `item_units_users_fk1` (`created_by`) USING BTREE,
   KEY `item_units_users_fk2` (`modified_by`) USING BTREE,
-  CONSTRAINT `item_units_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `item_units_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `item_units_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `item_units_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Table structure for item_vvm_stages
--- ----------------------------
-DROP TABLE IF EXISTS `item_vvm_stages`;
-CREATE TABLE `item_vvm_stages` (
-  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
-  `item_pack_size_id` int(11) DEFAULT NULL,
-  `vvm_stage_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`pk_id`),
-  KEY `item_pack_size_id` (`item_pack_size_id`),
-  KEY `vvm_stage_id` (`vvm_stage_id`),
-  CONSTRAINT `item_vvm_stages_ibfk_1` FOREIGN KEY (`item_pack_size_id`) REFERENCES `r2`.`item_pack_sizes` (`pk_id`),
-  CONSTRAINT `item_vvm_stages_ibfk_2` FOREIGN KEY (`vvm_stage_id`) REFERENCES `r2`.`vvm_stages` (`pk_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for items
@@ -1617,10 +1585,10 @@ CREATE TABLE `list_detail` (
   KEY `list_detail_list_master_id_list_master_fk1` (`list_master_id`) USING BTREE,
   KEY `list_detail_created_by_users_fk2` (`created_by`) USING BTREE,
   KEY `list_detail_modified_by_users_fk3` (`modified_by`) USING BTREE,
-  CONSTRAINT `list_detail_ibfk_3` FOREIGN KEY (`list_master_id`) REFERENCES `list_master` (`pk_id`),
   CONSTRAINT `list_detail_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `list_detail_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=latin1;
+  CONSTRAINT `list_detail_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `list_detail_ibfk_3` FOREIGN KEY (`list_master_id`) REFERENCES `list_master` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=166 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for list_master
@@ -1638,9 +1606,9 @@ CREATE TABLE `list_master` (
   PRIMARY KEY (`pk_id`),
   KEY `list_master_created_by_users_fk1` (`created_by`) USING BTREE,
   KEY `list_master_modified_by_users_fk2` (`modified_by`) USING BTREE,
-  CONSTRAINT `list_master_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `list_master_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
+  CONSTRAINT `list_master_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `list_master_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for location_populations
@@ -1659,10 +1627,10 @@ CREATE TABLE `location_populations` (
   KEY `location_population_location_id_list_detail_pk_id` (`location_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `location_populations_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`pk_id`),
   CONSTRAINT `location_populations_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `location_populations_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9685 DEFAULT CHARSET=latin1;
+  CONSTRAINT `location_populations_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `location_populations_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9684 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for location_types
@@ -1681,9 +1649,9 @@ CREATE TABLE `location_types` (
   KEY `location_types_geo_levels_fk1` (`geo_level_id`),
   KEY `location_types_users_fk2` (`created_by`),
   KEY `location_types_users_fk3` (`modified_by`),
-  CONSTRAINT `location_types_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `location_types_ibfk_1` FOREIGN KEY (`geo_level_id`) REFERENCES `geo_levels` (`pk_id`),
-  CONSTRAINT `location_types_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `location_types_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `location_types_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -1712,14 +1680,14 @@ CREATE TABLE `locations` (
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   KEY `district_id` (`district_id`),
-  CONSTRAINT `locations_ibfk_7` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`),
   CONSTRAINT `locations_ibfk_1` FOREIGN KEY (`geo_level_id`) REFERENCES `geo_levels` (`pk_id`),
   CONSTRAINT `locations_ibfk_2` FOREIGN KEY (`location_type_id`) REFERENCES `location_types` (`pk_id`),
   CONSTRAINT `locations_ibfk_3` FOREIGN KEY (`province_id`) REFERENCES `locations` (`pk_id`),
   CONSTRAINT `locations_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `locations_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `locations_ibfk_6` FOREIGN KEY (`parent_id`) REFERENCES `locations` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5002 DEFAULT CHARSET=latin1;
+  CONSTRAINT `locations_ibfk_6` FOREIGN KEY (`parent_id`) REFERENCES `locations` (`pk_id`),
+  CONSTRAINT `locations_ibfk_7` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5004 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for log_book
@@ -1749,11 +1717,11 @@ CREATE TABLE `log_book` (
   KEY `warehouse_id` (`warehouse_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `log_book_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `log_book_ibfk_1` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`),
   CONSTRAINT `log_book_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `log_book_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23263 DEFAULT CHARSET=latin1;
+  CONSTRAINT `log_book_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `log_book_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=26780 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for log_book_item_doses
@@ -1773,11 +1741,11 @@ CREATE TABLE `log_book_item_doses` (
   KEY `log_book_id` (`log_book_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `log_book_item_doses_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `log_book_item_doses_ibfk_1` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
   CONSTRAINT `log_book_item_doses_ibfk_2` FOREIGN KEY (`log_book_id`) REFERENCES `log_book` (`pk_id`),
-  CONSTRAINT `log_book_item_doses_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=116341 DEFAULT CHARSET=latin1;
+  CONSTRAINT `log_book_item_doses_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `log_book_item_doses_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=133926 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for map_district_mapping
@@ -1797,14 +1765,15 @@ CREATE TABLE `map_district_mapping` (
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
+  KEY `mapping_id` (`mapping_id`),
   KEY `district_id` (`district_id`),
   KEY `province_id` (`province_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `map_district_mapping_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `map_district_mapping_ibfk_1` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`),
   CONSTRAINT `map_district_mapping_ibfk_2` FOREIGN KEY (`province_id`) REFERENCES `locations` (`pk_id`),
-  CONSTRAINT `map_district_mapping_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `map_district_mapping_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `map_district_mapping_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=174 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -1867,7 +1836,6 @@ CREATE TABLE `non_ccm_locations` (
   KEY `non_ccm_locations_list_detail_fk7` (`level`) USING BTREE,
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `non_ccm_locations_ibfk_9` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `non_ccm_locations_ibfk_1` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `non_ccm_locations_ibfk_2` FOREIGN KEY (`rack_information_id`) REFERENCES `rack_information` (`pk_id`),
   CONSTRAINT `non_ccm_locations_ibfk_3` FOREIGN KEY (`area`) REFERENCES `list_detail` (`pk_id`),
@@ -1875,8 +1843,41 @@ CREATE TABLE `non_ccm_locations` (
   CONSTRAINT `non_ccm_locations_ibfk_5` FOREIGN KEY (`rack`) REFERENCES `list_detail` (`pk_id`),
   CONSTRAINT `non_ccm_locations_ibfk_6` FOREIGN KEY (`pallet`) REFERENCES `list_detail` (`pk_id`),
   CONSTRAINT `non_ccm_locations_ibfk_7` FOREIGN KEY (`level`) REFERENCES `list_detail` (`pk_id`),
-  CONSTRAINT `non_ccm_locations_ibfk_8` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1622 DEFAULT CHARSET=latin1;
+  CONSTRAINT `non_ccm_locations_ibfk_8` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `non_ccm_locations_ibfk_9` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1627 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Table structure for pack_info
+-- ----------------------------
+DROP TABLE IF EXISTS `pack_info`;
+CREATE TABLE `pack_info` (
+  `pk_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'stakeholder id (primary key)',
+  `stakeholder_item_pack_size_id` int(11) DEFAULT NULL,
+  `pack_size_description` text,
+  `length` decimal(11,2) DEFAULT NULL,
+  `width` decimal(11,2) DEFAULT NULL,
+  `height` decimal(11,2) DEFAULT NULL,
+  `quantity_per_pack` int(11) unsigned DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `list_rank` int(11) DEFAULT NULL,
+  `volum_per_vial` decimal(10,2) DEFAULT NULL,
+  `item_gtin` varchar(20) DEFAULT NULL,
+  `packaging_level` int(11) DEFAULT '140',
+  `created_by` int(11) NOT NULL DEFAULT '1',
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` int(11) NOT NULL DEFAULT '1',
+  `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`pk_id`),
+  KEY `modified_by` (`modified_by`),
+  KEY `stakeholder_item_pack_size_id` (`stakeholder_item_pack_size_id`),
+  KEY `packaging_level` (`packaging_level`),
+  KEY `created_by` (`created_by`),
+  CONSTRAINT `pack_info_ibfk_1` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `pack_info_ibfk_2` FOREIGN KEY (`stakeholder_item_pack_size_id`) REFERENCES `stakeholder_item_pack_sizes` (`pk_id`),
+  CONSTRAINT `pack_info_ibfk_3` FOREIGN KEY (`packaging_level`) REFERENCES `list_detail` (`pk_id`),
+  CONSTRAINT `pack_info_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=843 DEFAULT CHARSET=utf8 COMMENT='contains detail information of stakeholder and itm_info_tab';
 
 -- ----------------------------
 -- Table structure for period
@@ -1897,51 +1898,9 @@ CREATE TABLE `period` (
   PRIMARY KEY (`pk_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `period_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `period_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `period_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `period_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Table structure for physical_stock_taking
--- ----------------------------
-DROP TABLE IF EXISTS `physical_stock_taking`;
-CREATE TABLE `physical_stock_taking` (
-  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_date` datetime DEFAULT NULL,
-  `to_date` datetime DEFAULT NULL,
-  `description` text,
-  `remarks` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`pk_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Table structure for physical_stock_taking_detail
--- ----------------------------
-DROP TABLE IF EXISTS `physical_stock_taking_detail`;
-CREATE TABLE `physical_stock_taking_detail` (
-  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
-  `batch_number` varchar(255) DEFAULT NULL,
-  `stock_batch_id` int(11) DEFAULT NULL,
-  `placement_location_id` int(11) DEFAULT NULL,
-  `vvm_stage` int(11) DEFAULT NULL,
-  `quantity` decimal(10,0) DEFAULT NULL,
-  `item_pack_size_id` int(11) NOT NULL,
-  `production_date` datetime DEFAULT NULL,
-  `expiry_date` datetime DEFAULT NULL,
-  `created_date` datetime DEFAULT NULL,
-  `physical_stock_taking_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`pk_id`),
-  KEY `stock_batch_id` (`stock_batch_id`),
-  KEY `placement_location_id` (`placement_location_id`),
-  KEY `item_pack_size_id` (`item_pack_size_id`),
-  KEY `physical_stock_taking_id` (`physical_stock_taking_id`),
-  KEY `vvm_stage` (`vvm_stage`),
-  CONSTRAINT `physical_stock_taking_detail_ibfk_1` FOREIGN KEY (`stock_batch_id`) REFERENCES `stock_batch` (`pk_id`),
-  CONSTRAINT `physical_stock_taking_detail_ibfk_2` FOREIGN KEY (`placement_location_id`) REFERENCES `placement_locations` (`pk_id`),
-  CONSTRAINT `physical_stock_taking_detail_ibfk_3` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
-  CONSTRAINT `physical_stock_taking_detail_ibfk_4` FOREIGN KEY (`physical_stock_taking_id`) REFERENCES `physical_stock_taking` (`pk_id`),
-  CONSTRAINT `physical_stock_taking_detail_ibfk_5` FOREIGN KEY (`vvm_stage`) REFERENCES `vvm_stages` (`pk_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for pilot_districts
@@ -1958,10 +1917,10 @@ CREATE TABLE `pilot_districts` (
   KEY `pilot_districts_locations_fk1` (`district_id`) USING BTREE,
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `pilot_districts_ibfk_3` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`),
   CONSTRAINT `pilot_districts_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `pilot_districts_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=134 DEFAULT CHARSET=latin1;
+  CONSTRAINT `pilot_districts_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `pilot_districts_ibfk_3` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for pipeline_consignments
@@ -1990,7 +1949,7 @@ CREATE TABLE `pipeline_consignments` (
   `created_date` datetime DEFAULT NULL,
   `master_id` int(11) DEFAULT '0' COMMENT 'This will be use for original stock master id',
   `status` enum('Received','Receiving','Planned') DEFAULT 'Planned',
-  `stock_batch_id` int(11) DEFAULT NULL,
+  `stock_batch_warehouse_id` int(11) DEFAULT NULL,
   `transaction_type_id` int(11) DEFAULT NULL,
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -2005,57 +1964,20 @@ CREATE TABLE `pipeline_consignments` (
   KEY `vvm_type_id` (`vvm_type_id`),
   KEY `from_warehouse_id` (`from_warehouse_id`),
   KEY `to_warehouse_id` (`to_warehouse_id`),
-  KEY `stock_batch_id` (`stock_batch_id`),
+  KEY `stock_batch_warehouse_id` (`stock_batch_warehouse_id`),
   KEY `transaction_type_id` (`transaction_type_id`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `pipeline_consignments_ibfk_10` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `pipeline_consignments_ibfk_1` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
+  CONSTRAINT `pipeline_consignments_ibfk_10` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `pipeline_consignments_ibfk_2` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
   CONSTRAINT `pipeline_consignments_ibfk_3` FOREIGN KEY (`manufacturer_id`) REFERENCES `stakeholder_item_pack_sizes` (`pk_id`),
   CONSTRAINT `pipeline_consignments_ibfk_4` FOREIGN KEY (`vvm_type_id`) REFERENCES `vvm_types` (`pk_id`),
   CONSTRAINT `pipeline_consignments_ibfk_5` FOREIGN KEY (`from_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `pipeline_consignments_ibfk_6` FOREIGN KEY (`to_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `pipeline_consignments_ibfk_7` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `pipeline_consignments_ibfk_8` FOREIGN KEY (`stock_batch_id`) REFERENCES `stock_batch` (`pk_id`),
+  CONSTRAINT `pipeline_consignments_ibfk_8` FOREIGN KEY (`stock_batch_warehouse_id`) REFERENCES `stock_batch_warehouses` (`pk_id`),
   CONSTRAINT `pipeline_consignments_ibfk_9` FOREIGN KEY (`transaction_type_id`) REFERENCES `transaction_types` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=199 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Table structure for pipeline_consignments_copy
--- ----------------------------
-DROP TABLE IF EXISTS `pipeline_consignments_copy`;
-CREATE TABLE `pipeline_consignments_copy` (
-  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
-  `voucher_number` varchar(50) DEFAULT NULL,
-  `transaction_counter` int(11) DEFAULT NULL,
-  `expected_arrival_date` datetime DEFAULT NULL,
-  `reference_number` varchar(100) DEFAULT NULL,
-  `stakeholder_activity_id` int(11) DEFAULT NULL,
-  `description` text,
-  `item_pack_size_id` int(11) DEFAULT NULL COMMENT 'manufacture_item_id for history',
-  `batch_number` varchar(255) DEFAULT NULL,
-  `production_date` datetime DEFAULT NULL,
-  `expiry_date` datetime DEFAULT NULL,
-  `manufacturer_id` int(11) DEFAULT NULL,
-  `vvm_type_id` int(11) DEFAULT NULL,
-  `unit_price` float DEFAULT NULL,
-  `quantity` int(11) NOT NULL DEFAULT '0',
-  `received_quantity` int(11) DEFAULT '0',
-  `from_warehouse_id` int(11) NOT NULL,
-  `to_warehouse_id` int(11) NOT NULL,
-  `created_by` int(11) NOT NULL,
-  `created_date` datetime DEFAULT NULL,
-  `master_id` int(11) DEFAULT '0' COMMENT 'This will be use for original stock master id',
-  `status` enum('Received','Receiving','Planned') DEFAULT 'Planned',
-  `batch_id` int(11) DEFAULT NULL,
-  `transaction_type` int(11) DEFAULT NULL,
-  PRIMARY KEY (`pk_id`),
-  KEY `stock_master_transaction_types_fk1` (`unit_price`),
-  KEY `stock_master_warehouses_fk2` (`quantity`),
-  KEY `stock_master_warehouses_fk3` (`received_quantity`),
-  KEY `stock_master_users_fk4` (`created_by`),
-  KEY `stock_master_ibfk_1` (`stakeholder_activity_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for pipeline_consignments_draft
@@ -2079,13 +2001,11 @@ CREATE TABLE `pipeline_consignments_draft` (
   `to_warehouse_id` int(11) NOT NULL,
   `created_by` int(11) NOT NULL,
   `created_date` datetime DEFAULT NULL,
-  `stock_batch_id` int(11) DEFAULT NULL,
+  `stock_batch_warehouse_id` int(11) DEFAULT NULL,
   `transaction_type_id` int(11) DEFAULT NULL,
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
-  KEY `stock_master_transaction_types_fk1` (`unit_price`),
-  KEY `stock_master_warehouses_fk2` (`quantity`),
   KEY `stock_master_users_fk4` (`created_by`),
   KEY `stock_master_ibfk_1` (`stakeholder_activity_id`),
   KEY `item_pack_size_id` (`item_pack_size_id`),
@@ -2093,18 +2013,19 @@ CREATE TABLE `pipeline_consignments_draft` (
   KEY `vvm_type_id` (`vvm_type_id`),
   KEY `from_warehouse_id` (`from_warehouse_id`),
   KEY `to_warehouse_id` (`to_warehouse_id`),
-  KEY `stock_batch_id` (`stock_batch_id`),
+  KEY `created_by` (`created_by`),
+  KEY `stock_batch_id` (`stock_batch_warehouse_id`),
   KEY `transaction_type_id` (`transaction_type_id`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `pipeline_consignments_draft_ibfk_10` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `pipeline_consignments_draft_ibfk_1` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
+  CONSTRAINT `pipeline_consignments_draft_ibfk_10` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `pipeline_consignments_draft_ibfk_2` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
   CONSTRAINT `pipeline_consignments_draft_ibfk_3` FOREIGN KEY (`manufacturer_id`) REFERENCES `stakeholder_item_pack_sizes` (`pk_id`),
   CONSTRAINT `pipeline_consignments_draft_ibfk_4` FOREIGN KEY (`vvm_type_id`) REFERENCES `vvm_types` (`pk_id`),
   CONSTRAINT `pipeline_consignments_draft_ibfk_5` FOREIGN KEY (`from_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `pipeline_consignments_draft_ibfk_6` FOREIGN KEY (`to_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `pipeline_consignments_draft_ibfk_7` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `pipeline_consignments_draft_ibfk_8` FOREIGN KEY (`stock_batch_id`) REFERENCES `stock_batch` (`pk_id`),
+  CONSTRAINT `pipeline_consignments_draft_ibfk_8` FOREIGN KEY (`stock_batch_warehouse_id`) REFERENCES `stock_batch_warehouses` (`pk_id`),
   CONSTRAINT `pipeline_consignments_draft_ibfk_9` FOREIGN KEY (`transaction_type_id`) REFERENCES `transaction_types` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2129,12 +2050,12 @@ CREATE TABLE `pipeline_consignments_placements` (
   KEY `vvm_stage` (`vvm_stage`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `pipeline_consignments_placements_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `pipeline_consignments_placements_ibfk_1` FOREIGN KEY (`pipeline_consignment_id`) REFERENCES `pipeline_consignments` (`pk_id`),
   CONSTRAINT `pipeline_consignments_placements_ibfk_2` FOREIGN KEY (`placement_location_id`) REFERENCES `placement_locations` (`pk_id`),
   CONSTRAINT `pipeline_consignments_placements_ibfk_3` FOREIGN KEY (`vvm_stage`) REFERENCES `vvm_stages` (`pk_id`),
-  CONSTRAINT `pipeline_consignments_placements_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
+  CONSTRAINT `pipeline_consignments_placements_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `pipeline_consignments_placements_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for placement_locations
@@ -2152,28 +2073,13 @@ CREATE TABLE `placement_locations` (
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
   KEY `placement_locations_list_detail_fk1` (`location_type`) USING BTREE,
+  KEY `location_id` (`location_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `placement_locations_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `placement_locations_ibfk_1` FOREIGN KEY (`location_type`) REFERENCES `list_detail` (`pk_id`),
-  CONSTRAINT `placement_locations_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20310 DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Table structure for placement_quantity
--- ----------------------------
-DROP TABLE IF EXISTS `placement_quantity`;
-CREATE TABLE `placement_quantity` (
-  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
-  `quantity` int(11) DEFAULT NULL,
-  `ccm_id` int(11) NOT NULL,
-  `stock_batch_id` int(11) NOT NULL,
-  PRIMARY KEY (`pk_id`),
-  KEY `placement_quantity_cold_chain_fk1` (`ccm_id`),
-  KEY `placement_quantity_stock_batch_fk2` (`stock_batch_id`),
-  CONSTRAINT `placement_quantity_ccm_id_cold_chain_pk_id` FOREIGN KEY (`ccm_id`) REFERENCES `cold_chain` (`pk_id`),
-  CONSTRAINT `placement_quantity_stock_batch_fk2` FOREIGN KEY (`stock_batch_id`) REFERENCES `stock_batch` (`pk_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `placement_locations_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `placement_locations_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20317 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for placement_summary
@@ -2183,7 +2089,7 @@ CREATE TABLE `placement_summary` (
   `pk_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_name` varchar(255) DEFAULT NULL,
   `batch_number` varchar(255) DEFAULT NULL,
-  `stock_batch_id` int(11) DEFAULT NULL,
+  `stock_batch_warehouse_id` int(11) DEFAULT NULL,
   `placement_location_id` int(11) DEFAULT NULL,
   `vvm_stage` int(11) DEFAULT NULL,
   `quantity` decimal(10,0) DEFAULT NULL,
@@ -2193,17 +2099,17 @@ CREATE TABLE `placement_summary` (
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
-  KEY `stock_batch_id` (`stock_batch_id`),
+  KEY `stock_batch_warehouse_id` (`stock_batch_warehouse_id`),
   KEY `placement_location_id` (`placement_location_id`),
   KEY `vvm_stage` (`vvm_stage`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `placement_summary_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `placement_summary_ibfk_1` FOREIGN KEY (`stock_batch_id`) REFERENCES `stock_batch` (`pk_id`),
+  CONSTRAINT `placement_summary_ibfk_1` FOREIGN KEY (`stock_batch_warehouse_id`) REFERENCES `stock_batch_warehouses` (`pk_id`),
   CONSTRAINT `placement_summary_ibfk_2` FOREIGN KEY (`placement_location_id`) REFERENCES `placement_locations` (`pk_id`),
   CONSTRAINT `placement_summary_ibfk_3` FOREIGN KEY (`vvm_stage`) REFERENCES `vvm_stages` (`pk_id`),
-  CONSTRAINT `placement_summary_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=53497 DEFAULT CHARSET=latin1;
+  CONSTRAINT `placement_summary_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `placement_summary_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=113523 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for placements
@@ -2215,7 +2121,7 @@ CREATE TABLE `placements` (
   `vvm_stage` int(11) DEFAULT '1',
   `is_placed` int(2) unsigned DEFAULT '1' COMMENT '1 when placed 0 when picked',
   `placement_location_id` int(11) DEFAULT NULL COMMENT 'it can be cold chain and non cold chain id',
-  `stock_batch_id` int(11) DEFAULT NULL,
+  `stock_batch_warehouse_id` int(11) DEFAULT NULL,
   `stock_detail_id` int(11) DEFAULT NULL,
   `placement_transaction_type_id` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
@@ -2223,20 +2129,20 @@ CREATE TABLE `placements` (
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
-  KEY `placements_stock_batch_fk2` (`stock_batch_id`) USING BTREE,
+  KEY `placements_stock_batch_fk2` (`stock_batch_warehouse_id`) USING BTREE,
   KEY `placements_stock_detail_fk3` (`stock_detail_id`) USING BTREE,
   KEY `placements_stock_placement_location_fk1` (`placement_location_id`) USING BTREE,
   KEY `placements_users_fk5` (`created_by`) USING BTREE,
   KEY `placements_list_detail_fk4` (`placement_transaction_type_id`) USING BTREE,
   KEY `modified_by` (`modified_by`),
   KEY `vvm_stage` (`vvm_stage`),
-  CONSTRAINT `placements_ibfk_6` FOREIGN KEY (`vvm_stage`) REFERENCES `vvm_stages` (`pk_id`),
-  CONSTRAINT `placements_ibfk_1` FOREIGN KEY (`stock_batch_id`) REFERENCES `stock_batch` (`pk_id`),
+  CONSTRAINT `placements_ibfk_1` FOREIGN KEY (`stock_batch_warehouse_id`) REFERENCES `stock_batch_warehouses` (`pk_id`),
   CONSTRAINT `placements_ibfk_2` FOREIGN KEY (`placement_transaction_type_id`) REFERENCES `list_detail` (`pk_id`),
   CONSTRAINT `placements_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `placements_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `placements_ibfk_5` FOREIGN KEY (`placement_location_id`) REFERENCES `placement_locations` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51876 DEFAULT CHARSET=latin1;
+  CONSTRAINT `placements_ibfk_5` FOREIGN KEY (`placement_location_id`) REFERENCES `placement_locations` (`pk_id`),
+  CONSTRAINT `placements_ibfk_6` FOREIGN KEY (`vvm_stage`) REFERENCES `vvm_stages` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=107500 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for purpose_transfer_history
@@ -2246,8 +2152,8 @@ CREATE TABLE `purpose_transfer_history` (
   `pk_id` int(11) NOT NULL AUTO_INCREMENT,
   `from_activity_id` int(11) DEFAULT NULL,
   `to_activity_id` int(11) DEFAULT NULL,
-  `from_batch_id` int(11) DEFAULT NULL,
-  `to_batch_id` int(11) DEFAULT NULL,
+  `from_stock_batch_warehouse_id` int(11) DEFAULT NULL,
+  `to_stock_batch_warehouse_id` int(11) DEFAULT NULL,
   `quantity` decimal(10,0) DEFAULT NULL,
   `transaction_type_id` int(11) DEFAULT NULL,
   `created_date` date DEFAULT NULL,
@@ -2257,19 +2163,19 @@ CREATE TABLE `purpose_transfer_history` (
   PRIMARY KEY (`pk_id`),
   KEY `from_activity_id` (`from_activity_id`),
   KEY `to_activity_id` (`to_activity_id`),
-  KEY `from_batch_id` (`from_batch_id`),
-  KEY `to_batch_id` (`to_batch_id`),
+  KEY `from_batch_id` (`from_stock_batch_warehouse_id`),
+  KEY `to_batch_id` (`to_stock_batch_warehouse_id`),
   KEY `transaction_type_id` (`transaction_type_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `purpose_transfer_history_ibfk_7` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `purpose_transfer_history_ibfk_1` FOREIGN KEY (`from_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
   CONSTRAINT `purpose_transfer_history_ibfk_2` FOREIGN KEY (`to_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
-  CONSTRAINT `purpose_transfer_history_ibfk_3` FOREIGN KEY (`from_batch_id`) REFERENCES `stock_batch` (`pk_id`),
-  CONSTRAINT `purpose_transfer_history_ibfk_4` FOREIGN KEY (`to_batch_id`) REFERENCES `stock_batch` (`pk_id`),
+  CONSTRAINT `purpose_transfer_history_ibfk_3` FOREIGN KEY (`from_stock_batch_warehouse_id`) REFERENCES `stock_batch_warehouses` (`pk_id`),
+  CONSTRAINT `purpose_transfer_history_ibfk_4` FOREIGN KEY (`to_stock_batch_warehouse_id`) REFERENCES `stock_batch_warehouses` (`pk_id`),
   CONSTRAINT `purpose_transfer_history_ibfk_5` FOREIGN KEY (`transaction_type_id`) REFERENCES `transaction_types` (`pk_id`),
-  CONSTRAINT `purpose_transfer_history_ibfk_6` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+  CONSTRAINT `purpose_transfer_history_ibfk_6` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `purpose_transfer_history_ibfk_7` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for rack_information
@@ -2289,8 +2195,8 @@ CREATE TABLE `rack_information` (
   PRIMARY KEY (`pk_id`),
   KEY `rack_information_users_fk1` (`created_by`) USING BTREE,
   KEY `rack_information_users_fk2` (`modified_by`) USING BTREE,
-  CONSTRAINT `rack_information_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `rack_information_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `rack_information_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `rack_information_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -2313,8 +2219,8 @@ CREATE TABLE `report_options` (
   PRIMARY KEY (`pk_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `report_options_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `report_options_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `report_options_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `report_options_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -2344,8 +2250,8 @@ CREATE TABLE `reports` (
   PRIMARY KEY (`report_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `reports_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `reports_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `reports_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `reports_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -2362,8 +2268,8 @@ CREATE TABLE `resource_types` (
   PRIMARY KEY (`pk_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `resource_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `resource_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `resource_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `resource_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -2390,10 +2296,10 @@ CREATE TABLE `resources` (
   KEY `resource_type_id` (`resource_type_id`),
   KEY `resources_created_by_users_pk` (`created_by`),
   KEY `resources_created_by_users_pk2` (`modified_by`),
-  CONSTRAINT `resources_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `resources_ibfk_1` FOREIGN KEY (`resource_type_id`) REFERENCES `resource_types` (`pk_id`),
-  CONSTRAINT `resources_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=842 DEFAULT CHARSET=latin1;
+  CONSTRAINT `resources_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `resources_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=845 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for role_resources
@@ -2410,7 +2316,7 @@ CREATE TABLE `role_resources` (
   KEY `role_resources_resources_fk2` (`resource_id`),
   CONSTRAINT `role_resources_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`pk_id`),
   CONSTRAINT `role_resources_ibfk_2` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12901 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12974 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for roles
@@ -2430,9 +2336,9 @@ CREATE TABLE `roles` (
   KEY `roles_users_fk2` (`created_by`) USING BTREE,
   KEY `roles_users_fk3` (`modified_by`) USING BTREE,
   KEY `roles_list_detail_fk1` (`category_id`) USING BTREE,
-  CONSTRAINT `roles_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `roles_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `list_detail` (`pk_id`),
-  CONSTRAINT `roles_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `roles_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `roles_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COMMENT='contain user type information';
 
 -- ----------------------------
@@ -2450,14 +2356,14 @@ CREATE TABLE `shipment_detail` (
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
-  KEY `shipment_id` (`shipment_id`),
-  KEY `warehouse_id` (`warehouse_id`),
-  KEY `created_by` (`created_by`),
+  KEY `shipment_id` (`shipment_id`) USING BTREE,
+  KEY `warehouse_id` (`warehouse_id`) USING BTREE,
+  KEY `created_by` (`created_by`) USING BTREE,
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `shipment_detail_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `shipment_detail_ibfk_1` FOREIGN KEY (`shipment_id`) REFERENCES `shipments` (`pk_id`),
   CONSTRAINT `shipment_detail_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `shipment_detail_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `shipment_detail_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `shipment_detail_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -2477,9 +2383,9 @@ CREATE TABLE `shipment_history` (
   KEY `shipment_id` (`shipment_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `shipment_history_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `shipment_history_ibfk_1` FOREIGN KEY (`shipment_id`) REFERENCES `shipments` (`pk_id`),
-  CONSTRAINT `shipment_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `shipment_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `shipment_history_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -2501,15 +2407,16 @@ CREATE TABLE `shipments` (
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
   KEY `item_pack_size_id` (`item_pack_size_id`),
+  KEY `funding_source_id` (`funding_source_id`),
   KEY `stakeholder_activity_id` (`stakeholder_activity_id`),
   KEY `warehouse_id` (`warehouse_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `shipments_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `shipments_ibfk_1` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
   CONSTRAINT `shipments_ibfk_2` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
   CONSTRAINT `shipments_ibfk_3` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `shipments_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `shipments_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `shipments_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -2526,8 +2433,8 @@ CREATE TABLE `stakeholder_activities` (
   PRIMARY KEY (`pk_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `stakeholder_activities_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `stakeholder_activities_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `stakeholder_activities_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stakeholder_activities_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -2537,14 +2444,7 @@ DROP TABLE IF EXISTS `stakeholder_item_pack_sizes`;
 CREATE TABLE `stakeholder_item_pack_sizes` (
   `pk_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'stakeholder id (primary key)',
   `pack_size_description` text,
-  `length` decimal(11,2) DEFAULT NULL,
-  `width` decimal(11,2) DEFAULT NULL,
-  `height` decimal(11,2) DEFAULT NULL,
-  `quantity_per_pack` int(11) unsigned DEFAULT NULL,
-  `status` tinyint(1) DEFAULT '1',
   `list_rank` int(11) DEFAULT NULL,
-  `volum_per_vial` decimal(10,2) DEFAULT NULL,
-  `item_gtin` varchar(20) DEFAULT NULL,
   `packaging_level` int(11) DEFAULT '140',
   `stakeholder_id` int(11) DEFAULT NULL,
   `item_pack_size_id` int(11) DEFAULT NULL,
@@ -2563,7 +2463,7 @@ CREATE TABLE `stakeholder_item_pack_sizes` (
   CONSTRAINT `stakeholder_item_pack_sizes_ibfk_3` FOREIGN KEY (`packaging_level`) REFERENCES `list_detail` (`pk_id`),
   CONSTRAINT `stakeholder_item_pack_sizes_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `stakeholder_item_pack_sizes_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=819 DEFAULT CHARSET=utf8 COMMENT='contains detail information of stakeholder and itm_info_tab';
+) ENGINE=InnoDB AUTO_INCREMENT=843 DEFAULT CHARSET=utf8 COMMENT='contains detail information of stakeholder and itm_info_tab';
 
 -- ----------------------------
 -- Table structure for stakeholder_sectors
@@ -2580,9 +2480,9 @@ CREATE TABLE `stakeholder_sectors` (
   PRIMARY KEY (`pk_id`),
   KEY `stakeholder_sectors_users_fk1` (`created_by`),
   KEY `stakeholder_sectors_users_fk2` (`modified_by`),
-  CONSTRAINT `stakeholder_sectors_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `stakeholder_sectors_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+  CONSTRAINT `stakeholder_sectors_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stakeholder_sectors_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for stakeholder_types
@@ -2599,8 +2499,8 @@ CREATE TABLE `stakeholder_types` (
   PRIMARY KEY (`pk_id`),
   KEY `stakeholder_types_users_fk1` (`created_by`),
   KEY `stakeholder_types_users_fk2` (`modified_by`),
-  CONSTRAINT `stakeholder_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `stakeholder_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `stakeholder_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stakeholder_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -2630,14 +2530,15 @@ CREATE TABLE `stakeholders` (
   KEY `stakeholders_ibfk_1` (`stakeholder_activity_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `stakeholders_ibfk_7` FOREIGN KEY (`parent_id`) REFERENCES `stakeholders` (`pk_id`),
   CONSTRAINT `stakeholders_ibfk_1` FOREIGN KEY (`stakeholder_type_id`) REFERENCES `stakeholder_types` (`pk_id`),
   CONSTRAINT `stakeholders_ibfk_2` FOREIGN KEY (`stakeholder_sector_id`) REFERENCES `stakeholder_sectors` (`pk_id`),
   CONSTRAINT `stakeholders_ibfk_3` FOREIGN KEY (`geo_level_id`) REFERENCES `geo_levels` (`pk_id`),
   CONSTRAINT `stakeholders_ibfk_4` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
   CONSTRAINT `stakeholders_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `stakeholders_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8 COMMENT='contain information about stakeholders';
+  CONSTRAINT `stakeholders_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stakeholders_ibfk_7` FOREIGN KEY (`parent_id`) REFERENCES `stakeholders` (`pk_id`),
+  CONSTRAINT `stakeholders_ibfk_8` FOREIGN KEY (`main_stakeholder`) REFERENCES `stakeholders` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8 COMMENT='contain information about stakeholders';
 
 -- ----------------------------
 -- Table structure for stock_batch
@@ -2646,44 +2547,107 @@ DROP TABLE IF EXISTS `stock_batch`;
 CREATE TABLE `stock_batch` (
   `pk_id` int(11) NOT NULL AUTO_INCREMENT,
   `number` varchar(100) DEFAULT NULL,
-  `batch_master_id` int(11) DEFAULT NULL COMMENT 'system generated id',
-  `expiry_date` datetime DEFAULT NULL,
-  `quantity` bigint(20) DEFAULT NULL,
-  `status` enum('Finished','Stacked','Running') DEFAULT 'Stacked',
+  `expiry_date` date DEFAULT NULL,
   `unit_price` float DEFAULT NULL,
-  `production_date` datetime DEFAULT NULL,
-  `last_update` datetime DEFAULT NULL,
-  `item_pack_size_id` int(11) NOT NULL,
+  `production_date` date DEFAULT NULL,
   `vvm_type_id` int(11) DEFAULT NULL,
-  `warehouse_id` int(11) NOT NULL,
-  `stakeholder_item_pack_size_id` int(11) DEFAULT NULL COMMENT 'manufacture_item_id for history',
+  `pack_info_id` int(11) DEFAULT NULL COMMENT 'manufacture_item_id for history',
   `created_by` int(11) NOT NULL DEFAULT '1',
   `created_date` datetime DEFAULT NULL,
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
-  KEY `item_pack_size_id` (`item_pack_size_id`),
   KEY `vvm_type_id` (`vvm_type_id`),
-  KEY `warehouse_id` (`warehouse_id`),
-  KEY `batch_master_id` (`batch_master_id`),
-  KEY `stakeholder_item_pack_size_id` (`stakeholder_item_pack_size_id`),
+  KEY `stakeholder_item_pack_size_id` (`pack_info_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `stock_batch_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `stock_batch_ibfk_1` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
   CONSTRAINT `stock_batch_ibfk_2` FOREIGN KEY (`vvm_type_id`) REFERENCES `vvm_types` (`pk_id`),
-  CONSTRAINT `stock_batch_ibfk_3` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `stock_batch_ibfk_4` FOREIGN KEY (`stakeholder_item_pack_size_id`) REFERENCES `stakeholder_item_pack_sizes` (`pk_id`),
-  CONSTRAINT `stock_batch_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=63738 DEFAULT CHARSET=utf8;
+  CONSTRAINT `stock_batch_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stock_batch_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stock_batch_ibfk_5` FOREIGN KEY (`pack_info_id`) REFERENCES `pack_info` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4835 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for stock_batch_history
+-- Table structure for stock_batch_vvm
 -- ----------------------------
-DROP TABLE IF EXISTS `stock_batch_history`;
-CREATE TABLE `stock_batch_history` (
+DROP TABLE IF EXISTS `stock_batch_vvm`;
+CREATE TABLE `stock_batch_vvm` (
   `pk_id` int(11) NOT NULL AUTO_INCREMENT,
-  `batch_id` int(11) NOT NULL,
+  `stock_batch_warehouse_id` int(11) DEFAULT NULL,
+  `vvm_stage` int(11) DEFAULT NULL,
+  `quantity` decimal(10,0) DEFAULT NULL,
+  `created_by` int(11) NOT NULL DEFAULT '1',
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` int(11) NOT NULL DEFAULT '1',
+  `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`pk_id`),
+  KEY `stock_batch_id` (`stock_batch_warehouse_id`),
+  KEY `vvm_stage` (`vvm_stage`),
+  KEY `created_by` (`created_by`),
+  KEY `modified_by` (`modified_by`),
+  CONSTRAINT `stock_batch_vvm_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stock_batch_vvm_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=403 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Table structure for stock_batch_vvm_history
+-- ----------------------------
+DROP TABLE IF EXISTS `stock_batch_vvm_history`;
+CREATE TABLE `stock_batch_vvm_history` (
+  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
+  `stock_batch_vvm_id` int(11) DEFAULT NULL,
+  `stock_batch_warehouse_id` int(11) DEFAULT NULL,
+  `vvm_stage` int(11) DEFAULT NULL,
+  `quantity` decimal(10,0) DEFAULT NULL,
+  `created_by` int(11) NOT NULL DEFAULT '1',
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` int(11) NOT NULL DEFAULT '1',
+  `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`pk_id`),
+  KEY `stock_batch_vvm_id` (`stock_batch_vvm_id`),
+  KEY `stock_batch_id` (`stock_batch_warehouse_id`),
+  KEY `vvm_stage` (`vvm_stage`),
+  KEY `created_by` (`created_by`),
+  KEY `modified_by` (`modified_by`),
+  CONSTRAINT `stock_batch_vvm_history_ibfk_1` FOREIGN KEY (`stock_batch_vvm_id`) REFERENCES `stock_batch_vvm` (`pk_id`),
+  CONSTRAINT `stock_batch_vvm_history_ibfk_2` FOREIGN KEY (`stock_batch_warehouse_id`) REFERENCES `stock_batch_warehouses` (`pk_id`),
+  CONSTRAINT `stock_batch_vvm_history_ibfk_3` FOREIGN KEY (`vvm_stage`) REFERENCES `vvm_stages` (`pk_id`),
+  CONSTRAINT `stock_batch_vvm_history_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stock_batch_vvm_history_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=403 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Table structure for stock_batch_warehouses
+-- ----------------------------
+DROP TABLE IF EXISTS `stock_batch_warehouses`;
+CREATE TABLE `stock_batch_warehouses` (
+  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
+  `quantity` bigint(20) DEFAULT NULL,
+  `status` enum('Finished','Stacked','Running') DEFAULT 'Stacked',
+  `warehouse_id` int(11) NOT NULL,
+  `stock_batch_id` int(11) DEFAULT NULL,
+  `created_by` int(11) NOT NULL DEFAULT '1',
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` int(11) NOT NULL DEFAULT '1',
+  `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`pk_id`),
+  KEY `modified_by` (`modified_by`),
+  KEY `warehouse_id` (`warehouse_id`),
+  KEY `created_by` (`created_by`),
+  KEY `stock_batch_id` (`stock_batch_id`),
+  CONSTRAINT `stock_batch_warehouses_ibfk_1` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stock_batch_warehouses_ibfk_3` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
+  CONSTRAINT `stock_batch_warehouses_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stock_batch_warehouses_ibfk_5` FOREIGN KEY (`stock_batch_id`) REFERENCES `stock_batch` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=66945 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for stock_batch_warehouses_history
+-- ----------------------------
+DROP TABLE IF EXISTS `stock_batch_warehouses_history`;
+CREATE TABLE `stock_batch_warehouses_history` (
+  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
+  `stock_batch_warehouse_id` int(11) DEFAULT NULL,
   `number` varchar(100) DEFAULT NULL,
   `batch_master_id` int(11) DEFAULT NULL COMMENT 'system generated id',
   `expiry_date` datetime DEFAULT NULL,
@@ -2707,56 +2671,13 @@ CREATE TABLE `stock_batch_history` (
   KEY `warehouse_id` (`warehouse_id`),
   KEY `batch_master_id` (`batch_master_id`),
   KEY `stakeholder_item_pack_size_id` (`stakeholder_item_pack_size_id`),
-  KEY `created_by` (`created_by`),
-  KEY `modified_by` (`modified_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=44149 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Table structure for stock_batch_vvm
--- ----------------------------
-DROP TABLE IF EXISTS `stock_batch_vvm`;
-CREATE TABLE `stock_batch_vvm` (
-  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
-  `stock_batch_id` int(11) DEFAULT NULL,
-  `vvm_stage` int(11) DEFAULT NULL,
-  `quantity` decimal(10,0) DEFAULT NULL,
-  `created_by` int(11) NOT NULL DEFAULT '1',
-  `created_date` datetime DEFAULT NULL,
-  `modified_by` int(11) NOT NULL DEFAULT '1',
-  `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`pk_id`),
+  KEY `stock_batch_warehouse_id` (`stock_batch_warehouse_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `stock_batch_vvm_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `stock_batch_vvm_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=405 DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Table structure for stock_batch_vvm_history
--- ----------------------------
-DROP TABLE IF EXISTS `stock_batch_vvm_history`;
-CREATE TABLE `stock_batch_vvm_history` (
-  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
-  `stock_batch_vvm_id` int(11) DEFAULT NULL,
-  `stock_batch_id` int(11) DEFAULT NULL,
-  `vvm_stage` int(11) DEFAULT NULL,
-  `quantity` decimal(10,0) DEFAULT NULL,
-  `created_by` int(11) NOT NULL DEFAULT '1',
-  `created_date` datetime DEFAULT NULL,
-  `modified_by` int(11) NOT NULL DEFAULT '1',
-  `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`pk_id`),
-  KEY `stock_batch_vvm_id` (`stock_batch_vvm_id`),
-  KEY `stock_batch_id` (`stock_batch_id`),
-  KEY `vvm_stage` (`vvm_stage`),
-  KEY `created_by` (`created_by`),
-  KEY `modified_by` (`modified_by`),
-  CONSTRAINT `stock_batch_vvm_history_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `stock_batch_vvm_history_ibfk_1` FOREIGN KEY (`stock_batch_vvm_id`) REFERENCES `stock_batch_vvm` (`pk_id`),
-  CONSTRAINT `stock_batch_vvm_history_ibfk_2` FOREIGN KEY (`stock_batch_id`) REFERENCES `stock_batch` (`pk_id`),
-  CONSTRAINT `stock_batch_vvm_history_ibfk_3` FOREIGN KEY (`vvm_stage`) REFERENCES `vvm_stages` (`pk_id`),
-  CONSTRAINT `stock_batch_vvm_history_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=405 DEFAULT CHARSET=latin1;
+  CONSTRAINT `stock_batch_warehouses_history_ibfk_1` FOREIGN KEY (`stock_batch_warehouse_id`) REFERENCES `stock_batch_warehouses` (`pk_id`),
+  CONSTRAINT `stock_batch_warehouses_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stock_batch_warehouses_history_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=47794 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for stock_detail
@@ -2770,7 +2691,7 @@ CREATE TABLE `stock_detail` (
   `is_received` int(11) DEFAULT NULL,
   `adjustment_type` int(4) DEFAULT NULL,
   `stock_master_id` int(11) NOT NULL,
-  `stock_batch_id` int(11) NOT NULL,
+  `stock_batch_warehouse_id` int(11) DEFAULT NULL,
   `item_unit_id` int(11) NOT NULL,
   `created_by` int(11) NOT NULL DEFAULT '1',
   `created_date` datetime DEFAULT NULL,
@@ -2778,18 +2699,20 @@ CREATE TABLE `stock_detail` (
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
   KEY `stock_detail_stock_master_fk1` (`stock_master_id`),
-  KEY `stock_detail_stock_batch_fk2` (`stock_batch_id`),
+  KEY `stock_detail_stock_batch_fk2` (`stock_batch_warehouse_id`),
   KEY `stock_detail_item_units_fk3` (`item_unit_id`) USING BTREE,
   KEY `vvm_stage` (`vvm_stage`),
+  KEY `adjustment_type` (`adjustment_type`),
+  KEY `item_unit_id` (`item_unit_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   CONSTRAINT `stock_detail_ibfk_1` FOREIGN KEY (`vvm_stage`) REFERENCES `vvm_stages` (`pk_id`),
   CONSTRAINT `stock_detail_ibfk_2` FOREIGN KEY (`stock_master_id`) REFERENCES `stock_master` (`pk_id`),
-  CONSTRAINT `stock_detail_ibfk_3` FOREIGN KEY (`stock_batch_id`) REFERENCES `stock_batch` (`pk_id`),
+  CONSTRAINT `stock_detail_ibfk_3` FOREIGN KEY (`stock_batch_warehouse_id`) REFERENCES `stock_batch_warehouses` (`pk_id`),
   CONSTRAINT `stock_detail_ibfk_4` FOREIGN KEY (`item_unit_id`) REFERENCES `item_units` (`pk_id`),
   CONSTRAINT `stock_detail_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `stock_detail_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=279164 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=358300 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for stock_detail_history
@@ -2804,7 +2727,7 @@ CREATE TABLE `stock_detail_history` (
   `is_received` int(11) DEFAULT NULL,
   `adjustment_type` tinyint(1) DEFAULT NULL,
   `stock_master_id` int(11) NOT NULL,
-  `stock_batch_id` int(11) NOT NULL,
+  `stock_batch_warehouse_id` int(11) DEFAULT NULL,
   `item_unit_id` int(11) NOT NULL,
   `action_type` tinyint(4) NOT NULL,
   `created_by` int(11) NOT NULL DEFAULT '1',
@@ -2813,12 +2736,18 @@ CREATE TABLE `stock_detail_history` (
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
   KEY `stock_detail_stock_master_fk1` (`stock_master_id`),
-  KEY `stock_detail_stock_batch_fk2` (`stock_batch_id`),
+  KEY `stock_detail_stock_batch_fk2` (`stock_batch_warehouse_id`),
   KEY `stock_detail_item_units_fk3` (`item_unit_id`) USING BTREE,
   KEY `vvm_stage` (`vvm_stage`),
+  KEY `adjustment_type` (`adjustment_type`),
   KEY `created_by` (`created_by`),
-  KEY `modified_by` (`modified_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=312942 DEFAULT CHARSET=utf8;
+  KEY `modified_by` (`modified_by`),
+  CONSTRAINT `stock_detail_history_ibfk_1` FOREIGN KEY (`stock_batch_warehouse_id`) REFERENCES `stock_batch_warehouses` (`pk_id`),
+  CONSTRAINT `stock_detail_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stock_detail_history_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stock_detail_history_ibfk_4` FOREIGN KEY (`vvm_stage`) REFERENCES `vvm_stages` (`pk_id`),
+  CONSTRAINT `stock_detail_history_ibfk_5` FOREIGN KEY (`stock_master_id`) REFERENCES `stock_master_history` (`master_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=470320 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for stock_master
@@ -2852,13 +2781,13 @@ CREATE TABLE `stock_master` (
   KEY `stock_master_users_fk4` (`created_by`),
   KEY `stock_master_ibfk_1` (`stakeholder_activity_id`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `stock_master_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `stock_master_ibfk_1` FOREIGN KEY (`transaction_type_id`) REFERENCES `transaction_types` (`pk_id`),
   CONSTRAINT `stock_master_ibfk_2` FOREIGN KEY (`from_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `stock_master_ibfk_3` FOREIGN KEY (`to_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `stock_master_ibfk_4` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
-  CONSTRAINT `stock_master_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=79121 DEFAULT CHARSET=utf8;
+  CONSTRAINT `stock_master_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stock_master_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=102456 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for stock_master_history
@@ -2890,21 +2819,15 @@ CREATE TABLE `stock_master_history` (
   KEY `stock_master_warehouses_fk3` (`to_warehouse_id`),
   KEY `stock_master_users_fk4` (`created_by`),
   KEY `stock_master_ibfk_1` (`stakeholder_activity_id`),
-  KEY `modified_by` (`modified_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=77058 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Table structure for stock_receive_from_scanner
--- ----------------------------
-DROP TABLE IF EXISTS `stock_receive_from_scanner`;
-CREATE TABLE `stock_receive_from_scanner` (
-  `pk_id` int(11) NOT NULL,
-  `stock_detail_id` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
-  PRIMARY KEY (`pk_id`),
-  KEY `stock_detail_id` (`stock_detail_id`),
-  CONSTRAINT `stock_receive_from_scanner_ibfk_1` FOREIGN KEY (`stock_detail_id`) REFERENCES `stock_detail` (`pk_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `modified_by` (`modified_by`),
+  KEY `master_id` (`master_id`),
+  CONSTRAINT `stock_master_history_ibfk_1` FOREIGN KEY (`transaction_type_id`) REFERENCES `transaction_types` (`pk_id`),
+  CONSTRAINT `stock_master_history_ibfk_2` FOREIGN KEY (`from_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
+  CONSTRAINT `stock_master_history_ibfk_3` FOREIGN KEY (`to_warehouse_id`) REFERENCES `warehouses` (`pk_id`),
+  CONSTRAINT `stock_master_history_ibfk_4` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
+  CONSTRAINT `stock_master_history_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `stock_master_history_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=119365 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for system
@@ -2921,8 +2844,8 @@ CREATE TABLE `system` (
   PRIMARY KEY (`pk_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `system_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `system_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `system_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `system_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='contains system wide global information.';
 
 -- ----------------------------
@@ -2942,8 +2865,8 @@ CREATE TABLE `transaction_types` (
   PRIMARY KEY (`pk_id`),
   KEY `transaction_types_users_fk1` (`created_by`),
   KEY `transaction_types_users_fk2` (`modified_by`),
-  CONSTRAINT `transaction_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `transaction_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `transaction_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `transaction_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -2964,11 +2887,11 @@ CREATE TABLE `user_documents` (
   KEY `doc_id` (`doc_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `user_documents_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `user_documents_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `user_documents_ibfk_2` FOREIGN KEY (`doc_id`) REFERENCES `documents` (`pk_id`),
-  CONSTRAINT `user_documents_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  CONSTRAINT `user_documents_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `user_documents_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for user_login_log
@@ -2987,10 +2910,10 @@ CREATE TABLE `user_login_log` (
   KEY `user_id` (`user_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `user_login_log_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `user_login_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `user_login_log_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=102885 DEFAULT CHARSET=latin1;
+  CONSTRAINT `user_login_log_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `user_login_log_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=125734 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for users
@@ -3016,10 +2939,11 @@ CREATE TABLE `users` (
   `role_id` int(11) NOT NULL,
   `stakeholder_id` int(11) NOT NULL,
   `location_id` int(11) DEFAULT NULL,
-  `created_by` int(11) NOT NULL,
   `auth` varchar(50) DEFAULT NULL,
   `organization` varchar(50) DEFAULT NULL,
   `country` int(11) unsigned zerofill DEFAULT NULL,
+  `created_by` int(11) NOT NULL,
+  `created_date` datetime DEFAULT NULL,
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
@@ -3028,12 +2952,12 @@ CREATE TABLE `users` (
   KEY `users_users_fk4` (`created_by`) USING BTREE,
   KEY `users_locations_fk3` (`location_id`) USING BTREE,
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `users_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`pk_id`),
   CONSTRAINT `users_ibfk_2` FOREIGN KEY (`stakeholder_id`) REFERENCES `stakeholders` (`pk_id`),
   CONSTRAINT `users_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`pk_id`),
-  CONSTRAINT `users_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1732 DEFAULT CHARSET=utf8 COMMENT='contain user information';
+  CONSTRAINT `users_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `users_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1751 DEFAULT CHARSET=utf8 COMMENT='contain user information';
 
 -- ----------------------------
 -- Table structure for vvm_groups
@@ -3048,15 +2972,15 @@ CREATE TABLE `vvm_groups` (
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
+  KEY `vvm_group_id` (`vvm_group_id`),
   KEY `vvm_stage_id` (`vvm_stage_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  KEY `vvm_group_id` (`vvm_group_id`),
   CONSTRAINT `vvm_groups_ibfk_1` FOREIGN KEY (`vvm_stage_id`) REFERENCES `vvm_stages` (`pk_id`),
   CONSTRAINT `vvm_groups_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `vvm_groups_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `vvm_groups_ibfk_5` FOREIGN KEY (`vvm_group_id`) REFERENCES `vvm_groups` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+  CONSTRAINT `vvm_groups_ibfk_4` FOREIGN KEY (`vvm_group_id`) REFERENCES `vvm_groups` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for vvm_stages
@@ -3072,8 +2996,8 @@ CREATE TABLE `vvm_stages` (
   PRIMARY KEY (`pk_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `vvm_stages_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `vvm_stages_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `vvm_stages_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `vvm_stages_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -3082,7 +3006,7 @@ CREATE TABLE `vvm_stages` (
 DROP TABLE IF EXISTS `vvm_transfer_history`;
 CREATE TABLE `vvm_transfer_history` (
   `pk_id` int(11) NOT NULL AUTO_INCREMENT,
-  `batch_id` int(11) DEFAULT NULL,
+  `stock_batch_warehouse_id` int(11) DEFAULT NULL,
   `from_vvm_stage_id` int(11) DEFAULT NULL,
   `to_vvm_stage_id` int(11) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
@@ -3091,17 +3015,17 @@ CREATE TABLE `vvm_transfer_history` (
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
-  KEY `batch_id` (`batch_id`),
+  KEY `batch_id` (`stock_batch_warehouse_id`),
   KEY `from_vvm_stage_id` (`from_vvm_stage_id`),
   KEY `to_vvm_stage_id` (`to_vvm_stage_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `vvm_transfer_history_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `vvm_transfer_history_ibfk_1` FOREIGN KEY (`batch_id`) REFERENCES `stock_batch` (`pk_id`),
+  CONSTRAINT `vvm_transfer_history_ibfk_1` FOREIGN KEY (`stock_batch_warehouse_id`) REFERENCES `stock_batch_warehouses` (`pk_id`),
   CONSTRAINT `vvm_transfer_history_ibfk_2` FOREIGN KEY (`from_vvm_stage_id`) REFERENCES `vvm_stages` (`pk_id`),
   CONSTRAINT `vvm_transfer_history_ibfk_3` FOREIGN KEY (`to_vvm_stage_id`) REFERENCES `vvm_stages` (`pk_id`),
-  CONSTRAINT `vvm_transfer_history_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  CONSTRAINT `vvm_transfer_history_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `vvm_transfer_history_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for vvm_types
@@ -3142,14 +3066,17 @@ CREATE TABLE `warehouse_population` (
   `created_date` datetime DEFAULT NULL,
   `modified_by` int(11) NOT NULL,
   `modified_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `surviving_children_0_11` int(11) DEFAULT NULL,
+  `children_aged_12_23` int(11) DEFAULT NULL,
+  `above_2_year` int(11) DEFAULT NULL,
   PRIMARY KEY (`pk_id`),
   KEY `warehouses_population_warehouses_fk1` (`warehouse_id`) USING BTREE,
   KEY `warehouses_population_users_fk2` (`created_by`) USING BTREE,
   KEY `warehouses_population_users_fk3` (`modified_by`) USING BTREE,
-  CONSTRAINT `warehouse_population_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `warehouse_population_ibfk_1` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `warehouse_population_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5574 DEFAULT CHARSET=latin1;
+  CONSTRAINT `warehouse_population_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `warehouse_population_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7621 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for warehouse_population_archieve
@@ -3171,9 +3098,9 @@ CREATE TABLE `warehouse_population_archieve` (
   KEY `warehouses_population_archieve_users_fk2` (`created_by`) USING BTREE,
   KEY `warehouses_population_archieve_users_fk3` (`modified_by`) USING BTREE,
   KEY `warehouses_population_archieve_warehouses_fk1` (`warehouse_id`) USING BTREE,
-  CONSTRAINT `warehouse_population_archieve_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `warehouse_population_archieve_ibfk_1` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `warehouse_population_archieve_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `warehouse_population_archieve_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `warehouse_population_archieve_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -3191,10 +3118,13 @@ CREATE TABLE `warehouse_storage_types` (
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
+  KEY `stakeholder_item_pack_size_id` (`stakeholder_item_pack_size_id`),
+  KEY `warehouse_type_id` (`warehouse_type_id`),
+  KEY `stakeholder_activity_id` (`stakeholder_activity_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `warehouse_storage_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `warehouse_storage_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `warehouse_storage_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `warehouse_storage_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -3211,8 +3141,8 @@ CREATE TABLE `warehouse_type_categories` (
   PRIMARY KEY (`pk_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `warehouse_type_categories_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `warehouse_type_categories_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `warehouse_type_categories_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `warehouse_type_categories_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -3235,10 +3165,14 @@ CREATE TABLE `warehouse_types` (
   PRIMARY KEY (`pk_id`),
   KEY `warehouse_types_users_fk1` (`created_by`) USING BTREE,
   KEY `warehouse_types_users_fk2` (`modified_by`) USING BTREE,
+  KEY `geo_level_id` (`geo_level_id`),
   KEY `warehouse_type_category_id` (`warehouse_type_category_id`),
-  CONSTRAINT `warehouse_types_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  KEY `list_rank` (`list_rank`),
+  KEY `created_by` (`created_by`),
+  KEY `modified_by` (`modified_by`),
   CONSTRAINT `warehouse_types_ibfk_1` FOREIGN KEY (`warehouse_type_category_id`) REFERENCES `warehouse_type_categories` (`pk_id`),
-  CONSTRAINT `warehouse_types_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `warehouse_types_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `warehouse_types_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -3259,11 +3193,11 @@ CREATE TABLE `warehouse_users` (
   KEY `warehouse_id` (`warehouse_id`) USING BTREE,
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `warehouse_users_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `warehouse_users_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `warehouse_users_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `warehouse_users_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17962 DEFAULT CHARSET=latin1;
+  CONSTRAINT `warehouse_users_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `warehouse_users_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18000 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for warehouse_vaccine_storage_types
@@ -3283,10 +3217,10 @@ CREATE TABLE `warehouse_vaccine_storage_types` (
   KEY `warehouse_type_id` (`warehouse_type_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `warehouse_vaccine_storage_types_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `warehouse_vaccine_storage_types_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `item_pack_sizes` (`pk_id`),
   CONSTRAINT `warehouse_vaccine_storage_types_ibfk_2` FOREIGN KEY (`warehouse_type_id`) REFERENCES `warehouse_types` (`pk_id`),
-  CONSTRAINT `warehouse_vaccine_storage_types_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
+  CONSTRAINT `warehouse_vaccine_storage_types_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `warehouse_vaccine_storage_types_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -3313,86 +3247,25 @@ CREATE TABLE `warehouses` (
   `modified_by` int(11) NOT NULL DEFAULT '1',
   `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`),
-  KEY `province_id` (`province_id`),
-  KEY `stakeholder_id` (`stakeholder_id`),
-  KEY `location_id` (`location_id`),
+  KEY `pk_id` (`pk_id`),
   KEY `stakeholder_office_id` (`stakeholder_office_id`),
+  KEY `district_id` (`district_id`),
+  KEY `province_id` (`province_id`),
+  KEY `province_id_2` (`province_id`),
+  KEY `location_id` (`location_id`),
   KEY `warehouse_type_id` (`warehouse_type_id`),
+  KEY `stakeholder_id` (`stakeholder_id`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  KEY `district_id` (`district_id`),
-  CONSTRAINT `warehouses_ibfk_8` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`),
   CONSTRAINT `warehouses_ibfk_1` FOREIGN KEY (`province_id`) REFERENCES `locations` (`pk_id`),
   CONSTRAINT `warehouses_ibfk_2` FOREIGN KEY (`stakeholder_id`) REFERENCES `stakeholders` (`pk_id`),
   CONSTRAINT `warehouses_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`pk_id`),
   CONSTRAINT `warehouses_ibfk_4` FOREIGN KEY (`stakeholder_office_id`) REFERENCES `stakeholders` (`pk_id`),
   CONSTRAINT `warehouses_ibfk_5` FOREIGN KEY (`warehouse_type_id`) REFERENCES `warehouse_types` (`pk_id`),
   CONSTRAINT `warehouses_ibfk_6` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `warehouses_ibfk_7` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10355 DEFAULT CHARSET=utf8 COMMENT='contain information about warehouse';
-
--- ----------------------------
--- Table structure for warehouses_data
--- ----------------------------
-DROP TABLE IF EXISTS `warehouses_data`;
-CREATE TABLE `warehouses_data` (
-  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
-  `opening_balance` int(11) DEFAULT NULL,
-  `received_balance` int(11) DEFAULT NULL,
-  `issue_balance` int(11) DEFAULT NULL,
-  `closing_balance` int(11) DEFAULT NULL,
-  `wastages` int(11) DEFAULT NULL,
-  `vials_used` int(11) DEFAULT NULL,
-  `adjustments` int(11) DEFAULT NULL,
-  `reporting_start_date` datetime DEFAULT NULL,
-  `nearest_expiry` datetime DEFAULT NULL,
-  `item_pack_size_id` int(11) DEFAULT NULL,
-  `warehouse_id` int(11) DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `created_date` datetime NOT NULL,
-  `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `is_calculated` tinyint(1) DEFAULT '0',
-  `modified_by` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`pk_id`),
-  KEY `warehouse_id` (`warehouse_id`),
-  KEY `warehouses_data_ibfk_1` (`item_pack_size_id`),
-  KEY `modified_by` (`modified_by`),
-  CONSTRAINT `warehouses_data_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `warehouses_data_ibfk_1` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`),
-  CONSTRAINT `warehouses_data_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4055113 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Table structure for warehouses_data_draft
--- ----------------------------
-DROP TABLE IF EXISTS `warehouses_data_draft`;
-CREATE TABLE `warehouses_data_draft` (
-  `pk_id` int(11) NOT NULL AUTO_INCREMENT,
-  `opening_balance` int(11) DEFAULT NULL,
-  `received_balance` int(11) DEFAULT NULL,
-  `issue_balance` int(11) DEFAULT NULL,
-  `closing_balance` int(11) DEFAULT NULL,
-  `wastages` int(11) DEFAULT NULL,
-  `vials_used` int(11) DEFAULT NULL,
-  `adjustments` int(11) DEFAULT NULL,
-  `reporting_start_date` datetime DEFAULT NULL,
-  `nearest_expiry` datetime DEFAULT NULL,
-  `item_pack_size_id` int(11) DEFAULT NULL,
-  `warehouse_id` int(11) DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `created_date` datetime DEFAULT NULL,
-  `modified_by` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`pk_id`),
-  KEY `modified_by` (`modified_by`),
-  KEY `created_by` (`created_by`),
-  KEY `item_pack_size_id` (`item_pack_size_id`),
-  KEY `warehouse_id` (`warehouse_id`),
-  CONSTRAINT `warehouses_data_draft_ibfk_4` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
-  CONSTRAINT `warehouses_data_draft_ibfk_1` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `warehouses_data_draft_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `warehouses_data_draft_ibfk_3` FOREIGN KEY (`item_pack_size_id`) REFERENCES `item_pack_sizes` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7178557 DEFAULT CHARSET=utf8;
+  CONSTRAINT `warehouses_ibfk_7` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `warehouses_ibfk_8` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10370 DEFAULT CHARSET=utf8 COMMENT='contain information about warehouse';
 
 -- ----------------------------
 -- Table structure for warehouses_service_types
@@ -3411,10 +3284,10 @@ CREATE TABLE `warehouses_service_types` (
   KEY `warehouses_warehouses_fk1` (`warehouse_id`) USING BTREE,
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
-  CONSTRAINT `warehouses_service_types_ibfk_4` FOREIGN KEY (`service_type_id`) REFERENCES `list_detail` (`pk_id`),
   CONSTRAINT `warehouses_service_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `warehouses_service_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `warehouses_service_types_ibfk_3` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`)
+  CONSTRAINT `warehouses_service_types_ibfk_3` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
+  CONSTRAINT `warehouses_service_types_ibfk_4` FOREIGN KEY (`service_type_id`) REFERENCES `list_detail` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4217 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -3428,23 +3301,1043 @@ CREATE TABLE `warehouses_update_history` (
   `ip_address` varchar(20) DEFAULT NULL,
   `warehouse_id` int(11) DEFAULT NULL,
   `modified_by` int(11) DEFAULT NULL,
-  `created_by` int(11) NOT NULL DEFAULT '1',
   `created_date` datetime DEFAULT NULL,
+  `created_by` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`pk_id`),
   KEY `warehouses_update_history_warehouses_fk1` (`warehouse_id`) USING BTREE,
   KEY `warehouses_update_history_users_fk2` (`modified_by`) USING BTREE,
   KEY `created_by` (`created_by`),
-  CONSTRAINT `warehouses_update_history_ibfk_3` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `warehouses_update_history_ibfk_1` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
-  CONSTRAINT `warehouses_update_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=77041 DEFAULT CHARSET=latin1;
+  CONSTRAINT `warehouses_update_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
+  CONSTRAINT `warehouses_update_history_ibfk_3` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=84054 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Procedure structure for _test_copy
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `_test_copy`;
+DELIMITER ;;
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `_test_copy`(in_type char(2), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+    DETERMINISTIC
+BEGIN
+
+SET @num := 0;
+SET @loc := 0;
+
+CASE
+WHEN (in_type = 'N') THEN
+	SELECT
+		B.pk_id,
+		B.item_name,
+		A.AMC,
+		C.CB
+	FROM
+		(
+			SELECT
+				B.pk_id,
+				B.item_name,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.item_name,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							item_pack_sizes.pk_id,
+							item_pack_sizes.item_name,
+							SUM(
+								hf_data_master.issue_balance
+							) AS csum
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+						INNER JOIN item_pack_sizes ON hf_data_master.item_pack_size_id = item_pack_sizes.pk_id
+						INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+						WHERE
+							stakeholders.geo_level_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						GROUP BY
+							item_pack_sizes.pk_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							item_pack_sizes.pk_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			item_pack_sizes.pk_id,
+			item_pack_sizes.item_name
+		FROM
+			item_pack_sizes
+		ORDER BY
+			item_pack_sizes.list_rank
+	) B ON A.pk_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+			D.pk_id,
+			D.CB + (
+				SELECT
+					IFNULL(
+						SUM(stock_detail.quantity),
+						0
+					)
+				FROM
+					stock_master
+				INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+				INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+				INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+				INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+				INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+				INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+				INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+				WHERE
+					DATE_FORMAT(
+						stock_master.transaction_date,
+						'%Y-%m-%d'
+					) <= in_rpt_date
+				AND stakeholder_item_pack_sizes.item_pack_size_id = D.pk_id
+				AND stock_detail.is_received != 0
+			) AS CB
+		FROM
+			(
+				SELECT
+					item_pack_sizes.pk_id,
+					item_pack_sizes.item_name,
+					SUM(
+						hf_data_master.closing_balance
+					) AS CB
+				FROM
+					warehouses
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+				INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+				INNER JOIN item_pack_sizes ON hf_data_master.item_pack_size_id = item_pack_sizes.pk_id
+				WHERE
+					DATE_FORMAT(
+						hf_data_master.reporting_start_date,
+						'%Y-%m-%d'
+					) = in_rpt_date
+				AND stakeholders.geo_level_id >= 1
+				GROUP BY
+					item_pack_sizes.pk_id
+			) D
+	) C 
+	ON C.pk_id = B.pk_id;
+
+WHEN (in_type = 'NP') THEN
+		SELECT
+			b.item_pack_size_id,
+			AVG(b.csum) AS AMC,
+			C.CB
+		FROM
+			(
+				SELECT
+					A.item_pack_size_id,
+					A.csum,
+					@num :=
+				IF (@loc = item_pack_size_id, @num + 1, 1) AS row_number,
+				@loc := item_pack_size_id
+			FROM
+				(
+					SELECT
+						hf_data_master.item_pack_size_id,
+						SUM(
+							hf_data_master.issue_balance
+						) AS csum
+					FROM
+						warehouses
+					INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+					INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+					INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+					WHERE
+						stakeholders.geo_level_id = 6
+					AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+					AND hf_data_master.item_pack_size_id = in_item
+					GROUP BY
+						hf_data_master.item_pack_size_id,
+						hf_data_master.reporting_start_date
+					ORDER BY
+						hf_data_master.item_pack_size_id,
+						hf_data_master.reporting_start_date DESC
+				) AS A
+			) AS b
+		JOIN (SELECT
+						hf_data_master.item_pack_size_id,
+						SUM(hf_data_master.closing_balance) + (
+							SELECT
+								IFNULL(SUM(stock_detail.quantity), 0)
+							FROM
+								stock_master
+							INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+							INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+							INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+							INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+							INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+							INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+							INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+							WHERE
+								DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+							AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+							AND stock_detail.is_received != 0
+						) AS CB
+					FROM
+						warehouses
+					INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+					INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+					WHERE
+						DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+					AND hf_data_master.item_pack_size_id = in_item
+					AND stakeholders.geo_level_id >= 1
+					GROUP BY
+						hf_data_master.item_pack_size_id) C
+		ON C.item_pack_size_id = b.item_pack_size_id
+		WHERE
+			row_number <= 3
+		GROUP BY
+			item_pack_size_id;
+
+WHEN (in_type = 'PP') THEN
+	SELECT
+		B.pk_id,
+		B.location_name,
+		A.AMC,
+		C.CB
+	FROM
+		(
+			SELECT
+				b.province_id,
+				AVG(b.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.province_id,
+						A.csum,
+						@num :=
+					IF (@loc = province_id, @num + 1, 1) AS row_number,
+					@loc := province_id
+				FROM
+					(
+						SELECT
+							warehouses.province_id,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+						INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+						WHERE
+							stakeholders.geo_level_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.province_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							warehouses.province_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS b
+			WHERE
+				row_number <= 3
+			GROUP BY
+				province_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			locations.pk_id,
+			locations.location_name
+		FROM
+			locations
+		WHERE
+			locations.geo_level_id = 2
+		ORDER BY
+			locations.pk_id ASC
+	) B ON A.province_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+		D.province_id,
+		D.CB + (
+			SELECT
+				IFNULL(SUM(stock_detail.quantity), 0)
+			FROM
+				stock_master
+			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			WHERE
+				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+			AND stock_detail.is_received != 0
+			AND warehouses.province_id = D.province_id
+		) AS CB
+	FROM
+		(
+			SELECT
+				warehouses.province_id,
+				SUM(
+					hf_data_master.closing_balance
+				) AS CB
+			FROM
+				warehouses
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+			WHERE
+				stakeholders.geo_level_id >= 2
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			GROUP BY
+				warehouses.province_id
+		) D
+	) C 
+	ON C.province_id = B.pk_id;
+
+WHEN (in_type = 'DP') THEN
+	IF(in_location_id != 0) THEN
+		SELECT
+			B.pk_id,
+			B.province_id,
+			B.location_name,
+			A.AMC,
+			C.field_store,
+			C.district_store,
+			C.field_store + C.district_store AS CB
+		FROM
+			(
+				SELECT
+					b.district_id,
+					AVG(b.csum) AS AMC
+				FROM
+					(
+						SELECT
+							A.district_id,
+							A.csum,
+							@num :=
+						IF (@loc = district_id, @num + 1, 1) AS row_number,
+						@loc := district_id
+					FROM
+						(
+							SELECT
+								warehouses.district_id,
+								SUM(hf_data_master.issue_balance) AS csum
+							FROM
+								warehouses
+							INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+							INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+							INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+							WHERE
+								stakeholders.geo_level_id = 6
+							AND warehouses.province_id = in_location_id
+							AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+							AND hf_data_master.item_pack_size_id = in_item
+							GROUP BY
+								warehouses.district_id,
+								hf_data_master.reporting_start_date
+							ORDER BY
+								warehouses.district_id,
+								hf_data_master.reporting_start_date DESC
+						) AS A
+					) AS b
+				WHERE
+					row_number <= 3
+				GROUP BY
+					district_id
+			) A
+		RIGHT JOIN (
+			SELECT
+				locations.pk_id,
+				locations.location_name,
+				locations.province_id
+			FROM
+				locations
+			INNER JOIN pilot_districts ON locations.pk_id = pilot_districts.district_id
+			WHERE
+				locations.geo_level_id = 4
+			AND locations.parent_id = in_location_id
+			ORDER BY
+				locations.location_name ASC
+		) B ON A.district_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+			A.pk_id,
+			A.province_id,
+			A.location_name,
+			A.field_store,
+			A.district_store,
+			A.field_store + A.district_store AS CB
+		FROM
+			(
+				SELECT
+					B.pk_id,
+					B.province_id,
+					B.location_name,
+					A.CB AS field_store,
+					(
+						SELECT
+							IFNULL(SUM(stock_detail.quantity), 0)
+						FROM
+							stock_master
+						INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+						INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+						INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+						INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+						INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+						INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+						INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+						WHERE
+							DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+						AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+						AND stock_detail.is_received != 0
+						AND warehouses.district_id = A.district_id
+					) AS district_store
+				FROM
+					(
+						SELECT
+							warehouses.district_id,
+							SUM(hf_data_master.closing_balance) AS CB
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+						WHERE
+							stakeholders.geo_level_id >= 4
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.district_id
+					) A
+				RIGHT JOIN (
+					SELECT
+						locations.pk_id,
+						locations.location_name,
+						locations.province_id
+					FROM
+						locations
+					INNER JOIN pilot_districts ON locations.pk_id = pilot_districts.district_id
+					WHERE
+						locations.geo_level_id = 4
+					AND locations.parent_id = in_location_id
+					ORDER BY
+						locations.location_name ASC
+				) B ON A.district_id = B.pk_id
+			) A
+	) C 
+	ON C.pk_id = B.pk_id;
+
+	ELSEIF(in_location_id = 0) THEN
+		SELECT
+			B.pk_id,
+			B.province_id,
+			B.location_name,
+			A.AMC,
+			C.field_store,
+			C.district_store,
+			C.field_store + C.district_store AS CB
+		FROM
+			(
+				SELECT
+					b.district_id,
+					AVG(b.csum) AS AMC
+				FROM
+					(
+						SELECT
+							A.district_id,
+							A.csum,
+							@num :=
+						IF (@loc = district_id, @num + 1, 1) AS row_number,
+						@loc := district_id
+					FROM
+						(
+							SELECT
+								warehouses.district_id,
+								SUM(hf_data_master.issue_balance) AS csum
+							FROM
+								warehouses
+							INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+							INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+							INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+							WHERE
+								stakeholders.geo_level_id = 6
+							AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+							AND hf_data_master.item_pack_size_id = in_item
+							GROUP BY
+								warehouses.district_id,
+								hf_data_master.reporting_start_date
+							ORDER BY
+								warehouses.district_id,
+								hf_data_master.reporting_start_date DESC
+						) AS A
+					) AS b
+				WHERE
+					row_number <= 3
+				GROUP BY
+					district_id
+			) A
+		RIGHT JOIN (
+			SELECT
+				locations.pk_id,
+				locations.location_name,
+				locations.province_id
+			FROM
+				locations
+			INNER JOIN pilot_districts ON locations.pk_id = pilot_districts.district_id
+			WHERE
+				locations.geo_level_id = 4
+			ORDER BY
+				locations.province_id ASC,
+				locations.location_name ASC
+		) B ON A.district_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+			A.pk_id,
+			A.province_id,
+			A.location_name,
+			A.field_store,
+			A.district_store,
+			A.field_store + A.district_store AS CB
+		FROM
+			(
+				SELECT
+					B.pk_id,
+					B.province_id,
+					B.location_name,
+					A.CB AS field_store,
+					(
+						SELECT
+							IFNULL(SUM(stock_detail.quantity), 0)
+						FROM
+							stock_master
+						INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+						INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+						INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+						INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+						INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+						INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+						INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+						WHERE
+							DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+						AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+						AND stock_detail.is_received != 0
+						AND warehouses.district_id = A.district_id
+					) AS district_store
+				FROM
+					(
+						SELECT
+							warehouses.district_id,
+							SUM(hf_data_master.closing_balance) AS CB
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+						WHERE
+							stakeholders.geo_level_id >= 4
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.district_id
+					) A
+				RIGHT JOIN (
+					SELECT
+						locations.pk_id,
+						locations.location_name,
+						locations.province_id
+					FROM
+						locations
+					INNER JOIN pilot_districts ON locations.pk_id = pilot_districts.district_id
+					WHERE
+						locations.geo_level_id = 4
+					ORDER BY
+						locations.province_id ASC,
+						locations.location_name ASC
+				) B ON A.district_id = B.pk_id
+			) A
+	) C 
+	ON C.pk_id = B.pk_id;
+	END IF;
+
+WHEN (in_type = 'TP') THEN
+	SELECT
+		B.pk_id,
+		B.location_name,
+		A.AMC,
+		C.CB
+	FROM
+		(
+			SELECT
+				b.pk_id,
+				AVG(b.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							Tehsil.pk_id,
+							Tehsil.location_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN locations ON warehouses.location_id = locations.pk_id
+						INNER JOIN locations AS Tehsil ON locations.parent_id = Tehsil.pk_id
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						WHERE
+							warehouses.district_id = in_location_id
+						AND warehouses.stakeholder_office_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							Tehsil.pk_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							Tehsil.pk_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS b
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			locations.pk_id,
+			locations.location_name
+		FROM
+			locations
+		WHERE
+			locations.geo_level_id = 5
+		AND locations.district_id = in_location_id
+		ORDER BY
+			locations.location_name ASC
+	) B ON A.pk_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+		D.pk_id,
+		D.CB + (
+			SELECT
+				IFNULL(SUM(stock_detail.quantity), 0)
+			FROM
+				stock_master
+			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			WHERE
+				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+			AND stock_detail.is_received != 0
+			AND warehouses.location_id = D.pk_id
+		) AS CB
+	FROM
+		(
+			SELECT
+				Tehsil.pk_id,
+				Tehsil.location_name,
+				SUM(hf_data_master.closing_balance) AS CB
+			FROM
+				warehouses
+			INNER JOIN locations ON warehouses.location_id = locations.pk_id
+			INNER JOIN locations AS Tehsil ON locations.parent_id = Tehsil.pk_id
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			WHERE
+				warehouses.district_id = in_location_id
+			AND warehouses.stakeholder_office_id = 6
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			GROUP BY
+				Tehsil.pk_id
+		) D
+	) C 
+	ON C.pk_id = B.pk_id;
+
+WHEN (in_type = 'UP') THEN
+	SELECT
+		B.pk_id,
+		B.tehsil_id,
+		B.location_name,
+		A.AMC,
+		C.CB
+	FROM
+		(
+			SELECT
+				b.pk_id,
+				AVG(b.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							locations.pk_id,
+							locations.location_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN locations ON warehouses.location_id = locations.pk_id
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						WHERE
+							warehouses.district_id = in_location_id
+						AND warehouses.stakeholder_office_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.location_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							warehouses.location_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS b
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			locations.pk_id,
+			locations.parent_id AS tehsil_id,
+			locations.location_name
+		FROM
+			locations
+		WHERE
+			locations.geo_level_id = 6
+		AND locations.district_id = in_location_id
+		ORDER BY
+			locations.location_name ASC
+	) B ON A.pk_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+			D.pk_id,
+			D.CB + (
+			SELECT
+				IFNULL(SUM(stock_detail.quantity), 0)
+			FROM
+				stock_master
+			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			WHERE
+				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+			AND stock_detail.is_received != 0
+			AND warehouses.location_id = D.pk_id
+		) AS CB
+	FROM
+		(
+			SELECT
+				locations.pk_id,
+				locations.location_name,
+				SUM(hf_data_master.closing_balance) AS CB
+			FROM
+				warehouses
+			INNER JOIN locations ON warehouses.location_id = locations.pk_id
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			WHERE
+				warehouses.district_id = in_location_id
+			AND warehouses.stakeholder_office_id = 6
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			GROUP BY
+				warehouses.location_id
+			ORDER BY
+				locations.location_name ASC
+		) D
+	) C 
+	ON C.pk_id = B.pk_id;
+
+WHEN (in_type = 'WP') THEN
+	SELECT
+		B.pk_id,
+		B.tehsil_id,
+		B.warehouse_name AS location_name,
+		A.AMC,
+		C.CB
+	FROM
+		(
+			SELECT
+				b.pk_id,
+				AVG(b.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							warehouses.pk_id,
+							warehouses.warehouse_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						WHERE
+							warehouses.location_id = in_location_id
+						AND warehouses.stakeholder_office_id = 6 
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.pk_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							warehouses.pk_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS b
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			warehouses.pk_id,
+			warehouses.warehouse_name,
+			locations.parent_id AS tehsil_id
+		FROM
+			warehouses
+		INNER JOIN locations ON warehouses.location_id = locations.pk_id
+		WHERE
+			warehouses.location_id = in_location_id
+		ORDER BY
+			warehouses.warehouse_name ASC
+	) B ON A.pk_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+			D.pk_id,
+			D.CB + (
+			SELECT
+				IFNULL(SUM(stock_detail.quantity), 0)
+			FROM
+				stock_master
+			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			WHERE
+				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+			AND stock_detail.is_received != 0
+			AND warehouses.pk_id = D.pk_id
+		) AS CB
+	FROM
+		(
+			SELECT
+				warehouses.pk_id,
+				warehouses.warehouse_name,
+				SUM(hf_data_master.closing_balance) AS CB
+			FROM
+				warehouses
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			WHERE
+				warehouses.location_id = in_location_id
+			AND warehouses.stakeholder_office_id = 6 
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			GROUP BY
+				warehouses.pk_id
+			ORDER BY
+				warehouses.warehouse_name ASC
+		) D
+	) C 
+	ON C.pk_id = B.pk_id;
+
+WHEN (in_type = 'P') THEN
+	SELECT
+		b.district_id as location_id,
+		b.location_name,
+		AVG(b.csum) AS AMC,
+		C.CB
+	FROM
+		(
+			SELECT
+				A.reporting_start_date,
+				A.csum,
+				A.district_id,
+				A.location_name,
+				@num :=
+			IF (@loc = district_id, @num + 1, 1) AS row_number,
+			@loc := district_id as location_id
+		FROM
+			(
+				SELECT
+					hf_data_master.reporting_start_date,
+					SUM(hf_data_master.issue_balance) AS csum,
+					warehouses.district_id,
+					locations.location_name
+				FROM
+					warehouses
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+				INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+				INNER JOIN locations ON locations.pk_id = warehouses.district_id
+        INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+				WHERE
+					stakeholders.geo_level_id = 6
+				AND hf_data_master.issue_balance > 0
+				AND warehouses.stakeholder_id = 1
+				AND issue_balance > 0
+				AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+				AND hf_data_master.item_pack_size_id = in_item
+				AND warehouses.province_id = in_location_id
+				GROUP BY
+					warehouses.district_id,
+					hf_data_master.reporting_start_date
+				ORDER BY
+					warehouses.district_id,
+					hf_data_master.reporting_start_date DESC
+			) AS A
+		) AS b
+		JOIN(SELECT
+					hf_data_master.reporting_start_date,
+					SUM(hf_data_master.closing_balance) AS CB,
+					warehouses.district_id as location_id,
+					locations.location_name
+				FROM
+					warehouses
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+				INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+				INNER JOIN locations ON locations.pk_id = warehouses.district_id
+				INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+				WHERE
+					stakeholders.geo_level_id >= 4
+				AND warehouses.stakeholder_id = in_stakeholder
+				AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+				AND hf_data_master.item_pack_size_id = in_item
+				AND warehouses.province_id = in_location_id
+				GROUP BY
+					warehouses.district_id
+				ORDER BY
+					warehouses.district_id)C
+		ON C.location_id = b.location_id
+	WHERE
+		row_number <= 3
+	GROUP BY
+		district_id;
+
+WHEN (in_type = 'D') THEN
+	SELECT
+		b.location_id,
+		b.location_name,
+		AVG(b.csum) AS AMC,
+		C.CB
+	FROM
+		(
+			SELECT
+				A.reporting_start_date,
+				A.csum,
+				A.location_id,
+				A.location_name,
+				@num :=
+			IF (@loc = location_id, @num + 1, 1) AS row_number,
+			@loc := location_id
+		FROM
+			(
+				SELECT
+					hf_data_master.reporting_start_date,
+					SUM(hf_data_master.issue_balance) AS csum,
+					warehouses.location_id,
+					locations.location_name
+				FROM
+					warehouses
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+				INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+				INNER JOIN locations ON locations.pk_id = warehouses.location_id
+        INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id 
+				WHERE
+					stakeholders.geo_level_id >= 6
+				AND hf_data_master.issue_balance > 0
+				AND warehouses.stakeholder_id = 1
+				AND issue_balance > 0
+				AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+				AND hf_data_master.item_pack_size_id = in_item
+				AND warehouses.district_id = in_location_id
+				GROUP BY
+					warehouses.location_id,
+					hf_data_master.reporting_start_date
+				ORDER BY
+					warehouses.location_id,
+					hf_data_master.reporting_start_date DESC
+			) AS A
+		) AS b
+		JOIN(SELECT
+					hf_data_master.reporting_start_date,
+					SUM(hf_data_master.closing_balance) AS CB,
+					warehouses.location_id,
+					locations.location_name
+				FROM
+					warehouses
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+				INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+				INNER JOIN locations ON locations.pk_id = warehouses.location_id
+				INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+				WHERE
+					stakeholders.geo_level_id >= 6
+				AND warehouses.stakeholder_id = in_stakeholder
+				AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+				AND hf_data_master.item_pack_size_id = in_item
+				AND warehouses.district_id = in_location_id
+				GROUP BY
+					warehouses.location_id
+				ORDER BY
+					warehouses.location_id)C
+		ON C.location_id = b.location_id
+	WHERE
+		row_number <= 3
+	GROUP BY
+		location_id;
+
+END CASE;
+
+END
+;;
+DELIMITER ;
 
 -- ----------------------------
 -- Procedure structure for GetIllegalWastageofDistrict
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `GetIllegalWastageofDistrict`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `GetIllegalWastageofDistrict`(in_item INT, in_rpt_date DATE, in_location_id INT, in_allowable_wastage_rate FLOAT, in_stakeholder INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `GetIllegalWastageofDistrict`(in_item INT, in_rpt_date DATE, in_location_id INT, in_allowable_wastage_rate FLOAT, in_stakeholder INT)
+    DETERMINISTIC
 BEGIN
 
 	SELECT
@@ -3505,7 +4398,8 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `GetIllegalWastageofDistrictHF`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `GetIllegalWastageofDistrictHF`(in_item INT, in_rpt_date DATE, in_location_id INT, in_allowable_wastage_rate FLOAT, in_stakeholder INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `GetIllegalWastageofDistrictHF`(in_item INT, in_rpt_date DATE, in_location_id INT, in_allowable_wastage_rate FLOAT, in_stakeholder INT)
+    DETERMINISTIC
 BEGIN
 
 	SELECT
@@ -3565,17 +4459,17 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `PlacementSummary`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `PlacementSummary`(locationid INT, batchid INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `PlacementSummary`(locationid INT, batchid INT)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
 
-DELETE FROM placement_summary WHERE placement_location_id = locationid AND stock_batch_id = batchid;
+DELETE FROM placement_summary WHERE placement_summary.placement_location_id = locationid AND placement_summary.stock_batch_warehouse_id = batchid;
 
 INSERT INTO placement_summary (
 	placement_summary.item_name,
 	placement_summary.batch_number,
-	placement_summary.stock_batch_id,
+	placement_summary.stock_batch_warehouse_id,
 	placement_summary.placement_location_id,
 	placement_summary.vvm_stage,
 	placement_summary.quantity,
@@ -3583,23 +4477,25 @@ INSERT INTO placement_summary (
 ) SELECT
 	item_pack_sizes.item_name,
 	stock_batch.number,
-	placements.stock_batch_id,
+	placements.stock_batch_warehouse_id,
 	placements.placement_location_id,
 	placements.vvm_stage,
 	Sum(placements.quantity) AS qty,
-	ROUND(Sum(placements.quantity) / stakeholder_item_pack_sizes.quantity_per_pack) as cartons
+	ROUND(Sum(placements.quantity) / pack_info.quantity_per_pack) as cartons
 FROM
 	placements
-INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+INNER JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
 WHERE
 	placements.placement_location_id = locationid
-AND placements.stock_batch_id = batchid
-AND stakeholder_item_pack_sizes.packaging_level = 140
+AND placements.stock_batch_warehouse_id = batchid
+AND pack_info.packaging_level = 140
 GROUP BY
 	placements.vvm_stage,
-	placements.stock_batch_id,
+	placements.stock_batch_warehouse_id,
 	placements.placement_location_id
 HAVING
 	qty > 0;
@@ -3613,7 +4509,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPAdjustQty`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `REPAdjustQty`(batchId INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPAdjustQty`(batchId INT)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -3624,9 +4520,9 @@ DECLARE temp DOUBLE;
 SELECT
 	warehouse_id INTO wh_id
 FROM
-	stock_batch
+	stock_batch_warehouses
 WHERE
-	stock_batch.pk_id = batchId LIMIT 1;
+	stock_batch_warehouses.pk_id = batchId LIMIT 1;
 
 SET temp = AdjustQty(batchId,wh_id);
 
@@ -3639,7 +4535,8 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPgetAMC`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPgetAMC`(in_type char(2), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPgetAMC`(in_type char(5), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+    DETERMINISTIC
 BEGIN
 
 SET @num := 0;
@@ -3654,9 +4551,9 @@ WHEN (in_type = 'N') THEN
 	FROM
 		(
 			SELECT
-				b.pk_id,
-				b.item_name,
-				AVG(b.csum) AS AMC
+				B.pk_id,
+				B.item_name,
+				AVG(B.csum) AS AMC
 			FROM
 				(
 					SELECT
@@ -3690,7 +4587,663 @@ WHEN (in_type = 'N') THEN
 							item_pack_sizes.pk_id,
 							hf_data_master.reporting_start_date DESC
 					) AS A
-				) AS b
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			item_pack_sizes.pk_id,
+			item_pack_sizes.item_name
+		FROM
+			item_pack_sizes
+		ORDER BY
+			item_pack_sizes.list_rank
+	) B ON A.pk_id = B.pk_id;
+
+WHEN (in_type = 'NP') THEN
+		SELECT
+			B.item_pack_size_id,
+			AVG(B.csum) AS AMC
+		FROM
+			(
+				SELECT
+					A.item_pack_size_id,
+					A.csum,
+					@num :=
+				IF (@loc = item_pack_size_id, @num + 1, 1) AS row_number,
+				@loc := item_pack_size_id
+			FROM
+				(
+					SELECT
+						hf_data_master.item_pack_size_id,
+						SUM(
+							hf_data_master.issue_balance
+						) AS csum
+					FROM
+						warehouses
+					INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+					INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+					INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+					WHERE
+						stakeholders.geo_level_id = 6
+					AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+					AND hf_data_master.item_pack_size_id = in_item
+					GROUP BY
+						hf_data_master.item_pack_size_id,
+						hf_data_master.reporting_start_date
+					ORDER BY
+						hf_data_master.item_pack_size_id,
+						hf_data_master.reporting_start_date DESC
+				) AS A
+			) AS B
+		WHERE
+			row_number <= 3
+		GROUP BY
+			item_pack_size_id;
+
+WHEN (in_type = 'PP') THEN
+	SELECT
+		B.pk_id,
+		B.location_name,
+		A.AMC
+	FROM
+		(
+			SELECT
+				B.province_id,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.province_id,
+						A.csum,
+						@num :=
+					IF (@loc = province_id, @num + 1, 1) AS row_number,
+					@loc := province_id
+				FROM
+					(
+						SELECT
+							warehouses.province_id,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+						INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+						WHERE
+							stakeholders.geo_level_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.province_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							warehouses.province_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				province_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			locations.pk_id,
+			locations.location_name
+		FROM
+			locations
+		WHERE
+			locations.geo_level_id = 2
+		ORDER BY
+			locations.pk_id ASC
+	) B ON A.province_id = B.pk_id;
+
+WHEN (in_type = 'DP') THEN
+	IF(in_location_id != 0) THEN
+		SELECT
+			B.province_id,
+			B.province_name,
+			B.pk_id AS district_id,
+			B.location_name AS district_name,
+			A.AMC
+		FROM
+			(
+				SELECT
+					B.district_id,
+					AVG(B.csum) AS AMC
+				FROM
+					(
+						SELECT
+							A.district_id,
+							A.csum,
+							@num :=
+						IF (@loc = district_id, @num + 1, 1) AS row_number,
+						@loc := district_id
+					FROM
+						(
+							SELECT
+								warehouses.district_id,
+								SUM(hf_data_master.issue_balance) AS csum
+							FROM
+								warehouses
+							INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+							INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+							INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+							WHERE
+								stakeholders.geo_level_id = 6
+							AND warehouses.province_id = in_location_id
+							AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+							AND hf_data_master.item_pack_size_id = in_item
+							GROUP BY
+								warehouses.district_id,
+								hf_data_master.reporting_start_date
+							ORDER BY
+								warehouses.district_id,
+								hf_data_master.reporting_start_date DESC
+						) AS A
+					) AS B
+				WHERE
+					row_number <= 3
+				GROUP BY
+					district_id
+			) A
+		RIGHT JOIN (
+			SELECT
+				locations.pk_id,
+				locations.location_name,
+				locations.province_id,
+				Province.location_name AS province_name
+			FROM
+				locations
+			INNER JOIN pilot_districts ON locations.pk_id = pilot_districts.district_id
+			INNER JOIN locations AS Province ON locations.province_id = Province.pk_id
+			WHERE
+				locations.geo_level_id = 4
+			AND locations.parent_id = in_location_id
+			ORDER BY
+				locations.location_name ASC
+		) B ON A.district_id = B.pk_id;
+
+	ELSEIF(in_location_id = 0) THEN
+		SELECT
+			B.pk_id,
+			B.province_id,
+			B.location_name,
+			A.AMC
+		FROM
+			(
+				SELECT
+					B.district_id,
+					AVG(B.csum) AS AMC
+				FROM
+					(
+						SELECT
+							A.district_id,
+							A.csum,
+							@num :=
+						IF (@loc = district_id, @num + 1, 1) AS row_number,
+						@loc := district_id
+					FROM
+						(
+							SELECT
+								warehouses.district_id,
+								SUM(hf_data_master.issue_balance) AS csum
+							FROM
+								warehouses
+							INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+							INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+							INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+							WHERE
+								stakeholders.geo_level_id = 6
+							AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+							AND hf_data_master.item_pack_size_id = in_item
+							GROUP BY
+								warehouses.district_id,
+								hf_data_master.reporting_start_date
+							ORDER BY
+								warehouses.district_id,
+								hf_data_master.reporting_start_date DESC
+						) AS A
+					) AS B
+				WHERE
+					row_number <= 3
+				GROUP BY
+					district_id
+			) A
+		RIGHT JOIN (
+			SELECT
+				locations.pk_id,
+				locations.location_name,
+				locations.province_id
+			FROM
+				locations
+			INNER JOIN pilot_districts ON locations.pk_id = pilot_districts.district_id
+			WHERE
+				locations.geo_level_id = 4
+			ORDER BY
+				locations.province_id ASC,
+				locations.location_name ASC
+		) B ON A.district_id = B.pk_id;
+	END IF;
+
+WHEN (in_type = 'TP') THEN
+	SELECT
+		B.district_id,
+		B.district_name,
+		B.pk_id AS tehsil_id,
+		B.tehsil_name,
+		A.AMC
+	FROM
+		(
+			SELECT
+				B.pk_id,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							Tehsil.pk_id,
+							Tehsil.location_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN locations ON warehouses.location_id = locations.pk_id
+						INNER JOIN locations AS Tehsil ON locations.parent_id = Tehsil.pk_id
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						WHERE
+							warehouses.district_id = in_location_id
+						AND warehouses.stakeholder_office_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							Tehsil.pk_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							Tehsil.pk_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			District.pk_id AS district_id,
+			District.location_name AS district_name,
+			locations.pk_id,
+			locations.location_name AS tehsil_name
+		FROM
+			locations
+		INNER JOIN locations AS District ON locations.district_id = District.pk_id
+		WHERE
+			locations.geo_level_id = 5
+		AND locations.district_id = in_location_id
+		ORDER BY
+			district_name ASC,
+			tehsil_name ASC
+	) B ON A.pk_id = B.pk_id;
+
+WHEN (in_type = 'PTP') THEN
+	SELECT
+		B.district_id,
+		B.district_name,
+		B.pk_id AS tehsil_id,
+		B.tehsil_name,
+		A.AMC
+	FROM
+		(
+			SELECT
+				B.pk_id,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							Tehsil.pk_id,
+							Tehsil.location_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN locations ON warehouses.location_id = locations.pk_id
+						INNER JOIN locations AS Tehsil ON locations.parent_id = Tehsil.pk_id
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						WHERE
+							warehouses.province_id = in_location_id
+						AND warehouses.stakeholder_office_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							Tehsil.pk_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							Tehsil.pk_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			District.pk_id AS district_id,
+			District.location_name AS district_name,
+			locations.pk_id,
+			locations.location_name AS tehsil_name
+		FROM
+			locations
+		INNER JOIN locations AS District ON locations.district_id = District.pk_id
+		WHERE
+			locations.geo_level_id = 5
+		AND locations.province_id = in_location_id
+		ORDER BY
+			district_name ASC,
+			tehsil_name ASC
+	) B ON A.pk_id = B.pk_id;
+
+WHEN (in_type = 'UP') THEN
+	SELECT
+		B.pk_id,
+		B.tehsil_id,
+		B.location_name,
+		A.AMC
+	FROM
+		(
+			SELECT
+				B.pk_id,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							locations.pk_id,
+							locations.location_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN locations ON warehouses.location_id = locations.pk_id
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						WHERE
+							warehouses.district_id = in_location_id
+						AND warehouses.stakeholder_office_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.location_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							warehouses.location_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			locations.pk_id,
+			locations.parent_id AS tehsil_id,
+			locations.location_name
+		FROM
+			locations
+		WHERE
+			locations.geo_level_id = 6
+		AND locations.district_id = in_location_id
+		ORDER BY
+			locations.location_name ASC
+	) B ON A.pk_id = B.pk_id;
+
+WHEN (in_type = 'WP') THEN
+	SELECT
+		B.pk_id,
+		B.tehsil_id,
+		B.warehouse_name AS location_name,
+		A.AMC
+	FROM
+		(
+			SELECT
+				B.pk_id,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							warehouses.pk_id,
+							warehouses.warehouse_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						WHERE
+							warehouses.location_id = in_location_id
+						AND warehouses.stakeholder_office_id = 6 
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.pk_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							warehouses.pk_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			warehouses.pk_id,
+			warehouses.warehouse_name,
+			locations.parent_id AS tehsil_id
+		FROM
+			warehouses
+		INNER JOIN locations ON warehouses.location_id = locations.pk_id
+		WHERE
+			warehouses.location_id = in_location_id
+		ORDER BY
+			warehouses.warehouse_name ASC
+	) B ON A.pk_id = B.pk_id;
+
+WHEN (in_type = 'P') THEN
+	SELECT
+		B.district_id as location_id,
+		B.location_name,
+		AVG(B.csum) AS AMC
+	FROM
+		(
+			SELECT
+				A.reporting_start_date,
+				A.csum,
+				A.district_id,
+				A.location_name,
+				@num :=
+			IF (@loc = district_id, @num + 1, 1) AS row_number,
+			@loc := district_id as location_id
+		FROM
+			(
+				SELECT
+					hf_data_master.reporting_start_date,
+					SUM(hf_data_master.issue_balance) AS csum,
+					warehouses.district_id,
+					locations.location_name
+				FROM
+					warehouses
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+				INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+				INNER JOIN locations ON locations.pk_id = warehouses.district_id
+        INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+				WHERE
+					stakeholders.geo_level_id = 6
+				AND hf_data_master.issue_balance > 0
+				AND warehouses.stakeholder_id = 1
+				AND issue_balance > 0
+				AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+				AND hf_data_master.item_pack_size_id = in_item
+				AND warehouses.province_id = in_location_id
+				GROUP BY
+					warehouses.district_id,
+					hf_data_master.reporting_start_date
+				ORDER BY
+					warehouses.district_id,
+					hf_data_master.reporting_start_date DESC
+			) AS A
+		) AS B
+	WHERE
+		row_number <= 3
+	GROUP BY
+		district_id;
+
+WHEN (in_type = 'D') THEN
+	SELECT
+		B.location_id,
+		B.location_name,
+		AVG(B.csum) AS AMC
+	FROM
+		(
+			SELECT
+				A.reporting_start_date,
+				A.csum,
+				A.location_id,
+				A.location_name,
+				@num :=
+			IF (@loc = location_id, @num + 1, 1) AS row_number,
+			@loc := location_id
+		FROM
+			(
+				SELECT
+					hf_data_master.reporting_start_date,
+					SUM(hf_data_master.issue_balance) AS csum,
+					warehouses.location_id,
+					locations.location_name
+				FROM
+					warehouses
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+				INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+				INNER JOIN locations ON locations.pk_id = warehouses.location_id
+        INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id 
+				WHERE
+					stakeholders.geo_level_id >= 6
+				AND hf_data_master.issue_balance > 0
+				AND warehouses.stakeholder_id = 1
+				AND issue_balance > 0
+				AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+				AND hf_data_master.item_pack_size_id = in_item
+				AND warehouses.district_id = in_location_id
+				GROUP BY
+					warehouses.location_id,
+					hf_data_master.reporting_start_date
+				ORDER BY
+					warehouses.location_id,
+					hf_data_master.reporting_start_date DESC
+			) AS A
+		) AS B
+	WHERE
+		row_number <= 3
+	GROUP BY
+		location_id;
+
+END CASE;
+
+END
+;;
+DELIMITER ;
+
+-- ----------------------------
+-- Procedure structure for REPgetAMC_copy
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `REPgetAMC_copy`;
+DELIMITER ;;
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPgetAMC_copy`(in_type char(2), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+    DETERMINISTIC
+BEGIN
+
+SET @num := 0;
+SET @loc := 0;
+
+CASE
+WHEN (in_type = 'N') THEN
+	SELECT
+		B.pk_id,
+		B.item_name,
+		A.AMC
+	FROM
+		(
+			SELECT
+				B.pk_id,
+				B.item_name,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.item_name,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							item_pack_sizes.pk_id,
+							item_pack_sizes.item_name,
+							SUM(
+								hf_data_master.issue_balance
+							) AS csum
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+						INNER JOIN item_pack_sizes ON hf_data_master.item_pack_size_id = item_pack_sizes.pk_id
+						INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+						WHERE
+							stakeholders.geo_level_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						GROUP BY
+							item_pack_sizes.pk_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							item_pack_sizes.pk_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
 			WHERE
 				row_number <= 3
 			GROUP BY
@@ -4112,9 +5665,9 @@ WHEN (in_type = 'WP') THEN
 
 WHEN (in_type = 'P') THEN
 	SELECT
-		AVG(b.csum) AS AMC,
 		b.district_id as location_id,
-		b.location_name
+		b.location_name,
+		AVG(b.csum) AS AMC
 	FROM
 		(
 			SELECT
@@ -4161,9 +5714,9 @@ WHEN (in_type = 'P') THEN
 
 WHEN (in_type = 'D') THEN
 	SELECT
-		AVG(b.csum) AS AMC,
 		b.location_id,
-		b.location_name
+		b.location_name,
+		AVG(b.csum) AS AMC
 	FROM
 		(
 			SELECT
@@ -4219,7 +5772,8 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPgetAMCHF`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPgetAMCHF`(in_type char(2), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPgetAMCHF`(in_type char(2), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+    DETERMINISTIC
 BEGIN
 
 SET @num := 0;
@@ -4337,7 +5891,8 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPgetCB`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPgetCB`(in_type char(2), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPgetCB`(in_type char(5), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+    DETERMINISTIC
 BEGIN
 
 CASE
@@ -4351,12 +5906,15 @@ WHEN (in_type = 'N') THEN
 			FROM
 				stock_master
 			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-			INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-			INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
 			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
 			WHERE
 				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
-			AND stock_batch.item_pack_size_id = A.pk_id
+			AND stakeholder_item_pack_sizes.item_pack_size_id = A.pk_id
 			AND stock_detail.is_received != 0
 		) AS CB
 	FROM
@@ -4395,12 +5953,15 @@ WHEN (in_type = 'NP') THEN
 			FROM
 				stock_master
 			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-			INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-			INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
 			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
 			WHERE
 				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
-			AND stock_batch.item_pack_size_id = hf_data_master.item_pack_size_id
+			AND stakeholder_item_pack_sizes.item_pack_size_id = hf_data_master.item_pack_size_id
 			AND stock_detail.is_received != 0
 		) AS CB
 	FROM
@@ -4424,12 +5985,15 @@ WHEN (in_type = 'PP') THEN
 			FROM
 				stock_master
 			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-			INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-			INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
 			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
 			WHERE
 				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
-			AND stock_batch.item_pack_size_id = in_item
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
 			AND stock_detail.is_received != 0
 			AND warehouses.province_id = A.province_id
 		) AS CB
@@ -4466,17 +6030,19 @@ WHEN (in_type = 'PP') THEN
 WHEN (in_type = 'DP') THEN
 	IF(in_location_id != 0) THEN
 		SELECT
-			A.pk_id,
 			A.province_id,
-			A.location_name,
+			A.province_name,
+			A.pk_id AS district_id,
+			A.location_name AS district_name,
 			A.field_store,
 			A.district_store,
 			A.field_store + A.district_store AS CB
 		FROM
 			(
 				SELECT
-					B.pk_id,
 					B.province_id,
+					B.province_name,
+					B.pk_id,
 					B.location_name,
 					A.CB AS field_store,
 					(
@@ -4485,12 +6051,15 @@ WHEN (in_type = 'DP') THEN
 						FROM
 							stock_master
 						INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-						INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-						INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+						INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+						INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+						INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+						INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+						INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
 						INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
 						WHERE
 							DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
-						AND stock_batch.item_pack_size_id = in_item
+						AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
 						AND stock_detail.is_received != 0
 						AND warehouses.district_id = A.district_id
 					) AS district_store
@@ -4514,10 +6083,12 @@ WHEN (in_type = 'DP') THEN
 					SELECT
 						locations.pk_id,
 						locations.location_name,
-						locations.province_id
+						locations.province_id,
+						Province.location_name AS province_name
 					FROM
 						locations
 					INNER JOIN pilot_districts ON locations.pk_id = pilot_districts.district_id
+					INNER JOIN locations AS Province ON locations.province_id = Province.pk_id
 					WHERE
 						locations.geo_level_id = 4
 					AND locations.parent_id = in_location_id
@@ -4528,9 +6099,10 @@ WHEN (in_type = 'DP') THEN
 
 	ELSEIF(in_location_id = 0) THEN
 		SELECT
-			A.pk_id,
 			A.province_id,
-			A.location_name,
+			A.province_name,
+			A.pk_id AS district_id,
+			A.location_name AS district_name,
 			A.field_store,
 			A.district_store,
 			A.field_store + A.district_store AS CB
@@ -4540,6 +6112,7 @@ WHEN (in_type = 'DP') THEN
 					B.pk_id,
 					B.province_id,
 					B.location_name,
+					B.province_name,
 					A.CB AS field_store,
 					(
 						SELECT
@@ -4547,12 +6120,15 @@ WHEN (in_type = 'DP') THEN
 						FROM
 							stock_master
 						INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-						INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-						INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+						INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+						INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+						INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+						INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+						INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
 						INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
 						WHERE
 							DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
-						AND stock_batch.item_pack_size_id = in_item
+						AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
 						AND stock_detail.is_received != 0
 						AND warehouses.district_id = A.district_id
 					) AS district_store
@@ -4578,10 +6154,12 @@ WHEN (in_type = 'DP') THEN
 					SELECT
 						locations.pk_id,
 						locations.location_name,
-						locations.province_id
+						locations.province_id,
+						Province.location_name AS province_name
 					FROM
 						locations
 					INNER JOIN pilot_districts ON locations.pk_id = pilot_districts.district_id
+					INNER JOIN locations AS Province ON locations.province_id = Province.pk_id
 					WHERE
 						locations.geo_level_id = 4
 					ORDER BY
@@ -4593,19 +6171,25 @@ WHEN (in_type = 'DP') THEN
 
 WHEN (in_type = 'TP') THEN
 	SELECT
-		B.pk_id,
-		B.location_name,
+		B.district_id,
+		B.district_name,
+		B.pk_id AS tehsil_id,
+		B.tehsil_name,
 		A.CB + (
 			SELECT
 				IFNULL(SUM(stock_detail.quantity), 0)
 			FROM
 				stock_master
 			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-			INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-			INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
 			WHERE
 				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
-			AND stock_batch.item_pack_size_id = in_item
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
 			AND stock_detail.is_received != 0
 			AND warehouses.location_id = A.pk_id
 		) AS CB
@@ -4630,15 +6214,79 @@ WHEN (in_type = 'TP') THEN
 		) A
 	RIGHT JOIN (
 		SELECT
+			District.pk_id AS district_id,
+			District.location_name AS district_name,
 			locations.pk_id,
-			locations.location_name
+			locations.location_name AS tehsil_name
 		FROM
 			locations
+		INNER JOIN locations AS District ON locations.district_id = District.pk_id
 		WHERE
 			locations.geo_level_id = 5
 		AND locations.district_id = in_location_id
 		ORDER BY
-			locations.location_name ASC
+			district_name ASC,
+			tehsil_name ASC
+	) B ON A.pk_id = B.pk_id;
+
+WHEN (in_type = 'PTP') THEN
+	SELECT
+		B.district_id,
+		B.district_name,
+		B.pk_id AS tehsil_id,
+		B.tehsil_name,
+		A.CB + (
+			SELECT
+				IFNULL(SUM(stock_detail.quantity), 0)
+			FROM
+				stock_master
+			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			WHERE
+				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+			AND stock_detail.is_received != 0
+			AND warehouses.location_id = A.pk_id
+		) AS CB
+	FROM
+		(
+			SELECT
+				Tehsil.pk_id,
+				Tehsil.location_name,
+				SUM(hf_data_master.closing_balance) AS CB
+			FROM
+				warehouses
+			INNER JOIN locations ON warehouses.location_id = locations.pk_id
+			INNER JOIN locations AS Tehsil ON locations.parent_id = Tehsil.pk_id
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			WHERE
+				warehouses.province_id = in_location_id
+			AND warehouses.stakeholder_office_id = 6
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			GROUP BY
+				Tehsil.pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			District.pk_id AS district_id,
+			District.location_name AS district_name,
+			locations.pk_id,
+			locations.location_name AS tehsil_name
+		FROM
+			locations
+		INNER JOIN locations AS District ON locations.district_id = District.pk_id
+		WHERE
+			locations.geo_level_id = 5
+		AND locations.province_id = in_location_id
+		ORDER BY
+			district_name ASC,
+			tehsil_name ASC
 	) B ON A.pk_id = B.pk_id;
 
 WHEN (in_type = 'UP') THEN
@@ -4652,11 +6300,15 @@ WHEN (in_type = 'UP') THEN
 			FROM
 				stock_master
 			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-			INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-			INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
 			WHERE
 				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
-			AND stock_batch.item_pack_size_id = in_item
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
 			AND stock_detail.is_received != 0
 			AND warehouses.location_id = A.pk_id
 		) AS CB
@@ -4705,11 +6357,15 @@ WHEN (in_type = 'WP') THEN
 			FROM
 				stock_master
 			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-			INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-			INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
 			WHERE
 				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
-			AND stock_batch.item_pack_size_id = in_item
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
 			AND stock_detail.is_received != 0
 			AND warehouses.pk_id = A.pk_id
 		) AS CB
@@ -4748,10 +6404,10 @@ WHEN (in_type = 'WP') THEN
 
 WHEN (in_type = 'P') THEN
 	SELECT
-		hf_data_master.reporting_start_date,
-		SUM(hf_data_master.closing_balance) AS CB,
 		warehouses.district_id as location_id,
-		locations.location_name
+		locations.location_name,		
+		hf_data_master.reporting_start_date,
+		SUM(hf_data_master.closing_balance) AS CB
 	FROM
 		warehouses
 	INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
@@ -4771,10 +6427,10 @@ WHEN (in_type = 'P') THEN
 
 WHEN (in_type = 'D') THEN
 	SELECT
-		hf_data_master.reporting_start_date,
-		SUM(hf_data_master.closing_balance) AS CB,
 		warehouses.location_id,
-		locations.location_name
+		locations.location_name,
+		hf_data_master.reporting_start_date,
+		SUM(hf_data_master.closing_balance) AS CB
 	FROM
 		warehouses
 	INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
@@ -4803,7 +6459,8 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPgetCBHF`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPgetCBHF`(in_type char(2), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPgetCBHF`(in_type char(2), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+    DETERMINISTIC
 BEGIN
 
 CASE
@@ -4870,7 +6527,8 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPgetConsumption`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPgetConsumption`(in_type char(2), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPgetConsumption`(in_type char(2), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+    DETERMINISTIC
 BEGIN
 
 CASE
@@ -5139,6 +6797,7 @@ WHEN (in_type = 'P') THEN
 	SELECT
 		hf_data_master.reporting_start_date,
 		SUM(hf_data_master.issue_balance) AS consumption,
+		SUM(hf_data_master.closing_balance) AS SOH,
 		warehouses.district_id AS location_id,
 		locations.location_name,
 		ROUND(
@@ -5178,10 +6837,9 @@ WHEN (in_type = 'P') THEN
 WHEN (in_type = 'D') THEN
 
 	SELECT
-		hf_data_master.reporting_start_date,
-		SUM(hf_data_master.issue_balance) AS consumption,
-		warehouses.location_id AS location_id,
+		warehouses.location_id,
 		locations.location_name,
+		SUM(hf_data_master.closing_balance) AS CB,
 		ROUND(
 			(
 				(
@@ -5198,17 +6856,22 @@ WHEN (in_type = 'D') THEN
 	INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
 	INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
 	INNER JOIN locations ON locations.pk_id = warehouses.location_id
-  INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
-	INNER JOIN location_populations ON warehouses.location_id = location_populations.location_id
+	INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+	INNER JOIN location_populations ON location_populations.location_id = locations.pk_id
 	INNER JOIN item_pack_sizes ON hf_data_master.item_pack_size_id = item_pack_sizes.pk_id
 	INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
 	WHERE
-		stakeholders.geo_level_id = 6
+		stakeholders.geo_level_id >= 6
 	AND warehouses.stakeholder_id = in_stakeholder
-	AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+	AND DATE_FORMAT(
+		hf_data_master.reporting_start_date,
+		'%Y-%m-%d'
+	) = in_rpt_date
 	AND hf_data_master.item_pack_size_id = in_item
-	AND locations.parent_id = in_location_id
-	AND YEAR (location_populations.estimation_date) = YEAR(in_rpt_date)
+	AND warehouses.district_id = in_location_id
+	AND YEAR (
+		location_populations.estimation_date
+	) = YEAR (in_rpt_date)
 	GROUP BY
 		warehouses.location_id
 	ORDER BY
@@ -5225,7 +6888,8 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPgetConsumptionHF`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPgetConsumptionHF`(in_type char(2), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPgetConsumptionHF`(in_type char(2), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+    DETERMINISTIC
 BEGIN
 
 CASE
@@ -5317,49 +6981,1372 @@ END
 DELIMITER ;
 
 -- ----------------------------
+-- Procedure structure for REPgetData
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `REPgetData`;
+DELIMITER ;;
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPgetData`(in_type char(5), in_rpt_date DATE, in_location_id INT, in_item INT, in_stakeholder INT)
+    DETERMINISTIC
+BEGIN
+
+SET @num := 0;
+SET @loc := 0;
+
+CASE
+
+#National level
+WHEN (in_type = 'N') THEN
+	SELECT
+		B.pk_id AS item_id,
+		B.item_name,
+		C.Vaccinated,
+		ROUND(A.AMC, 2) AS AMC,
+		C.SOH,
+		ROUND((C.SOH/A.AMC), 2) AS MOS
+	FROM
+		(
+			SELECT
+				B.pk_id,
+				B.item_name,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.item_name,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							item_pack_sizes.pk_id,
+							item_pack_sizes.item_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+						INNER JOIN item_pack_sizes ON hf_data_master.item_pack_size_id = item_pack_sizes.pk_id
+						INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+						WHERE
+							stakeholders.geo_level_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						GROUP BY
+							item_pack_sizes.pk_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							item_pack_sizes.pk_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			item_pack_sizes.pk_id,
+			item_pack_sizes.item_name
+		FROM
+			item_pack_sizes
+		ORDER BY
+			item_pack_sizes.list_rank
+	) B ON A.pk_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+			D.pk_id,
+			D.Vaccinated,
+			D.SOH + (
+				SELECT
+					IFNULL(SUM(stock_detail.quantity), 0)
+				FROM
+					stock_master
+				INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+				INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+				INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+				INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+				INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+				INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+				INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+				WHERE
+					DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+				AND stakeholder_item_pack_sizes.item_pack_size_id = D.pk_id
+				AND stock_detail.is_received != 0
+			) AS SOH
+		FROM
+			(
+				SELECT
+					item_pack_sizes.pk_id,
+					item_pack_sizes.item_name,
+					SUM(IF(stakeholders.geo_level_id = 6, hf_data_master.issue_balance, 0)) AS Vaccinated,
+					SUM(hf_data_master.closing_balance) AS SOH
+				FROM
+					warehouses
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+				INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+				INNER JOIN item_pack_sizes ON hf_data_master.item_pack_size_id = item_pack_sizes.pk_id
+				WHERE
+					DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+				AND stakeholders.geo_level_id >= 1
+				GROUP BY
+					item_pack_sizes.pk_id
+			) D
+	) C 
+	ON C.pk_id = B.pk_id;
+
+#National level: Product given
+WHEN (in_type = 'NP') THEN
+		SELECT
+			B.item_pack_size_id AS item_id,
+			C.Vaccinated,
+			ROUND(AVG(B.csum), 2) AS AMC,
+			C.SOH,
+			ROUND((C.SOH/AVG(B.csum)), 2) AS MOS
+		FROM
+			(
+				SELECT
+					A.item_pack_size_id,
+					A.csum,
+					@num :=
+				IF (@loc = item_pack_size_id, @num + 1, 1) AS row_number,
+				@loc := item_pack_size_id
+			FROM
+				(
+					SELECT
+						hf_data_master.item_pack_size_id,
+						SUM(hf_data_master.issue_balance) AS csum
+					FROM
+						warehouses
+					INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+					INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+					INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+					WHERE
+						stakeholders.geo_level_id = 6
+					AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+					AND hf_data_master.item_pack_size_id = in_item
+					GROUP BY
+						hf_data_master.item_pack_size_id,
+						hf_data_master.reporting_start_date
+					ORDER BY
+						hf_data_master.item_pack_size_id,
+						hf_data_master.reporting_start_date DESC
+				) AS A
+			) AS B
+		JOIN (
+			SELECT
+				hf_data_master.item_pack_size_id,
+				SUM(IF(stakeholders.geo_level_id = 6, hf_data_master.issue_balance, 0)) AS Vaccinated,
+				SUM(hf_data_master.closing_balance) + (
+					SELECT
+						IFNULL(SUM(stock_detail.quantity), 0)
+					FROM
+						stock_master
+					INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+					INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+					INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+					INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+					INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+					INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+					INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+					WHERE
+						DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+					AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+					AND stock_detail.is_received != 0
+				) AS SOH
+			FROM
+				warehouses
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+			WHERE
+				DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			AND stakeholders.geo_level_id >= 1
+			GROUP BY
+				hf_data_master.item_pack_size_id
+		) C
+		ON C.item_pack_size_id = B.item_pack_size_id
+		WHERE
+			row_number <= 3
+		GROUP BY
+			item_id;
+
+#Province wise
+WHEN (in_type = 'P') THEN
+	SELECT
+		B.pk_id AS province_id,
+		B.location_name AS province_name,
+		C.Vaccinated,
+		ROUND(A.AMC, 2) AS AMC,
+		C.SOH,
+		ROUND((C.SOH/A.AMC), 2) AS MOS
+	FROM
+		(
+			SELECT
+				B.province_id,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.province_id,
+						A.csum,
+						@num :=
+					IF (@loc = province_id, @num + 1, 1) AS row_number,
+					@loc := province_id
+				FROM
+					(
+						SELECT
+							warehouses.province_id,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+						INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+						WHERE
+							stakeholders.geo_level_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.province_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							warehouses.province_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				province_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			locations.pk_id,
+			locations.location_name
+		FROM
+			locations
+		WHERE
+			locations.geo_level_id = 2
+	) B ON A.province_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+		D.province_id,
+		D.Vaccinated,
+		D.SOH + (
+			SELECT
+				IFNULL(SUM(stock_detail.quantity), 0)
+			FROM
+				stock_master
+			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			WHERE
+				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+			AND stock_detail.is_received != 0
+			AND warehouses.province_id = D.province_id
+		) AS SOH
+	FROM
+		(
+			SELECT
+				warehouses.province_id,
+				SUM(IF(stakeholders.geo_level_id = 6, hf_data_master.issue_balance, 0)) AS Vaccinated,
+				SUM(hf_data_master.closing_balance) AS SOH
+			FROM
+				warehouses
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+			WHERE
+				stakeholders.geo_level_id >= 2
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			GROUP BY
+				warehouses.province_id
+		) D
+	) C 
+	ON C.province_id = B.pk_id
+	ORDER BY
+		B.pk_id ASC;
+
+#District wise
+WHEN (in_type = 'D') THEN
+	#Districts of the given Province
+	IF(in_location_id != 0) THEN
+		SELECT
+			B.province_id,
+			B.province_name,
+			B.pk_id AS district_id,
+			B.location_name AS district_name,
+			C.Vaccinated,
+			ROUND(A.AMC, 2) AS AMC,
+			C.field_store_SOH,
+			C.district_store_SOH,
+			C.total_SOH,
+			ROUND((C.district_store_SOH/A.AMC), 2) AS district_store_MOS,
+			ROUND((C.field_store_SOH/A.AMC), 2) AS field_store_MOS,
+			ROUND((C.total_SOH/A.AMC), 2) AS total_MOS
+		FROM
+			(
+				SELECT
+					B.district_id,
+					AVG(B.csum) AS AMC
+				FROM
+					(
+						SELECT
+							A.district_id,
+							A.csum,
+							@num :=
+						IF (@loc = district_id, @num + 1, 1) AS row_number,
+						@loc := district_id
+					FROM
+						(
+							SELECT
+								warehouses.district_id,
+								SUM(hf_data_master.issue_balance) AS csum
+							FROM
+								warehouses
+							INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+							INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+							INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+							WHERE
+								stakeholders.geo_level_id = 6
+							AND warehouses.province_id = in_location_id
+							AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+							AND hf_data_master.item_pack_size_id = in_item
+							GROUP BY
+								warehouses.district_id,
+								hf_data_master.reporting_start_date
+							ORDER BY
+								warehouses.district_id,
+								hf_data_master.reporting_start_date DESC
+						) AS A
+					) AS B
+				WHERE
+					row_number <= 3
+				GROUP BY
+					district_id
+			) A
+		RIGHT JOIN (
+			SELECT
+				locations.pk_id,
+				locations.location_name,
+				locations.province_id,
+				Province.location_name AS province_name
+			FROM
+				locations
+			INNER JOIN pilot_districts ON locations.pk_id = pilot_districts.district_id
+			INNER JOIN locations AS Province ON locations.province_id = Province.pk_id
+			WHERE
+				locations.geo_level_id = 4
+			AND locations.province_id = in_location_id
+		) B ON A.district_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+			A.pk_id,
+			A.province_id,
+			A.location_name,
+			A.Vaccinated,
+			A.field_store_SOH,
+			A.district_store_SOH,
+			A.field_store_SOH + A.district_store_SOH AS total_SOH
+		FROM
+			(
+				SELECT
+					B.pk_id,
+					B.province_id,
+					B.location_name,
+					A.Vaccinated,
+					A.SOH AS field_store_SOH,
+					(
+						SELECT
+							IFNULL(SUM(stock_detail.quantity), 0)
+						FROM
+							stock_master
+						INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+						INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+						INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+						INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+						INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+						INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+						INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+						WHERE
+							DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+						AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+						AND stock_detail.is_received != 0
+						AND warehouses.district_id = A.district_id
+					) AS district_store_SOH
+				FROM
+					(
+						SELECT
+							warehouses.district_id,
+							SUM(IF(stakeholders.geo_level_id = 6, hf_data_master.issue_balance, 0)) AS Vaccinated,
+							SUM(hf_data_master.closing_balance) AS SOH
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+						WHERE
+							stakeholders.geo_level_id >= 4
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.district_id
+					) A
+				RIGHT JOIN (
+					SELECT
+						locations.pk_id,
+						locations.location_name,
+						locations.province_id,
+						Province.location_name AS province_name
+					FROM
+						locations
+					INNER JOIN pilot_districts ON locations.pk_id = pilot_districts.district_id
+					INNER JOIN locations AS Province ON locations.province_id = Province.pk_id
+					WHERE
+						locations.geo_level_id = 4
+					AND locations.province_id = in_location_id
+				) B ON A.district_id = B.pk_id
+			) A
+	) C 
+	ON C.pk_id = B.pk_id
+	ORDER BY
+		B.province_id,
+		B.location_name;
+
+	#All Districts
+	ELSEIF(in_location_id = 0) THEN
+		SELECT
+			B.province_id,
+			B.province_name,
+			B.pk_id AS district_id,
+			B.location_name AS district_name,
+			C.Vaccinated,
+			ROUND(A.AMC, 2) AS AMC,
+			C.field_store_SOH,
+			C.district_store_SOH,
+			C.total_SOH,
+			ROUND((C.district_store_SOH/A.AMC), 2) AS district_store_MOS,
+			ROUND((C.field_store_SOH/A.AMC), 2) AS field_store_MOS,
+			ROUND((C.total_SOH/A.AMC), 2) AS total_MOS
+		FROM
+			(
+				SELECT
+					B.district_id,
+					AVG(B.csum) AS AMC
+				FROM
+					(
+						SELECT
+							A.district_id,
+							A.csum,
+							@num :=
+						IF (@loc = district_id, @num + 1, 1) AS row_number,
+						@loc := district_id
+					FROM
+						(
+							SELECT
+								warehouses.district_id,
+								SUM(hf_data_master.issue_balance) AS csum
+							FROM
+								warehouses
+							INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+							INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+							INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+							WHERE
+								stakeholders.geo_level_id = 6
+							AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+							AND hf_data_master.item_pack_size_id = in_item
+							GROUP BY
+								warehouses.district_id,
+								hf_data_master.reporting_start_date
+							ORDER BY
+								warehouses.district_id,
+								hf_data_master.reporting_start_date DESC
+						) AS A
+					) AS B
+				WHERE
+					row_number <= 3
+				GROUP BY
+					district_id
+			) A
+		RIGHT JOIN (
+			SELECT
+				locations.pk_id,
+				locations.location_name,
+				locations.province_id,
+				Province.location_name AS province_name
+			FROM
+				locations
+			INNER JOIN pilot_districts ON locations.pk_id = pilot_districts.district_id
+			INNER JOIN locations AS Province ON locations.province_id = Province.pk_id
+			WHERE
+				locations.geo_level_id = 4
+		) B ON A.district_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+			A.pk_id,
+			A.province_id,
+			A.location_name,
+			A.Vaccinated,
+			A.field_store_SOH,
+			A.district_store_SOH,
+			A.field_store_SOH + A.district_store_SOH AS total_SOH
+		FROM
+			(
+				SELECT
+					B.pk_id,
+					B.province_id,
+					B.location_name,
+					A.Vaccinated,
+					A.SOH AS field_store_SOH,
+					(
+						SELECT
+							IFNULL(SUM(stock_detail.quantity), 0)
+						FROM
+							stock_master
+						INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+						INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+						INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+						INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+						INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+						INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+						INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+						WHERE
+							DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+						AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+						AND stock_detail.is_received != 0
+						AND warehouses.district_id = A.district_id
+					) AS district_store_SOH
+				FROM
+					(
+						SELECT
+							warehouses.district_id,
+							SUM(IF(stakeholders.geo_level_id = 6, hf_data_master.issue_balance, 0)) AS Vaccinated,
+							SUM(hf_data_master.closing_balance) AS SOH
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+						WHERE
+							stakeholders.geo_level_id >= 4
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.district_id
+					) A
+				RIGHT JOIN (
+					SELECT
+						locations.pk_id,
+						locations.location_name,
+						locations.province_id,
+						Province.location_name AS province_name
+					FROM
+						locations
+					INNER JOIN pilot_districts ON locations.pk_id = pilot_districts.district_id
+					INNER JOIN locations AS Province ON locations.province_id = Province.pk_id
+					WHERE
+						locations.geo_level_id = 4
+				) B ON A.district_id = B.pk_id
+			) A
+	) C 
+	ON C.pk_id = B.pk_id
+	ORDER BY
+		B.province_id,
+		B.location_name;
+	END IF;
+
+#Tehsil wise: District given
+WHEN (in_type = 'TD') THEN
+	SELECT
+		B.district_id,
+		B.district_name,
+		B.pk_id AS tehsil_id,
+		B.tehsil_name,
+		C.Vaccinated,
+		ROUND(A.AMC, 2) AS AMC,
+		C.SOH,
+		ROUND((C.SOH/A.AMC), 2) AS MOS
+	FROM
+		(
+			SELECT
+				B.pk_id,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							Tehsil.pk_id,
+							Tehsil.location_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN locations ON warehouses.location_id = locations.pk_id
+						INNER JOIN locations AS Tehsil ON locations.parent_id = Tehsil.pk_id
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						WHERE
+							warehouses.district_id = in_location_id
+						AND warehouses.stakeholder_office_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							Tehsil.pk_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							Tehsil.pk_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			District.pk_id AS district_id,
+			District.location_name AS district_name,
+			locations.pk_id,
+			locations.location_name AS tehsil_name
+		FROM
+			locations
+		INNER JOIN locations AS District ON locations.district_id = District.pk_id
+		WHERE
+			locations.geo_level_id = 5
+		AND locations.district_id = in_location_id
+	) B ON A.pk_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+		D.pk_id,
+		D.Vaccinated,
+		D.SOH + (
+			SELECT
+				IFNULL(SUM(stock_detail.quantity), 0)
+			FROM
+				stock_master
+			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			WHERE
+				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+			AND stock_detail.is_received != 0
+			AND warehouses.location_id = D.pk_id
+		) AS SOH
+	FROM
+		(
+			SELECT
+				Tehsil.pk_id,
+				Tehsil.location_name,
+				SUM(IF(stakeholders.geo_level_id = 6, hf_data_master.issue_balance, 0)) AS Vaccinated,
+				SUM(hf_data_master.closing_balance) AS SOH
+			FROM
+				warehouses
+			INNER JOIN locations ON warehouses.location_id = locations.pk_id
+			INNER JOIN locations AS Tehsil ON locations.parent_id = Tehsil.pk_id
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+			WHERE
+				warehouses.district_id = in_location_id
+			AND warehouses.stakeholder_office_id = 6
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			GROUP BY
+				Tehsil.pk_id
+		) D
+	) C 
+	ON C.pk_id = B.pk_id
+	ORDER BY
+		B.district_name,
+		B.tehsil_name;
+
+#Tehsil wise: Province given
+WHEN (in_type = 'TP') THEN
+	SELECT
+		B.district_id,
+		B.district_name,
+		B.pk_id AS tehsil_id,
+		B.tehsil_name,
+		C.Vaccinated,
+		ROUND(A.AMC, 2) AS AMC,
+		C.SOH,
+		ROUND((C.SOH/A.AMC), 2) AS MOS
+	FROM
+		(
+			SELECT
+				B.pk_id,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							Tehsil.pk_id,
+							Tehsil.location_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN locations ON warehouses.location_id = locations.pk_id
+						INNER JOIN locations AS Tehsil ON locations.parent_id = Tehsil.pk_id
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						WHERE
+							warehouses.province_id = in_location_id
+						AND warehouses.stakeholder_office_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							Tehsil.pk_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							Tehsil.pk_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			District.pk_id AS district_id,
+			District.location_name AS district_name,
+			locations.pk_id,
+			locations.location_name AS tehsil_name
+		FROM
+			locations
+		INNER JOIN locations AS District ON locations.district_id = District.pk_id
+		WHERE
+			locations.geo_level_id = 5
+		AND locations.province_id = in_location_id
+	) B ON A.pk_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+		D.pk_id,
+		D.Vaccinated,
+		D.SOH + (
+			SELECT
+				IFNULL(SUM(stock_detail.quantity), 0)
+			FROM
+				stock_master
+			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			WHERE
+				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+			AND stock_detail.is_received != 0
+			AND warehouses.location_id = D.pk_id
+		) AS SOH
+	FROM
+		(
+			SELECT
+				Tehsil.pk_id,
+				Tehsil.location_name,
+				SUM(IF(stakeholders.geo_level_id = 6, hf_data_master.issue_balance, 0)) AS Vaccinated,
+				SUM(hf_data_master.closing_balance) AS SOH
+			FROM
+				warehouses
+			INNER JOIN locations ON warehouses.location_id = locations.pk_id
+			INNER JOIN locations AS Tehsil ON locations.parent_id = Tehsil.pk_id
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+			WHERE
+				warehouses.province_id = in_location_id
+			AND warehouses.stakeholder_office_id = 6
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			GROUP BY
+				Tehsil.pk_id
+		) D
+	) C 
+	ON C.pk_id = B.pk_id
+	ORDER BY
+		B.district_name,
+		B.tehsil_name;
+
+WHEN (in_type = 'UD') THEN
+	SELECT
+		B.tehsil_id,
+		B.tehsil_name,
+		B.pk_id AS uc_id,
+		B.location_name AS uc_name,
+		C.Vaccinated,
+		ROUND(A.AMC, 2) AS AMC,
+		C.SOH,
+		ROUND((C.SOH/A.AMC), 2) AS MOS
+	FROM
+		(
+			SELECT
+				B.pk_id,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							locations.pk_id,
+							locations.location_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN locations ON warehouses.location_id = locations.pk_id
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						WHERE
+							warehouses.district_id = in_location_id
+						AND warehouses.stakeholder_office_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.location_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							warehouses.location_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			Tehsil.pk_id AS tehsil_id,
+			Tehsil.location_name AS tehsil_name,
+			locations.pk_id,
+			locations.location_name
+		FROM
+			locations
+		INNER JOIN locations AS Tehsil ON locations.parent_id = Tehsil.pk_id
+		WHERE
+			locations.geo_level_id = 6
+		AND Tehsil.parent_id = in_location_id
+	) B ON A.pk_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+			D.pk_id,
+			D.Vaccinated,
+			D.SOH + (
+			SELECT
+				IFNULL(SUM(stock_detail.quantity), 0)
+			FROM
+				stock_master
+			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			WHERE
+				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+			AND stock_detail.is_received != 0
+			AND warehouses.location_id = D.pk_id
+		) AS SOH
+	FROM
+		(
+			SELECT
+				locations.pk_id,
+				locations.location_name,
+				SUM(IF(stakeholders.geo_level_id = 6, hf_data_master.issue_balance, 0)) AS Vaccinated,
+				SUM(hf_data_master.closing_balance) AS SOH
+			FROM
+				warehouses
+			INNER JOIN locations ON warehouses.location_id = locations.pk_id
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+			WHERE
+				warehouses.district_id = in_location_id
+			AND warehouses.stakeholder_office_id = 6
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			GROUP BY
+				warehouses.location_id
+		) D
+	) C 
+	ON C.pk_id = B.pk_id
+	ORDER BY
+		B.tehsil_name,
+		B.location_name;
+
+WHEN (in_type = 'UT') THEN
+	SELECT
+		B.tehsil_id,
+		B.tehsil_name,
+		B.pk_id AS uc_id,
+		B.location_name AS uc_name,
+		C.Vaccinated,
+		ROUND(A.AMC, 2) AS AMC,
+		C.SOH,
+		ROUND((C.SOH/A.AMC), 2) AS MOS
+	FROM
+		(
+			SELECT
+				B.pk_id,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							locations.pk_id,
+							locations.location_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN locations ON warehouses.location_id = locations.pk_id
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						WHERE
+							locations.parent_id = in_location_id
+						AND warehouses.stakeholder_office_id = 6
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.location_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							warehouses.location_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			Tehsil.pk_id AS tehsil_id,
+			Tehsil.location_name AS tehsil_name,
+			locations.pk_id,
+			locations.location_name
+		FROM
+			locations
+		INNER JOIN locations AS Tehsil ON locations.parent_id = Tehsil.pk_id
+		WHERE
+			locations.geo_level_id = 6
+		AND Tehsil.pk_id = in_location_id
+	) B ON A.pk_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+			D.pk_id,
+			D.Vaccinated,
+			D.SOH + (
+			SELECT
+				IFNULL(SUM(stock_detail.quantity), 0)
+			FROM
+				stock_master
+			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			WHERE
+				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+			AND stock_detail.is_received != 0
+			AND warehouses.location_id = D.pk_id
+		) AS SOH
+	FROM
+		(
+			SELECT
+				locations.pk_id,
+				locations.location_name,
+				SUM(IF(stakeholders.geo_level_id = 6, hf_data_master.issue_balance, 0)) AS Vaccinated,
+				SUM(hf_data_master.closing_balance) AS SOH
+			FROM
+				warehouses
+			INNER JOIN locations ON warehouses.location_id = locations.pk_id
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+			WHERE
+				locations.parent_id = in_location_id
+			AND warehouses.stakeholder_office_id = 6
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			GROUP BY
+				warehouses.location_id
+		) D
+	) C 
+	ON C.pk_id = B.pk_id
+	ORDER BY
+		B.tehsil_name,
+		B.location_name;
+
+WHEN (in_type = 'WU') THEN
+	SELECT
+		B.location_id,
+		B.location_name,
+		B.pk_id,
+		B.warehouse_name,
+		C.Vaccinated,
+		ROUND(A.AMC, 2) AS AMC,
+		C.SOH,
+		ROUND((C.SOH/A.AMC), 2) AS MOS
+	FROM
+		(
+			SELECT
+				B.pk_id,
+				AVG(B.csum) AS AMC
+			FROM
+				(
+					SELECT
+						A.pk_id,
+						A.csum,
+						@num :=
+					IF (@loc = pk_id, @num + 1, 1) AS row_number,
+					@loc := pk_id
+				FROM
+					(
+						SELECT
+							warehouses.pk_id,
+							warehouses.warehouse_name,
+							SUM(hf_data_master.issue_balance) AS csum
+						FROM
+							warehouses
+						INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+						WHERE
+							warehouses.location_id = in_location_id
+						AND warehouses.stakeholder_office_id = 6 
+						AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+						AND hf_data_master.item_pack_size_id = in_item
+						GROUP BY
+							warehouses.pk_id,
+							hf_data_master.reporting_start_date
+						ORDER BY
+							warehouses.pk_id,
+							hf_data_master.reporting_start_date DESC
+					) AS A
+				) AS B
+			WHERE
+				row_number <= 3
+			GROUP BY
+				pk_id
+		) A
+	RIGHT JOIN (
+		SELECT
+			warehouses.pk_id,
+			warehouses.warehouse_name,
+			locations.pk_id AS location_id,
+			locations.location_name AS location_name
+		FROM
+			warehouses
+		INNER JOIN locations ON warehouses.location_id = locations.pk_id
+		WHERE
+			warehouses.location_id = in_location_id
+		ORDER BY
+			warehouses.warehouse_name ASC
+	) B ON A.pk_id = B.pk_id
+	LEFT JOIN (
+		SELECT
+			D.pk_id,
+			D.Vaccinated,
+			D.SOH + (
+			SELECT
+				IFNULL(SUM(stock_detail.quantity), 0)
+			FROM
+				stock_master
+			INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
+			INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+			INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+			INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+			INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+			INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			WHERE
+				DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= in_rpt_date
+			AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
+			AND stock_detail.is_received != 0
+			AND warehouses.pk_id = D.pk_id
+		) AS SOH
+	FROM
+		(
+			SELECT
+				warehouses.pk_id,
+				warehouses.warehouse_name,
+				SUM(IF(stakeholders.geo_level_id = 6, hf_data_master.issue_balance, 0)) AS Vaccinated,
+				SUM(hf_data_master.closing_balance) AS SOH
+			FROM
+				warehouses
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+			WHERE
+				warehouses.location_id = in_location_id
+			AND warehouses.stakeholder_office_id = 6 
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			GROUP BY
+				warehouses.pk_id
+			ORDER BY
+				warehouses.warehouse_name ASC
+		) D
+	) C 
+	ON C.pk_id = B.pk_id;
+
+/*WHEN (in_type = 'P') THEN
+	SELECT
+		B.district_id,
+		B.location_name AS dstrcit_name,
+		C.Vaccinated,
+		ROUND(AVG(B.csum), 2) AS AMC,
+		C.SOH,
+		ROUND((C.SOH/AVG(B.csum)), 2) AS MOS,
+		C.target
+	FROM
+		(
+			SELECT
+				A.csum,
+				A.district_id,
+				A.location_name,
+				@num :=
+			IF (@loc = district_id, @num + 1, 1) AS row_number,
+			@loc := district_id as location_id
+		FROM
+			(
+				SELECT
+					SUM(hf_data_master.issue_balance) AS csum,
+					warehouses.district_id,
+					locations.location_name
+				FROM
+					warehouses
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+				INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+				INNER JOIN locations ON locations.pk_id = warehouses.district_id
+        INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+				WHERE
+					stakeholders.geo_level_id = 6
+				AND hf_data_master.issue_balance > 0
+				AND warehouses.stakeholder_id = 1
+				AND issue_balance > 0
+				AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+				AND hf_data_master.item_pack_size_id = in_item
+				AND warehouses.province_id = in_location_id
+				GROUP BY
+					warehouses.district_id,
+					hf_data_master.reporting_start_date
+				ORDER BY
+					warehouses.district_id,
+					hf_data_master.reporting_start_date DESC
+			) AS A
+		) AS B
+		JOIN(
+			SELECT
+				warehouses.district_id AS location_id,
+				locations.location_name,
+				SUM(IF(stakeholders.geo_level_id = 6, hf_data_master.issue_balance, 0)) AS Vaccinated,
+				SUM(hf_data_master.closing_balance) AS SOH,
+				ROUND(
+					(
+						(
+							(
+								(
+									location_populations.population / 100
+								) * items.population_percent_increase_per_year
+							) / 100 * items.child_surviving_percent_per_year
+						) * items.doses_per_year
+					) / 12
+				) AS target
+			FROM
+				warehouses
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+			INNER JOIN locations ON locations.pk_id = warehouses.district_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			INNER JOIN location_populations ON warehouses.district_id = location_populations.location_id
+			INNER JOIN item_pack_sizes ON hf_data_master.item_pack_size_id = item_pack_sizes.pk_id
+			INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
+			WHERE
+				stakeholders.geo_level_id >= 4
+			AND warehouses.stakeholder_id = in_stakeholder
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			AND warehouses.province_id = in_location_id
+			AND YEAR (location_populations.estimation_date) = YEAR(in_rpt_date)
+			GROUP BY
+				warehouses.district_id,
+				Reporting_start_date
+			ORDER BY
+				warehouses.district_id,
+				Reporting_start_date DESC
+		)C
+		ON C.location_id = B.location_id
+	WHERE
+		row_number <= 3
+	GROUP BY
+		district_id;
+
+WHEN (in_type = 'D') THEN
+	SELECT
+		B.location_id,
+		B.location_name,
+		C.target,
+		C.Vaccinated,
+		ROUND(AVG(B.csum), 2) AS AMC,
+		C.SOH,
+		ROUND((C.SOH/AVG(B.csum)), 2) AS MOS
+	FROM
+		(
+			SELECT
+				A.reporting_start_date,
+				A.csum,
+				A.location_id,
+				A.location_name,
+				@num :=
+			IF (@loc = location_id, @num + 1, 1) AS row_number,
+			@loc := location_id
+		FROM
+			(
+				SELECT
+					hf_data_master.reporting_start_date,
+					SUM(hf_data_master.issue_balance) AS csum,
+					warehouses.location_id,
+					locations.location_name
+				FROM
+					warehouses
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+				INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+				INNER JOIN locations ON locations.pk_id = warehouses.location_id
+        INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id 
+				WHERE
+					stakeholders.geo_level_id >= 6
+				AND hf_data_master.issue_balance > 0
+				AND warehouses.stakeholder_id = 1
+				AND issue_balance > 0
+				AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') <= in_rpt_date
+				AND hf_data_master.item_pack_size_id = in_item
+				AND warehouses.district_id = in_location_id
+				GROUP BY
+					warehouses.location_id,
+					hf_data_master.reporting_start_date
+				ORDER BY
+					warehouses.location_id,
+					hf_data_master.reporting_start_date DESC
+			) AS A
+		) AS B
+		JOIN(
+			SELECT
+				warehouses.location_id,
+				locations.location_name,
+				SUM(hf_data_master.issue_balance) AS Vaccinated,
+				ROUND(
+					(
+						(
+							(
+								(
+									location_populations.population / 100
+								) * items.population_percent_increase_per_year
+							) / 100 * items.child_surviving_percent_per_year
+						) * items.doses_per_year
+					) / 12
+				) AS target,
+				SUM(hf_data_master.closing_balance) AS SOH
+			FROM
+				warehouses
+			INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+			INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+			INNER JOIN locations ON locations.pk_id = warehouses.location_id
+			INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+			INNER JOIN location_populations ON location_populations.location_id = locations.pk_id
+			INNER JOIN item_pack_sizes ON hf_data_master.item_pack_size_id = item_pack_sizes.pk_id
+			INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
+			WHERE
+				stakeholders.geo_level_id >= 6
+			AND warehouses.stakeholder_id = in_stakeholder
+			AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = in_rpt_date
+			AND hf_data_master.item_pack_size_id = in_item
+			AND warehouses.district_id = in_location_id
+			AND YEAR (location_populations.estimation_date) = YEAR (in_rpt_date)
+			GROUP BY
+				warehouses.location_id
+			ORDER BY
+				warehouses.location_id
+		)C
+		ON C.location_id = B.location_id
+	WHERE
+		row_number <= 3
+	GROUP BY
+		location_id;*/
+
+END CASE;
+
+END
+;;
+DELIMITER ;
+
+-- ----------------------------
 -- Procedure structure for REPStockBatchHistory
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPStockBatchHistory`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPStockBatchHistory`(in_id INT, in_action INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPStockBatchHistory`(in_id INT, in_action INT)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
 
-INSERT INTO stock_batch_history (
-	stock_batch_history.batch_id,
-	stock_batch_history.number,
-	stock_batch_history.batch_master_id,
-	stock_batch_history.expiry_date,
-	stock_batch_history.quantity,
-	stock_batch_history.`status`,
-	stock_batch_history.unit_price,
-	stock_batch_history.production_date,
-	stock_batch_history.last_update,
-	stock_batch_history.item_pack_size_id,
-	stock_batch_history.vvm_type_id,
-	stock_batch_history.warehouse_id,
-	stock_batch_history.stakeholder_item_pack_size_id,
-	stock_batch_history.action_type
+INSERT INTO stock_batch_warehouses_history (
+	stock_batch_warehouses_history.stock_batch_warehouse_id,
+	stock_batch_warehouses_history.quantity,
+	stock_batch_warehouses_history.`status`,
+	stock_batch_warehouses_history.action_type,
+	stock_batch_warehouses_history.created_by,
+	stock_batch_warehouses_history.created_date,
+	stock_batch_warehouses_history.modified_by,
+	stock_batch_warehouses_history.modified_date
 ) SELECT
-	stock_batch.pk_id,
-	stock_batch.number,
-	stock_batch.batch_master_id,
-	stock_batch.expiry_date,
-	stock_batch.quantity,
-	stock_batch.`status`,
-	stock_batch.unit_price,
-	stock_batch.production_date,
-	stock_batch.last_update,
-	stock_batch.item_pack_size_id,
-	stock_batch.vvm_type_id,
-	stock_batch.warehouse_id,
-	stock_batch.stakeholder_item_pack_size_id,
-	in_action
-FROM
-	stock_batch
-WHERE
-	stock_batch.pk_id = in_id;
+		stock_batch_warehouses.pk_id,
+		stock_batch_warehouses.quantity,
+		stock_batch_warehouses.`status`,
+		in_action,
+		stock_batch_warehouses.created_by,
+		stock_batch_warehouses.created_date,
+		stock_batch_warehouses.modified_by,
+		stock_batch_warehouses.modified_date
+	FROM
+		stock_batch_warehouses
+	WHERE
+		stock_batch_warehouses.pk_id = in_id;
 
 END
 ;;
@@ -5370,7 +8357,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPStockDetailHistory`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPStockDetailHistory`(in_id INT, in_action INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPStockDetailHistory`(in_id INT, in_action INT)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -5383,7 +8370,7 @@ BEGIN
 		stock_detail_history.is_received,
 		stock_detail_history.adjustment_type,
 		stock_detail_history.stock_master_id,
-		stock_detail_history.stock_batch_id,
+		stock_detail_history.stock_batch_warehouse_id,
 		stock_detail_history.item_unit_id,
 		stock_detail_history.action_type
 	) SELECT
@@ -5394,7 +8381,7 @@ BEGIN
 		stock_detail.is_received,
 		stock_detail.adjustment_type,
 		stock_detail.stock_master_id,
-		stock_detail.stock_batch_id,
+		stock_detail.stock_batch_warehouse_id,
 		stock_detail.item_unit_id,
 		in_action
 	FROM
@@ -5411,7 +8398,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPStockMasterHistory`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPStockMasterHistory`(in_id INT, in_action INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPStockMasterHistory`(in_id INT, in_action INT)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -5464,7 +8451,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPUpdateSummaryDistrict`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPUpdateSummaryDistrict`(in_stk INT, in_item INT, in_rpt_date DATETIME, in_loc INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPUpdateSummaryDistrict`(in_stk INT, in_item INT, in_rpt_date DATETIME, in_loc INT)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -5569,7 +8556,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPUpdateSummaryNational`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPUpdateSummaryNational`(in_stk INT, in_item INT, in_rpt_date DATETIME)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPUpdateSummaryNational`(in_stk INT, in_item INT, in_rpt_date DATETIME)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -5660,7 +8647,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPUpdateSummaryProvince`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPUpdateSummaryProvince`(in_stk INT, in_item INT, in_rpt_date DATETIME, in_loc INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPUpdateSummaryProvince`(in_stk INT, in_item INT, in_rpt_date DATETIME, in_loc INT)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -5755,7 +8742,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPUpdateSummaryTehsil`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPUpdateSummaryTehsil`(in_stk INT, in_item INT, in_rpt_date DATETIME, in_loc INT)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPUpdateSummaryTehsil`(in_stk INT, in_item INT, in_rpt_date DATETIME, in_loc INT)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -5864,7 +8851,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `REPUpdateSummaryUC`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` PROCEDURE `REPUpdateSummaryUC`(in_wh_id INTEGER, in_item VARCHAR(10), in_rpt_date DATETIME)
+CREATE DEFINER=`vlmisr2user`@`localhost` PROCEDURE `REPUpdateSummaryUC`(in_wh_id INTEGER, in_item VARCHAR(10), in_rpt_date DATETIME)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -5980,7 +8967,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `AdjustQty`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `AdjustQty`(`batchId` int,`whId` int) RETURNS bigint(20)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `AdjustQty`(`batchId` int,`whId` int) RETURNS bigint(20)
     DETERMINISTIC
 BEGIN 
   -- DECLARE receive INT;
@@ -5992,11 +8979,11 @@ SELECT
 	 IFNULL(Sum(stock_detail.quantity),0) INTO qty
 	 FROM
 	 stock_detail
-	INNER JOIN stock_batch ON  stock_detail.stock_batch_id = stock_batch.pk_id
+	INNER JOIN stock_batch_warehouses ON  stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
   INNER JOIN stock_master ON   stock_detail.stock_master_id = stock_master.pk_id
 	WHERE
-	stock_detail.stock_batch_id = batchId AND
-	stock_batch.warehouse_id= whId;
+	stock_detail.stock_batch_warehouse_id = batchId AND
+	stock_batch_warehouses.warehouse_id= whId;
   /*
 SELECT
 	 IFNULL(Sum(stock_detail.quantity),0) INTO receive
@@ -6034,15 +9021,15 @@ SELECT
 	SET qty = receive + issue + adjustment;*/
 
 	 IF(qty >= 0) THEN 
-		 UPDATE  stock_batch  SET  quantity = qty	WHERE  pk_id=batchId AND warehouse_id = whId;
+		 UPDATE  stock_batch_warehouses  SET  quantity = qty	WHERE  pk_id=batchId AND warehouse_id = whId;
 	 END IF;
 
    IF(qty < 0) THEN
-		 UPDATE  stock_batch  SET  quantity = 0, status='Finished'	WHERE  pk_id=batchId AND warehouse_id = whId;
+		 UPDATE  stock_batch_warehouses  SET  quantity = 0, status='Finished'	WHERE  pk_id=batchId AND warehouse_id = whId;
 	 END IF;
  
-	 UPDATE stock_batch SET status='Finished'	WHERE quantity <= 0;
-   UPDATE stock_batch SET status='Stacked'	WHERE quantity > 0 and status!='Running'	;
+	 UPDATE stock_batch_warehouses SET status='Finished'	WHERE quantity <= 0;
+   UPDATE stock_batch_warehouses SET status='Stacked'	WHERE quantity > 0 and status!='Running'	;
 
   RETURN(qty);
 END
@@ -6054,7 +9041,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `GetIllegalWastageofDistrict`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `GetIllegalWastageofDistrict`(item_id integer, reporting_date varchar(10),district_id integer,allowable_wastage_rate integer,stakeholderid integer) RETURNS varchar(255) CHARSET latin1
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `GetIllegalWastageofDistrict`(item_id integer, reporting_date varchar(10),district_id integer,allowable_wastage_rate integer,stakeholderid integer) RETURNS varchar(255) CHARSET latin1
     READS SQL DATA
     DETERMINISTIC
 BEGIN 
@@ -6073,10 +9060,10 @@ FROM
 			if(ROUND(
 				IFNULL(
 					(
-						sum(warehouses_data.wastages) / (
+						sum(hf_data_master.wastages) / (
 							SUM(
-								warehouses_data.issue_balance
-							) + sum(warehouses_data.wastages)
+								hf_data_master.issue_balance
+							) + sum(hf_data_master.wastages)
 						)
 					) * 100,
 					0
@@ -6087,13 +9074,13 @@ FROM
 		FROM
 			locations AS UC
 		INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-		INNER JOIN warehouses_data ON warehouses.pk_id = warehouses_data.warehouse_id
+		INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
 		WHERE
 			UC.geo_level_id = 6
 		AND warehouses.stakeholder_id = stakeholderid
-		AND warehouses_data.reporting_start_date = reporting_date 
-		AND warehouses_data.issue_balance IS NOT NULL
-		AND warehouses_data.item_pack_size_id = item_id
+		AND hf_data_master.reporting_start_date = reporting_date 
+		AND hf_data_master.issue_balance IS NOT NULL
+		AND hf_data_master.item_pack_size_id = item_id
 		and UC.district_id=district_id  
 GROUP BY  UC.pk_id 
 UNION
@@ -6138,7 +9125,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `getMonthlyRcvQtyWH`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `getMonthlyRcvQtyWH`(`in_month` int,`in_year` int,`in_item` int,`in_wh` int) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `getMonthlyRcvQtyWH`(`in_month` int,`in_year` int,`in_item` int,`in_wh` int) RETURNS int(11)
     DETERMINISTIC
 BEGIN
 	DECLARE retval INTEGER;
@@ -6148,7 +9135,7 @@ SELECT
 	FROM
 		stock_master
 	INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-	INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+	INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 	WHERE
 		stock_master.to_warehouse_id = in_wh
 	AND stock_master.transaction_type_id = 1
@@ -6165,7 +9152,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `getMosColor`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `getMosColor`(`in_id` float,`in_itemrec_id` int,`in_stkid` int,`in_lvlid` int) RETURNS varchar(100) CHARSET latin1
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `getMosColor`(`in_id` float,`in_itemrec_id` int,`in_stkid` int,`in_lvlid` int) RETURNS varchar(100) CHARSET latin1
     DETERMINISTIC
 BEGIN 
    DECLARE vName VARCHAR(100);
@@ -6192,7 +9179,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `GetPicked`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `GetPicked`(stock_detail_id integer) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `GetPicked`(stock_detail_id integer) RETURNS int(11)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -6217,7 +9204,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `GetPlaced`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `GetPlaced`(stock_detail_id integer) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `GetPlaced`(stock_detail_id integer) RETURNS int(11)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -6242,7 +9229,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `getStkItemCount`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `getStkItemCount`(`in_id` int) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `getStkItemCount`(`in_id` int) RETURNS int(11)
     DETERMINISTIC
 BEGIN
      DECLARE retval  INTEGER;
@@ -6270,7 +9257,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `GetUnplacedBatches`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `GetUnplacedBatches`(`item_id` int) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `GetUnplacedBatches`(`item_id` int) RETURNS int(11)
     DETERMINISTIC
 BEGIN 
   DECLARE item_id INT;
@@ -6288,11 +9275,14 @@ BEGIN
 	stock_batch.warehouse_id = whId;*/
 
 	SELECT DISTINCT
-	stock_batch.pk_id INTO batch_id
-	FROM
-	stock_batch
-	WHERE
-	stock_batch.item_pack_size_id = item_id;
+	stock_batch_warehouses.pk_id INTO batch_id
+FROM
+	stock_batch_warehouses
+INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+WHERE
+	stakeholder_item_pack_sizes.item_pack_size_id = item_id;
 
   RETURN(batch_id);
 END
@@ -6304,7 +9294,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `GetVacdoses`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `GetVacdoses`(item_id integer) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `GetVacdoses`(item_id integer) RETURNS int(11)
     READS SQL DATA
     DETERMINISTIC
 BEGIN 
@@ -6329,7 +9319,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `getWarehouseType`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `getWarehouseType`(in_wh INTEGER) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `getWarehouseType`(in_wh INTEGER) RETURNS int(11)
     DETERMINISTIC
 BEGIN
 
@@ -6353,7 +9343,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `ReceiveStockAtUC`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `ReceiveStockAtUC`(master_id int, trans_no char(50),batch_id int,bnumber char(50),item_pack_size_id int,wh_id int, countr int) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `ReceiveStockAtUC`(master_id int, trans_no char(50),batch_id int,bnumber char(50),item_pack_size_id int,wh_id int, countr int) RETURNS int(11)
     DETERMINISTIC
 BEGIN
  DECLARE new_master_id INTEGER;
@@ -6366,6 +9356,8 @@ BEGIN
  DECLARE c DOUBLE DEFAULT 0;
  DECLARE batchId INTEGER;
  DECLARE cnt INTEGER;
+
+SET in_user = 1;
 
 INSERT INTO stock_master (
  stock_master.transaction_date,
@@ -6381,7 +9373,9 @@ INSERT INTO stock_master (
  stock_master.campaign_id,
  stock_master.stakeholder_activity_id,
  stock_master.created_by,
- stock_master.created_date
+ stock_master.created_date,
+ stock_master.modified_by,
+ stock_master.modified_date
 ) SELECT
  stock_master.transaction_date,
  trans_no,
@@ -6396,7 +9390,9 @@ INSERT INTO stock_master (
  stock_master.campaign_id,
  stock_master.stakeholder_activity_id,
  stock_master.created_by,
- stock_master.created_date
+ stock_master.created_date,
+ stock_master.modified_by,
+ stock_master.modified_date
 FROM
  stock_master
 WHERE
@@ -6405,39 +9401,38 @@ WHERE
 SET new_master_id = LAST_INSERT_ID();
 
 SELECT
- stock_batch.pk_id,
- COUNT(stock_batch.pk_id) INTO batchId,cnt
+ stock_batch_warehouses.pk_id,
+ COUNT(stock_batch_warehouses.pk_id) INTO batchId,cnt
 FROM
- stock_batch
+ stock_batch_warehouses
+INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 WHERE
  stock_batch.number = bnumber
-AND stock_batch.item_pack_size_id = item_pack_size_id
-AND stock_batch.warehouse_id = wh_id;
+AND stakeholder_item_pack_sizes.item_pack_size_id = item_pack_size_id
+AND stock_batch_warehouses.warehouse_id = wh_id;
 
 IF(cnt=0) THEN
- INSERT INTO stock_batch (
-  stock_batch.number,
-  stock_batch.expiry_date,
-  stock_batch.unit_price,
-  stock_batch.production_date,
-  stock_batch.last_update,
-  stock_batch.item_pack_size_id,
-  stock_batch.vvm_type_id,
-  stock_batch.warehouse_id,
-  stock_batch.stakeholder_item_pack_size_id
+ INSERT INTO stock_batch_warehouses (
+	stock_batch_warehouses.stock_batch_id,
+  stock_batch_warehouses.warehouse_id,
+  stock_batch_warehouses.quantity,
+	stock_batch_warehouses.created_by,
+	stock_batch_warehouses.created_date,
+	stock_batch_warehouses.modified_by,
+	stock_batch_warehouses.modified_date
  ) SELECT
-  stock_batch.number,
-  stock_batch.expiry_date,
-  stock_batch.unit_price,
-  stock_batch.production_date,
-  stock_batch.last_update,
-  stock_batch.item_pack_size_id,
-  stock_batch.vvm_type_id,
+	stock_batch_warehouses.stock_batch_id,
   wh_id,
-  stock_batch.stakeholder_item_pack_size_id
+  stock_batch_warehouses.quantity,
+	in_user,
+	NOW(),
+	in_user,
+	NOW()
  FROM
-  stock_batch
- WHERE stock_batch.pk_id = batch_id;
+  stock_batch_warehouses
+ WHERE stock_batch_warehouses.pk_id = batch_id;
 
  SET new_batch_id = LAST_INSERT_ID();
 
@@ -6473,14 +9468,16 @@ WHERE
 SELECT
 MONTH(stock_master.transaction_date),
 YEAR(stock_master.transaction_date),
-stock_batch.item_pack_size_id,
+stakeholder_item_pack_sizes.item_pack_size_id,
 stock_master.to_warehouse_id,
 stock_master.created_by
 INTO in_month, in_year, in_item, in_wh, in_user
 FROM
 stock_master
-INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_idstock_batch_warehouses
+INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 WHERE
 stock_detail.stock_master_id = new_master_id LIMIT 1;
 
@@ -6497,7 +9494,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetAvailabilityRateStr`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetAvailabilityRateStr`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(8),`in_WF` varchar(1),`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS varchar(20) CHARSET latin1
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetAvailabilityRateStr`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(8),`in_WF` varchar(1),`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS varchar(20) CHARSET latin1
     DETERMINISTIC
 BEGIN
 
@@ -6649,7 +9646,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetCB`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetCB`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(20),`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS double
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetCB`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(20),`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS double
     DETERMINISTIC
 BEGIN
 
@@ -6681,15 +9678,15 @@ END IF;
 -- Aggreate warehouse closing balance national
 		SELECT sum(closing_balance) INTO retval from (
     SELECT
-			sum(warehouses_data.closing_balance) as closing_balance
+			sum(hf_data_master.closing_balance) as closing_balance
 		FROM
 			warehouses
-		INNER JOIN  warehouses_data  ON  warehouses.pk_id = warehouses_data.warehouse_id
+		INNER JOIN  hf_data_master  ON  warehouses.pk_id = hf_data_master.warehouse_id
 		INNER JOIN stakeholders ON   warehouses.stakeholder_office_id=  stakeholders.pk_id
 		WHERE
-			warehouses_data.item_pack_size_id = in_item
-		AND    MONTH(warehouses_data.reporting_start_date) = in_month
-		AND   YEAR(warehouses_data.reporting_start_date) = in_year
+			hf_data_master.item_pack_size_id = in_item
+		AND    MONTH(hf_data_master.reporting_start_date) = in_month
+		AND   YEAR(hf_data_master.reporting_start_date) = in_year
 		AND    stakeholders.geo_level_id >= 1
     UNION 
     SELECT
@@ -6708,15 +9705,15 @@ END IF;
 -- Aggreate warehouse closing balance national
 		SELECT sum(closing_balance) INTO retval from (
      SELECT
-			sum(warehouses_data.closing_balance) as closing_balance
+			sum(hf_data_master.closing_balance) as closing_balance
 		FROM
 			warehouses
-		INNER JOIN   warehouses_data   ON    warehouses.pk_id  =   warehouses_data.warehouse_id 
+		INNER JOIN   hf_data_master   ON    warehouses.pk_id  =   hf_data_master.warehouse_id 
 		INNER JOIN  stakeholders  ON   warehouses.stakeholder_office_id =   stakeholders.pk_id
 		WHERE
-			 warehouses_data.item_pack_size_id = in_item
-		AND MONTH(warehouses_data.reporting_start_date) = in_month
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item
+		AND MONTH(hf_data_master.reporting_start_date) = in_month
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
 		AND   stakeholders.geo_level_id = 1 
     UNION
     	SELECT
@@ -6735,15 +9732,15 @@ END IF;
   WHEN (in_type = 'P') THEN
 -- Aggreate warehouse closing balance for selected province 
    SELECT sum(closing_balance) INTO retval from (
-   SELECT sum(warehouses_data.closing_balance) as closing_balance
+   SELECT sum(hf_data_master.closing_balance) as closing_balance
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.province_id = in_prov 
 		AND   stakeholders.geo_level_id>=2
     UNION 
@@ -6762,15 +9759,15 @@ END IF;
  WHEN (in_type = 'PW') THEN
 -- Aggreate warehouse closing balance for selected province 
 Select sum(closing_balance) INTO retval from
-  ( SELECT sum(warehouses_data.closing_balance) as closing_balance
+  ( SELECT sum(hf_data_master.closing_balance) as closing_balance
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders  ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.province_id = in_prov 
 		AND   stakeholders.geo_level_id=2
     UNION
@@ -6790,15 +9787,15 @@ Select sum(closing_balance) INTO retval from
 WHEN (in_type = 'V') THEN
 -- Aggreate warehouse closing balance for selected province 
 SELECT sum(closing_balance) INTO retval from   
-(SELECT sum(warehouses_data.closing_balance) as closing_balance
+(SELECT sum(hf_data_master.closing_balance) as closing_balance
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.district_id  in (SELECT
 																					 locations.pk_id
 																				FROM
@@ -6829,15 +9826,15 @@ SELECT sum(closing_balance) INTO retval from
 WHEN (in_type = 'D') THEN
 -- Aggreate warehouse closing balance for selected province 
 SELECT sum(closing_balance) INTO retval  from (
-   SELECT sum(warehouses_data.closing_balance) as closing_balance
+   SELECT sum(hf_data_master.closing_balance) as closing_balance
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.district_id = in_prov 
 		AND   stakeholders.geo_level_id >= 4
    UNION 
@@ -6856,15 +9853,15 @@ SELECT sum(closing_balance) INTO retval  from (
 WHEN (in_type = 'DP') THEN
 -- Aggreate warehouse closing balance for selected province 
    SELECT sum(closing_balance) INTO retval from
-  (SELECT sum(warehouses_data.closing_balance) as closing_balance
+  (SELECT sum(hf_data_master.closing_balance) as closing_balance
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.province_id = in_prov 
 		AND   stakeholders.geo_level_id = 4
     UNION 
@@ -6883,15 +9880,15 @@ WHEN (in_type = 'DP') THEN
 WHEN (in_type = 'DW') THEN
 -- Aggreate warehouse closing balance for selected province 
    SELECT sum(closing_balance) INTO retval from
-  (SELECT sum(warehouses_data.closing_balance) as closing_balance
+  (SELECT sum(hf_data_master.closing_balance) as closing_balance
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND  MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND  YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND  MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND  YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.district_id = in_prov 
 		AND   stakeholders.geo_level_id = 4
     UNION 
@@ -6910,15 +9907,15 @@ WHEN (in_type = 'DW') THEN
 WHEN (in_type = 'H') THEN
 -- Aggreate warehouse closing balance for selected province 
    SELECT sum(closing_balance) INTO retval from 
-   (SELECT sum(warehouses_data.closing_balance) as closing_balance
+   (SELECT sum(hf_data_master.closing_balance) as closing_balance
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND  MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND  YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND  MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND  YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.location_id    in (
 																				SELECT
 																					 locations.pk_id
@@ -6950,15 +9947,15 @@ WHEN (in_type = 'HW') THEN
 -- Aggreate warehouse closing balance for selected province 
    SELECT sum(closing_balance) INTO retval 
 from 
-(SELECT sum(warehouses_data.closing_balance) as closing_balance
+(SELECT sum(hf_data_master.closing_balance) as closing_balance
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
 		AND warehouses.location_id = in_prov
 		AND stakeholders.geo_level_id=5
    UNION
@@ -6977,15 +9974,15 @@ from
 WHEN (in_type = 'U') THEN
 -- Aggreate warehouse closing balance for selected districts
    SELECT sum(closing_balance) INTO retval from 
-(SELECT sum(warehouses_data.closing_balance) as closing_balance
+(SELECT sum(hf_data_master.closing_balance) as closing_balance
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.location_id   = in_prov 
 		AND   stakeholders.geo_level_id=6
    UNION 
@@ -7004,15 +10001,15 @@ WHEN (in_type = 'U') THEN
 WHEN (in_type = 'UP') THEN
 -- Aggreate UC closing balance for selected province 
    SELECT sum(closing_balance) INTO retval FROM
-  (SELECT sum(warehouses_data.closing_balance) as closing_balance
+  (SELECT sum(hf_data_master.closing_balance) as closing_balance
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND  MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND  YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND  MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND  YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.province_id= in_prov 
 		AND   stakeholders.geo_level_id=6  
    UNION 
@@ -7032,15 +10029,15 @@ SELECT sum(hf_data_master.closing_balance) as closing_balance
 WHEN (in_type = 'UD') THEN
 -- Aggreate warehouse closing balance for selected province 
   SELECT sum(closing_balance) INTO retval FROM
-( SELECT sum(warehouses_data.closing_balance) as closing_balance
+( SELECT sum(hf_data_master.closing_balance) as closing_balance
    FROM 
    warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
    Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-    warehouses_data.item_pack_size_id = in_item 
-  AND  MONTH(warehouses_data.reporting_start_date) = in_month 
-  AND  YEAR(warehouses_data.reporting_start_date) = in_year
+    hf_data_master.item_pack_size_id = in_item 
+  AND  MONTH(hf_data_master.reporting_start_date) = in_month 
+  AND  YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.district_id  = in_prov 
   AND   stakeholders.geo_level_id=6 
 UNION 
@@ -7059,15 +10056,15 @@ UNION
 WHEN (in_type = 'UW') THEN
 -- Aggreate warehouse closing balance for selected province 
    SELECT sum(closing_balance) INTO retval from
-   (SELECT sum(warehouses_data.closing_balance) as closing_balance
+   (SELECT sum(hf_data_master.closing_balance) as closing_balance
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND  MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND  YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND  MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND  YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.pk_id  = in_prov 
 		AND   stakeholders.geo_level_id=6
     UNION 
@@ -7089,22 +10086,22 @@ WHEN (in_type = 'UW') THEN
    WHEN (in_type = 'WS') THEN
  -- Aggreate warehouse closing balance for selected  stakeholders
     IF (wflag='CWH') THEN
-			SELECT sum(warehouses_data.closing_balance)
+			SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk  AND   stakeholders.stakeholder_type_id=0 and   stakeholders.geo_level_id=1;
 
     ELSE
 
-     	SELECT sum(warehouses_data.closing_balance)
+     	SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-        WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+        WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk and   stakeholders.geo_level_id=1;
     END IF;
 
@@ -7113,101 +10110,101 @@ WHEN (in_type = 'UW') THEN
 
   WHEN (in_type = 'WSP') THEN
 
-			SELECT sum(warehouses_data.closing_balance)
+			SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-        WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+        WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk AND  warehouses.province_id = in_prov and   stakeholders.geo_level_id>=2;
 
 
  WHEN (in_type = 'WPD') THEN
 -- Aggreate warehouse closing balance for selected  stakeholders and province
-  SELECT sum(warehouses_data.closing_balance)
+  SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.location_id   = in_dist and   stakeholders.geo_level_id>=3;
 
 
   WHEN (in_type = 'WSPD') THEN
--- Aggreate warehouse closing balance for selected  stakeholders, province and district  sum(warehouses_data.closing_balance)
+-- Aggreate warehouse closing balance for selected  stakeholders, province and district  sum(hf_data_master.closing_balance)
 
-   SELECT       sum(warehouses_data.closing_balance)
+   SELECT       sum(hf_data_master.closing_balance)
   INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-        WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+        WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk AND  warehouses.location_id   = in_dist and   stakeholders.geo_level_id=3;
 
 
  WHEN (in_type = 'T') THEN
 -- Aggreate field + warehouse closing balance national
-   SELECT sum(warehouses_data.closing_balance)
+   SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-        WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+        WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND   stakeholders.stakeholder_type_id=0;
 
    WHEN (in_type = 'TS') THEN
 -- Aggreate field + warehouse closing balance for selected  stakeholders
-   SELECT sum(warehouses_data.closing_balance)
+   SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk;
 
   
 
   WHEN (in_type = 'TSP') THEN
 -- Aggreate field + warehouse closing balance for selected  stakeholders and province
-  SELECT sum(warehouses_data.closing_balance)
+  SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk AND  warehouses.province_id = in_prov
          AND  (stakeholders.geo_level_id>=2);
 
  WHEN (in_type = 'TPD') THEN
 -- Aggreate field + warehouse closing balance for selected  stakeholders and province
-  SELECT sum(warehouses_data.closing_balance)
+  SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.location_id   = in_dist
          AND   stakeholders.stakeholder_type_id=0 and (  stakeholders.geo_level_id>=3);
 
 WHEN (in_type = 'XPD') THEN
 -- Aggreate field + warehouse closing balance for selected  stakeholders and province
-  SELECT sum(warehouses_data.closing_balance)
+  SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.location_id   = in_dist
          AND   stakeholders.stakeholder_type_id=1 and (stakeholders.geo_level_id=3);
 
   WHEN (in_type = 'TSPD') THEN
--- Aggreate field + warehouse closing balance for selected  stakeholders, province and district sum(warehouses_data.closing_balance)
+-- Aggreate field + warehouse closing balance for selected  stakeholders, province and district sum(hf_data_master.closing_balance)
    SELECT '100' as a
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk  AND  warehouses.location_id   = in_dist
          AND   stakeholders.stakeholder_type_id=0 and (  stakeholders.geo_level_id>=3) limit 1;
 */
@@ -7226,7 +10223,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetCB_copy`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `REPgetCB_copy`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(20),`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS double
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetCB_copy`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(20),`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS double
     DETERMINISTIC
 BEGIN
 
@@ -7257,72 +10254,72 @@ END IF;
   WHEN (in_type = 'N') THEN
 -- Aggreate warehouse closing balance national
 		SELECT
-			sum(warehouses_data.closing_balance) INTO retval
+			sum(hf_data_master.closing_balance) INTO retval
 		FROM
 			warehouses
-		INNER JOIN  warehouses_data  ON  warehouses.pk_id = warehouses_data.warehouse_id
+		INNER JOIN  hf_data_master  ON  warehouses.pk_id = hf_data_master.warehouse_id
 		INNER JOIN stakeholders ON   warehouses.stakeholder_office_id=  stakeholders.pk_id
 		WHERE
-			warehouses_data.item_pack_size_id = in_item
-		AND    MONTH(warehouses_data.reporting_start_date) = in_month
-		AND   YEAR(warehouses_data.reporting_start_date) = in_year
+			hf_data_master.item_pack_size_id = in_item
+		AND    MONTH(hf_data_master.reporting_start_date) = in_month
+		AND   YEAR(hf_data_master.reporting_start_date) = in_year
 		AND    stakeholders.geo_level_id >= 1;
 
   WHEN (in_type = 'NW') THEN
 -- Aggreate warehouse closing balance national
 		SELECT
-			sum(warehouses_data.closing_balance) INTO retval
+			sum(hf_data_master.closing_balance) INTO retval
 		FROM
 			warehouses
-		INNER JOIN   warehouses_data   ON    warehouses.pk_id  =   warehouses_data.warehouse_id 
+		INNER JOIN   hf_data_master   ON    warehouses.pk_id  =   hf_data_master.warehouse_id 
 		INNER JOIN  stakeholders  ON   warehouses.stakeholder_office_id =   stakeholders.pk_id
 		WHERE
-			 warehouses_data.item_pack_size_id = in_item
-		AND MONTH(warehouses_data.reporting_start_date) = in_month
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item
+		AND MONTH(hf_data_master.reporting_start_date) = in_month
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
 		AND   stakeholders.geo_level_id = 1;
 
 
   WHEN (in_type = 'P') THEN
 -- Aggreate warehouse closing balance for selected province 
-   SELECT sum(warehouses_data.closing_balance) INTO retval
+   SELECT sum(hf_data_master.closing_balance) INTO retval
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.province_id = in_prov 
 		AND   stakeholders.geo_level_id>=2;
 
  WHEN (in_type = 'PW') THEN
 -- Aggreate warehouse closing balance for selected province 
-   SELECT sum(warehouses_data.closing_balance) INTO retval
+   SELECT sum(hf_data_master.closing_balance) INTO retval
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders  ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.province_id = in_prov 
 		AND   stakeholders.geo_level_id=2;
 
 
 WHEN (in_type = 'V') THEN
 -- Aggreate warehouse closing balance for selected province 
-   SELECT sum(warehouses_data.closing_balance) INTO retval
+   SELECT sum(hf_data_master.closing_balance) INTO retval
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.district_id  in (SELECT
 																					 locations.pk_id
 																				FROM
@@ -7334,57 +10331,57 @@ WHEN (in_type = 'V') THEN
   
 WHEN (in_type = 'D') THEN
 -- Aggreate warehouse closing balance for selected province 
-   SELECT sum(warehouses_data.closing_balance) INTO retval
+   SELECT sum(hf_data_master.closing_balance) INTO retval
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.district_id = in_prov 
 		AND   stakeholders.geo_level_id >= 4;
 
 WHEN (in_type = 'DP') THEN
 -- Aggreate warehouse closing balance for selected province 
-   SELECT sum(warehouses_data.closing_balance) INTO retval
+   SELECT sum(hf_data_master.closing_balance) INTO retval
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.province_id = in_prov 
 		AND   stakeholders.geo_level_id = 4;
 
 WHEN (in_type = 'DW') THEN
 -- Aggreate warehouse closing balance for selected province 
-   SELECT sum(warehouses_data.closing_balance) INTO retval
+   SELECT sum(hf_data_master.closing_balance) INTO retval
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND  MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND  YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND  MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND  YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.district_id = in_prov 
 		AND   stakeholders.geo_level_id = 4;
 
 WHEN (in_type = 'H') THEN
 -- Aggreate warehouse closing balance for selected province 
-   SELECT sum(warehouses_data.closing_balance) INTO retval
+   SELECT sum(hf_data_master.closing_balance) INTO retval
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND  MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND  YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND  MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND  YEAR(hf_data_master.reporting_start_date) = in_year
     
 AND  warehouses.location_id    in (
 																				SELECT
@@ -7397,57 +10394,57 @@ AND  warehouses.location_id    in (
 
 WHEN (in_type = 'U') THEN
 -- Aggreate warehouse closing balance for selected districts
-   SELECT sum(warehouses_data.closing_balance) INTO retval
+   SELECT sum(hf_data_master.closing_balance) INTO retval
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.location_id   = in_prov 
 		AND   stakeholders.geo_level_id=6;
 
 WHEN (in_type = 'UP') THEN
 -- Aggreate UC closing balance for selected province 
-   SELECT sum(warehouses_data.closing_balance) INTO retval
+   SELECT sum(hf_data_master.closing_balance) INTO retval
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND  MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND  YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND  MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND  YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.province_id= in_prov 
 		AND   stakeholders.geo_level_id=6;
 
 WHEN (in_type = 'UD') THEN
 -- Aggreate warehouse closing balance for selected province 
-   SELECT sum(warehouses_data.closing_balance) INTO retval
+   SELECT sum(hf_data_master.closing_balance) INTO retval
    FROM 
    warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
    Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-    warehouses_data.item_pack_size_id = in_item 
-  AND  MONTH(warehouses_data.reporting_start_date) = in_month 
-  AND  YEAR(warehouses_data.reporting_start_date) = in_year
+    hf_data_master.item_pack_size_id = in_item 
+  AND  MONTH(hf_data_master.reporting_start_date) = in_month 
+  AND  YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.district_id  = in_prov 
   AND   stakeholders.geo_level_id=6;
 
 WHEN (in_type = 'UW') THEN
 -- Aggreate warehouse closing balance for selected province 
-   SELECT sum(warehouses_data.closing_balance) INTO retval
+   SELECT sum(hf_data_master.closing_balance) INTO retval
    FROM 
 			warehouses
-   Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+   Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  	 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
    WHERE 
-			 warehouses_data.item_pack_size_id = in_item 
-		AND  MONTH(warehouses_data.reporting_start_date) = in_month 
-		AND  YEAR(warehouses_data.reporting_start_date) = in_year
+			 hf_data_master.item_pack_size_id = in_item 
+		AND  MONTH(hf_data_master.reporting_start_date) = in_month 
+		AND  YEAR(hf_data_master.reporting_start_date) = in_year
     AND  warehouses.pk_id  = in_prov 
 		AND   stakeholders.geo_level_id=6;
 
@@ -7457,22 +10454,22 @@ WHEN (in_type = 'UW') THEN
    WHEN (in_type = 'WS') THEN
  -- Aggreate warehouse closing balance for selected  stakeholders
     IF (wflag='CWH') THEN
-			SELECT sum(warehouses_data.closing_balance)
+			SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk  AND   stakeholders.stakeholder_type_id=0 and   stakeholders.geo_level_id=1;
 
     ELSE
 
-     	SELECT sum(warehouses_data.closing_balance)
+     	SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-        WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+        WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk and   stakeholders.geo_level_id=1;
     END IF;
 
@@ -7481,101 +10478,101 @@ WHEN (in_type = 'UW') THEN
 
   WHEN (in_type = 'WSP') THEN
 
-			SELECT sum(warehouses_data.closing_balance)
+			SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-        WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+        WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk AND  warehouses.province_id = in_prov and   stakeholders.geo_level_id>=2;
 
 
  WHEN (in_type = 'WPD') THEN
 -- Aggreate warehouse closing balance for selected  stakeholders and province
-  SELECT sum(warehouses_data.closing_balance)
+  SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.location_id   = in_dist and   stakeholders.geo_level_id>=3;
 
 
   WHEN (in_type = 'WSPD') THEN
--- Aggreate warehouse closing balance for selected  stakeholders, province and district  sum(warehouses_data.closing_balance)
+-- Aggreate warehouse closing balance for selected  stakeholders, province and district  sum(hf_data_master.closing_balance)
 
-   SELECT       sum(warehouses_data.closing_balance)
+   SELECT       sum(hf_data_master.closing_balance)
   INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-        WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+        WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk AND  warehouses.location_id   = in_dist and   stakeholders.geo_level_id=3;
 
 
  WHEN (in_type = 'T') THEN
 -- Aggreate field + warehouse closing balance national
-   SELECT sum(warehouses_data.closing_balance)
+   SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
  				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-        WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+        WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND   stakeholders.stakeholder_type_id=0;
 
    WHEN (in_type = 'TS') THEN
 -- Aggreate field + warehouse closing balance for selected  stakeholders
-   SELECT sum(warehouses_data.closing_balance)
+   SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk;
 
   
 
   WHEN (in_type = 'TSP') THEN
 -- Aggreate field + warehouse closing balance for selected  stakeholders and province
-  SELECT sum(warehouses_data.closing_balance)
+  SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk AND  warehouses.province_id = in_prov
          AND  (stakeholders.geo_level_id>=2);
 
  WHEN (in_type = 'TPD') THEN
 -- Aggreate field + warehouse closing balance for selected  stakeholders and province
-  SELECT sum(warehouses_data.closing_balance)
+  SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.location_id   = in_dist
          AND   stakeholders.stakeholder_type_id=0 and (  stakeholders.geo_level_id>=3);
 
 WHEN (in_type = 'XPD') THEN
 -- Aggreate field + warehouse closing balance for selected  stakeholders and province
-  SELECT sum(warehouses_data.closing_balance)
+  SELECT sum(hf_data_master.closing_balance)
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.location_id   = in_dist
          AND   stakeholders.stakeholder_type_id=1 and (stakeholders.geo_level_id=3);
 
   WHEN (in_type = 'TSPD') THEN
--- Aggreate field + warehouse closing balance for selected  stakeholders, province and district sum(warehouses_data.closing_balance)
+-- Aggreate field + warehouse closing balance for selected  stakeholders, province and district sum(hf_data_master.closing_balance)
    SELECT '100' as a
           INTO retval
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data .item_id = in_item AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master .item_id = in_item AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.stakeholder_id   = in_stk  AND  warehouses.location_id   = in_dist
          AND   stakeholders.stakeholder_type_id=0 and (  stakeholders.geo_level_id>=3) limit 1;
 */
@@ -7594,7 +10591,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetCBWHData`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetCBWHData`(in_month INTEGER, in_year INTEGER,  in_item INTEGER, in_wh INTEGER) RETURNS int(20)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetCBWHData`(in_month INTEGER, in_year INTEGER,  in_item INTEGER, in_wh INTEGER) RETURNS int(20)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -7608,10 +10605,14 @@ BEGIN
 	FROM
 		stock_master
 	INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-	INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+	INNER JOIN stock_batch_warehouses ON   stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+  INNER JOIN stock_batch ON   stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+  INNER JOIN pack_info ON   stock_batch.pack_info_id = pack_info.pk_id
+  INNER JOIN stakeholder_item_pack_sizes ON   pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+	
 	WHERE
 		stock_master.to_warehouse_id = in_wh
-	AND stock_batch.item_pack_size_id = in_item
+	AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
 	AND stock_master.transaction_type_id = 1 
 	AND stock_master.transaction_date < DATE_ADD(CONCAT(in_year,'-',in_month,'-01'),INTERVAL 1 MONTH);
 
@@ -7620,10 +10621,14 @@ BEGIN
 	FROM
 		stock_master
 	INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-	INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+	INNER JOIN stock_batch_warehouses ON   stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+  INNER JOIN stock_batch ON   stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+  INNER JOIN pack_info ON   stock_batch.pack_info_id = pack_info.pk_id
+  INNER JOIN stakeholder_item_pack_sizes ON   pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+	
 	WHERE
 		stock_master.from_warehouse_id = in_wh
-	AND stock_batch.item_pack_size_id = in_item
+	AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
   AND stock_master.transaction_type_id = 2
 	AND stock_master.transaction_date < DATE_ADD(CONCAT(in_year,'-',in_month,'-01'),INTERVAL 1 MONTH);
 
@@ -7632,10 +10637,14 @@ BEGIN
 	FROM
 		stock_master
 	INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-	INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+	INNER JOIN stock_batch_warehouses ON   stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+  INNER JOIN stock_batch ON   stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+  INNER JOIN pack_info ON   stock_batch.pack_info_id = pack_info.pk_id
+  INNER JOIN stakeholder_item_pack_sizes ON   pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+	
 	WHERE
 		stock_master.from_warehouse_id = in_wh
-	AND stock_batch.item_pack_size_id = in_item
+	AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
 	AND stock_master.transaction_type_id > 2
 	AND stock_master.transaction_date < DATE_ADD(CONCAT(in_year,'-',in_month,'-01'),INTERVAL 1 MONTH);
 
@@ -7651,7 +10660,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetConsumption`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetConsumption`(`in_month` int,`in_year` int,`in_item` int,`in_stk` int,`in_loc_level` varchar(8),`in_loc` int) RETURNS varchar(10) CHARSET latin1
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetConsumption`(`in_month` int,`in_year` int,`in_item` int,`in_stk` int,`in_loc_level` varchar(8),`in_loc` int) RETURNS varchar(10) CHARSET latin1
     DETERMINISTIC
 BEGIN
 
@@ -7666,14 +10675,14 @@ CASE
 WHEN (in_loc_level = 'N') THEN
   /*  Aggreate National Consumption */
    SELECT sum(issue_balance) INTO retval from (
-         SELECT sum( warehouses_data.issue_balance) as issue_balance
+         SELECT sum( hf_data_master.issue_balance) as issue_balance
          FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data.item_pack_size_id = in_item
-         AND  warehouses.pk_id  =   warehouses_data.warehouse_id  
-         AND MONTH(warehouses_data.reporting_start_date) = in_month 
-         AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master.item_pack_size_id = in_item
+         AND  warehouses.pk_id  =   hf_data_master.warehouse_id  
+         AND MONTH(hf_data_master.reporting_start_date) = in_month 
+         AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND   stakeholders.geo_level_id=c_level
          UNION 
          SELECT sum( hf_data_master.issue_balance) as issue_balance
@@ -7689,13 +10698,13 @@ WHEN (in_loc_level = 'N') THEN
 WHEN (in_loc_level  = 'P') THEN
 /*Aggreate Consumption for selected province*/
   SELECT sum(issue_balance) INTO retval FROM
-   ( SELECT sum( warehouses_data.issue_balance) as issue_balance
+   ( SELECT sum( hf_data_master.issue_balance) as issue_balance
           
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data.item_pack_size_id = in_item 
-				 AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master.item_pack_size_id = in_item 
+				 AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.province_id = in_loc
          AND   stakeholders.geo_level_id=c_level
    UNION
@@ -7712,12 +10721,12 @@ WHEN (in_loc_level  = 'P') THEN
 WHEN (in_loc_level  = 'UP') THEN
 /*Aggreate Consumption for selected province*/
  SELECT sum(issue_balance) INTO retval FROM
-  ( SELECT sum( warehouses_data.issue_balance) as issue_balance
+  ( SELECT sum( hf_data_master.issue_balance) as issue_balance
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data.item_pack_size_id = in_item 
-				 AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master.item_pack_size_id = in_item 
+				 AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
          AND  warehouses.province_id = in_loc
          AND   stakeholders.geo_level_id=c_level
     UNION 
@@ -7733,13 +10742,13 @@ WHEN (in_loc_level  = 'UP') THEN
  WHEN (in_loc_level  = 'V') THEN
 /*Aggreate Consumption for selected province*/
    SELECT sum(issue_balance) INTO retval FROM
-(SELECT sum( warehouses_data.issue_balance) as issue_balance
+(SELECT sum( hf_data_master.issue_balance) as issue_balance
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data.item_pack_size_id = in_item 
-				 AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
-				 AND  warehouses.pk_id  =   warehouses_data.warehouse_id  
+         WHERE  hf_data_master.item_pack_size_id = in_item 
+				 AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
+				 AND  warehouses.pk_id  =   hf_data_master.warehouse_id  
 				 AND  warehouses.district_id in (SELECT
 																					 locations.pk_id
 																				FROM
@@ -7769,14 +10778,14 @@ WHEN (in_loc_level  = 'UP') THEN
 WHEN (in_loc_level  = 'D') THEN
 /*Aggreate Consumption for selected province*/
    SELECT sum(issue_balance) INTO retval FROM
-       (SELECT sum( warehouses_data.issue_balance) as issue_balance
+       (SELECT sum( hf_data_master.issue_balance) as issue_balance
         
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders  ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data.item_pack_size_id = in_item 
-				 AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
-				 AND  warehouses.pk_id  =   warehouses_data.warehouse_id  
+         WHERE  hf_data_master.item_pack_size_id = in_item 
+				 AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
+				 AND  warehouses.pk_id  =   hf_data_master.warehouse_id  
 				 AND  warehouses.district_id = in_loc
          AND   stakeholders.geo_level_id=c_level
    UNION  
@@ -7794,13 +10803,13 @@ WHEN (in_loc_level  = 'D') THEN
 WHEN (in_loc_level  = 'DW') THEN
 /*Aggreate Consumption for selected province*/
 SELECT sum(issue_balance) INTO retval from
-   (SELECT sum( warehouses_data.issue_balance) as issue_balance
+   (SELECT sum( hf_data_master.issue_balance) as issue_balance
          FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders  ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data.item_pack_size_id = in_item 
-				 AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
-				 AND  warehouses.pk_id  =   warehouses_data.warehouse_id  
+         WHERE  hf_data_master.item_pack_size_id = in_item 
+				 AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
+				 AND  warehouses.pk_id  =   hf_data_master.warehouse_id  
 				 AND  warehouses.district_id = in_loc
          AND   stakeholders.geo_level_id=c_level
          UNION 
@@ -7817,14 +10826,14 @@ SELECT sum(issue_balance) INTO retval from
 WHEN (in_loc_level  = 'DP') THEN
 /*Aggreate Consumption for selected province*/
    SELECT sum(issue_balance) INTO retval FROM
-   (SELECT sum( warehouses_data.issue_balance) as issue_balance
+   (SELECT sum( hf_data_master.issue_balance) as issue_balance
          
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data.item_pack_size_id = in_item 
-				 AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
-				 AND  warehouses.pk_id  =   warehouses_data.warehouse_id  
+         WHERE  hf_data_master.item_pack_size_id = in_item 
+				 AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
+				 AND  warehouses.pk_id  =   hf_data_master.warehouse_id  
 				 AND  warehouses.province_id = in_loc
          AND   stakeholders.geo_level_id=c_level
     UNION 
@@ -7842,14 +10851,14 @@ WHEN (in_loc_level  = 'DP') THEN
  WHEN (in_loc_level  = 'H') THEN
 /*Aggreate Consumption for selected province*/
    SELECT sum(issue_balance) INTO retval FROM
-   (SELECT sum( warehouses_data.issue_balance) as issue_balance
+   (SELECT sum( hf_data_master.issue_balance) as issue_balance
         
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data.item_pack_size_id = in_item 
-				 AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
-				 AND  warehouses.pk_id  =   warehouses_data.warehouse_id  
+         WHERE  hf_data_master.item_pack_size_id = in_item 
+				 AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
+				 AND  warehouses.pk_id  =   hf_data_master.warehouse_id  
 				 AND  warehouses.location_id   in (
 																				SELECT
 																					 locations.pk_id
@@ -7881,14 +10890,14 @@ SELECT sum( hf_data_master.issue_balance) as issue_balance
 WHEN (in_loc_level  = 'U') THEN
 /*Aggreate Consumption for selected province*/
    SELECT sum(issue_balance) INTO retval FROM
-(SELECT sum( warehouses_data.issue_balance) as issue_balance
+(SELECT sum( hf_data_master.issue_balance) as issue_balance
           
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders  ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data.item_pack_size_id = in_item 
-				 AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
-				 AND  warehouses.pk_id  =   warehouses_data.warehouse_id  
+         WHERE  hf_data_master.item_pack_size_id = in_item 
+				 AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
+				 AND  warehouses.pk_id  =   hf_data_master.warehouse_id  
 				 AND  warehouses.location_id   = in_loc
          AND   stakeholders.geo_level_id=c_level
   UNION 
@@ -7906,13 +10915,13 @@ WHEN (in_loc_level  = 'U') THEN
 WHEN (in_loc_level  = 'UW') THEN
 /*Aggreate Consumption for selected province*/
    SELECT sum(issue_balance) INTO retval FROM
-(SELECT sum( warehouses_data.issue_balance) as issue_balance
+(SELECT sum( hf_data_master.issue_balance) as issue_balance
         
         FROM warehouses
-         Inner Join  warehouses_data  ON  warehouses.pk_id  =   warehouses_data.warehouse_id 
+         Inner Join  hf_data_master  ON  warehouses.pk_id  =   hf_data_master.warehouse_id 
 				 Inner Join  stakeholders ON  warehouses.stakeholder_office_id =   stakeholders.pk_id
-         WHERE  warehouses_data.item_pack_size_id = in_item 
-				 AND MONTH(warehouses_data.reporting_start_date) = in_month AND YEAR(warehouses_data.reporting_start_date) = in_year
+         WHERE  hf_data_master.item_pack_size_id = in_item 
+				 AND MONTH(hf_data_master.reporting_start_date) = in_month AND YEAR(hf_data_master.reporting_start_date) = in_year
 				 AND  warehouses.pk_id  = in_loc 
          AND   stakeholders.geo_level_id=c_level
 UNION 
@@ -7944,7 +10953,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetConsumptionAVG`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetConsumptionAVG`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(20),`in_stk` varchar(255),`in_prov` int,`in_dist` varchar(8)) RETURNS double
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetConsumptionAVG`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(20),`in_stk` varchar(255),`in_prov` int,`in_dist` varchar(8)) RETURNS double
     DETERMINISTIC
 BEGIN
 
@@ -8236,7 +11245,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetConsumptionAVGMap`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetConsumptionAVGMap`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(20),`in_stk` varchar(255),`in_prov` int,`in_dist` varchar(8)) RETURNS double
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetConsumptionAVGMap`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(20),`in_stk` varchar(255),`in_prov` int,`in_dist` varchar(8)) RETURNS double
     DETERMINISTIC
 BEGIN
 
@@ -8497,7 +11506,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetData`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetData`(`in_col` varchar(255),`in_rg` varchar(1),`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` int,`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS varchar(255) CHARSET latin1
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetData`(`in_col` varchar(255),`in_rg` varchar(1),`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` int,`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS varchar(255) CHARSET latin1
     DETERMINISTIC
 BEGIN
 /*
@@ -8769,7 +11778,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetMapConsumption`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`192.168.1.232` FUNCTION `REPgetMapConsumption`(`in_month` int,`in_year` int,`in_item` int,`in_stk` int,`in_loc_level` varchar(8),`in_loc` int) RETURNS varchar(10) CHARSET latin1
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetMapConsumption`(`in_month` int,`in_year` int,`in_item` int,`in_stk` int,`in_loc_level` varchar(8),`in_loc` int) RETURNS varchar(10) CHARSET latin1
     DETERMINISTIC
 BEGIN
 
@@ -8940,7 +11949,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetMapData`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`192.168.1.232` FUNCTION `REPgetMapData`(`in_col` varchar(255),`in_rg` varchar(1),`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` int,`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS varchar(255) CHARSET latin1
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetMapData`(`in_col` varchar(255),`in_rg` varchar(1),`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` int,`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS varchar(255) CHARSET latin1
     DETERMINISTIC
 BEGIN
 /*
@@ -9212,7 +12221,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetMOS`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetMOS`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(20),`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS varchar(15) CHARSET latin1
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetMOS`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(20),`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS varchar(15) CHARSET latin1
     DETERMINISTIC
 BEGIN
 
@@ -9454,7 +12463,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetReportingRateStr`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetReportingRateStr`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(8),`in_WF` varchar(8),`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS varchar(20) CHARSET latin1
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetReportingRateStr`(`in_type` varchar(8),`in_month` int,`in_year` int,`in_item` varchar(8),`in_WF` varchar(8),`in_stk` int,`in_prov` int,`in_dist` varchar(8)) RETURNS varchar(20) CHARSET latin1
     DETERMINISTIC
 BEGIN
 
@@ -9606,7 +12615,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetRR`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetRR`(in_lvl VARCHAR(10), in_start_date DATE, in_end_date DATE, in_stk INT, in_item INT, in_loc INT, aggregation INT) RETURNS varchar(300) CHARSET latin1
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetRR`(in_lvl VARCHAR(10), in_start_date DATE, in_end_date DATE, in_stk INT, in_item INT, in_loc INT, aggregation INT) RETURNS varchar(300) CHARSET latin1
     DETERMINISTIC
 BEGIN
 
@@ -9890,7 +12899,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetRR_copy`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetRR_copy`(in_lvl VARCHAR(10), in_start_date DATE, in_end_date DATE, in_stk INT, in_item INT, in_loc INT, aggregation INT) RETURNS varchar(300) CHARSET latin1
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetRR_copy`(in_lvl VARCHAR(10), in_start_date DATE, in_end_date DATE, in_stk INT, in_item INT, in_loc INT, aggregation INT) RETURNS varchar(300) CHARSET latin1
     DETERMINISTIC
 BEGIN
 
@@ -9918,13 +12927,13 @@ CASE
 				FROM
 					locations AS UC
 				INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-				INNER JOIN warehouses_data ON warehouses.pk_id = warehouses_data.warehouse_id
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
 				WHERE
 					UC.geo_level_id = 6
 				AND warehouses.stakeholder_id = in_stk
-				AND warehouses_data.reporting_start_date BETWEEN in_start_date AND in_end_date
-				AND warehouses_data.issue_balance IS NOT NULL
-				AND warehouses_data.item_pack_size_id = in_item;
+				AND hf_data_master.reporting_start_date BETWEEN in_start_date AND in_end_date
+				AND hf_data_master.issue_balance IS NOT NULL
+				AND hf_data_master.item_pack_size_id = in_item;
 
 			WHEN (in_lvl = 'P') THEN
 				SELECT
@@ -9942,13 +12951,13 @@ CASE
 				FROM
 					locations AS UC
 				INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-				INNER JOIN warehouses_data ON warehouses.pk_id = warehouses_data.warehouse_id
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
 				WHERE
 					UC.geo_level_id = 6
 				AND warehouses.stakeholder_id = in_stk
-				AND warehouses_data.reporting_start_date BETWEEN in_start_date AND in_end_date
-				AND warehouses_data.issue_balance IS NOT NULL
-				AND warehouses_data.item_pack_size_id = in_item
+				AND hf_data_master.reporting_start_date BETWEEN in_start_date AND in_end_date
+				AND hf_data_master.issue_balance IS NOT NULL
+				AND hf_data_master.item_pack_size_id = in_item
 				AND UC.province_id = in_loc;
 
 			WHEN (in_lvl = 'D') THEN
@@ -9967,13 +12976,13 @@ CASE
 				FROM
 					locations AS UC
 				INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-				INNER JOIN warehouses_data ON warehouses.pk_id = warehouses_data.warehouse_id
+				INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
 				WHERE
 					UC.geo_level_id = 6
 				AND warehouses.stakeholder_id = in_stk
-				AND warehouses_data.reporting_start_date BETWEEN in_start_date AND in_end_date
-				AND warehouses_data.issue_balance IS NOT NULL
-				AND warehouses_data.item_pack_size_id = in_item
+				AND hf_data_master.reporting_start_date BETWEEN in_start_date AND in_end_date
+				AND hf_data_master.issue_balance IS NOT NULL
+				AND hf_data_master.item_pack_size_id = in_item
 				AND UC.district_id = in_loc;
 
 		END CASE;
@@ -9997,15 +13006,15 @@ CASE
 					FROM
 						locations AS UC
 					INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-					INNER JOIN warehouses_data ON warehouses.pk_id = warehouses_data.warehouse_id
+					INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
 					WHERE
 						UC.geo_level_id = 6
 					AND warehouses.stakeholder_id = in_stk
-					AND warehouses_data.reporting_start_date BETWEEN in_start_date AND in_end_date
-					AND warehouses_data.issue_balance IS NOT NULL
-					AND warehouses_data.item_pack_size_id = in_item
+					AND hf_data_master.reporting_start_date BETWEEN in_start_date AND in_end_date
+					AND hf_data_master.issue_balance IS NOT NULL
+					AND hf_data_master.item_pack_size_id = in_item
 					GROUP BY
-						warehouses_data.reporting_start_date) A;
+						hf_data_master.reporting_start_date) A;
 
 			WHEN (in_lvl = 'P') THEN
 				SELECT
@@ -10024,16 +13033,16 @@ CASE
 					FROM
 						locations AS UC
 					INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-					INNER JOIN warehouses_data ON warehouses.pk_id = warehouses_data.warehouse_id
+					INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
 					WHERE
 						UC.geo_level_id = 6
 					AND warehouses.stakeholder_id = in_stk
-					AND warehouses_data.reporting_start_date BETWEEN in_start_date AND in_end_date
-					AND warehouses_data.issue_balance IS NOT NULL
-					AND warehouses_data.item_pack_size_id = in_item
+					AND hf_data_master.reporting_start_date BETWEEN in_start_date AND in_end_date
+					AND hf_data_master.issue_balance IS NOT NULL
+					AND hf_data_master.item_pack_size_id = in_item
 					AND UC.province_id = in_loc
 					GROUP BY
-						warehouses_data.reporting_start_date) A;
+						hf_data_master.reporting_start_date) A;
 
 			WHEN (in_lvl = 'D') THEN
 				SELECT
@@ -10052,16 +13061,16 @@ CASE
 					FROM
 						locations AS UC
 					INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-					INNER JOIN warehouses_data ON warehouses.pk_id = warehouses_data.warehouse_id
+					INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
 					WHERE
 						UC.geo_level_id = 6
 					AND warehouses.stakeholder_id = in_stk
-					AND warehouses_data.reporting_start_date BETWEEN in_start_date AND in_end_date
-					AND warehouses_data.issue_balance IS NOT NULL
-					AND warehouses_data.item_pack_size_id = in_item
+					AND hf_data_master.reporting_start_date BETWEEN in_start_date AND in_end_date
+					AND hf_data_master.issue_balance IS NOT NULL
+					AND hf_data_master.item_pack_size_id = in_item
 					AND UC.district_id = in_loc
 					GROUP BY
-						warehouses_data.reporting_start_date) A;
+						hf_data_master.reporting_start_date) A;
 
 		END CASE;
 
@@ -10078,7 +13087,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetTotalUCs`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetTotalUCs`(in_lvl varchar(8), in_loc INT, in_stk INT) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetTotalUCs`(in_lvl varchar(8), in_loc INT, in_stk INT) RETURNS int(11)
     DETERMINISTIC
 BEGIN
 
@@ -10153,7 +13162,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetTransWHData`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `REPgetTransWHData`(in_type INTEGER,  in_month INTEGER, in_year INTEGER, in_item VARCHAR(20), in_wh INTEGER) RETURNS double
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetTransWHData`(in_type INTEGER,  in_month INTEGER, in_year INTEGER, in_item VARCHAR(20), in_wh INTEGER) RETURNS double
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -10168,10 +13177,13 @@ BEGIN
 	FROM
 		stock_master
 	INNER JOIN  stock_detail ON   stock_detail.stock_master_id =  stock_master.pk_id
-	INNER JOIN stock_batch ON   stock_detail.stock_batch_id = stock_batch.pk_id
+	INNER JOIN stock_batch_warehouses ON   stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+  INNER JOIN stock_batch ON   stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+  INNER JOIN pack_info ON   stock_batch.pack_info_id = pack_info.pk_id
+  INNER JOIN stakeholder_item_pack_sizes ON   pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 	WHERE
 		stock_master.to_warehouse_id = in_wh
-	AND stock_batch.item_pack_size_id = in_item
+	AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
 	AND MONTH ( stock_master.transaction_date) = in_month
 	AND YEAR ( stock_master.transaction_date) = in_year AND
 stock_master.transaction_type_id = 1;
@@ -10184,10 +13196,14 @@ stock_master.transaction_type_id = 1;
 	FROM
 		stock_master
 	INNER JOIN  stock_detail ON   stock_detail.stock_master_id =  stock_master.pk_id
-	INNER JOIN stock_batch ON   stock_detail.stock_batch_id = stock_batch.pk_id
+	INNER JOIN stock_batch_warehouses ON   stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+  INNER JOIN stock_batch ON   stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+  INNER JOIN pack_info ON   stock_batch.pack_info_id = pack_info.pk_id
+  INNER JOIN stakeholder_item_pack_sizes ON   pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+	
 	WHERE
 		stock_master.from_warehouse_id = in_wh
-	AND stock_batch.item_pack_size_id = in_item
+	AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
 	AND MONTH ( stock_master.transaction_date) = in_month
 	AND YEAR ( stock_master.transaction_date) = in_year AND
 stock_master.transaction_type_id = 2;
@@ -10199,10 +13215,14 @@ WHEN (in_type = 3) THEN
 	FROM
 		stock_master
 	INNER JOIN  stock_detail ON   stock_detail.stock_master_id =  stock_master.pk_id
-	INNER JOIN stock_batch ON   stock_detail.stock_batch_id = stock_batch.pk_id
+	INNER JOIN stock_batch_warehouses ON   stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+  INNER JOIN stock_batch ON   stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+  INNER JOIN pack_info ON   stock_batch.pack_info_id = pack_info.pk_id
+  INNER JOIN stakeholder_item_pack_sizes ON   pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+	
 	WHERE
 		stock_master.from_warehouse_id = in_wh
-	AND stock_batch.item_pack_size_id = in_item
+	AND stakeholder_item_pack_sizes.item_pack_size_id = in_item
 	AND MONTH ( stock_master.transaction_date) = in_month
 	AND YEAR ( stock_master.transaction_date) = in_year AND
 stock_master.transaction_type_id > 2;
@@ -10221,7 +13241,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPgetWastage`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPgetWastage`(in_lvl VARCHAR(10), in_start_date DATE, in_end_date DATE, in_stk INT, in_item INT, in_loc INT, aggregation INT) RETURNS varchar(300) CHARSET latin1
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPgetWastage`(in_lvl VARCHAR(10), in_start_date DATE, in_end_date DATE, in_stk INT, in_item INT, in_loc INT, aggregation INT) RETURNS varchar(300) CHARSET latin1
     DETERMINISTIC
 BEGIN
 
@@ -10423,7 +13443,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPUpdateCapacity`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPUpdateCapacity`(in_wh INTEGER) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPUpdateCapacity`(in_wh INTEGER) RETURNS int(11)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -10464,7 +13484,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPUpdateCarryForward`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPUpdateCarryForward`(in_rpt_date DATE, in_item INTEGER, in_wh INTEGER) RETURNS int(4)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPUpdateCarryForward`(in_rpt_date DATE, in_item INTEGER, in_wh INTEGER) RETURNS int(4)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -10479,36 +13499,36 @@ DECLARE wID INTEGER;
 
 # Get previous month Closing Balance
 SELECT
-	warehouses_data.closing_balance INTO preMonthCB
+	hf_data_master.closing_balance INTO preMonthCB
 FROM
-	warehouses_data
+	hf_data_master
 WHERE
-	warehouses_data.warehouse_id = in_wh
-AND warehouses_data.item_pack_size_id = in_item
-AND warehouses_data.reporting_start_date = DATE_ADD(in_rpt_date, INTERVAL -1 MONTH) LIMIT 1;
+	hf_data_master.warehouse_id = in_wh
+AND hf_data_master.item_pack_size_id = in_item
+AND hf_data_master.reporting_start_date = DATE_ADD(in_rpt_date, INTERVAL -1 MONTH) LIMIT 1;
 
 # Get values of the month passed
 SELECT
-	warehouses_data.pk_id,
-	COALESCE(warehouses_data.opening_balance, NULL, 0),
-	COALESCE(warehouses_data.received_balance, NULL, 0),
-	COALESCE(warehouses_data.issue_balance, NULL, 0),
-	COALESCE(warehouses_data.closing_balance, NULL, 0),
-	COALESCE(warehouses_data.wastages, NULL, 0)
+	hf_data_master.pk_id,
+	COALESCE(hf_data_master.opening_balance, NULL, 0),
+	COALESCE(hf_data_master.received_balance, NULL, 0),
+	COALESCE(hf_data_master.issue_balance, NULL, 0),
+	COALESCE(hf_data_master.closing_balance, NULL, 0),
+	COALESCE(hf_data_master.wastages, NULL, 0)
 INTO wID, OB, receive, issue, CB, wastages
 FROM
-	warehouses_data
+	hf_data_master
 WHERE
-	warehouses_data.warehouse_id = in_wh
-AND warehouses_data.item_pack_size_id = in_item
-AND warehouses_data.reporting_start_date = in_rpt_date LIMIT 1;
+	hf_data_master.warehouse_id = in_wh
+AND hf_data_master.item_pack_size_id = in_item
+AND hf_data_master.reporting_start_date = in_rpt_date LIMIT 1;
 
 SET CB = (preMonthCB + receive) - (issue + wastages);
 
 # Check if no data is entered against that product
 IF (wID IS NULL) THEN
 
-	INSERT INTO warehouses_data SET
+	INSERT INTO hf_data_master SET
 	`reporting_start_date` = in_rpt_date,	
 	`item_pack_size_id` = in_item,
 	`warehouse_id` = in_wh,	
@@ -10517,7 +13537,7 @@ IF (wID IS NULL) THEN
 
 ELSE
 	# Run update query
-	UPDATE warehouses_data SET
+	UPDATE hf_data_master SET
 		`opening_balance` = preMonthCB,
 		`received_balance` = receive,
 		`issue_balance` = issue,
@@ -10539,7 +13559,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPUpdateData`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `REPUpdateData`(in_month INTEGER, in_year INTEGER, in_item INTEGER, in_wh INTEGER, in_created_by INTEGER) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPUpdateData`(in_month INTEGER, in_year INTEGER, in_item INTEGER, in_wh INTEGER, in_created_by INTEGER) RETURNS int(11)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -10570,9 +13590,11 @@ SET adjustment = REPgetTransWHData(3,in_month, in_year, in_item, in_wh) * noofdo
 -- Calculating Closing balance
 SET closingb = (openingb + receive + adjustment) - issue;
 -- Deleting old record
-DELETE from  warehouses_data  WHERE  MONTH(reporting_start_date) =in_month and YEAR(reporting_start_date)=in_year  and  item_pack_size_id=in_item and  warehouse_id =in_wh;
+DELETE hf_data_detail.* from  hf_data_detail,hf_data_master  WHERE hf_data_master.pk_id = hf_data_detail.hf_data_master_id AND MONTH(hf_data_master.reporting_start_date) =in_month and YEAR(hf_data_master.reporting_start_date)=in_year  and  hf_data_master.item_pack_size_id=in_item and  warehouse_id =in_wh;
+
+DELETE from  hf_data_master  WHERE  MONTH(reporting_start_date) =in_month and YEAR(reporting_start_date)=in_year  and  item_pack_size_id=in_item and  warehouse_id =in_wh;
 -- Inserting new record
-INSERT into  warehouses_data  (item_pack_size_id,warehouse_id,opening_balance,received_balance,issue_balance,closing_balance,adjustments,reporting_start_date,created_by,created_date) 
+INSERT into  hf_data_master  (item_pack_size_id,warehouse_id,opening_balance,received_balance,issue_balance,closing_balance,adjustments,reporting_start_date,created_by,created_date) 
 VALUES(in_item,in_wh,openingb,receive,issue,closingb,adjustment,CONCAT(in_year, '-', in_month, '-01'),in_created_by,DATE(NOW()));
 
 return 1;
@@ -10586,7 +13608,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPUpdateDataCampaign`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPUpdateDataCampaign`(in_date DATE, in_item INTEGER, in_wh INTEGER, in_created_by INTEGER, in_c_id INTEGER) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPUpdateDataCampaign`(in_date DATE, in_item INTEGER, in_wh INTEGER, in_created_by INTEGER, in_c_id INTEGER) RETURNS int(11)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -10651,7 +13673,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `REPUpdateRequirement`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `REPUpdateRequirement`(in_wh INTEGER) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `REPUpdateRequirement`(in_wh INTEGER) RETURNS int(11)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
@@ -10749,7 +13771,7 @@ DELIMITER ;
 -- ----------------------------
 DROP FUNCTION IF EXISTS `UTILgetLimitParam`;
 DELIMITER ;;
-CREATE DEFINER=`vlmis`@`%` FUNCTION `UTILgetLimitParam`(`in_month` int,`in_year` int) RETURNS int(11)
+CREATE DEFINER=`vlmisr2user`@`localhost` FUNCTION `UTILgetLimitParam`(`in_month` int,`in_year` int) RETURNS int(11)
     DETERMINISTIC
 BEGIN 
   DECLARE retval INTEGER;  
@@ -10765,35 +13787,35 @@ DELIMITER ;
 DROP TRIGGER IF EXISTS `Add Placements`;
 DELIMITER ;;
 CREATE TRIGGER `Add Placements` AFTER INSERT ON `placements` FOR EACH ROW BEGIN
-    CALL PlacementSummary(NEW.placement_location_id,NEW.stock_batch_id);
+    CALL PlacementSummary(NEW.placement_location_id,NEW.stock_batch_warehouse_id);
 END
 ;;
 DELIMITER ;
 DROP TRIGGER IF EXISTS `Update Placements`;
 DELIMITER ;;
 CREATE TRIGGER `Update Placements` AFTER UPDATE ON `placements` FOR EACH ROW BEGIN
-        CALL PlacementSummary(NEW.placement_location_id,NEW.stock_batch_id);
+        CALL PlacementSummary(NEW.placement_location_id,NEW.stock_batch_warehouse_id);
 END
 ;;
 DELIMITER ;
 DROP TRIGGER IF EXISTS `Delete Placements`;
 DELIMITER ;;
 CREATE TRIGGER `Delete Placements` AFTER DELETE ON `placements` FOR EACH ROW BEGIN
-    CALL PlacementSummary(OLD.placement_location_id,OLD.stock_batch_id);
+    CALL PlacementSummary(OLD.placement_location_id,OLD.stock_batch_warehouse_id);
 END
 ;;
 DELIMITER ;
 DROP TRIGGER IF EXISTS `Add Stock Batch`;
 DELIMITER ;;
-CREATE TRIGGER `Add Stock Batch` AFTER INSERT ON `stock_batch` FOR EACH ROW BEGIN
+CREATE TRIGGER `Add Stock Batch` AFTER INSERT ON `stock_batch_warehouses` FOR EACH ROW BEGIN
     CALL REPStockBatchHistory(NEW.pk_id, 1);
 END
 ;;
 DELIMITER ;
 DROP TRIGGER IF EXISTS `Update Stock Batch`;
 DELIMITER ;;
-CREATE TRIGGER `Update Stock Batch` AFTER UPDATE ON `stock_batch` FOR EACH ROW BEGIN
-    IF (NEW.number != OLD.number OR NEW.batch_master_id != OLD.batch_master_id OR NEW.expiry_date != OLD.expiry_date OR NEW.unit_price != OLD.unit_price OR NEW.production_date != OLD.production_date OR NEW.item_pack_size_id != OLD.item_pack_size_id OR NEW.vvm_type_id != OLD.vvm_type_id OR NEW.warehouse_id != OLD.warehouse_id OR NEW.stakeholder_item_pack_size_id != OLD.stakeholder_item_pack_size_id) THEN
+CREATE TRIGGER `Update Stock Batch` AFTER UPDATE ON `stock_batch_warehouses` FOR EACH ROW BEGIN
+    IF (NEW.stock_batch_id != OLD.stock_batch_id OR NEW.warehouse_id != OLD.warehouse_id) THEN
         CALL REPStockBatchHistory(NEW.pk_id, 2);
     END IF;
 END
@@ -10801,7 +13823,7 @@ END
 DELIMITER ;
 DROP TRIGGER IF EXISTS `Delete Stock Batch`;
 DELIMITER ;;
-CREATE TRIGGER `Delete Stock Batch` BEFORE DELETE ON `stock_batch` FOR EACH ROW BEGIN
+CREATE TRIGGER `Delete Stock Batch` BEFORE DELETE ON `stock_batch_warehouses` FOR EACH ROW BEGIN
     CALL REPStockBatchHistory(OLD.pk_id, 3);
 END
 ;;
@@ -10810,6 +13832,7 @@ DROP TRIGGER IF EXISTS `Add Stock Detail`;
 DELIMITER ;;
 CREATE TRIGGER `Add Stock Detail` AFTER INSERT ON `stock_detail` FOR EACH ROW BEGIN
     CALL REPStockDetailHistory(NEW.pk_id, 1);
+    CALL REPAdjustQty(NEW.stock_batch_warehouse_id);
 END
 ;;
 DELIMITER ;
@@ -10817,6 +13840,7 @@ DROP TRIGGER IF EXISTS `Update Stock Detail`;
 DELIMITER ;;
 CREATE TRIGGER `Update Stock Detail` AFTER UPDATE ON `stock_detail` FOR EACH ROW BEGIN
     CALL REPStockDetailHistory(NEW.pk_id, 2);
+    CALL REPAdjustQty(OLD.stock_batch_warehouse_id);
 END
 ;;
 DELIMITER ;
@@ -10830,7 +13854,7 @@ DELIMITER ;
 DROP TRIGGER IF EXISTS `Adjust Quantity`;
 DELIMITER ;;
 CREATE TRIGGER `Adjust Quantity` AFTER DELETE ON `stock_detail` FOR EACH ROW BEGIN
-    CALL REPAdjustQty(OLD.stock_batch_id);
+	CALL REPAdjustQty(OLD.stock_batch_warehouse_id);
 END
 ;;
 DELIMITER ;

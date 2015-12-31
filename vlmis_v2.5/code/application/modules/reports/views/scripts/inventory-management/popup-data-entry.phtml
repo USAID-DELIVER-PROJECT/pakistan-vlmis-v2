@@ -158,10 +158,10 @@ foreach ($query_1 as $row) {
 
                                 <?php
                                 if ($this->is_new_report == 1) {
-                                    $row2 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($wh_id, $RptDate, $result['pk_id'], '145');
+                                    $row2 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($wh_id, $RptDate, $result['pk_id'], 'Model_ListDetail::AGE_0_11');
                                 } else {
-                                    $row2 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($wh_id, $RptDate, $result['pk_id'], '145');
-                                    $row3 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($wh_id, $RptDate, $result['pk_id'], '146');
+                                    $row2 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($wh_id, $RptDate, $result['pk_id'], 'Model_ListDetail::AGE_0_11');
+                                    $row3 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($wh_id, $RptDate, $result['pk_id'], 'Model_ListDetail::AGE_12_23');
                                 }
 
                                 $counter = 1;

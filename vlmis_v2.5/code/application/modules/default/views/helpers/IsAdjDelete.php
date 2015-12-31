@@ -11,7 +11,7 @@ class Zend_View_Helper_IsAdjDelete extends Zend_View_Helper_Abstract {
         $str_sql = $em->createQueryBuilder()
                 ->select("sb.pkId as stock_batch_id,DATE_FORMAT(sm.transactionDate,'%Y-%m-%d') transactionDate")
                 ->from('StockDetail', 'sd')
-                ->join('sd.stockBatch', 'sb')
+                ->join('sd.stockBatchWarehouse', 'sb')
                 ->join('sd.stockMaster', 'sm')
                 //->where("sm.transactionType NOT IN (".Model_StockMaster::PURPOSE_POSITIVE.",".Model_StockMaster::PURPOSE_NEGATIVE.")")
                 ->andWhere("sm.pkId = $master_id");
@@ -21,7 +21,7 @@ class Zend_View_Helper_IsAdjDelete extends Zend_View_Helper_Abstract {
             $str_sql2 = $em->createQueryBuilder()
                     ->select("sd.pkId")
                     ->from('StockDetail', 'sd')
-                    ->join('sd.stockBatch', 'sb')
+                    ->join('sd.stockBatchWarehouse', 'sb')
                     ->join('sd.stockMaster', 'sm')
                     ->join('sm.transactionType', 'tt')
                     ->where("DATE_FORMAT(sm.transactionDate,'%Y-%m-%d') >= '" . $row[0]['transactionDate'] . "' ")

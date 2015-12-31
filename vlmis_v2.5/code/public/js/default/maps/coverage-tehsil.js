@@ -324,8 +324,8 @@ function drawGrid(){
     dataDownload.length = 0;
     jsonData.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>District</th><th>Tehsil</th><th>Consumption</th><th>Target</th><th>Coverage(%)</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>District</th><th>Tehsil</th><th>Consumption</th><th>Target</th><th class='center' colspan='2'>Coverage(%)</th></thead>";
     for (var i = 0; i < features.length; i++) {
         table += "<tr><td>" + features[i].attributes.district + "</td><td>" + features[i].attributes.tehsil + "</td><td align='right'>" + features[i].attributes.consumption.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td><td align='right'>" + features[i].attributes.target.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td><td align='right'>" + features[i].attributes.coverage + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
         jsonData.push({
@@ -353,8 +353,8 @@ function gridFilter(color){
     $("#attributeGrid").html("");
     dataDownload.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>District</th><th>Tehsil</th><th>Consumption</th><th>Target</th><th>Coverage(%)</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>District</th><th>Tehsil</th><th>Consumption</th><th>Target</th><th class='center' colspan='2'>Coverage(%)</th></thead>";
     for (var i = 0; i < features.length; i++) {
         if (features[i].attributes.color == color) {
            table += "<tr><td>" + features[i].attributes.district + "</td><td>" + features[i].attributes.tehsil + "</td><td align='right'>" + features[i].attributes.consumption.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td><td align='right'>" + features[i].attributes.target.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td><td align='right'>" + features[i].attributes.coverage + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
@@ -417,10 +417,10 @@ function districtCountGraph() {
     if($('#dist').val()!="all"){name = $("#dist option:selected").text() }
     else{name = $("#prov option:selected").text()}
     var revenueChart = new FusionCharts({
-        type: 'column3D',
+        type: 'column2D',
         renderAt: 'chart-container',
         width: '100%',
-        height: '350px',
+        height: '98%',
         dataFormat: 'json',
         dataSource: {
             "chart": {

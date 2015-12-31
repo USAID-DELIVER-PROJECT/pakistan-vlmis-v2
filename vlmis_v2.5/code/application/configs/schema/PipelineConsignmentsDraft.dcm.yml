@@ -54,13 +54,13 @@ PipelineConsignmentsDraft:
       nullable: false
       column: modified_date
   oneToOne:
-    modifiedBy:
-      targetEntity: Users
+    manufacturer:
+      targetEntity: PackInfo
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        modified_by:
+        manufacturer_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     stakeholderActivity:
@@ -72,6 +72,15 @@ PipelineConsignmentsDraft:
         stakeholder_activity_id:
           referencedColumnName: pk_id
       orphanRemoval: false
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
     itemPackSize:
       targetEntity: ItemPackSizes
       cascade: {  }
@@ -79,15 +88,6 @@ PipelineConsignmentsDraft:
       inversedBy: null
       joinColumns:
         item_pack_size_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    manufacturer:
-      targetEntity: StakeholderItemPackSizes
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        manufacturer_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     vvmType:
@@ -126,13 +126,13 @@ PipelineConsignmentsDraft:
         created_by:
           referencedColumnName: pk_id
       orphanRemoval: false
-    stockBatch:
-      targetEntity: StockBatch
+    stockBatchWarehouse:
+      targetEntity: StockBatchWarehouses
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        stock_batch_id:
+        stock_batch_warehouse_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     transactionType:

@@ -153,11 +153,6 @@ class Iadmin_ManageRolesController extends App_Controller_Base {
                 $resource_id = $this->_em->find('Resources', $form->resource->getValue());
                 $rr->setResource($resource_id);
                 $rr->setPermission($form->permission->getValue());
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $rr->setCreatedBy($created_by);
-                $rr->setCreatedDate(App_Tools_Time::now());
-                $rr->setModifiedBy($created_by);
-                $rr->setModifiedDate(App_Tools_Time::now());
                 $this->_em->persist($rr);
                 $this->_em->flush();
             }

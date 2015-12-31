@@ -48,12 +48,13 @@ class StockController extends App_Controller_Base {
         }
 
         if ($this->_request->isPost()) {
-            $em = Zend_Registry::get('doctrine');
-            $em->getConnection()->beginTransaction();
-            try {
-                if (isset($this->_request->stockid) && !empty($this->_request->stockid)) {
-
+            if (isset($this->_request->stockid) && !empty($this->_request->stockid)) {
+                $em = Zend_Registry::get('doctrine');
+                $em->getConnection()->beginTransaction();
+                try {
                     $master_affacted = $stock_master->updateStockMasterTemp($this->_request->stockid, $this->_request->comments);
+                    //echo $master_affacted;
+                    // exit;
                     $detail_affacted = $stock_detail->updateStockDetailTemp($this->_request->stockid);
 
                     //Save Data in warehouse_data table
@@ -64,8 +65,15 @@ class StockController extends App_Controller_Base {
                     $this->view->master_id = $this->_request->stockid;
 
                     $em->getConnection()->commit();
-                } elseif ($form->isValid($this->_request->getPost())) {
-
+                } catch (Exception $e) {
+                    $em->getConnection()->rollback();
+                    $em->close();
+                    App_FileLogger::info($e);
+                }
+            } elseif ($form->isValid($this->_request->getPost())) {
+                $em = Zend_Registry::get('doctrine');
+                $em->getConnection()->beginTransaction();
+                try {
                     $recedit = $this->_request->getPost('rcvedit', '');
                     if ($recedit == "Yes") {
                         $d_id = $this->_request->getPost('detailid');
@@ -80,6 +88,7 @@ class StockController extends App_Controller_Base {
                     }
 
                     $temp = $form->getValues();
+
                     $data = array_merge($temp, $form_values);
                     $data['edit_type'] = $red_type;
 
@@ -99,7 +108,8 @@ class StockController extends App_Controller_Base {
                     $str_sql->execute();
 
                     $detail_id = $stock_detail->addStockDetail($data);
-
+                    // echo $detail_id;
+                    // exit;
                     if ($detail_id) {
                         $stock_batch->autoRunningLEFOBatch($form->getValue('item_id'));
                     }
@@ -133,13 +143,13 @@ class StockController extends App_Controller_Base {
                     }
                     $em->getConnection()->commit();
                     $this->redirect("/stock/receive-supplier");
+                } catch (Exception $e) {
+                    $em->getConnection()->rollback();
+                    $em->close();
+                    App_FileLogger::info($e);
                 }
-            } catch (Exception $e) {
-                $em->getConnection()->rollback();
-                $em->close();
-                //echo $e->getMessage();
-                App_FileLogger::info($e);
             }
+
 
             $arr_data['stock_id'] = (!empty($stock_id) ? $stock_id : "");
             if (!empty($stock_id) || !empty($batch_id) || !empty($master_affacted) || !empty($detail_affacted)) {
@@ -170,7 +180,8 @@ class StockController extends App_Controller_Base {
         if ($temp_stock_list != false) {
 
             $time_arr = explode(' ', $temp_stock_list[0]['transaction_date']);
-            $time = date('H:i A', strtotime($time_arr[1] . $time_arr[2]));
+            //          $time = date('H:i A', strtotime($time_arr[1] . $time_arr[2])); // Undefined offset: 2 in $time_arr[2]
+            $time = date('H:i A', strtotime($time_arr[1]));
 
             $form->transaction_number->setValue($temp_stock_list[0]['transaction_number']);
             $form->transaction_date->setValue(App_Controller_Functions::dateToUserFormat($time_arr[0]) . ' ' . $time);
@@ -209,12 +220,12 @@ class StockController extends App_Controller_Base {
                     $form->activity_id->setValue($stakeholder_act->getPkId());
                 }
 
-                if ($obj_rec->getStockBatch()->getItemPackSize()->getItemCategory()->getPkId() == 1 || $obj_rec->getStockBatch()->getItemPackSize()->getItemCategory()->getPkId() == 4) {
+                if ($obj_rec->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemCategory()->getPkId() == 1 || $obj_rec->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemCategory()->getPkId() == 4) {
                     $form->vvm_type_id->setValue($obj_rec->getStockBatch()->getVvmType()->getPkId());
                 }
             }
-            $form->item_id->setValue($obj_rec->getStockBatch()->getItemPackSize()->getPkId());
-            $form->getManufacturerByProductId($obj_rec->getStockBatch()->getItemPackSize()->getPkId());
+            $form->item_id->setValue($obj_rec->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId());
+            $form->getManufacturerByProductId($obj_rec->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId());
             $stakeholder_item_pack_size = $obj_rec->getStockBatch()->getStakeholderItemPackSize();
             if (count($stakeholder_item_pack_size) > 0) {
                 $form->manufacturer_id->setValue($stakeholder_item_pack_size->getPkId());
@@ -236,7 +247,7 @@ class StockController extends App_Controller_Base {
             }
 
             $this->view->rcvedit = true;
-            $this->view->prod_cat = $obj_rec->getStockBatch()->getItemPackSize()->getItemCategory()->getPkId();
+            $this->view->prod_cat = $obj_rec->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemCategory()->getPkId();
             $this->view->detail_id = $this->_request->id;
         }
 // Edit Receive End
@@ -420,7 +431,7 @@ class StockController extends App_Controller_Base {
     }
 
     public function monthlyConsumptionAction() {
-        if ($this->_identity->getProvinceId() == 2) {
+        if ($this->_identity->getProvinceId() == 2 || $this->_identity->getProvinceId() == 3) {
             $this->redirect("/stock/monthly-consumption2");
         }
         $form = new Form_MonthlyConsumption();
@@ -517,7 +528,7 @@ class StockController extends App_Controller_Base {
     }
 
     public function monthlyConsumption2Action() {
-        if ($this->_identity->getProvinceId() != 2) {
+        if ($this->_identity->getProvinceId() != 2 && $this->_identity->getProvinceId() != 3) {
             $this->redirect("/stock/monthly-consumption");
         }
         $form = new Form_MonthlyConsumption();
@@ -527,7 +538,6 @@ class StockController extends App_Controller_Base {
         $this->view->warehouses = $warehouses;
 
         if (isset($this->_request->do) && !empty($this->_request->do)) {
-
             $temp = $this->_request->do;
             //App_Controller_Functions::pr(base64_decode(substr($temp, 1, strlen($temp) - 1)));
             $warehouse_data = new Model_HfDataMaster();
@@ -580,9 +590,9 @@ class StockController extends App_Controller_Base {
             $warehouse = $this->_em->getRepository("Warehouses")->find($arr_temp['wh_id']);
             $warehouse_name = $warehouse->getWarehouseName();
 
-            $form->monthly_report->setMultiOptions($arr_combo);
-            $form->monthly_report->setValue($temp);
-
+            // $form->monthly_report->setMultiOptions($arr_combo);
+            //$form->monthly_report->setValue($temp);
+            $this->view->monthly_report = $temp;
             $this->view->rpt_date = $arr_temp['rpt_date'];
             $this->view->wh_id = $arr_temp['wh_id'];
 
@@ -601,7 +611,6 @@ class StockController extends App_Controller_Base {
         if ($this->_request->isPost()) {
             $data = $this->_request->getPost();
 
-
             $hf_data_master = new Model_HfDataMaster();
             $hf_data_master->form_values = $data;
             $result = $hf_data_master->addMonthlyConsumption2Validation();
@@ -618,8 +627,6 @@ class StockController extends App_Controller_Base {
                 $this->view->msg = $result;
             }
         }
-
-
 
         $this->view->form = $form;
         $this->view->do = $this->_request->do;
@@ -679,11 +686,16 @@ class StockController extends App_Controller_Base {
                         $stock_master->transaction_number = $issue_no;
                         $stock_master->to_warehouse_id = $this->_identity->getWarehouseId();
 
+
                         $stock_batch = new Model_StockBatch();
                         $placement_locations = $stock_batch->getAllColdStores();
+
                         $non_ccm_loc = new Model_NonCcmLocations();
                         $non_ccm_locations = $non_ccm_loc->getAllDryStores();
+
                         $stockReceive = $stock_master->getwarehouseStockByIssueNo();
+
+
 
                         $transaction_type = new Model_TransactionTypes();
                         $trans_type = $transaction_type->findAll();
@@ -755,8 +767,8 @@ class StockController extends App_Controller_Base {
         if (!empty($this->_request->id)) {
             $detail_id = $this->_request->id;
             $issue = $this->_em->getRepository("StockDetail")->find($detail_id);
-            $from_edit->item_id->setValue($issue->getStockBatch()->getItemPackSize()->getPkId());
-            $from_edit->fillBatchCombo($issue->getStockBatch()->getItemPackSize()->getPkId());
+            $from_edit->item_id->setValue($issue->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId());
+            $from_edit->fillBatchCombo($issue->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId());
             $from_edit->number->setValue($issue->getStockBatch()->getPkId());
             $from_edit->vvm_stage->setValue($issue->getVvmStage());
             $from_edit->quantity->setValue(abs($issue->getQuantity()));
@@ -797,7 +809,8 @@ class StockController extends App_Controller_Base {
             $warehouse_id = $this->_request->warehouse;
         }
 
-        $created_by = $this->_em->find('Users', $this->_user_id);
+//      $created_by = $this->_em->find('Users', $this->_user_id); // Undefined property: StockController::$_user_id
+        $created_by = $this->_em->find('Users', $this->_userid);
         if ($this->_request->isPost()) {
             if ($from_edit->isValid($this->_request->getPost())) {
                 $editissue = $this->_request->getPost('issueedit');
@@ -901,7 +914,8 @@ class StockController extends App_Controller_Base {
         $stock_id = "";
         $master_id = "";
 
-        $created_by = $this->_em->find('Users', $this->_user_id);
+//      $created_by = $this->_em->find('Users', $this->_user_id); // Undefined property: StockController::$_user_id
+        $created_by = $this->_em->find('Users', $this->_userid);
         if (!empty($this->_request->hdn_stock_id)) {
             $stock_id = $this->_request->hdn_stock_id;
         }
@@ -914,11 +928,11 @@ class StockController extends App_Controller_Base {
         }
 
         if ($this->_request->isPost()) {
-            $em = Zend_Registry::get('doctrine');
-            $em->getConnection()->beginTransaction();
-            try {
-                if (!empty($master_id)) {
 
+            if (!empty($master_id)) {
+                $em = Zend_Registry::get('doctrine');
+                $em->getConnection()->beginTransaction();
+                try {
                     //Start update issue period
                     $array = $this->_request->getParams();
                     $stock_master->updateStockPeriod($master_id, $array);
@@ -938,8 +952,15 @@ class StockController extends App_Controller_Base {
                     $this->view->voucher = $transaction_number;
                     $this->view->master_id = $master_id;
                     $em->getConnection()->commit();
-                } elseif ($form->isValid($this->_request->getPost())) {
-
+                } catch (Exception $e) {
+                    $em->getConnection()->rollback();
+                    $em->close();
+                    App_FileLogger::info($e);
+                }
+            } elseif ($form->isValid($this->_request->getPost())) {
+                $em = Zend_Registry::get('doctrine');
+                $em->getConnection()->beginTransaction();
+                try {
                     $editissue = $this->_request->getPost('issueedit');
                     if ($editissue == "Yes") {
                         $d_id = $this->_request->getPost('detailid');
@@ -1048,16 +1069,16 @@ class StockController extends App_Controller_Base {
                     }
                     $em->getConnection()->commit();
                     $this->redirect("/stock/issue");
-                }
-            } catch (Exception $e) {
-                $em->getConnection()->rollback();
-                $em->close();
-                App_FileLogger::info($e);
-                switch ($e->getMessage()) {
-                    case 'PLCD_QTY_GREATER_THAN_ISSUE_QTY':
-                        $this->view->status = false;
-                        $this->view->msg = "Issue quantity should not greater than placed quantity!";
-                        break;
+                } catch (Exception $e) {
+                    $em->getConnection()->rollback();
+                    $em->close();
+                    App_FileLogger::info($e);
+                    switch ($e->getMessage()) {
+                        case 'PLCD_QTY_GREATER_THAN_ISSUE_QTY':
+                            $this->view->status = false;
+                            $this->view->msg = "Issue quantity should not greater than placed quantity!";
+                            break;
+                    }
                 }
             }
 
@@ -1065,7 +1086,7 @@ class StockController extends App_Controller_Base {
             $this->view->arr_data = $arr_data;
 
             if ($this->_request->type == 's') {
-                $this->redirect("/stock/issue-search");
+                $this->redirect("/stock/");
             }
         }
 
@@ -1128,8 +1149,8 @@ class StockController extends App_Controller_Base {
 
             $arr_data['warehouse_name'] = $issue->getStockMaster()->getToWarehouse()->getWarehouseName();
 
-            $form->item_id->setValue($issue->getStockBatch()->getItemPackSize()->getPkId());
-            $form->fillBatchCombo($issue->getStockBatch()->getItemPackSize()->getPkId());
+            $form->item_id->setValue($issue->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId());
+            $form->fillBatchCombo($issue->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId());
             $form->number->setValue($issue->getStockBatch()->getPkId());
             $form->vvm_stage->setValue($issue->getVvmStage());
             $form->quantity->setValue($issue->getQuantity());
@@ -1187,7 +1208,7 @@ class StockController extends App_Controller_Base {
                     $data = $form->getValues();
                     $stock_master = new Model_StockMaster();
                     $stock_master->form_values = $data;
-                    $result = $stock_master->addAjustment();
+                    $result = $stock_master->addAdjustment();
                     $this->view->status = $result;
                     $form->reset();
                     $form->adjustment_date->setValue(date("d/m/Y"));
@@ -1252,6 +1273,55 @@ class StockController extends App_Controller_Base {
         }
     }
 
+//    public function deleteAction() {
+//        $this->_helper->layout->disableLayout();
+//        $this->_helper->viewRenderer->setNoRender(TRUE);
+//
+//        if (isset($this->_request->id) && !empty($this->_request->id)) {
+//            $id = $this->_request->id;
+//
+//            $this->_em->getConnection()->beginTransaction();
+//            try {
+//                //Delete Placement
+//                $rowinfo = $this->_request->rowinfo;
+//                $qtydel = $this->_request->qtydel;
+//
+//                $data = '';
+//                foreach ($qtydel as $key => $value) {
+//                    if (!empty($value)) {
+//                        $data .= $rowinfo[$key] . "|$value,";
+//                    }
+//                }
+//                $data = rtrim($data, ",");
+//                $placement_type = Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_PICK;
+//                $placement = new Model_Placements();
+//                $flag = $placement->updateStockPlacement($data, $placement_type);
+//                //End Delete Placement
+//                //
+//            //
+//            //Delete receive
+//                $stock_master = new Model_StockMaster();
+//                $stock_master->deleteReceive($id);
+//                //End Delete receive
+//                $this->_em->getConnection()->commit();
+//
+//                //End Delete Issue
+//            } catch (Exception $e) {
+//                $this->_em->getConnection()->rollback();
+//                $this->_em->close();
+//                App_FileLogger::info($e);
+//            }
+//
+//            if (!empty($this->_request->p) && $this->_request->p == 'stock') {
+//                $this->redirect("/stock/receive-search?s=t");
+//                exit;
+//            }
+//
+//            $this->redirect("/stock/receive-supplier?s=t");
+//            exit;
+//        }
+//    }
+
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -1271,6 +1341,62 @@ class StockController extends App_Controller_Base {
             exit;
         }
     }
+
+//    public function deleteIssueAction() {
+//        $this->_helper->layout->disableLayout();
+//        $this->_helper->viewRenderer->setNoRender(TRUE);
+//
+//        if (isset($this->_request->id) && !empty($this->_request->id)) {
+//            $id = $this->_request->id;
+//            $this->_em->getConnection()->beginTransaction();
+//            try {
+//                //Delete placement
+//                $batch_id = $this->_request->b_id;
+//                $loc_id = $this->_request->loc_id;
+//                $vvm_stage_id = $this->_request->vvm_id;
+//                $qty_issued = $this->_request->qty_issued;
+//                $item_cat_id = $this->_request->item_cat_id;
+//
+//                if ($item_cat_id == 1) {
+//                    $loc_type = Model_PlacementLocations::LOCATIONTYPE_CCM;
+//                } else {
+//                    $loc_type = Model_PlacementLocations::LOCATIONTYPE_NONCCM;
+//                }
+//                $placement_locations = $this->_em->getRepository("PlacementLocations")->findBy(array("locationId" => $loc_id, "locationType" => $loc_type));
+//                $placement_loc_id = $placement_locations[0]->getPkId();
+//                $placement_details = $batch_id . "|" . $placement_loc_id . "|" . $vvm_stage_id . "|" . $qty_issued;
+//                $placement_type = Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_P;
+//                $placement = new Model_Placements();
+//                $flag = $placement->updateStockPlacement($placement_details, $placement_type);
+//                //End Delete placement
+//                //
+//                //Delete Issue
+//
+//                $stock_detail = new Model_StockDetail();
+//
+//                $flag2 = $stock_detail->deleteIssue($id);
+//
+//                $this->_em->getConnection()->commit();
+//
+//                //End Delete Issue
+//            } catch (Exception $e) {
+//                $this->_em->getConnection()->rollback();
+//                $this->_em->close();
+//                App_FileLogger::info($e);
+//            }
+//
+//            if (!empty($this->_request->p) && $this->_request->p == 'stock') {
+//                $this->redirect("/stock/issue-search");
+//                exit;
+//            } elseif (!empty($this->_request->p) && $this->_request->p == 'issue') {
+//                $this->redirect("/stock/issue");
+//                exit;
+//            }
+//
+//            $this->redirect("/stock/issue-supplier");
+//            exit;
+//        }
+//    }
 
     public function deleteIssueAction() {
         $this->_helper->layout->disableLayout();
@@ -1443,6 +1569,7 @@ class StockController extends App_Controller_Base {
         $stock_master->form_values['product'] = $this->_request->product;
         $stock_master->form_values['date_from'] = $this->_request->date_from;
         $stock_master->form_values['date_to'] = $this->_request->date_to;
+        $stock_master->form_values['activity_id'] = $this->_request->activity_id;
         $data = $stock_master->getTempStockIssue();
         $this->view->result = $data;
         $this->view->result = $data;
@@ -1471,6 +1598,7 @@ class StockController extends App_Controller_Base {
         $stock_master->form_values['product'] = $this->_request->product;
         $stock_master->form_values['date_from'] = $this->_request->date_from;
         $stock_master->form_values['date_to'] = $this->_request->date_to;
+        $stock_master->form_values['activity_id'] = $this->_request->activity_id;
         $data = $stock_master->getTempStockReceive();
         $this->view->result = $data;
         $this->view->result = $data;
@@ -1505,7 +1633,7 @@ class StockController extends App_Controller_Base {
         $stock_master->form_values['date_to'] = $this->_request->date_to;
         $data = $stock_master->getTempStockIssue();
 
-        array_push($export_array, array("Item Name", "Transaction Date", "Transaction Number", "Transaction Reference", "Warehouse Name", "Batch no.", "Expiry date", "Quantity", "Item Unit", "Doses per vial", "Total doses", "VVM Stage"));
+        array_push($export_array, array("Item Name", "Transaction Date", "Transaction Number", "Transaction Reference", "Supplier/Store", "Batch no.", "Expiry date", "Quantity", "Item Unit", "Doses per vial", "Total doses", "VVM Stage"));
         foreach ($data as $row) {
             array_push($export_array, array($row['itemName'], $row['transactionDate'], $row['transactionNumber'], $row['transactionReference'], $row['warehouseName'], $row['number'], $row['expiryDate'], $row['quantity'], $row['itemUnitName'], $row['description'], $row['quantity'] * $row['description'], $row['vvmStage']));
         }
@@ -1530,7 +1658,7 @@ class StockController extends App_Controller_Base {
         $stock_master->form_values['date_to'] = $this->_request->date_to;
         $data = $stock_master->getTempStockReceive();
 
-        array_push($export_array, array("Item Name", "Transaction Date", "Transaction Number", "Transaction Reference", "Warehouse Name", "Batch no.", "Expiry date", "Quantity", "Item Unit", "Doses per vial", "Total doses", "VVM Stage"));
+        array_push($export_array, array("Item Name", "Transaction Date", "Transaction Number", "Transaction Reference", "Supplier/Store", "Batch no.", "Expiry date", "Quantity", "Item Unit", "Doses per vial", "Total doses", "VVM Stage"));
         foreach ($data as $row) {
             array_push($export_array, array($row['itemName'], $row['transactionDate'], $row['transactionNumber'], $row['transactionReference'], $row['warehouseName'], $row['number'], $row['expiryDate'], $row['quantity'], $row['itemUnitName'], $row['description'], $row['quantity'] * $row['description'], $row['vvmStage']));
         }
@@ -1553,6 +1681,7 @@ class StockController extends App_Controller_Base {
         $stock_master->form_values['product'] = $this->_request->product;
         $stock_master->form_values['date_from'] = $this->_request->date_from;
         $stock_master->form_values['date_to'] = $this->_request->date_to;
+        $stock_master->form_values['activity_id'] = $this->_request->activity_id;
         $data = $stock_master->getTempStockIssueSummary($var);
         $this->view->result = $data;
         $this->view->username = $this->_identity->getUserName();
@@ -1576,6 +1705,7 @@ class StockController extends App_Controller_Base {
         $stock_master->form_values['product'] = $this->_request->product;
         $stock_master->form_values['date_from'] = $this->_request->date_from;
         $stock_master->form_values['date_to'] = $this->_request->date_to;
+        $stock_master->form_values['activity_id'] = $this->_request->activity_id;
         $data = $stock_master->getTempStockReceiveSummary($var);
         $this->view->result = $data;
         $this->view->username = $this->_identity->getUserName();
@@ -1823,7 +1953,7 @@ class StockController extends App_Controller_Base {
             $this->view->province_id = $warehouse_data->getProvinceId();
             $reports = new Model_Reports();
             $reports->form_values = array("wh_id" => $arr_temp['wh_id']);
-            $max_date = $reports->getLastCreatedDate();
+            $max_date = $reports->getLastCreatedDateIm();
 
             $this->view->created_date = date("d/m/Y", strtotime($max_date));
         }
@@ -2024,9 +2154,9 @@ class StockController extends App_Controller_Base {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->warehouse_id) && !empty($this->_request->warehouse_id)) {
             $warehouse_data = new Model_HfDataMaster();
-//$warehouse_id = $this->_request->wharehouse_id;
+            $level = $this->_request->level;
             $warehouse_id = $this->_request->warehouse_id;
-            $warehouse_data->form_values = array('warehouse_id' => $warehouse_id);
+            $warehouse_data->form_values = array('warehouse_id' => $warehouse_id, 'level' => $level);
             $result = $warehouse_data->getMonthYearByWarehouseId();
             $this->view->warehouse_id = $warehouse_id;
             $this->view->result = $result;
@@ -2138,7 +2268,7 @@ class StockController extends App_Controller_Base {
     public function locationStatusAction() {
         $form = new Form_LocationStatus();
         $params = array();
-
+        $result = null;
         $non_ccm_location = new Model_NonCcmLocations();
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_request->getPost())) {
@@ -2390,8 +2520,12 @@ class StockController extends App_Controller_Base {
     public function ajaxGetCampaignsByProductAction() {
         $this->_helper->layout->disableLayout();
         $item_id = $this->_request->getParam('item_id', '');
-
         $warehouse = $this->_request->getParam('warehouse_id', '');
+        if (empty($item_id)) {
+            $this->view->data = false;
+            return;
+        }
+
         if (!empty($warehouse)) {
             $sub_sql = $this->_em->getConnection()->prepare("SELECT district_id from warehouses where pk_id=$warehouse ");
 
@@ -2399,8 +2533,8 @@ class StockController extends App_Controller_Base {
             $district = $sub_sql->fetchAll();
             $dist_id = $district[0]['district_id'];
 
-            // echo $dist_id;
-            // exit;
+            //echo $dist_id;
+            //exit;
 
             $qry = "and campaign_districts.district_id= $dist_id ";
         }
@@ -2414,6 +2548,9 @@ class StockController extends App_Controller_Base {
                 WHERE
                 campaign_item_pack_sizes.item_pack_size_id = $item_id
                 $qry ");
+
+        // echo $str_sql;
+        //exit;
 
         $str_sql->execute();
         $campaigns = $str_sql->fetchAll();
@@ -2499,6 +2636,7 @@ class StockController extends App_Controller_Base {
         $sort = $this->_getParam("sort", "asc");
         $order = $this->_getParam("order", "product");
         $placement->form_values['id'] = $id;
+        $bin_name = $placement->getStockBinName($id);
         $result = $placement->getStockInBin($order, $sort);
 
         //Paginate the contest results
@@ -2513,7 +2651,7 @@ class StockController extends App_Controller_Base {
         $this->view->level = $level;
 
         $this->view->result = $result;
-        $this->view->title = $result[0]['LocationName'];
+        $this->view->title = $bin_name[0]['location_name'];
         $this->view->bin_id = $id;
         $this->view->order = $order;
         $this->view->sort = $sort;
@@ -2607,8 +2745,9 @@ class StockController extends App_Controller_Base {
         $level = $this->_request->getParam('level');
         $placement = $this->_em->find("PlacementSummary", $placement_id);
 
-        $batch_numer = $placement->getStockBatch()->getNumber();
-        $item_name = $placement->getStockBatch()->getStakeholderItemPackSize()->getItemPackSize()->getItemName();
+        //$batch_numer = $placement->getStockBatchWarehouse()->getStockBatch()->getNumber();
+        $batch_numer = $placement->getStockBatchWarehouse()->getStockBatch()->getNumber();
+        $item_name = $placement->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemName();
         $non_ccm_id = $non_ccm_loc->getNonCcmLocationId($bin_id);
         $form->item_pack_size_id->setValue($item_name);
         $form->stock_batch_id->setValue($batch_numer);
@@ -2657,9 +2796,14 @@ class StockController extends App_Controller_Base {
         $loc_name = new Model_ColdChain();
 
         $placement_id = $this->_request->getParam('placement_id');
+
         $placement = $this->_em->find("PlacementSummary", $placement_id);
-        $batch_numer = $placement->getStockBatch()->getNumber();
-        $item_name = $placement->getStockBatch()->getStakeholderItemPackSize()->getItemPackSize()->getItemName();
+        if (is_null($placement)) {
+            echo "<h4>Please refresh the page. Press Ctrl+R simultaneously. <h4>";
+            exit;
+        }
+        $batch_numer = $placement->getStockBatchWarehouse()->getStockBatch()->getNumber();
+        $item_name = $placement->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemName();
         $asset_name = $loc_name->getAssetByLocation($placement->getPlacementLocation()->getPkId());
 
         $form->item_pack_size_id->setValue($item_name);
@@ -2785,9 +2929,9 @@ class StockController extends App_Controller_Base {
 
         list($batch_id, $vvm, $placement_id, $activity_id) = explode("_", $params);
 
-        $stock_batch = $this->_em->getRepository("StockBatch")->find($batch_id);
-        $item_id = $stock_batch->getItemPackSize()->getItem()->getPkId();
-        $item_pack_size_id = $stock_batch->getItemPackSize()->getPkId();
+        $stock_batch = $this->_em->getRepository("StockBatchWarehouses")->find($batch_id);
+        $item_id = $stock_batch->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItem()->getPkId();
+        $item_pack_size_id = $stock_batch->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId();
 
         $sips->form_values = array(
             'item_id' => $item_id,
@@ -2806,6 +2950,7 @@ class StockController extends App_Controller_Base {
             'stakeholder_id' => $this->_request->getParam('activity_id', ''),
             'trans_date' => $this->_request->getParam('tran_date', date("d/m/Y h:i:s A"))
         );
+
         if (!empty($type) && $type == 2) {
             $result = $sips->getAllIssueProductsByStakeholder();
         } else {
@@ -2985,6 +3130,7 @@ class StockController extends App_Controller_Base {
             }
 
             $warehouse_id = $arr_temp['wh_id'];
+
             $wh = $this->_em->getRepository("Warehouses")->find($warehouse_id);
             $warehouse_name = $wh->getWarehouseName();
 
@@ -3122,6 +3268,7 @@ class StockController extends App_Controller_Base {
             }
             $em->getConnection()->commit();
         } catch (Exception $e) {
+            // echo $e;
             $em->getConnection()->rollback();
             $em->close();
         }
@@ -3145,7 +3292,7 @@ class StockController extends App_Controller_Base {
                     $data = $form->getValues();
                     $stock_master = new Model_StockMaster();
                     $stock_master->form_values = $data;
-                    $result = $stock_master->addAjustment();
+                    $result = $stock_master->addAdjustment();
                     $this->view->status = $result;
                     $form->reset();
                     $form->adjustment_date->setValue(date("d/m/Y"));
@@ -3433,7 +3580,7 @@ class StockController extends App_Controller_Base {
         if ($this->_request->isPost()) {
             $em = Zend_Registry::get('doctrine');
             $em->getConnection()->beginTransaction();
-            try {
+//            try {
                 $pipelines = $this->_request->getPost('pipeline');
                 $receivedqty = $this->_request->getPost('receivedqty');
                 $vvmstage = $this->_request->getPost('vvmstage');
@@ -3476,10 +3623,13 @@ class StockController extends App_Controller_Base {
                             $pipeline_consignments->setReceivedQuantity($receivedqty[$i]);
                             $pipeline_consignments->setStatus("Received");
 
-                            $created_by = $this->_em->find('Users', $this->_user_id);
-                            $pipeline_consignments->setCreatedBy($created_by);
+                            //$created_by = $this->_em->find('Users', $this->_user_id);
+                            
+//                            echo $row->getCreatedBy()->getPkId();
+//                            exit;
+                            $pipeline_consignments->setCreatedBy($pipeline_consignments->getCreatedBy());
                             $pipeline_consignments->setCreatedDate(App_Tools_Time::now());
-                            $pipeline_consignments->setModifiedBy($created_by);
+                            $pipeline_consignments->setModifiedBy($pipeline_consignments->getCreatedBy());
                             $pipeline_consignments->setModifiedDate(App_Tools_Time::now());
 
                             $this->_em->persist($pipeline_consignments);
@@ -3489,10 +3639,11 @@ class StockController extends App_Controller_Base {
                     }
                 }
                 $em->getConnection()->commit();
-            } catch (Exception $e) {
-                $em->getConnection()->rollback();
-                $em->close();
-            }
+//            } catch (Exception $e) {
+//                echo $e;
+//                $em->getConnection()->rollback();
+//                $em->close();
+//            }
         }
 
         if ($type == Model_TransactionTypes::TRANSACTION_RECIEVE) {
@@ -4005,9 +4156,9 @@ class StockController extends App_Controller_Base {
                             $placement->setQuantity($physical_stk->getQuantity());
                             $placement->setPlacementLocation($physical_stk->getPlacementLocation());
                             $placement->setStockBatch($physical_stk->getStockBatch());
-                            if ($stock_detail != null) {
-                                $placement->setStockDetail($stock_detail);
-                            }
+//                            if ($stock_detail != null) {
+//                                $placement->setStockDetail($stock_detail);
+//                            }
                             $type_id = $this->_em->getRepository("ListDetail")->find(114);
                             $placement->setPlacementTransactionType($type_id);
                             $created_by = $this->_em->getRepository("Users")->find($this->_userid);
@@ -4749,73 +4900,76 @@ class StockController extends App_Controller_Base {
 
     public function vvmManagementAction() {
         $form = new Form_VvmManagement();
+        $msg = '';
 
         if ($this->_request->isPost()) {
             $product_id = $this->_request->getPost('product');
             $batch_id = $this->_request->getPost('batch');
 
-            $msg = '';
+//          $msg = ''; // Undefined variable: msg (when page initially loaded)
             $em = Zend_Registry::get('doctrine');
             $em->getConnection()->beginTransaction();
             try {
                 $quantity = $this->_request->quantity;
                 $newvvm = $this->_request->newvvm;
-                foreach ($quantity as $key => $value) {
-                    if (!empty($value) && $value > 0) {
-                        $updatedqty = $value;
-                        list($batchid, $vvmid, $locationid) = explode("_", $key);
-                        $batch_detail = $this->_em->getRepository("StockBatch")->find($batchid);
+                if (!is_null($quantity)) {
+                    foreach ($quantity as $key => $value) {
+                        if (!empty($value) && $value > 0) {
+                            $updatedqty = $value;
+                            list($batchid, $vvmid, $locationid) = explode("_", $key);
+                            $batch_detail = $this->_em->getRepository("StockBatchWarehouses")->find($batchid);
 
-                        $placement = new Model_Placements();
-                        $placement->form_values = array(
-                            'quantity' => "-" . $updatedqty,
-                            'placement_loc_id' => $locationid,
-                            'batch_id' => $batchid,
-                            'placement_loc_type_id' => 116,
-                            'user_id' => $this->_userid,
-                            'created_date' => date("Y-m-d"),
-                            'vvmstage' => $vvmid,
-                            'is_placed' => 0
-                        );
-                        $placement->add();
+                            $placement = new Model_Placements();
+                            $placement->form_values = array(
+                                'quantity' => "-" . $updatedqty,
+                                'placement_loc_id' => $locationid,
+                                'batch_id' => $batchid,
+                                'placement_loc_type_id' => 116,
+                                'user_id' => $this->_userid,
+                                'created_date' => date("Y-m-d"),
+                                'vvmstage' => $vvmid,
+                                'is_placed' => 0
+                            );
+                            $placement->add();
 
-                        $placement->form_values = array(
-                            'quantity' => $updatedqty,
-                            'placement_loc_id' => $locationid,
-                            'batch_id' => $batchid,
-                            'placement_loc_type_id' => 116,
-                            'user_id' => $this->_userid,
-                            'created_date' => date("Y-m-d"),
-                            'vvmstage' => $newvvm[$key],
-                            'is_placed' => 1
-                        );
-                        $placement->add();
+                            $placement->form_values = array(
+                                'quantity' => $updatedqty,
+                                'placement_loc_id' => $locationid,
+                                'batch_id' => $batchid,
+                                'placement_loc_type_id' => 116,
+                                'user_id' => $this->_userid,
+                                'created_date' => date("Y-m-d"),
+                                'vvmstage' => $newvvm[$key],
+                                'is_placed' => 1
+                            );
+                            $placement->add();
 
-                        //Log Entry START
-                        $history = new VvmTransferHistory();
-                        $from_to_batch = $this->_em->getRepository("StockBatch")->find($batchid);
-                        $history->setBatch($from_to_batch);
-                        $from_vvmstages = $this->_em->getRepository("VvmStages")->find($vvmid);
-                        $history->setFromVvmStage($from_vvmstages);
-                        $to_vvmstages = $this->_em->getRepository("VvmStages")->find($newvvm[$key]);
-                        $history->setToVvmStage($to_vvmstages);
-                        $created_by = $this->_em->getRepository("Users")->find($this->_userid);
-                        $history->setCreatedBy($created_by);
-                        $history->setCreatedDate(App_Tools_Time::now());
-                        $history->setModifiedBy($created_by);
-                        $history->setModifiedDate(App_Tools_Time::now());
-                        $history->setQuantity(ABS($updatedqty));
-                        $this->_em->persist($history);
-                        $this->_em->flush();
-                        //Log Entry END
+                            //Log Entry START
+                            $history = new VvmTransferHistory();
+                            $from_to_batch = $this->_em->getRepository("StockBatchWarehouses")->find($batchid);
+                            $history->setStockBatchWarehouse($from_to_batch);
+                            $from_vvmstages = $this->_em->getRepository("VvmStages")->find($vvmid);
+                            $history->setFromVvmStage($from_vvmstages);
+                            $to_vvmstages = $this->_em->getRepository("VvmStages")->find($newvvm[$key]);
+                            $history->setToVvmStage($to_vvmstages);
+                            $created_by = $this->_em->getRepository("Users")->find($this->_userid);
+                            $history->setCreatedBy($created_by);
+                            $history->setCreatedDate(App_Tools_Time::now());
+                            $history->setModifiedBy($created_by);
+                            $history->setModifiedDate(App_Tools_Time::now());
+                            $history->setQuantity(ABS($updatedqty));
+                            $this->_em->persist($history);
+                            $this->_em->flush();
+                            //Log Entry END
 
-                        $msg = 'VVM has been changed successfully!';
-                        $product_id = $batch_detail->getItemPackSize()->getPkId();
-                        $batch_id = $batchid;
+                            $msg = 'VVM has been changed successfully!';
+                            $product_id = $batch_detail->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId();
+                            $batch_id = $batchid;
+                        }
                     }
                 }
-
                 $location = new Model_Locations();
+
                 $this->view->result = $location->getBatchVvmLocations($batch_id);
 
                 $form->product->setValue($product_id);
@@ -4828,6 +4982,9 @@ class StockController extends App_Controller_Base {
                 App_FileLogger::info($e);
             }
             $stock_detail = new Model_StockDetail();
+            //     echo  $stock_detail->getOpeningBalanceVvm($product_id, $batch_id);
+            //  $this->view->opening_balance_result = $stock_detail->getOpeningBalanceVvm($product_id, $batch_id);
+            //    $this->view->closing_balance_result = $stock_detail->getClosingBalanceVvm($product_id, $batch_id);
             $this->view->h_result = $stock_detail->getVvmTransferHistory($product_id);
         }
 
@@ -4838,25 +4995,26 @@ class StockController extends App_Controller_Base {
     public function purposeTransferManagementAction() {
         $form = new Form_PurposeTransfer();
         $stock_detail = new Model_StockDetail();
+        $msg = '';
 
         if ($this->_request->isPost()) {
             $product_id = $this->_request->getPost('product');
             $batch_id = $this->_request->getPost('batch');
 
-            $msg = '';
+//          $msg = ''; // Undefined variable: msg (when page initially loaded)
             $em = Zend_Registry::get('doctrine');
             $em->getConnection()->beginTransaction();
-            try {
-                $quantity = $this->_request->quantity;
-                $newpurpose = $this->_request->newpurpose;
-                $comments = $this->_request->comments;
-                $toproducts = $this->_request->toproducts;
-
+//            try {
+            $quantity = $this->_request->quantity;
+            $newpurpose = $this->_request->newpurpose;
+            $comments = $this->_request->comments;
+            $toproducts = $this->_request->toproducts;
+            if (!is_null($quantity)) {
                 foreach ($quantity as $key => $value) {
                     if (!empty($value) && $value > 0) {
                         $updatedqty = $value;
                         list($batchid, $vvmid, $locationid, $activity_id) = explode("_", $key);
-                        $batch_detail = $this->_em->getRepository("StockBatch")->find($batchid);
+                        $batch_detail = $this->_em->getRepository("StockBatchWarehouses")->find($batchid);
                         $microtime = strtotime(date("Y-m-d H:i:s"));
 
                         $stock_master = new Model_StockMaster();
@@ -4864,31 +5022,31 @@ class StockController extends App_Controller_Base {
                         $data = array(
                             'adjustment_date' => date("d/m/Y"),
                             'ref_no' => '',
-                            'product' => $batch_detail->getItemPackSize()->getPkId(),
+                            'product' => $batch_detail->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId(),
                             'batch_no' => $batchid,
                             'adjustment_type' => 17,
                             'quantity' => $updatedqty,
                             'comments' => $comments,
-                            'item_unit_id' => $batch_detail->getItemPackSize()->getItemUnit()->getPkId(),
+                            'item_unit_id' => $batch_detail->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemUnit()->getPkId(),
                             'vvm_stage' => $vvmid,
                             'location_id' => $locationid . "|" . $vvmid,
                             'purpose' => $activity_id,
                             'is_received' => $microtime
                         );
                         $stock_master->form_values = $data;
-                        $stock_master->addAjustment();
+                        $stock_master->addAdjustment();
 
                         $stock_batch = new Model_StockBatch();
                         $array = array(
                             'wh_id' => $batch_detail->getWarehouse()->getPkId(),
-                            'number' => $batch_detail->getNumber(),
+                            'number' => $batch_detail->getStockBatch()->getNumber(),
                             'item_id' => $toproducts[$key],
-                            'expiry_date' => $batch_detail->getExpiryDate()->format("d/m/Y"),
+                            'expiry_date' => $batch_detail->getStockBatch()->getExpiryDate()->format("d/m/Y"),
                             'quantity' => $updatedqty,
-                            'production_date' => ($batch_detail->getProductionDate() != null ? $batch_detail->getProductionDate()->format("d/m/Y") : '' ),
-                            'vvm_type_id' => $batch_detail->getVvmType()->getPkId(),
-                            'unit_price' => $batch_detail->getUnitPrice(),
-                            'manufacturer_id' => $batch_detail->getStakeholderItemPackSize()->getPkId()
+                            'production_date' => ($batch_detail->getStockBatch()->getProductionDate() != null ? $batch_detail->getStockBatch()->getProductionDate()->format("d/m/Y") : '' ),
+                            'vvm_type_id' => $batch_detail->getStockBatch()->getVvmType()->getPkId(),
+                            'unit_price' => $batch_detail->getStockBatch()->getUnitPrice(),
+                            'manufacturer_id' => $batch_detail->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getPkId()
                         );
                         $transbatchid = $stock_batch->createBatch($array);
 
@@ -4900,21 +5058,21 @@ class StockController extends App_Controller_Base {
                             'product' => $toproducts[$key],
                             'quantity' => $updatedqty,
                             'comments' => $comments,
-                            'item_unit_id' => $batch_detail->getItemPackSize()->getItemUnit()->getPkId(),
+                            'item_unit_id' => $batch_detail->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemUnit()->getPkId(),
                             'vvm_stage' => $vvmid,
                             'location_id' => $locationid . "|" . $vvmid,
                             'purpose' => $newpurpose[$key],
                             'is_received' => $microtime
                         );
                         $stock_master->form_values = $data2;
-                        $stock_master->addAjustment();
+                        $stock_master->addAdjustment();
 
                         //Log Entry START
                         $history = new PurposeTransferHistory();
-                        $from_batch = $this->_em->getRepository("StockBatch")->find($batchid);
-                        $history->setFromBatch($from_batch);
-                        $to_batch = $this->_em->getRepository("StockBatch")->find($transbatchid);
-                        $history->setToBatch($to_batch);
+                        $from_batch = $this->_em->getRepository("StockBatchWarehouses")->find($batchid);
+                        $history->setFromStockBatchWarehouse($from_batch);
+                        $to_batch = $this->_em->getRepository("StockBatchWarehouses")->find($transbatchid);
+                        $history->setToStockBatchWarehouse($to_batch);
                         $from_activity = $this->_em->getRepository("StakeholderActivities")->find($activity_id);
                         $history->setFromActivity($from_activity);
                         $to_activity = $this->_em->getRepository("StakeholderActivities")->find($newpurpose[$key]);
@@ -4935,23 +5093,24 @@ class StockController extends App_Controller_Base {
                         $stock_batch->adjustQuantityByWarehouse($transbatchid);
 
                         $msg = 'Purpose has been changed successfully!';
-                        $product_id = $batch_detail->getItemPackSize()->getPkId();
+                        $product_id = $batch_detail->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId();
                         $batch_id = $batchid;
                     }
                 }
-
-                $this->view->result = $stock_detail->purposeTransferManagement($batch_id);
-                //$this->view->h_result = $stock_detail->getPurposeTransferHistory($product_id);
-                //$this->view->history = $stock_detail->purposeTransferHistory($batch_id);
-                $form->product->setValue($product_id);
-                $this->view->batch = $batch_id;
-
-                $em->getConnection()->commit();
-            } catch (Exception $e) {
-                $em->getConnection()->rollback();
-                $em->close();
-                App_FileLogger::info($e);
             }
+
+            $this->view->result = $stock_detail->purposeTransferManagement($batch_id);
+            //$this->view->h_result = $stock_detail->getPurposeTransferHistory($product_id);
+            //$this->view->history = $stock_detail->purposeTransferHistory($batch_id);
+            $form->product->setValue($product_id);
+            $this->view->batch = $batch_id;
+
+            $em->getConnection()->commit();
+//            } catch (Exception $e) {
+//                $em->getConnection()->rollback();
+//                $em->close();
+//                App_FileLogger::info($e);
+//            }
 
             $this->view->opening_balance_result = $stock_detail->getOpeningBalancePurpose($product_id, $batch_id);
             $this->view->closing_balance_result = $stock_detail->getClosingBalancePurpose($product_id, $batch_id);
@@ -5285,6 +5444,14 @@ class StockController extends App_Controller_Base {
             $em->getConnection()->rollback();
             $em->close();
         }
+        echo $stock_id;
+        $master = $this->_em->getRepository("StockDetail")->findBy(array("stockMaster" => $stock_id));
+        if (count($master) == 0) {
+
+            $stock_master = $this->_em->getRepository("StockMaster")->find($stock_id);
+            $this->_em->remove($stock_master);
+            $this->_em->flush();
+        }
         if ($detail_id) {
             echo '1';
         } else {
@@ -5423,12 +5590,12 @@ class StockController extends App_Controller_Base {
         }
 
         if ($this->_request->isPost()) {
-            $em = Zend_Registry::get('doctrine');
-            $em->getConnection()->beginTransaction();
             $created_by = $this->_em->find('Users', $this->_user_id);
-            try {
-                if (!empty($master_id)) {
+            if (!empty($master_id)) {
+                $em = Zend_Registry::get('doctrine');
+                $em->getConnection()->beginTransaction();
 
+                try {
                     //Start update issue period
                     $array = $this->_request->getParams();
                     $stock_master->updateStockPeriod($master_id, $array);
@@ -5448,8 +5615,15 @@ class StockController extends App_Controller_Base {
                     $this->view->voucher = $transaction_number;
                     $this->view->master_id = $master_id;
                     $em->getConnection()->commit();
-                } elseif ($form->isValid($this->_request->getPost())) {
-
+                } catch (Exception $e) {
+                    $em->getConnection()->rollback();
+                    $em->close();
+                    App_FileLogger::info($e);
+                }
+            } elseif ($form->isValid($this->_request->getPost())) {
+                $em = Zend_Registry::get('doctrine');
+                $em->getConnection()->beginTransaction();
+                try {
                     $editissue = $this->_request->getPost('issueedit');
                     if ($editissue == "Yes") {
                         $d_id = $this->_request->getPost('detailid');
@@ -5577,18 +5751,19 @@ class StockController extends App_Controller_Base {
                     } else {
                         $form->transaction_date->setValue(date("d/m/Y h:i A"));
                     }
-                }
-            } catch (Exception $e) {
-                $em->getConnection()->rollback();
-                $em->close();
-                App_FileLogger::info($e);
-                switch ($e->getMessage()) {
-                    case 'PLCD_QTY_GREATER_THAN_ISSUE_QTY':
-                        $this->view->status = false;
-                        $this->view->msg = "Issue quantity should not greater than placed quantity!";
-                        break;
+                } catch (Exception $e) {
+                    $em->getConnection()->rollback();
+                    $em->close();
+                    App_FileLogger::info($e);
+                    switch ($e->getMessage()) {
+                        case 'PLCD_QTY_GREATER_THAN_ISSUE_QTY':
+                            $this->view->status = false;
+                            $this->view->msg = "Issue quantity should not greater than placed quantity!";
+                            break;
+                    }
                 }
             }
+
 
             $this->view->form = $form;
             $this->view->arr_data = $arr_data;
@@ -5643,8 +5818,8 @@ class StockController extends App_Controller_Base {
 
             $arr_data['warehouse_name'] = $issue->getStockMaster()->getToWarehouse()->getWarehouseName();
 
-            $form->item_id->setValue($issue->getStockBatch()->getItemPackSize()->getPkId());
-            $form->fillBatchCombo($issue->getStockBatch()->getItemPackSize()->getPkId());
+            $form->item_id->setValue($issue->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId());
+            $form->fillBatchCombo($issue->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId());
             $form->number->setValue($issue->getStockBatch()->getPkId());
             $form->vvm_stage->setValue($issue->getVvmStage());
             $form->quantity->setValue($issue->getQuantity());
@@ -5661,6 +5836,101 @@ class StockController extends App_Controller_Base {
 
         $this->view->params = array("province" => $this->_identity->getProvinceId(), "district" => $this->_identity->getDistrictId());
         $this->view->role = $this->_identity->getRoleId();
+    }
+
+    public function ajaxGetPlacementDetailAction() {
+        $this->_helper->layout->disableLayout();
+        $detail_id = $this->_request->id;
+        $stock_batch = new Model_StockBatch();
+        $arr = explode('|', $this->_request->id);
+        $this->view->array_data = $arr;
+        $stock_batch->form_values['batch_id'] = $arr[0];
+        $this->view->data = $stock_batch->getPlacementHistory();
+        $this->view->id = $detail_id;
+    }
+
+    public function deleteBatchPlacementAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(TRUE);
+
+        if ($this->_request->isPost()) {
+
+            $rowinfo = $this->_request->rowinfo;
+            $qtydel = $this->_request->qtydel;
+            //var_dump($rowinfo);
+            //var_dump($qtydel);
+            $data = '';
+            foreach ($qtydel as $key => $value) {
+                if (!empty($value)) {
+                    $data .= $rowinfo[$key] . "|$value,";
+                }
+            }
+
+            $data = rtrim($data, ",");
+            $placement_type = Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_PICK;
+            $placement = new Model_Placements();
+            $flag = $placement->updateStockPlacement($data, $placement_type);
+            if ($flag) {
+                $this->redirect("/stock/receive-search");
+                exit;
+            }
+        }
+    }
+
+    public function deleteStockIssueAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(TRUE);
+
+        if ($this->_request->isPost()) {
+
+            $batch_id = $this->_request->b_id;
+            $loc_id = $this->_request->loc_id;
+            $vvm_stage_id = $this->_request->vvm_id;
+            $qty_issued = $this->_request->qty_issued;
+            $item_cat_id = $this->_request->item_cat_id;
+
+            if ($item_cat_id == 1) {
+                $loc_type = Model_PlacementLocations::LOCATIONTYPE_CCM;
+            } else {
+                $loc_type = Model_PlacementLocations::LOCATIONTYPE_NONCCM;
+            }
+            $placement_locations = $this->_em->getRepository("PlacementLocations")->findBy(array("locationId" => $loc_id, "locationType" => $loc_type));
+            $placement_loc_id = $placement_locations[0]->getPkId();
+            $placement_details = $batch_id . "|" . $placement_loc_id . "|" . $vvm_stage_id . "|" . $qty_issued;
+            $placement_type = Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_P;
+            $placement = new Model_Placements();
+            $flag = $placement->updateStockPlacement($placement_details, $placement_type);
+            if ($flag) {
+                $this->redirect("/stock/issue-search");
+                exit;
+            }
+        }
+    }
+
+    public function ajaxGetPlacementLocationsAction() {
+
+        $this->_helper->layout->disableLayout();
+        $detail_id = $this->_request->id;
+        $p = $this->_request->p;
+
+        $stock_master = new Model_StockMaster();
+        $stock_master->form_values['$detail_id'] = $detail_id;
+        $result = $stock_master->getIssueDetail();
+
+        $item_category_id = $result['item_category_id'];
+        if ($item_category_id == 1) {
+            $cold_chain_loc = new Model_ColdChain();
+            $ccm_locations = $cold_chain_loc->getLocationsName();
+            $this->view->locations = $ccm_locations;
+        } else {
+            $non_ccm_loc = new Model_NonCcmLocations();
+            $non_ccm_locations = $non_ccm_loc->getLocationsName();
+            $this->view->locations = $non_ccm_locations;
+        }
+        $this->view->item_cat_id = $item_category_id;
+        $this->view->result = $result;
+        $this->view->p = $p;
+        $this->view->detail_id = $detail_id;
     }
 
 }

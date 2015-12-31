@@ -50,21 +50,6 @@ class StockMasterHistory
     private $comments;
 
     /**
-     * @var integer $transactionTypeId
-     */
-    private $transactionTypeId;
-
-    /**
-     * @var integer $fromWarehouseId
-     */
-    private $fromWarehouseId;
-
-    /**
-     * @var integer $toWarehouseId
-     */
-    private $toWarehouseId;
-
-    /**
      * @var integer $parentId
      */
     private $parentId;
@@ -73,16 +58,6 @@ class StockMasterHistory
      * @var integer $campaignId
      */
     private $campaignId;
-
-    /**
-     * @var integer $stakeholderActivityId
-     */
-    private $stakeholderActivityId;
-
-    /**
-     * @var integer $createdBy
-     */
-    private $createdBy;
 
     /**
      * @var datetime $createdDate
@@ -95,14 +70,39 @@ class StockMasterHistory
     private $actionType;
 
     /**
-     * @var integer $modifiedBy
+     * @var datetime $modifiedDate
+     */
+    private $modifiedDate;
+
+    /**
+     * @var Users
      */
     private $modifiedBy;
 
     /**
-     * @var datetime $modifiedDate
+     * @var TransactionTypes
      */
-    private $modifiedDate;
+    private $transactionType;
+
+    /**
+     * @var Warehouses
+     */
+    private $fromWarehouse;
+
+    /**
+     * @var Warehouses
+     */
+    private $toWarehouse;
+
+    /**
+     * @var StakeholderActivities
+     */
+    private $stakeholderActivity;
+
+    /**
+     * @var Users
+     */
+    private $createdBy;
 
 
     /**
@@ -256,66 +256,6 @@ class StockMasterHistory
     }
 
     /**
-     * Set transactionTypeId
-     *
-     * @param integer $transactionTypeId
-     */
-    public function setTransactionTypeId($transactionTypeId)
-    {
-        $this->transactionTypeId = $transactionTypeId;
-    }
-
-    /**
-     * Get transactionTypeId
-     *
-     * @return integer 
-     */
-    public function getTransactionTypeId()
-    {
-        return $this->transactionTypeId;
-    }
-
-    /**
-     * Set fromWarehouseId
-     *
-     * @param integer $fromWarehouseId
-     */
-    public function setFromWarehouseId($fromWarehouseId)
-    {
-        $this->fromWarehouseId = $fromWarehouseId;
-    }
-
-    /**
-     * Get fromWarehouseId
-     *
-     * @return integer 
-     */
-    public function getFromWarehouseId()
-    {
-        return $this->fromWarehouseId;
-    }
-
-    /**
-     * Set toWarehouseId
-     *
-     * @param integer $toWarehouseId
-     */
-    public function setToWarehouseId($toWarehouseId)
-    {
-        $this->toWarehouseId = $toWarehouseId;
-    }
-
-    /**
-     * Get toWarehouseId
-     *
-     * @return integer 
-     */
-    public function getToWarehouseId()
-    {
-        return $this->toWarehouseId;
-    }
-
-    /**
      * Set parentId
      *
      * @param integer $parentId
@@ -353,46 +293,6 @@ class StockMasterHistory
     public function getCampaignId()
     {
         return $this->campaignId;
-    }
-
-    /**
-     * Set stakeholderActivityId
-     *
-     * @param integer $stakeholderActivityId
-     */
-    public function setStakeholderActivityId($stakeholderActivityId)
-    {
-        $this->stakeholderActivityId = $stakeholderActivityId;
-    }
-
-    /**
-     * Get stakeholderActivityId
-     *
-     * @return integer 
-     */
-    public function getStakeholderActivityId()
-    {
-        return $this->stakeholderActivityId;
-    }
-
-    /**
-     * Set createdBy
-     *
-     * @param integer $createdBy
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-    }
-
-    /**
-     * Get createdBy
-     *
-     * @return integer 
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
     }
 
     /**
@@ -436,26 +336,6 @@ class StockMasterHistory
     }
 
     /**
-     * Set modifiedBy
-     *
-     * @param integer $modifiedBy
-     */
-    public function setModifiedBy($modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return integer 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
      * Set modifiedDate
      *
      * @param datetime $modifiedDate
@@ -473,5 +353,125 @@ class StockMasterHistory
     public function getModifiedDate()
     {
         return $this->modifiedDate;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+
+    /**
+     * Set transactionType
+     *
+     * @param TransactionTypes $transactionType
+     */
+    public function setTransactionType(\TransactionTypes $transactionType)
+    {
+        $this->transactionType = $transactionType;
+    }
+
+    /**
+     * Get transactionType
+     *
+     * @return TransactionTypes 
+     */
+    public function getTransactionType()
+    {
+        return $this->transactionType;
+    }
+
+    /**
+     * Set fromWarehouse
+     *
+     * @param Warehouses $fromWarehouse
+     */
+    public function setFromWarehouse(\Warehouses $fromWarehouse)
+    {
+        $this->fromWarehouse = $fromWarehouse;
+    }
+
+    /**
+     * Get fromWarehouse
+     *
+     * @return Warehouses 
+     */
+    public function getFromWarehouse()
+    {
+        return $this->fromWarehouse;
+    }
+
+    /**
+     * Set toWarehouse
+     *
+     * @param Warehouses $toWarehouse
+     */
+    public function setToWarehouse(\Warehouses $toWarehouse)
+    {
+        $this->toWarehouse = $toWarehouse;
+    }
+
+    /**
+     * Get toWarehouse
+     *
+     * @return Warehouses 
+     */
+    public function getToWarehouse()
+    {
+        return $this->toWarehouse;
+    }
+
+    /**
+     * Set stakeholderActivity
+     *
+     * @param StakeholderActivities $stakeholderActivity
+     */
+    public function setStakeholderActivity(\StakeholderActivities $stakeholderActivity)
+    {
+        $this->stakeholderActivity = $stakeholderActivity;
+    }
+
+    /**
+     * Get stakeholderActivity
+     *
+     * @return StakeholderActivities 
+     */
+    public function getStakeholderActivity()
+    {
+        return $this->stakeholderActivity;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param Users $createdBy
+     */
+    public function setCreatedBy(\Users $createdBy)
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return Users 
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
     }
 }

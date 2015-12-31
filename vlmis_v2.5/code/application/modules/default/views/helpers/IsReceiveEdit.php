@@ -10,7 +10,7 @@ class Zend_View_Helper_IsReceiveEdit extends Zend_View_Helper_Abstract {
         $str_sql = $em->createQueryBuilder()
                 ->select("sb.pkId as stock_batch_id,sm.transactionDate")
                 ->from('StockDetail', 'sd')
-                ->join('sd.stockBatch', 'sb')
+                ->join('sd.stockBatchWarehouse', 'sb')
                 ->join('sd.stockMaster', 'sm')
                 ->andWhere("sd.pkId = $detail_id");
 
@@ -20,7 +20,7 @@ class Zend_View_Helper_IsReceiveEdit extends Zend_View_Helper_Abstract {
         $str_sql2 = $em->createQueryBuilder()
                 ->select("sd.pkId")
                 ->from('StockDetail', 'sd')
-                ->join('sd.stockBatch', 'sb')
+                ->join('sd.stockBatchWarehouse', 'sb')
                 ->join('sd.stockMaster', 'sm')
                 ->where("sm.transactionDate >= '" . $row[0]['transactionDate'] . "' ")
                 ->andWhere("sb.pkId= '" . $row[0]['stock_batch_id'] . "' ")

@@ -30,6 +30,21 @@ WarehousePopulation:
       unsigned: false
       nullable: true
       column: women_of_child_bearing_age
+    survivingChildren011:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: surviving_children_0_11
+    childrenAged1223:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: children_aged_12_23
+    above2Year:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: above_2_year
     estimationYear:
       type: datetime
       nullable: true
@@ -59,15 +74,6 @@ WarehousePopulation:
       nullable: true
       column: modified_date
   oneToOne:
-    modifiedBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        modified_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     warehouse:
       targetEntity: Warehouses
       cascade: {  }
@@ -84,6 +90,15 @@ WarehousePopulation:
       inversedBy: null
       joinColumns:
         created_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

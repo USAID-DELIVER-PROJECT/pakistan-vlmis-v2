@@ -83,11 +83,6 @@ CcmModels:
       fixed: false
       nullable: true
       column: catalogue_id
-    ccmMakeId:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: ccm_make_id
     createdDate:
       type: datetime
       nullable: false
@@ -147,13 +142,13 @@ CcmModels:
       nullable: true
       column: is_pqs
   oneToOne:
-    modifiedBy:
-      targetEntity: Users
+    ccmMake:
+      targetEntity: CcmMakes
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        modified_by:
+        ccm_make_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     ccmAssetType:
@@ -172,6 +167,15 @@ CcmModels:
       inversedBy: null
       joinColumns:
         created_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

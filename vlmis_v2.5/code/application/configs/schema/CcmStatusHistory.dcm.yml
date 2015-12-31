@@ -27,6 +27,11 @@ CcmStatusHistory:
       type: datetime
       nullable: true
       column: status_date
+    warehouseId:
+      type: integer
+      unsigned: false
+      nullable: false
+      column: warehouse_id
     createdDate:
       type: datetime
       nullable: true
@@ -36,15 +41,6 @@ CcmStatusHistory:
       nullable: false
       column: modified_date
   oneToOne:
-    utilization:
-      targetEntity: CcmStatusList
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        utilization_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     ccm:
       targetEntity: ColdChain
       cascade: {  }
@@ -52,24 +48,6 @@ CcmStatusHistory:
       inversedBy: null
       joinColumns:
         ccm_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    reason:
-      targetEntity: CcmStatusList
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        reason_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    warehouse:
-      targetEntity: Warehouses
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        warehouse_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     createdBy:
@@ -99,6 +77,15 @@ CcmStatusHistory:
         ccm_status_list_id:
           referencedColumnName: pk_id
       orphanRemoval: false
+    reason:
+      targetEntity: CcmStatusList
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        reason_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
     ccmAssetType:
       targetEntity: CcmAssetTypes
       cascade: {  }
@@ -106,6 +93,15 @@ CcmStatusHistory:
       inversedBy: null
       joinColumns:
         ccm_asset_type_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    utilization:
+      targetEntity: CcmStatusList
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        utilization_id:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

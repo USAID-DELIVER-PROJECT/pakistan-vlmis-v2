@@ -35,7 +35,7 @@
                     <th><?php echo $this->from_date; ?></th>
                     <th></th>
                     <th></th>
-                    <th>Opening Balance (<?php echo $this->result[0]->getStockBatch()->getItemPackSize()->getItemName(); ?>)</th>
+                    <th>Opening Balance (<?php echo $this->result[0]->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemName(); ?>)</th>
                     <th></th>
                     <th></th>                    
                     <th class="right"><?php //echo number_format($balance_vials);   ?></th>
@@ -53,16 +53,16 @@
                     $nature = $row->getStockMaster()->getTransactionType()->getNature();
                     // $balance = (int)$balance*(int)$nature+(int)ABS($row->getQuantity());
                     $quantity_vials = $row->getQuantity();
-                    $quantity_doses = $quantity_vials * $row->getStockBatch()->getItemPackSize()->getNumberOfDoses();
+                    $quantity_doses = $quantity_vials * $row->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getNumberOfDoses();
                     $balance_vials = $balance_vials + ($nature . ABS($quantity_vials));
                     $balance_doses = $balance_doses + ($nature . ABS($quantity_doses));
 
                     if (array_key_exists($row->getStockBatch()->getPkId(), $batch_cb)) {
                         $batch_cb[$row->getStockBatch()->getPkId()] = $batch_cb[$row->getStockBatch()->getPkId()] + ($nature . ABS($quantity_vials));
-                        $batch_cb_doses = $batch_cb[$row->getStockBatch()->getPkId()] * $row->getStockBatch()->getItemPackSize()->getNumberOfDoses();
+                        $batch_cb_doses = $batch_cb[$row->getStockBatch()->getPkId()] * $row->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getNumberOfDoses();
                     } else {
                         $batch_cb[$row->getStockBatch()->getPkId()] = $this->getBatchOB($row->getStockBatch()->getPkId(),  App_Controller_Functions::dateToDbFormat($this->from_date)) + ($nature . ABS($quantity_vials));
-                        $batch_cb_doses = $batch_cb[$row->getStockBatch()->getPkId()] * $row->getStockBatch()->getItemPackSize()->getNumberOfDoses();
+                        $batch_cb_doses = $batch_cb[$row->getStockBatch()->getPkId()] * $row->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getNumberOfDoses();
                     }
 
                     if ($row->getStockMaster()->getTransactionType()->getpkId() == 2) {

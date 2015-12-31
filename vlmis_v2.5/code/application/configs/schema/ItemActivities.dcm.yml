@@ -19,6 +19,15 @@ ItemActivities:
       nullable: false
       column: modified_date
   oneToOne:
+    itemPackSize:
+      targetEntity: ItemPackSizes
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        item_pack_size_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
     stakeholderActivity:
       targetEntity: StakeholderActivities
       cascade: {  }
@@ -44,15 +53,6 @@ ItemActivities:
       inversedBy: null
       joinColumns:
         modified_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    itemPackSize:
-      targetEntity: ItemPackSizes
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        item_pack_size_id:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

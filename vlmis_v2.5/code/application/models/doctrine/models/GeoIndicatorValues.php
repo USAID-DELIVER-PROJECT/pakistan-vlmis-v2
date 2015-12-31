@@ -45,6 +45,11 @@ class GeoIndicatorValues
     private $modifiedDate;
 
     /**
+     * @var Users
+     */
+    private $modifiedBy;
+
+    /**
      * @var GeoIndicators
      */
     private $geoIndicator;
@@ -58,11 +63,6 @@ class GeoIndicatorValues
      * @var Users
      */
     private $createdBy;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
 
 
     /**
@@ -196,6 +196,26 @@ class GeoIndicatorValues
     }
 
     /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+
+    /**
      * Set geoIndicator
      *
      * @param GeoIndicators $geoIndicator
@@ -253,25 +273,5 @@ class GeoIndicatorValues
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
     }
 }

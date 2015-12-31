@@ -402,54 +402,7 @@ class Model_CcmWarehouses extends Model_Base {
         return $row->fetchAll();
     }
 
-    public function icepackFreezingCapacityAgainstSIARequirements() {
-        $where = array();
-        $str_where = "";
-
-        if (!empty($this->form_values['combo1']) && $this->form_values['office'] == 2) {
-            $where[] = "warehouses.province_id = " . $this->form_values['combo1'];
-        }
-        if (!empty($this->form_values['combo2']) && $this->form_values['office'] == 6) {
-            $where[] = "warehouses.district_id = " . $this->form_values['combo2'];
-        }
-        $where[] = "warehouses.status = 1";
-
-        if (count($where) > 0) {
-            $str_where .= " AND " . implode(" AND ", $where);
-        }
-
-        $str_qry = "
-                   SELECT
-                        Province.location_name AS Province,
-                        District.location_name AS Distirct,
-                        Tehsil.location_name AS Tehsil,
-                        UC.location_name AS UC,
-                        warehouses.warehouse_name AS FacilityName,
-                        warehouse_types.warehouse_type_name AS FacilityType,
-                        warehouses.ccem_id AS FacilityCode,
-                        warehouse_population.requirments_4degree AS Required,
-                        warehouse_population.capacity_4degree AS Capacity,
-                        IFNULL(warehouse_population.capacity_4degree, 0) - IFNULL(warehouse_population.requirments_4degree, 0) AS Balance
-                   FROM
-                        locations AS Province
-                        INNER JOIN locations AS District ON Province.pk_id = District.province_id
-                        INNER JOIN locations AS Tehsil ON District.pk_id = Tehsil.district_id
-                        INNER JOIN locations AS UC ON Tehsil.pk_id = UC.parent_id
-                        INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                        INNER JOIN warehouse_types ON warehouses.warehouse_type_id = warehouse_types.pk_id
-                        INNER JOIN cold_chain ON cold_chain.warehouse_id = warehouses.pk_id
-                        INNER JOIN warehouse_population ON warehouses.pk_id = warehouse_population.warehouse_id
-                   WHERE
-                        cold_chain.ccm_asset_type_id = 2
-                        " . $str_where . "
-                   GROUP BY
-                        warehouses.pk_id
-                    ";
-        $row = $this->_em->getConnection()->prepare($str_qry);
-        $row->execute();
-        return $row->fetchAll();
-    }
-
+  
     public function icepackFreezingCapacityAgainstSIARequirementsGraph() {
         $where = array();
         $str_where = "";
@@ -533,36 +486,7 @@ class Model_CcmWarehouses extends Model_Base {
         return $row->fetchAll();
     }
 
-    public function getLineListOfEquipmentWithWorkingStatus() {
-        $str_qry = "SELECT
-                    warehouse_types.warehouse_type_name AS FacilityType,
-                    AssetSubtype.asset_type_name,
-                    Count(AssetSubtype.pk_id) AS Total,
-                    Sum(IF(ccm_status_history.ccm_status_list_id=1, 1, 0)) AS Working,
-                    ROUND((SUM(IF(ccm_status_history.ccm_status_list_id=1, 1, 0))/COUNT(cold_chain.warehouse_id)) * 100, 1) AS WorkingPer,
-                    Sum(IF(ccm_status_history.ccm_status_list_id=2, 1, 0)) AS NeedsService,
-                    ROUND((SUM(IF(ccm_status_history.ccm_status_list_id=2, 1, 0))/COUNT(cold_chain.warehouse_id)) * 100, 1) AS NeedsServicePer,
-                    Sum(IF(ccm_status_history.ccm_status_list_id=3, 1, 0)) AS NotWorking,
-                    ROUND((SUM(IF(ccm_status_history.ccm_status_list_id=3, 1, 0))/COUNT(cold_chain.warehouse_id)) * 100, 1) AS NonWorkingPer
-                FROM
-                    warehouses
-                    INNER JOIN warehouse_types ON warehouses.warehouse_type_id = warehouse_types.pk_id
-                    INNER JOIN cold_chain ON cold_chain.warehouse_id = warehouses.pk_id
-                    INNER JOIN ccm_asset_types AS AssetSubtype ON cold_chain.ccm_asset_type_id = AssetSubtype.pk_id
-                    INNER JOIN ccm_asset_types AS AssetMainType ON AssetSubtype.parent_id = AssetMainType.pk_id
-                    INNER JOIN ccm_status_history ON cold_chain.ccm_status_history_id = ccm_status_history.pk_id
-                WHERE
-                    AssetMainType.pk_id = ".Model_CcmAssetTypes::REFRIGERATOR."
-                   and warehouses.status = ".Model_CcmAssetTypes::REFRIGERATOR."
-                GROUP BY
-                    warehouse_types.pk_id,
-                    AssetSubtype.pk_id
-                    ";
-        $row = $this->_em->getConnection()->prepare($str_qry);
-        $row->execute();
-        return $row->fetchAll();
-    }
-
+    
     public function getStorageCapacityByArea4c() {
         $where = array();
         $str_where = "";

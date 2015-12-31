@@ -2,7 +2,7 @@
 /* The file is used for the District Map creation of month of stock */
 $(window).load(function() {
 
-   map = new OpenLayers.Map('map', {
+    map = new OpenLayers.Map('map', {
         projection: new OpenLayers.Projection("EPSG:900913"),
         displayProjection: new OpenLayers.Projection("EPSG:4326"),
         maxExtent: restricted,
@@ -26,32 +26,32 @@ $(window).load(function() {
         ]
     });
 
-   province = new OpenLayers.Layer.Vector(
-        "Province", {
-            protocol: new OpenLayers.Protocol.HTTP({
-                url: appName + "/js/province.geojson",
-                format: new OpenLayers.Format.GeoJSON({
-                    internalProjection: new OpenLayers.Projection("EPSG:3857"),
-                    externalProjection: new OpenLayers.Projection("EPSG:3857")
-                })
-            }),
-            strategies: [new OpenLayers.Strategy.Fixed()],
-            styleMap: province_style_label,
-            isBaseLayer: true
-        });
+    province = new OpenLayers.Layer.Vector(
+            "Province", {
+                protocol: new OpenLayers.Protocol.HTTP({
+                    url: appName + "/js/province.geojson",
+                    format: new OpenLayers.Format.GeoJSON({
+                        internalProjection: new OpenLayers.Projection("EPSG:3857"),
+                        externalProjection: new OpenLayers.Projection("EPSG:3857")
+                    })
+                }),
+                strategies: [new OpenLayers.Strategy.Fixed()],
+                styleMap: province_style_label,
+                isBaseLayer: true
+            });
 
     district = new OpenLayers.Layer.Vector(
-        "District", {
-            protocol: new OpenLayers.Protocol.HTTP({
-                url: appName + "/js/district.geojson",
-                format: new OpenLayers.Format.GeoJSON({
-                    internalProjection: new OpenLayers.Projection("EPSG:3857"),
-                    externalProjection: new OpenLayers.Projection("EPSG:3857")
-                })
-            }),
-            strategies: [new OpenLayers.Strategy.Fixed()],
-            styleMap: district_style
-        });
+            "District", {
+                protocol: new OpenLayers.Protocol.HTTP({
+                    url: appName + "/js/district.geojson",
+                    format: new OpenLayers.Format.GeoJSON({
+                        internalProjection: new OpenLayers.Projection("EPSG:3857"),
+                        externalProjection: new OpenLayers.Projection("EPSG:3857")
+                    })
+                }),
+                strategies: [new OpenLayers.Strategy.Fixed()],
+                styleMap: district_style
+            });
 
     vLMIS = new OpenLayers.Layer.Vector("Consumption", {
         styleMap: vlMIS_style
@@ -84,14 +84,16 @@ function readData() {
 /* End of Function */
 
 /* Execute function on button click */
-$("#submit").click(function() {getData();});
+$("#submit").click(function() {
+    getData();
+});
 /* End of Function */
 
 /* Execute funtion for filter data */
 function getData() {
-    
+
     clearData();
-    
+
     year = $("#year").val();
     month = $('#month').val();
     product = $("#product").val();
@@ -100,7 +102,7 @@ function getData() {
     product_name = $("#product option:selected").text();
     type_name = $("#amc_type option:selected").text();
     provinceName = $("#province option:selected").text();
-    
+
     mapTitle();
 
     $.ajax({
@@ -112,12 +114,12 @@ function getData() {
             province: region,
             product: product,
             type: type,
-            level : '4'
+            level: '4'
         },
         dataType: "json",
         success: callback,
         error: function(response) {
-           /* Failure of ajax call,Stop the loader and enable the submit button */
+            /* Failure of ajax call,Stop the loader and enable the submit button */
             $("#loader").css("display", "none");
             $("#submit").attr("disabled", false);
             return;
@@ -127,8 +129,13 @@ function getData() {
     function callback(response) {
 
         data = response;
+        var amc_type = $("#amc_type").val();
         for (var i = 0; i < data.length; i++) {
-            maxValue.push(Math.round(data[i].consumption));
+            if (amc_type == 'C') {
+                maxValue.push(Math.round(data[i].Vaccinated));
+            } else if (amc_type == 'A') {
+                maxValue.push(Math.round(data[i].AMC));
+            }
         }
 
         max = Math.max.apply(Math, maxValue);
@@ -139,22 +146,29 @@ function getData() {
 }
 /* End of Function */
 
- /* Function for Draw Feature */
+/* Function for Draw Feature */
 function drawLayer() {
-   
+
     if (vLMIS.features.length > 0) {
         vLMIS.removeAllFeatures();
     }
 
     FilterData();
     if (data.length <= 0) {
-            alert("No Data Available");
-            $("#loader").css("display", "none");
-            $("#submit").attr("disabled", false);
+        alert("No Data Available");
+        $("#loader").css("display", "none");
+        $("#submit").attr("disabled", false);
     }
     data.sort(SortByID);
+    var vaccinated = 0;
+    var amc_type = $("#amc_type").val();
     for (var i = 0; i < data.length; i++) {
-        chkeArray(data[i].district_id, Number(data[i].consumption));
+        if (amc_type == 'C') {
+            vaccinated = Number(data[i].Vaccinated);
+        } else if (amc_type == 'A') {
+            vaccinated = Number(data[i].AMC);
+        }
+        chkeArray(data[i].district_id, vaccinated);
     }
     drawGrid();
     districtCountGraph();
@@ -162,15 +176,15 @@ function drawLayer() {
 }
 /* End of Function */
 
- /* Function for connecting database result calls from ajax with district layer */
+/* Function for connecting database result calls from ajax with district layer */
 function chkeArray(district_id, value) {
     for (var i = 0; i < district.features.length; i++) {
         if (district_id == district.features[i].attributes.district_id) {
             if (min == max) {
-                vLMISMiniLayer(district.features[i].geometry,district.features[i].attributes.province_id, district.features[i].attributes.province_name, product_name, district_id, district.features[i].attributes.district_name, value);
+                vLMISMiniLayer(district.features[i].geometry, district.features[i].attributes.province_id, district.features[i].attributes.province_name, product_name, district_id, district.features[i].attributes.district_name, value);
                 break;
             } else {
-                vLMISLayer(district.features[i].geometry,district.features[i].attributes.province_id, district.features[i].attributes.province_name, product_name, district_id, district.features[i].attributes.district_name, value);
+                vLMISLayer(district.features[i].geometry, district.features[i].attributes.province_id, district.features[i].attributes.province_name, product_name, district_id, district.features[i].attributes.district_name, value);
                 break;
             }
         }
@@ -219,7 +233,7 @@ function vLMISLayer(wkt, province_id, province, product, district_id, district, 
         district: district,
         province: province,
         product: product,
-        status:status,
+        status: status,
         value: value,
         color: color
     };
@@ -230,26 +244,26 @@ function vLMISLayer(wkt, province_id, province, product, district_id, district, 
 
 /* Function for renders feature and accociate attribute with it */
 function vLMISMiniLayer(wkt, province_id, province, product, district_id, district, value) {
-        feature = new OpenLayers.Feature.Vector(wkt);
-        if (value == parseInt(classesArray[0].start_value) && value == parseInt(classesArray[0].end_value)) {
-            color = classesArray[0].color_code;
-            NoData = Number(NoData) + 1;
-        } else {
-            color = classesArray[1].color_code;
-            class1 = Number(class1) + 1;
-        }
-        feature.attributes = {
-            district_id: district_id,
-            province_id: province_id,
-            district: district,
-            province: province,
-            product: product,
-            status:status,
-            value: value,
-            color: color
-        };
-        vLMIS.addFeatures(feature);
-        $("#loader").css("display", "none");
+    feature = new OpenLayers.Feature.Vector(wkt);
+    if (value == parseInt(classesArray[0].start_value) && value == parseInt(classesArray[0].end_value)) {
+        color = classesArray[0].color_code;
+        NoData = Number(NoData) + 1;
+    } else {
+        color = classesArray[1].color_code;
+        class1 = Number(class1) + 1;
+    }
+    feature.attributes = {
+        district_id: district_id,
+        province_id: province_id,
+        district: district,
+        province: province,
+        product: product,
+        status: status,
+        value: value,
+        color: color
+    };
+    vLMIS.addFeatures(feature);
+    $("#loader").css("display", "none");
 
 }
 /* End of Function */
@@ -300,16 +314,19 @@ function clearData() {
 function mapTitle() {
 
     prov_name = $("#province option:selected").text();
-    if(prov_name == "Select"){prov_name = "Pakistan"};
+    if (prov_name == "Select") {
+        prov_name = "Pakistan"
+    }
+    ;
     year_name = $("#year option:selected").text();
     month_value = ($('#month').val()) - 1;
     var month_name = monthNames[month_value];
     month_year = month_name + " " + year_name;
-    download = product_name+"->"+month_year;
-    if(type == "C"){
+    download = product_name + "->" + month_year;
+    if (type == "C") {
         $("#mapTitle").html("<font color='green' size='4'><b>" + type_name + "  (" + month_year + ")</b></font> <br/> " + product_name);
     }
-    else{
+    else {
         $("#mapTitle").html("<font color='green' size='4'><b>" + type_name + " <br/> (" + month_year + ")</b></font> <br/> " + product_name);
     }
 
@@ -326,21 +343,28 @@ function mapTitle() {
 }
 /* End of Function */
 
- /* Sorting JSON result in ascending order */
-function SortByID(x, y) {return x.consumption - y.consumption;}
+/* Sorting JSON result in ascending order */
+function SortByID(x, y) {
+    var amc_type = $('#amc_type').val();
+    if (amc_type == 'C') {
+        return x.Vaccinated - y.Vaccinated;
+    } else if (amc_type == 'A') {
+        return x.AMC - y.AMC;
+    }
+}
 /* End of Function */
 
- /* Funtion for Attribute table creation */
+/* Funtion for Attribute table creation */
 function drawGrid() {
     $("#attributeGrid").html("");
     $("#districtRanking").html("");
     dataDownload.length = 0;
     jsonData.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>Province</th><th>District</th><th align='center'>Product</th><th align='center'>" + type_name + "</th><th></th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>Province</th><th>District</th><th class='center'>Product</th><th class='center' colspan='2'>" + type_name + "</th></thead>";
     for (var i = 0; i < features.length; i++) {
-        table += "<tr><td>" + features[i].attributes.province + "</td><td>" + features[i].attributes.district + "</td><td align='center'>" + features[i].attributes.product + "</td><td align='right'>" + features[i].attributes.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
+        table += "<tr><td>" + features[i].attributes.province + "</td><td>" + features[i].attributes.district + "</td><td class='center'>" + features[i].attributes.product + "</td><td class='right'>" + features[i].attributes.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
         jsonData.push({
             label: features[i].attributes.district,
             value: features[i].attributes.value,
@@ -368,7 +392,7 @@ function drawGrid() {
     table += "</table>";
     $("#attributeGrid").append(table);
     maximum = vLMIS.features.length;
-    districtRanking(jsonData,"");
+    districtRanking(jsonData, "");
 }
 /* End of Function */
 
@@ -381,26 +405,26 @@ function districtCountGraph() {
     var cls3 = CalculatePercent(class3, maximum);
     var cls4 = CalculatePercent(class4, maximum);
     var cls5 = CalculatePercent(class5, maximum);
-    
+
     if (min == max) {
-       
-       if(min == "0" && max == "0"){
-                pieArray.push({
-                  label: classesArray[0].description,
-                  value: ND,
-                  color: classesArray[0].color_code
-              }); 
-       }else{ 
-                pieArray.push({
-                    label: classesArray[1].description,
-                    value: cls1,
-                    color: classesArray[1].color_code
-                });
+
+        if (min == "0" && max == "0") {
+            pieArray.push({
+                label: classesArray[0].description,
+                value: ND,
+                color: classesArray[0].color_code
+            });
+        } else {
+            pieArray.push({
+                label: classesArray[1].description,
+                value: cls1,
+                color: classesArray[1].color_code
+            });
         }
     } else {
-  
+
         pieArray.push({
-            label:'No Data',
+            label: 'No Data',
             value: ND,
             color: classesArray[0].color_code
         });
@@ -435,16 +459,16 @@ function districtCountGraph() {
         type: 'column3D',
         renderAt: 'chart-container',
         width: '100%',
-        height: '400px',
+        height: '350px',
         dataFormat: 'json',
         dataSource: {
             "chart": {
-                "caption": prov_name+"-"+type_name + " Status",
+                "caption": prov_name + "-" + type_name + " Status",
                 "subcaption": download,
                 "showLabels": "1",
-                "showlegend":"1",
+                "showlegend": "1",
                 "slantLabels": '1',
-                "labelDisplay":'Rotate',
+                "labelDisplay": 'Rotate',
                 "enableLink": '1',
                 "showValues": '1',
                 "xAxisName": "",
@@ -461,12 +485,12 @@ function districtCountGraph() {
 /* End of Function */
 
 /* Function for District wise ranking for Consumption */
-function districtRanking(records,title) {
-    
+function districtRanking(records, title) {
+
     records.sort(SortByRankingID);
     if (records.length > 52) {
         width = '280%';
-    } 
+    }
     else {
         width = '150%';
     }
@@ -474,11 +498,11 @@ function districtRanking(records,title) {
         type: 'column2D',
         renderAt: 'chart-container',
         width: width,
-        height: '100%',
+        height: '98%',
         dataFormat: 'json',
         dataSource: {
             "chart": {
-                "caption": prov_name+" - District wise " + type_name + " Ranking "+title,
+                "caption": prov_name + " - District wise " + type_name + " Ranking " + title,
                 "subcaption": download,
                 "slantLabels": '1',
                 "enableLink": '1',
@@ -486,10 +510,10 @@ function districtRanking(records,title) {
                 "rotateValues": '1',
                 "placeValuesInside": '1',
                 "formatnumberscale": "1",
-                "adjustDiv":'0',
-                "numDivLines":'3',
+                "adjustDiv": '0',
+                "numDivLines": '3',
                 "xAxisName": "",
-                "yAxisName": type_name+" (Doses)",
+                "yAxisName": type_name + " (Doses)",
                 "exportEnabled": "1",
                 "theme": "fint"
             },
@@ -505,11 +529,11 @@ function gridFilter(color) {
     $("#attributeGrid").html("");
     dataDownload.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>Province</th><th>District</th><th align='center'>Product</th><th align='center'>" + type_name + "</th><th></th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>Province</th><th>District</th><th class='center'>Product</th><th class='center'>" + type_name + "</th><th></th></thead>";
     for (var i = 0; i < features.length; i++) {
         if (features[i].attributes.color == color) {
-            table += "<tr><td>" + features[i].attributes.province + "</td><td>" + features[i].attributes.district + "</td><td align='center'>" + features[i].attributes.product + "</td><td align='right'>" + features[i].attributes.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
+            table += "<tr><td>" + features[i].attributes.province + "</td><td>" + features[i].attributes.district + "</td><td class='center'>" + features[i].attributes.product + "</td><td class='right'>" + features[i].attributes.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
             if (type_name == "Consumption") {
                 dataDownload.push({
                     province: features[i].attributes.province,

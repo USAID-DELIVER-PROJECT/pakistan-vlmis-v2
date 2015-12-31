@@ -7,9 +7,14 @@ class Zend_View_Helper_AllLevelCombo extends Zend_View_Helper_Abstract {
         $identity = App_Auth::getInstance();
         $translate = Zend_Registry::get('Zend_Translate');
         $base_url = Zend_Registry::get('baseurl');
+        $role = $identity->getRoleId();
 
         if ($user_lvl == null) {
             $user_lvl = $identity->getUserLevel($identity->getIdentity());
+        }
+        
+        if ($role == 17 || $role == 29) {
+            $user_lvl = 17;
         }
 
         $prov_id = $identity->getUserProvinceId($identity->getIdentity());
@@ -86,7 +91,7 @@ class Zend_View_Helper_AllLevelCombo extends Zend_View_Helper_Abstract {
                     );
                     break;
             }
-        } else if ($menu_type == 'explorer') {
+        } else if ($menu_type == 'explorer') {            
             switch ($user_lvl) {
                 case 1:
                     $arr_province = array(
@@ -115,7 +120,6 @@ class Zend_View_Helper_AllLevelCombo extends Zend_View_Helper_Abstract {
                     );
                     break;
                 case 4:
-                case 17:
                     $arr_province = array(
                         '2' => 'Province',
                         '3' => 'Division',

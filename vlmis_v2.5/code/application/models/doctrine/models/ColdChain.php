@@ -90,16 +90,6 @@ class ColdChain
     private $ccmAssetType;
 
     /**
-     * @var Users
-     */
-    private $createdBy;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
-
-    /**
      * @var CcmModels
      */
     private $ccmModel;
@@ -113,6 +103,16 @@ class ColdChain
      * @var Warehouses
      */
     private $warehouse;
+
+    /**
+     * @var Users
+     */
+    private $createdBy;
+
+    /**
+     * @var Users
+     */
+    private $modifiedBy;
 
 
     /**
@@ -426,46 +426,6 @@ class ColdChain
     }
 
     /**
-     * Set createdBy
-     *
-     * @param Users $createdBy
-     */
-    public function setCreatedBy(\Users $createdBy)
-    {
-        $this->createdBy = $createdBy;
-    }
-
-    /**
-     * Get createdBy
-     *
-     * @return Users 
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
      * Set ccmModel
      *
      * @param CcmModels $ccmModel
@@ -523,5 +483,45 @@ class ColdChain
     public function getWarehouse()
     {
         return $this->warehouse;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param Users $createdBy
+     */
+    public function setCreatedBy(\Users $createdBy)
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return Users 
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
     }
 }

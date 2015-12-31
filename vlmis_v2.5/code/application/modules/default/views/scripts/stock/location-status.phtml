@@ -88,11 +88,9 @@
                                                     $row1 = (int) $rowStatus['myrow'];
                                                     $rack = (int) $rowStatus['myrack'];
                                                     $pallet = (int) $rowStatus['mypallet'];
-                                                }
-                                                
+                                                }                                                
 
-                                                print " Hit Pre=".$hit." RC=". $Rowcounter." | ". $rr ." | ". $row1 ." | ".  $cc ." | ". $rack ." | ". $pallet."<br>";
-                                                 
+                                                //print " Hit Pre=".$hit." RC=". $Rowcounter." | ". $rr ." | ". $row1 ." | ".  $cc ." | ". $rack ." | ". $pallet."<br>";
                                                 if ($rr == $row1 && $cc == $rack && $pallet == $pp) {
                                                     $locArray[$rr][$cc][$pp] = $locname . "|" . $plc_locid;
                                                    
@@ -108,7 +106,7 @@
                                             }
                                         }
                                     }
-print_r($locArray);
+                                    
                                     for ($a = 1; $a <= $maxRows; $a++):
                                         ?>
                                         <tr style="border: 3px solid #d3d3d3;" >

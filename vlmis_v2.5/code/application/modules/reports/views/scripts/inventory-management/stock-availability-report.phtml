@@ -26,7 +26,7 @@ if ($num_item_cwh > 0) {
         $cwhamc = $this->reports()->reportAmc('NP', $rpt_date, 0, $sel_item, $sel_stk);
         $cwhsoh = $this->reports()->reportCb('NP', $rpt_date, 0, $sel_item, $sel_stk);
         //App_Controller_Functions::pr($cwhsoh);
-            
+
         if ($old1 != $row_item['warehouse_name']) {
             $cwh_name = $row_item['warehouse_name'];
         }
@@ -58,10 +58,10 @@ if (!empty($num_item) && $num_item > 0) {
     $pwhsoh = 0;
     $pwhamc = $this->reports()->reportAmc('PP', $rpt_date, 0, $sel_item, $sel_stk);
     $pwhsoh = $this->reports()->reportCb('PP', $rpt_date, 0, $sel_item, $sel_stk);
-    foreach($pwhamc as $amc){
+    foreach ($pwhamc as $amc) {
         $data_arr[$amc['pk_id']]['amc'] = $amc['AMC'];
     }
-    foreach($pwhsoh as $cb){
+    foreach ($pwhsoh as $cb) {
         $data_arr[$cb['pk_id']]['cb'] = $cb['CB'];
     }
     //App_Controller_Functions::pr($this->rs_items['provincial']);
@@ -96,18 +96,17 @@ if (!empty($num_item2) && $num_item2 > 0) {
     $pwhsoh = 0;
     $pwhamc = $this->reports()->reportAmc('DP', $rpt_date, $sel_prov, $sel_item, $sel_stk);
     $pwhsoh = $this->reports()->reportCb('DP', $rpt_date, $sel_prov, $sel_item, $sel_stk);
-    foreach($pwhamc as $amc){
+    foreach ($pwhamc as $amc) {
         $data_arr[$amc['pk_id']]['amc'] = $amc['AMC'];
     }
-    foreach($pwhsoh as $cb){
+    foreach ($pwhsoh as $cb) {
         $data_arr[$cb['pk_id']]['field_store'] = $cb['field_store'];
         $data_arr[$cb['pk_id']]['district_store'] = $cb['district_store'];
         $data_arr[$cb['pk_id']]['total_cb'] = $cb['CB'];
     }
-    
+
     foreach ($this->rs_items['district'] as $row_item2) {
-        if(isset($data_arr[$row_item2['district_id']]))
-        {
+        if (isset($data_arr[$row_item2['district_id']])) {
             $district_id = $row_item2['district_id'];
             $xml_district .="<row id=\"$counter\">";
             $district_name = $row_item2['district'];
@@ -117,7 +116,7 @@ if (!empty($num_item2) && $num_item2 > 0) {
             $xml_district .="<cell>" . $province_name . "</cell>";
             $xml_district .="<cell><![CDATA[$stk_name]]></cell>";
             $MOS = $MOS1 = $MOS2 = 0;
-            if($data_arr[$district_id]['amc'] > 0){
+            if ($data_arr[$district_id]['amc'] > 0) {
                 $MOS = $data_arr[$district_id]['district_store'] / $data_arr[$district_id]['amc'];
                 $MOS1 = $data_arr[$district_id]['field_store'] / $data_arr[$district_id]['amc'];
                 $MOS2 = $data_arr[$district_id]['total_cb'] / $data_arr[$district_id]['amc'];
@@ -247,7 +246,7 @@ $str_stock_report_district = "Districts Report For Province/Region = $this->loca
                                 <?php echo $this->render('inventory-management/reports-header.phtml') ?>
                             </td>
                         </tr>
-                        
+
                     </table>
 
                     <?php if ($num_item_cwh > 0) { ?>

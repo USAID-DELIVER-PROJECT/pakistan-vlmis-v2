@@ -114,6 +114,18 @@ class StockDetailProxy extends \StockDetail implements \Doctrine\ORM\Proxy\Proxy
         return parent::getModifiedDate();
     }
 
+    public function setStockBatchWarehouse(\StockBatchWarehouses $stockBatchWarehouse)
+    {
+        $this->__load();
+        return parent::setStockBatchWarehouse($stockBatchWarehouse);
+    }
+
+    public function getStockBatchWarehouse()
+    {
+        $this->__load();
+        return parent::getStockBatchWarehouse();
+    }
+
     public function setVvmStage(\VvmStages $vvmStage)
     {
         $this->__load();
@@ -136,18 +148,6 @@ class StockDetailProxy extends \StockDetail implements \Doctrine\ORM\Proxy\Proxy
     {
         $this->__load();
         return parent::getStockMaster();
-    }
-
-    public function setStockBatch(\StockBatch $stockBatch)
-    {
-        $this->__load();
-        return parent::setStockBatch($stockBatch);
-    }
-
-    public function getStockBatch()
-    {
-        $this->__load();
-        return parent::getStockBatch();
     }
 
     public function setItemUnit(\ItemUnits $itemUnit)
@@ -189,7 +189,7 @@ class StockDetailProxy extends \StockDetail implements \Doctrine\ORM\Proxy\Proxy
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'quantity', 'temporary', 'isReceived', 'adjustmentType', 'createdDate', 'modifiedDate', 'vvmStage', 'stockMaster', 'stockBatch', 'itemUnit', 'createdBy', 'modifiedBy');
+        return array('__isInitialized__', 'pkId', 'quantity', 'temporary', 'isReceived', 'adjustmentType', 'createdDate', 'modifiedDate', 'stockBatchWarehouse', 'vvmStage', 'stockMaster', 'itemUnit', 'createdBy', 'modifiedBy');
     }
 
     public function __clone()

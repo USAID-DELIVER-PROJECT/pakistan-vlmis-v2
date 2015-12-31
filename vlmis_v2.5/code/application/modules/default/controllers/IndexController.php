@@ -42,23 +42,22 @@ class IndexController extends App_Controller_Base {
                         parent::_redirect('/iadmin/');
                     }
                     if (in_array($role, array(14, 15))) {
-
                         parent::_redirect('/campaign/manage-campaigns/');
-                    }
-                    if (in_array($role, array(24))) {
-                        parent::_redirect('/reports/dashlet/cold-chain-capacity');
                     }
                     if (in_array($role, array(25))) {
                         parent::_redirect('/dashboard/?office=1');
                     }
+                    if (in_array($role, array(30))) {
+                        parent::_redirect('/dashboard/?office=2');
+                    }
                     if (in_array($role, array(26))) {
                         parent::_redirect('/dashboard/?office=6');
                     }
-                    if (in_array($role, array(27, 30, 31))) {
+                    if (in_array($role, array(27, 31))) {
                         parent::_redirect('/dashboard/?office=6');
                     }
 
-                    if (in_array($role, array(3, 4, 5, 6))) {
+                    if (in_array($role, array(3, 4, 5, 6,17,24))) {
                         parent::_redirect("/reports/dashlet/cold-chain-capacity");
                     }
 
@@ -161,6 +160,11 @@ class IndexController extends App_Controller_Base {
     public function faqsAction() {
         $this->_helper->layout->setLayout('front-inner');
     }
+    
+      public function releaseNotesAction() {
+        $this->_helper->layout->setLayout('front-inner');
+    }
+
 
     public function contactUsAction() {
         $this->_helper->layout->setLayout('front-inner');

@@ -26,7 +26,7 @@ if ($total[0] == 0) {
 
 $counter = 1;
 $i = 1;
-
+$whlist = ""; 
 foreach ($period as $date) {
     $str_date = $date->format("Y-m");
 }
@@ -53,7 +53,7 @@ foreach ($query_vals1 as $row_vals) {
     $xml_store .="<cell style=\"text-align:center;\">" . $i . "</cell>";
     foreach ($query as $row) {
         $wh_name = htmlentities($row['warehouse_name']);
-        $prov_tittle = htmlentities($row[prov_tittle]);
+        $prov_tittle = htmlentities($row['prov_tittle']);
         $d_name = htmlentities($row['d_name']);
          $teh_name = htmlentities($row['teh_name']);
         $UC = htmlentities($row['UC']);

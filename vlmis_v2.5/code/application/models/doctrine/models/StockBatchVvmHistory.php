@@ -40,9 +40,9 @@ class StockBatchVvmHistory
     private $stockBatchVvm;
 
     /**
-     * @var StockBatch
+     * @var StockBatchWarehouses
      */
-    private $stockBatch;
+    private $stockBatchWarehouse;
 
     /**
      * @var VvmStages
@@ -166,23 +166,23 @@ class StockBatchVvmHistory
     }
 
     /**
-     * Set stockBatch
+     * Set stockBatchWarehouse
      *
-     * @param StockBatch $stockBatch
+     * @param StockBatchWarehouses $stockBatchWarehouse
      */
-    public function setStockBatch(\StockBatch $stockBatch)
+    public function setStockBatchWarehouse(\StockBatchWarehouses $stockBatchWarehouse)
     {
-        $this->stockBatch = $stockBatch;
+        $this->stockBatchWarehouse = $stockBatchWarehouse;
     }
 
     /**
-     * Get stockBatch
+     * Get stockBatchWarehouse
      *
-     * @return StockBatch 
+     * @return StockBatchWarehouses 
      */
-    public function getStockBatch()
+    public function getStockBatchWarehouse()
     {
-        return $this->stockBatch;
+        return $this->stockBatchWarehouse;
     }
 
     /**

@@ -19,18 +19,7 @@ class Model_GatepassMaster extends Model_Base {
         $this->_table = $this->_em->getRepository('GatepassMaster');
     }
 
-    public function getAllVehicleNumber() {
-        $str_sql = $this->_em->createQueryBuilder()
-                ->select("gpm.pkId, gpm.number")
-                ->from('GatepassMaster', 'gpm');
-       
-        $row = $str_sql->getQuery()->getResult();
-        if (!empty($row) && count($row) > 0) {
-            return $row;
-        } else {
-            return false;
-        }
-    }
+   
 
     public function addGatepass() {
         $form_values = $this->form_values;

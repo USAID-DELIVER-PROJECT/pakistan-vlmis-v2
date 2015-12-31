@@ -186,8 +186,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->in_col = 'CABM';
             $this->view->in_rg = 'P';
             $this->view->in_type = 'P';
-            $this->view->in_rg1 = 'PP';
-            $this->view->in_type1 = 'PP';
+            $this->view->in_rg1 = 'P';
+            $this->view->in_type1 = 'P';
             $this->view->sel_item = $this->_request->prod_sel;
             $stakeholder = new Model_Stakeholders();
             $stk = $stakeholder->nationReport();
@@ -220,8 +220,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->in_col = 'CABM';
             $this->view->in_rg = 'P';
             $this->view->in_type = 'P';
-            $this->view->in_rg1 = 'PP';
-            $this->view->in_type1 = 'PP';
+            $this->view->in_rg1 = 'P';
+            $this->view->in_type1 = 'P';
             $this->view->sel_item = 28;
             $stakeholder = new Model_Stakeholders();
             $stk = $stakeholder->nationReport();
@@ -279,7 +279,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->location = $lct;
             $this->view->prov_sel = $this->_request->prov_sel;
             $this->view->in_item = 1;
-            $this->view->in_stk = 0;
+            $this->view->in_stk = 1;
             $this->view->in_prov = 0;
             $this->view->in_dist = 0;
             $this->view->counter = 1;
@@ -319,7 +319,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->location = $lct;
             $this->view->prov_sel = $this->_request->prov_sel;
             $this->view->in_item = 1;
-            $this->view->in_stk = 0;
+            $this->view->in_stk = 1;
             $this->view->in_prov = 0;
             $this->view->in_dist = 0;
             $this->view->counter = 1;
@@ -347,7 +347,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->in_rg = 'R';
             $this->view->in_type = 'D';
             $this->view->in_rg1 = 'R';
-            $this->view->in_type1 = 'DP';
+            $this->view->in_type1 = 'D';
             $locations = new Model_Locations();
             $this->view->sel_item = $this->_request->prod_sel;
             $this->view->in_item = $this->_request->prod_sel;
@@ -361,7 +361,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->location = $lct;
             $this->view->prov_sel = $this->_request->prov_sel;
 
-            $this->view->in_stk = 0;
+            $this->view->in_stk = 1;
             $this->view->in_prov = $this->_request->prov_sel;
             $this->view->in_dist = 0;
             $this->view->counter = 1;
@@ -389,7 +389,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->in_rg = 'R';
             $this->view->in_type = 'D';
             $this->view->in_rg1 = 'R';
-            $this->view->in_type1 = 'DP';
+            $this->view->in_type1 = 'D';
             $this->view->sel_item = 28;
             $stakeholder = new Model_Stakeholders();
             $stk = $stakeholder->nationReport();
@@ -402,7 +402,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->location = $lct;
             $this->view->prov_sel = 1;
             $this->view->in_item = 28;
-            $this->view->in_stk = 0;
+            $this->view->in_stk = 1;
             $this->view->in_prov = 1;
             $this->view->in_dist = 0;
             $this->view->counter = 1;
@@ -444,7 +444,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->in_rg = 'R';
             $this->view->in_type = 'D';
             $this->view->in_type_1 = 'H';
-            $this->view->in_type1 = 'TP';
+            $this->view->in_type1 = 'T';
             $this->view->sel_item = 1;
             $locations = new Model_Locations();
             $this->view->sel_item = $this->_request->prod_sel;
@@ -500,7 +500,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->in_rg = 'R';
             $this->view->in_type = 'D';
             $this->view->in_type_1 = 'H';
-            $this->view->in_type1 = 'TP';
+            $this->view->in_type1 = 'T';
             $this->view->sel_item = 28;
             $stakeholder = new Model_Stakeholders();
             $stk = $stakeholder->nationReport();
@@ -570,7 +570,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->in_col = 'CABM';
             $this->view->in_rg = 'U';
             $this->view->in_type = 'D';
-            $this->view->in_type1 = 'UP';
+            $this->view->in_type1 = 'UD';
             $this->view->sel_item = $this->_request->stkid;
             $this->view->in_type_1 = 'U';
             $this->view->prov_sel = $this->_request->prov_sel;
@@ -640,7 +640,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->in_col = 'SPIT';
             $this->view->in_rg = 'U';
             $this->view->in_type = 'D';
-            $this->view->in_type1 = 'UP';
+            $this->view->in_type1 = 'UD';
             $this->view->sel_item = 28;
             $this->view->in_type_1 = 'U';
             $stakeholder = new Model_Stakeholders();
@@ -661,7 +661,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->district = $district;
             $this->view->prov_sel = $this->_request->prov_sel;
             $this->view->in_item = 28;
-            $this->view->in_stk = 0;
+            $this->view->in_stk = 1;
             $this->view->in_prov = 1;
             $this->view->in_dist = 33;
             $this->view->sel_dist = 33;
@@ -1920,7 +1920,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->item_id = $item;
         $location = new Model_Locations();
         if (isset($this->_request->province) && !empty($this->_request->province)) {
-            $this->view->province = $this->_request->province;
+            //$this->view->province = $this->_request->province;
+            $province = $this->_request->province;
+            $this->view->province = $province;
         } else {
             $this->view->province = $province = 1;
         }
@@ -2012,7 +2014,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->item_id = $item;
         $location = new Model_Locations();
         if (isset($this->_request->province) && !empty($this->_request->province)) {
-            $this->view->province = $this->_request->province;
+            //$this->view->province = $this->_request->province;
+            $province = $this->_request->province;
+            $this->view->province = $province;
         } else {
             $this->view->province = $province = 1;
         }
@@ -2104,7 +2108,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->item_id = $item;
         $location = new Model_Locations();
         if (isset($this->_request->province) && !empty($this->_request->province)) {
-            $this->view->province = $this->_request->province;
+            //$this->view->province = $this->_request->province;
+            $province = $this->_request->province;
+            $this->view->province = $province;
         } else {
             $this->view->province = $province = 1;
         }
@@ -2188,7 +2194,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->item_id = $item;
         $location = new Model_Locations();
         if (isset($this->_request->province) && !empty($this->_request->province)) {
-            $this->view->province = $this->_request->province;
+//          $this->view->province = $this->_request->province;
+            $province = $this->_request->province;
+            $this->view->province = $province;
         } else {
             $this->view->province = $province = 1;
         }
@@ -2278,7 +2286,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->item_id = $item;
         $location = new Model_Locations();
         if (isset($this->_request->province) && !empty($this->_request->province)) {
-            $this->view->province = $this->_request->province;
+//          $this->view->province = $this->_request->province;
+            $province = $this->_request->province;
+            $this->view->province = $province;
         } else {
             $this->view->province = $province = 1;
         }
@@ -2639,12 +2649,16 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->combos = $this->_request->getPost();
             $form_values = $this->_request->getPost();
             // App_Controller_Functions::pr($form_values);
-            $this->view->office = $form_values['office'];
-            $this->view->warehouse_id = $form_values['warehouse'];
-            $this->view->warehouse_hidden = $form_values['warehouse'];
-
-            $this->view->combo1_hidden = $form_values['combo1'];
-            $this->view->combo2_hidden = $form_values['combo2'];
+            
+//            $this->view->office = $form_values['office'];
+//            $this->view->warehouse_id = $form_values['warehouse'];
+//            $this->view->warehouse_hidden = $form_values['warehouse'];
+//            $this->view->combo1_hidden = $form_values['combo1'];
+//            $this->view->combo2_hidden = $form_values['combo2'];
+            
+            $this->view->warehouse_id = $this->_identity->getWarehouseId();
+            $this->view->warehouse_hidden = $this->_identity->getWarehouseId();
+            
             $this->view->time_period = $form_values['time_period'];
             $form->time_period->setValue($form_values['time_period']);
         } else {

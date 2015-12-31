@@ -33,7 +33,7 @@
                             ?>
                             <tr>
                                 <td><?php echo $count; ?></td>
-                                <td><?php echo $row->getStockBatch()->getItemPackSize()->getItemName(); ?></td>
+                                <td><?php echo $row->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemName(); ?></td>
                                 <td><?php echo $row->getStockBatch()->getNumber(); ?></td>
                                 <td><?php echo number_format(ABS($row->getQuantity())); ?></td>
                                 <td><?php echo $row->getStockMaster()->getTransactionDate()->format("d/m/Y"); ?></td>
@@ -90,7 +90,7 @@
                             ?>
                             <tr>
                                 <td><?php echo $count; ?></td>
-                                <td><?php echo $row->getStockBatch()->getItemPackSize()->getItemName(); ?></td>
+                                <td><?php echo $row->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemName(); ?></td>
                                 <td><?php echo $row->getStockBatch()->getNumber(); ?></td>
                                 <td><?php echo number_format(ABS($row->getQuantity())); ?></td>
                                 <td><?php echo $row->getStockMaster()->getTransactionDate()->format("d/m/Y"); ?></td>

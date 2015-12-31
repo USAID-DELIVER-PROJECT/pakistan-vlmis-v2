@@ -35,6 +35,21 @@ class WarehousePopulation
     private $womenOfChildBearingAge;
 
     /**
+     * @var integer $survivingChildren011
+     */
+    private $survivingChildren011;
+
+    /**
+     * @var integer $childrenAged1223
+     */
+    private $childrenAged1223;
+
+    /**
+     * @var integer $above2Year
+     */
+    private $above2Year;
+
+    /**
      * @var datetime $estimationYear
      */
     private $estimationYear;
@@ -70,11 +85,6 @@ class WarehousePopulation
     private $modifiedDate;
 
     /**
-     * @var Users
-     */
-    private $modifiedBy;
-
-    /**
      * @var Warehouses
      */
     private $warehouse;
@@ -83,6 +93,11 @@ class WarehousePopulation
      * @var Users
      */
     private $createdBy;
+
+    /**
+     * @var Users
+     */
+    private $modifiedBy;
 
 
     /**
@@ -173,6 +188,66 @@ class WarehousePopulation
     public function getWomenOfChildBearingAge()
     {
         return $this->womenOfChildBearingAge;
+    }
+
+    /**
+     * Set survivingChildren011
+     *
+     * @param integer $survivingChildren011
+     */
+    public function setSurvivingChildren011($survivingChildren011)
+    {
+        $this->survivingChildren011 = $survivingChildren011;
+    }
+
+    /**
+     * Get survivingChildren011
+     *
+     * @return integer 
+     */
+    public function getSurvivingChildren011()
+    {
+        return $this->survivingChildren011;
+    }
+
+    /**
+     * Set childrenAged1223
+     *
+     * @param integer $childrenAged1223
+     */
+    public function setChildrenAged1223($childrenAged1223)
+    {
+        $this->childrenAged1223 = $childrenAged1223;
+    }
+
+    /**
+     * Get childrenAged1223
+     *
+     * @return integer 
+     */
+    public function getChildrenAged1223()
+    {
+        return $this->childrenAged1223;
+    }
+
+    /**
+     * Set above2Year
+     *
+     * @param integer $above2Year
+     */
+    public function setAbove2Year($above2Year)
+    {
+        $this->above2Year = $above2Year;
+    }
+
+    /**
+     * Get above2Year
+     *
+     * @return integer 
+     */
+    public function getAbove2Year()
+    {
+        return $this->above2Year;
     }
 
     /**
@@ -316,26 +391,6 @@ class WarehousePopulation
     }
 
     /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
      * Set warehouse
      *
      * @param Warehouses $warehouse
@@ -373,5 +428,25 @@ class WarehousePopulation
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
     }
 }

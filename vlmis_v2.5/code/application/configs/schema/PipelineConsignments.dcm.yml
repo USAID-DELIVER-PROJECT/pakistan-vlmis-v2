@@ -61,10 +61,6 @@ PipelineConsignments:
       unsigned: false
       nullable: true
       column: received_quantity
-    createdDate:
-      type: datetime
-      nullable: true
-      column: created_date
     masterId:
       type: integer
       unsigned: false
@@ -75,20 +71,15 @@ PipelineConsignments:
       length: null
       fixed: false
       nullable: true
+    createdDate:
+      type: datetime
+      nullable: true
+      column: created_date
     modifiedDate:
       type: datetime
       nullable: false
       column: modified_date
   oneToOne:
-    modifiedBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        modified_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     stakeholderActivity:
       targetEntity: StakeholderActivities
       cascade: {  }
@@ -96,6 +87,15 @@ PipelineConsignments:
       inversedBy: null
       joinColumns:
         stakeholder_activity_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
           referencedColumnName: pk_id
       orphanRemoval: false
     itemPackSize:
@@ -108,7 +108,7 @@ PipelineConsignments:
           referencedColumnName: pk_id
       orphanRemoval: false
     manufacturer:
-      targetEntity: StakeholderItemPackSizes
+      targetEntity: PackInfo
       cascade: {  }
       mappedBy: null
       inversedBy: null
@@ -152,13 +152,13 @@ PipelineConsignments:
         created_by:
           referencedColumnName: pk_id
       orphanRemoval: false
-    stockBatch:
-      targetEntity: StockBatch
+    stockBatchWarehouse:
+      targetEntity: StockBatchWarehouses
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        stock_batch_id:
+        stock_batch_warehouse_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     transactionType:

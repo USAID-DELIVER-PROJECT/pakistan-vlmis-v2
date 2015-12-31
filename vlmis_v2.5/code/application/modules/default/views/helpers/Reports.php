@@ -48,8 +48,11 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                     FROM
                             stock_master
                     INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-                    INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                    INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id                    
                     INNER JOIN transaction_types ON stock_master.transaction_type_id = transaction_types.pk_id
                     WHERE
                             stock_master.parent_id = $master_id
@@ -152,33 +155,40 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                                             Sum(stock_detail.quantity) AS total_vials,
                                             item_pack_sizes.item_name,
                                             item_pack_sizes.number_of_doses,
-                                            stock_batch.item_pack_size_id,
+                                            stakeholder_item_pack_sizes.item_pack_size_id,
                                             stock_batch.unit_price
                                     FROM
                                             stock_master
                                     INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-                                    INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-                                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                                    INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                                     WHERE
                                             stock_master.pk_id = $master_id
-                                    GROUP BY
-                                            stock_batch.item_pack_size_id
+                                    GROUP BY item_pack_sizes.pk_id
                             ) A
                     LEFT JOIN (
                             SELECT
                                     SUM(stock_detail.quantity) AS total_vials,
-                                    stock_batch.item_pack_size_id
+                                    stakeholder_item_pack_sizes.item_pack_size_id
                             FROM
                                     stock_master
                             INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-                            INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+                            INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                            INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                            INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                            INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                             WHERE
                                     stock_master.parent_id = $master_id
                             AND stock_master.transaction_type_id > 2
-                            GROUP BY
-                                    stock_batch.item_pack_size_id
+                            GROUP BY item_pack_sizes.pk_id
                     ) B ON B.item_pack_size_id = A.item_pack_size_id";
         $this->_em = Zend_Registry::get('doctrine');
+//       echo $querypro;
+//        exit;
         $row = $this->_em->getConnection()->prepare($querypro);
 
         $row->execute();
@@ -205,31 +215,38 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                                             Sum(stock_detail.quantity) AS total_vials,
                                             item_pack_sizes.item_name,
                                             item_pack_sizes.number_of_doses,
-                                            stock_batch.item_pack_size_id,
+                                            stakeholder_item_pack_sizes.item_pack_size_id,
                                             stock_batch.unit_price
                                     FROM
                                             stock_master_history as stock_master
                                     INNER JOIN stock_detail_history as stock_detail ON stock_detail.stock_master_id = stock_master.master_id
-                                    INNER JOIN stock_batch as stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-                                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                                    INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                                     WHERE
                                             stock_master.master_id = $master_id and stock_master.action_type = 2 and stock_detail.action_type = 3
                                     GROUP BY
-                                            stock_batch.item_pack_size_id
+                                            stakeholder_item_pack_sizes.item_pack_size_id
                             ) A
                     LEFT JOIN (
                             SELECT
                                     SUM(stock_detail.quantity) AS total_vials,
-                                    stock_batch.item_pack_size_id
+                                    stakeholder_item_pack_sizes.item_pack_size_id
                             FROM
                                     stock_master_history as stock_master
                             INNER JOIN stock_detail_history as stock_detail ON stock_detail.stock_master_id = stock_master.master_id
-                            INNER JOIN stock_batch as stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+                            INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                            INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                            INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                            INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                             WHERE
                                     stock_master.parent_id = $master_id
                             AND stock_master.transaction_type_id > 2 and stock_master.action_type = 2 and stock_detail.action_type = 3
                             GROUP BY
-                                    stock_batch.item_pack_size_id
+                                    stakeholder_item_pack_sizes.item_pack_size_id
                     ) B ON B.item_pack_size_id = A.item_pack_size_id";
         $this->_em = Zend_Registry::get('doctrine');
         $row = $this->_em->getConnection()->prepare($querypro);
@@ -250,8 +267,12 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
         FROM
                 stock_detail
         INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-        INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-        INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+        INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+        INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
      
         WHERE
                 stock_master.transaction_type_id = 2
@@ -260,7 +281,7 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                 stock_master.transaction_date,
                 '%Y-%m'
         ) = '$report_date'
-        AND stock_batch.item_pack_size_id = $item_pack_id
+        AND stakeholder_item_pack_sizes.item_pack_size_id = $item_pack_id
         AND stock_master.from_warehouse_id = $warehouse_id
         AND stock_master.to_warehouse_id = $to_warehouse_id    
       ";
@@ -341,8 +362,12 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
         FROM
                 stock_detail
         INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-        INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-        INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+        INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+        INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
      
         WHERE
                 stock_master.transaction_type_id = 2
@@ -351,7 +376,7 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                 stock_master.transaction_date,
                 '%Y-%m'
         ) = '$report_date'
-        AND stock_batch.item_pack_size_id = $item_pack_id
+        AND stakeholder_item_pack_sizes.item_pack_size_id = $item_pack_id
         AND stock_master.from_warehouse_id = $warehouse_id
           
       ";

@@ -300,4 +300,16 @@ $(function () {
             $(this).focus();
         }
     });
+
+
+    $("#checkall").change(function () {
+        if (this.checked) {
+            $("input[type=checkbox]").attr("checked", true);
+        }
+        if (!this.checked) {
+            $("input[type=checkbox]").attr("checked", false);
+        }
+    });
+
+
 });

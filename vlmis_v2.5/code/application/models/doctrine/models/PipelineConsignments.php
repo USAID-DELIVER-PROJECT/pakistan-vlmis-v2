@@ -70,11 +70,6 @@ class PipelineConsignments
     private $receivedQuantity;
 
     /**
-     * @var datetime $createdDate
-     */
-    private $createdDate;
-
-    /**
      * @var integer $masterId
      */
     private $masterId;
@@ -85,14 +80,14 @@ class PipelineConsignments
     private $status;
 
     /**
+     * @var datetime $createdDate
+     */
+    private $createdDate;
+
+    /**
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
 
     /**
      * @var StakeholderActivities
@@ -100,12 +95,17 @@ class PipelineConsignments
     private $stakeholderActivity;
 
     /**
+     * @var Users
+     */
+    private $modifiedBy;
+
+    /**
      * @var ItemPackSizes
      */
     private $itemPackSize;
 
     /**
-     * @var StakeholderItemPackSizes
+     * @var PackInfo
      */
     private $manufacturer;
 
@@ -130,9 +130,9 @@ class PipelineConsignments
     private $createdBy;
 
     /**
-     * @var StockBatch
+     * @var StockBatchWarehouses
      */
-    private $stockBatch;
+    private $stockBatchWarehouse;
 
     /**
      * @var TransactionTypes
@@ -371,26 +371,6 @@ class PipelineConsignments
     }
 
     /**
-     * Set createdDate
-     *
-     * @param datetime $createdDate
-     */
-    public function setCreatedDate($createdDate)
-    {
-        $this->createdDate = $createdDate;
-    }
-
-    /**
-     * Get createdDate
-     *
-     * @return datetime 
-     */
-    public function getCreatedDate()
-    {
-        return $this->createdDate;
-    }
-
-    /**
      * Set masterId
      *
      * @param integer $masterId
@@ -431,6 +411,26 @@ class PipelineConsignments
     }
 
     /**
+     * Set createdDate
+     *
+     * @param datetime $createdDate
+     */
+    public function setCreatedDate($createdDate)
+    {
+        $this->createdDate = $createdDate;
+    }
+
+    /**
+     * Get createdDate
+     *
+     * @return datetime 
+     */
+    public function getCreatedDate()
+    {
+        return $this->createdDate;
+    }
+
+    /**
      * Set modifiedDate
      *
      * @param datetime $modifiedDate
@@ -451,26 +451,6 @@ class PipelineConsignments
     }
 
     /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
      * Set stakeholderActivity
      *
      * @param StakeholderActivities $stakeholderActivity
@@ -488,6 +468,26 @@ class PipelineConsignments
     public function getStakeholderActivity()
     {
         return $this->stakeholderActivity;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
     }
 
     /**
@@ -513,9 +513,9 @@ class PipelineConsignments
     /**
      * Set manufacturer
      *
-     * @param StakeholderItemPackSizes $manufacturer
+     * @param PackInfo $manufacturer
      */
-    public function setManufacturer(\StakeholderItemPackSizes $manufacturer)
+    public function setManufacturer(\PackInfo $manufacturer)
     {
         $this->manufacturer = $manufacturer;
     }
@@ -523,7 +523,7 @@ class PipelineConsignments
     /**
      * Get manufacturer
      *
-     * @return StakeholderItemPackSizes 
+     * @return PackInfo 
      */
     public function getManufacturer()
     {
@@ -611,23 +611,23 @@ class PipelineConsignments
     }
 
     /**
-     * Set stockBatch
+     * Set stockBatchWarehouse
      *
-     * @param StockBatch $stockBatch
+     * @param StockBatchWarehouses $stockBatchWarehouse
      */
-    public function setStockBatch(\StockBatch $stockBatch)
+    public function setStockBatchWarehouse(\StockBatchWarehouses $stockBatchWarehouse)
     {
-        $this->stockBatch = $stockBatch;
+        $this->stockBatchWarehouse = $stockBatchWarehouse;
     }
 
     /**
-     * Get stockBatch
+     * Get stockBatchWarehouse
      *
-     * @return StockBatch 
+     * @return StockBatchWarehouses 
      */
-    public function getStockBatch()
+    public function getStockBatchWarehouse()
     {
-        return $this->stockBatch;
+        return $this->stockBatchWarehouse;
     }
 
     /**

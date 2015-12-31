@@ -83,24 +83,6 @@ ColdChain:
         ccm_asset_type_id:
           referencedColumnName: pk_id
       orphanRemoval: false
-    createdBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        created_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    modifiedBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        modified_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     ccmModel:
       targetEntity: CcmModels
       cascade: {  }
@@ -126,6 +108,24 @@ ColdChain:
       inversedBy: null
       joinColumns:
         warehouse_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    createdBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        created_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

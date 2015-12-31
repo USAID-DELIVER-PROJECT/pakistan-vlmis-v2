@@ -105,14 +105,14 @@ class Users
     private $country;
 
     /**
+     * @var datetime $createdDate
+     */
+    private $createdDate;
+
+    /**
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
 
     /**
      * @var Roles
@@ -133,6 +133,11 @@ class Users
      * @var Users
      */
     private $createdBy;
+
+    /**
+     * @var Users
+     */
+    private $modifiedBy;
 
 
     /**
@@ -506,6 +511,26 @@ class Users
     }
 
     /**
+     * Set createdDate
+     *
+     * @param datetime $createdDate
+     */
+    public function setCreatedDate($createdDate)
+    {
+        $this->createdDate = $createdDate;
+    }
+
+    /**
+     * Get createdDate
+     *
+     * @return datetime 
+     */
+    public function getCreatedDate()
+    {
+        return $this->createdDate;
+    }
+
+    /**
      * Set modifiedDate
      *
      * @param datetime $modifiedDate
@@ -523,26 +548,6 @@ class Users
     public function getModifiedDate()
     {
         return $this->modifiedDate;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
     }
 
     /**
@@ -623,5 +628,25 @@ class Users
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
     }
 }

@@ -40,6 +40,11 @@ class CcmWarehouses
     private $modifiedDate;
 
     /**
+     * @var Users
+     */
+    private $modifiedBy;
+
+    /**
      * @var ListDetail
      */
     private $electricityAvailability;
@@ -53,11 +58,6 @@ class CcmWarehouses
      * @var Users
      */
     private $createdBy;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
 
 
     /**
@@ -171,6 +171,26 @@ class CcmWarehouses
     }
 
     /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+
+    /**
      * Set electricityAvailability
      *
      * @param ListDetail $electricityAvailability
@@ -228,25 +248,5 @@ class CcmWarehouses
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
     }
 }

@@ -42,6 +42,14 @@ HfDataDetail:
       type: decimal
       nullable: true
       column: outreach_female
+    outreachOutsideMale:
+      type: decimal
+      nullable: true
+      column: outreach_outside_male
+    outreachOutsideFemale:
+      type: decimal
+      nullable: true
+      column: outreach_outside_female
     pregnantWomen:
       type: decimal
       nullable: true

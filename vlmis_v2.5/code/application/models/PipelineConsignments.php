@@ -42,7 +42,8 @@ class Model_PipelineConsignments extends Model_Base {
 
         $str_sql->orderBy("fa.pkId", "ASC");
 
-        //echo $str_sql->getQuery()->getSql();
+//        echo $str_sql->getQuery()->getSql();
+//        exit;
         $row = $str_sql->getQuery()->getResult();
         return $row;
     }
@@ -70,6 +71,7 @@ class Model_PipelineConsignments extends Model_Base {
         $voucher = $params['voucher'];
         $vvmstage = $params['vvmstage'];
         $is_update = $params['update'];
+        $auth = $params['auth'];
 
         $pipeline_consignments = $this->_em->getRepository("PipelineConsignments")->find($rec_id);
         /**
@@ -91,7 +93,7 @@ class Model_PipelineConsignments extends Model_Base {
             }
         }
 
-        $plac_loc_id = $this->_em->getRepository("PlacementLocations")->find($location_id);
+        $plac_loc_id = $this->_em->getRepository("PlacementLocations")->find($loctation_id);
         /*
          * Add entry in Placement table
          */
@@ -103,8 +105,10 @@ class Model_PipelineConsignments extends Model_Base {
         $vvms = $this->_em->getRepository("VvmStages")->find($vvmstage);
         $placements->setVvmStage($vvms);
 
-        $created_by = $this->_em->find('Users', $this->_user_id);
-
+        //$created_by = $this->_em->find('Users', $this->_user_id);
+        $created_by = $this->_em->getRepository("Users")->findOneBy((array('auth' => $auth)));
+        $placements->setCreatedBy($created_by);
+        $placements->setCreatedDate(App_Tools_Time::now());
         $placements->setModifiedBy($created_by);
         $placements->setModifiedDate(App_Tools_Time::now());
 
@@ -237,7 +241,7 @@ class Model_PipelineConsignments extends Model_Base {
                 $stock_detail->setAdjustmentType(2);
                 $stock_master = $this->_em->getRepository("StockMaster")->find($master_id);
                 $stock_detail->setStockMaster($stock_master);
-                $stock_detail->setStockBatch($stock_batch);
+                $stock_detail->setStockBatchWarehouse($stock_batch);
                 $stock_detail->setItemUnit($pipeline_consignments->getItemPackSize()->getItemUnit());
 
                 $stock_detail->setCreatedBy($created_by);
@@ -257,8 +261,8 @@ class Model_PipelineConsignments extends Model_Base {
                 $placements->setVvmStage($temp_plac->getVvmStage());
                 $placements->setIsPlaced(1);
                 $placements->setPlacementLocation($plac_loc_id);
-                $placements->setStockBatch($stock_batch);
-                $placements->setStockDetail($stock_detail);
+                $placements->setStockBatchWarehouse($stock_batch);
+                //  $placements->setStockDetail($stock_detail);
                 $trans_type = $this->_em->getRepository("ListDetail")->find(Model_ListDetail::STOCK_PLACEMENT);
                 $placements->setPlacementTransactionType($trans_type);
                 $placements->setCreatedBy($pipeline_consignments->getCreatedBy());
@@ -283,7 +287,7 @@ class Model_PipelineConsignments extends Model_Base {
             $stock_detail->setAdjustmentType(2);
             $stock_master = $this->_em->getRepository("StockMaster")->find($master_id);
             $stock_detail->setStockMaster($stock_master);
-            $stock_detail->setStockBatch($stock_batch);
+            $stock_detail->setStockBatchWarehouse($stock_batch);
             $stock_detail->setItemUnit($pipeline_consignments->getItemPackSize()->getItemUnit());
 
             $stock_detail->setCreatedBy($created_by);
@@ -396,12 +400,15 @@ class Model_PipelineConsignments extends Model_Base {
             $stock_master->setParentId(0);
             $stock_master->setStakeholderActivity($pipeline_consignments->getStakeholderActivity());
 
+
             $stock_master->setCreatedBy($pipeline_consignments->getCreatedBy());
             $stock_master->setCreatedDate(new DateTime(date("Y-m-d H:i:s")));
-            $stock_master->setModifiedBy($created_by);
+            $stock_master->setModifiedBy($pipeline_consignments->getCreatedBy());
             $stock_master->setModifiedDate(App_Tools_Time::now());
             $this->_em->persist($stock_master);
             $this->_em->flush();
+
+
 
             $master_id = $stock_master->getPkId();
         }
@@ -418,26 +425,33 @@ class Model_PipelineConsignments extends Model_Base {
             $stock_batch = new StockBatch();
             $stock_batch->setNumber(strtoupper($batch_no));
             $stock_batch->setExpiryDate($pipeline_consignments->getExpiryDate());
-            $stock_batch->setQuantity($qty);
-            $stock_batch->setStatus('Stacked');
+
+
             $stock_batch->setUnitPrice(0);
             $stock_batch->setProductionDate($pipeline_consignments->getProductionDate());
-            $stock_batch->setLastUpdate(new DateTime(date("Y-m-d")));
-            $stock_batch->setItemPackSize($pipeline_consignments->getItemPackSize());
+
+
             $vvm_type = $this->_em->getRepository("VvmTypes")->find(2);
             $stock_batch->setVvmType($vvm_type);
-            $stock_batch->setWarehouse($pipeline_consignments->getToWarehouse());
-            $stock_batch->setStakeholderItemPackSize($pipeline_consignments->getManufacturer());
 
-            $stock_batch->setCreatedBy($created_by);
+            $stock_batch->setPackInfo($pipeline_consignments->getManufacturer());
+
+            $stock_batch->setCreatedBy($pipeline_consignments->getCreatedBy());
             $stock_batch->setCreatedDate(App_Tools_Time::now());
-            $stock_batch->setModifiedBy($created_by);
+            $stock_batch->setModifiedBy($pipeline_consignments->getCreatedBy());
             $stock_batch->setModifiedDate(App_Tools_Time::now());
 
             $this->_em->persist($stock_batch);
             $this->_em->flush();
 
-            $batch_id = $stock_batch->getPkId();
+            $stock_batch_warehouses = new StockBatchWarehouses();
+            $stock_batch_warehouses->setQuantity($qty);
+            $stock_batch_warehouses->setStatus('Stacked');
+            $stock_batch_warehouses->setStockBatch($stock_batch);
+            $stock_batch_warehouses->setWarehouse($pipeline_consignments->getToWarehouse());
+            $this->_em->persist($stock_batch_warehouses);
+            $this->_em->flush();
+            $batch_id = $stock_batch_warehouses->getPkId();
         }
 
         /*
@@ -452,13 +466,13 @@ class Model_PipelineConsignments extends Model_Base {
         $stock_detail->setAdjustmentType(1);
         $stock_master = $this->_em->getRepository("StockMaster")->find($master_id);
         $stock_detail->setStockMaster($stock_master);
-        $stock_batch = $this->_em->getRepository("StockBatch")->find($batch_id);
-        $stock_detail->setStockBatch($stock_batch);
+        $stock_batch = $this->_em->getRepository("StockBatchWarehouses")->find($batch_id);
+        $stock_detail->setStockBatchWarehouse($stock_batch);
         $stock_detail->setItemUnit($pipeline_consignments->getItemPackSize()->getItemUnit());
 
-        $stock_detail->setCreatedBy($created_by);
+        $stock_detail->setCreatedBy($pipeline_consignments->getCreatedBy());
         $stock_detail->setCreatedDate(App_Tools_Time::now());
-        $stock_detail->setModifiedBy($created_by);
+        $stock_detail->setModifiedBy($pipeline_consignments->getCreatedBy());
         $stock_detail->setModifiedDate(App_Tools_Time::now());
 
         $this->_em->persist($stock_detail);
@@ -476,12 +490,14 @@ class Model_PipelineConsignments extends Model_Base {
                 $placements->setVvmStage($vvms);
                 $placements->setIsPlaced(1);
                 $placements->setPlacementLocation($plac_loc_id);
-                $placements->setStockBatch($stock_batch);
-                $placements->setStockDetail($stock_detail);
+                $placements->setStockBatchWarehouse($stock_batch);
+                // $placements->setStockDetail($stock_detail);
                 $trans_type = $this->_em->getRepository("ListDetail")->find(Model_ListDetail::STOCK_PLACEMENT);
                 $placements->setPlacementTransactionType($trans_type);
                 $placements->setCreatedBy($pipeline_consignments->getCreatedBy());
+                $placements->setModifiedBy($pipeline_consignments->getCreatedBy());
                 $placements->setCreatedDate(new DateTime(date("Y-m-d H:i:s")));
+                $placements->setModifiedDate(new DateTime(date("Y-m-d H:i:s")));
                 $this->_em->persist($placements);
                 $this->_em->flush();
             }
@@ -533,11 +549,15 @@ class Model_PipelineConsignments extends Model_Base {
 
     public function checkBatch($array) {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select("sb.pkId")
-                ->from("StockBatch", 'sb')
+                ->select("sbw.pkId")
+                ->from("StockBatchWarehouses", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "ips")
                 ->where("sb.number = '" . $array['number'] . "'")
-                ->andWhere("sb.itemPackSize = " . $array['item_id'])
-                ->andWhere("sb.warehouse = " . $array['wh_id']);
+                ->andWhere("sip.itemPackSize = " . $array['item_id'])
+                ->andWhere("sbw.warehouse = " . $array['wh_id']);
 
         $row = $str_sql->getQuery()->getResult();
 
@@ -578,13 +598,12 @@ class Model_PipelineConsignments extends Model_Base {
                     'arrival_date' => $row->getExpectedArrivalDate()->format("Y-m-d"),
                     'reference_no' => $row->getReferenceNumber(),
                     'description' => $row->getDescription(),
-                    'gtin' => $row->getManufacturer()->getGtin(),
                     'quantity_per_pack' => $row->getManufacturer()->getQuantityPerPack(),
                     'item_pack_size_id' => $row->getItemPackSize()->getPkId(),
                     'item_category' => $row->getItemPackSize()->getItemCategory()->getPkId(),
                     'item_name' => $row->getItemPackSize()->getItemName(),
                     'batch_no' => $row->getBatchNumber(),
-                    'batch_id' => $row->getStockBatch()->getPkId(),
+                    'batch_id' => $row->getStockBatchWarehouse()->getPkId(),
                     'production_date' => ($row->getProductionDate() != null) ? $row->getProductionDate()->format("Y-m-d") : '',
                     'expiry_date' => $row->getExpiryDate()->format("Y-m-d"),
                     'manufacturer' => $row->getManufacturer()->getStakeholder()->getStakeholderName(),
@@ -622,17 +641,16 @@ class Model_PipelineConsignments extends Model_Base {
                     'arrival_date' => $row->getExpectedArrivalDate()->format("Y-m-d"),
                     'reference_no' => $row->getReferenceNumber(),
                     'description' => $row->getDescription(),
-                    'gtin' => $row->getManufacturer()->getGtin(),
                     'quantity_per_pack' => $row->getManufacturer()->getQuantityPerPack(),
                     'item_pack_size_id' => $row->getItemPackSize()->getPkId(),
                     'item_category' => $row->getItemPackSize()->getItemCategory()->getPkId(),
                     'item_name' => $row->getItemPackSize()->getItemName(),
                     'batch_no' => $row->getBatchNumber(),
-                    'batch_id' => ($row->getStockBatch() != null) ? $row->getStockBatch()->getPkId() : 0,
+                    'batch_id' => ($row->getStockBatchWarehouse() != null) ? $row->getStockBatch()->getPkId() : 0,
                     'production_date' => ($row->getProductionDate() != null) ? $row->getProductionDate()->format("Y-m-d") : '',
                     'expiry_date' => $row->getExpiryDate()->format("Y-m-d"),
-                    'manufacturer' => $row->getManufacturer()->getStakeholder()->getStakeholderName(),
-                    'manufacturer_id' => $row->getManufacturer()->getStakeholder()->getPkId(),
+                    'manufacturer' => $row->getManufacturer()->getStakeholderItemPackSize()->getStakeholder()->getStakeholderName(),
+                    'manufacturer_id' => $row->getManufacturer()->getPkId(),
                     'stakeholder_item_pack_size_id' => $row->getManufacturer()->getPkId(),
                     'quantity' => $row->getQuantity(),
                     'received_quantity' => ABS($row->getReceivedQuantity()),
@@ -654,7 +672,7 @@ class Model_PipelineConsignments extends Model_Base {
                 ->from("PipelineConsignments", "fa")
                 ->where("fa.fromWarehouse = " . $wh_id)
                 ->andWhere("fa.status != 'Received'")
-                ->andWhere("fa.transactionType = ".Model_TransactionTypes::TRANSACTION_ISSUE."")
+                ->andWhere("fa.transactionType = " . Model_TransactionTypes::TRANSACTION_ISSUE . "")
                 ->andWhere("fa.itemPackSize IN (" . Zend_Registry::get('barcode_products') . ")");
         $rows = $str_sql->getQuery()->getResult();
         if (count($rows) > 0) {
@@ -666,17 +684,16 @@ class Model_PipelineConsignments extends Model_Base {
                     'arrival_date' => $row->getExpectedArrivalDate()->format("Y-m-d"),
                     'reference_no' => $row->getReferenceNumber(),
                     'description' => $row->getDescription(),
-                    'gtin' => $row->getManufacturer()->getGtin(),
                     'quantity_per_pack' => $row->getManufacturer()->getQuantityPerPack(),
                     'item_pack_size_id' => $row->getItemPackSize()->getPkId(),
                     'item_category' => $row->getItemPackSize()->getItemCategory()->getPkId(),
                     'item_name' => $row->getItemPackSize()->getItemName(),
                     'batch_no' => $row->getBatchNumber(),
-                    'batch_id' => ($row->getStockBatch() != null) ? $row->getStockBatch()->getPkId() : 0,
+                    'batch_id' => ($row->getStockBatchWarehouse() != null) ? $row->getStockBatchWarehouse()->getPkId() : 0,
                     'production_date' => ($row->getProductionDate() != null) ? $row->getProductionDate()->format("Y-m-d") : '',
                     'expiry_date' => $row->getExpiryDate()->format("Y-m-d"),
-                    'manufacturer' => $row->getManufacturer()->getStakeholder()->getStakeholderName(),
-                    'manufacturer_id' => $row->getManufacturer()->getStakeholder()->getPkId(),
+                    'manufacturer' => $row->getManufacturer()->getStakeholderItemPackSize()->getStakeholder()->getStakeholderName(),
+                    'manufacturer_id' => $row->getManufacturer()->getStakeholderItemPackSize()->getStakeholder()->getPkId(),
                     'stakeholder_item_pack_size_id' => $row->getManufacturer()->getPkId(),
                     'quantity' => $row->getQuantity(),
                     'received_quantity' => ABS($row->getReceivedQuantity()),
@@ -774,6 +791,7 @@ class Model_PipelineConsignments extends Model_Base {
                 $farr->setReceivedQuantity($qty);
                 $farr->setFromWarehouse($pipeline_consignments->getFromWarehouse());
                 $farr->setToWarehouse($pipeline_consignments->getToWarehouse());
+                $farr->setModifiedBy($pipeline_consignments->getCreatedBy());
                 $farr->setCreatedBy($pipeline_consignments->getCreatedBy());
                 $farr->setCreatedDate($pipeline_consignments->getCreatedDate());
                 $farr->setMasterId(0);
@@ -832,14 +850,14 @@ class Model_PipelineConsignments extends Model_Base {
                 $farr->setDescription($form_values['description']);
                 $item_pack_size = $this->_em->getRepository("ItemPackSizes")->find($row['item_id']);
                 $farr->setItemPackSize($item_pack_size);
-                $stock_batch = $this->_em->getRepository("StockBatch")->find($row['number']);
-                $farr->setStockBatch($stock_batch);
-                $farr->setBatchNumber($stock_batch->getNumber());
-                $farr->setProductionDate($stock_batch->getProductionDate());
-                $farr->setExpiryDate($stock_batch->getExpiryDate());
-                $farr->setManufacturer($stock_batch->getStakeholderItemPackSize());
-                $farr->setVvmType($stock_batch->getVvmType());
-                $farr->setUnitPrice($stock_batch->getUnitPrice());
+                $stock_batch = $this->_em->getRepository("StockBatchWarehouses")->find($row['number']);
+                $farr->setStockBatchWarehouse($stock_batch);
+                $farr->setBatchNumber($stock_batch->getStockBatch()->getNumber());
+                $farr->setProductionDate($stock_batch->getStockBatch()->getProductionDate());
+                $farr->setExpiryDate($stock_batch->getStockBatch()->getExpiryDate());
+                $farr->setManufacturer($stock_batch->getStockBatch()->getPackInfo());
+                $farr->setVvmType($stock_batch->getStockBatch()->getVvmType());
+                $farr->setUnitPrice($stock_batch->getStockBatch()->getUnitPrice());
                 $quantity = str_replace(",", "", $row['quantity']);
                 $farr->setQuantity($quantity);
                 $farr->setReceivedQuantity(0);
@@ -901,7 +919,12 @@ class Model_PipelineConsignments extends Model_Base {
                 $farr->setBatchNumber($row['batch_number']);
                 $farr->setProductionDate(new \DateTime(App_Controller_Functions::dateToDbFormat($row['production_date'])));
                 $farr->setExpiryDate(new \DateTime(App_Controller_Functions::dateToDbFormat($row['expiry_date'])));
-                $manufacturer = $this->_em->getRepository("StakeholderItemPackSizes")->find($row['manufacturer_id']);
+                $manufacturer = $this->_em->getRepository("PackInfo")->findOneBy((array('stakeholderItemPackSize' => $row['manufacturer_id'])));
+                //$manufacturer = $this->_em->getRepository("PackInfo")->find($row['manufacturer_id']);
+//                echo 'id'.$manufacturer->getPkId();
+//                exit;
+
+
                 $farr->setManufacturer($manufacturer);
                 $vvm_type = $this->_em->getRepository("VvmTypes")->find($row['vvm_type_id']);
                 $farr->setVvmType($vvm_type);
@@ -921,7 +944,7 @@ class Model_PipelineConsignments extends Model_Base {
 
                 $farr->setCreatedBy($user);
                 $farr->setCreatedDate(App_Tools_Time::now());
-                $farr->setModifiedBy($created_by);
+                $farr->setModifiedBy($user);
                 $farr->setModifiedDate(App_Tools_Time::now());
 
                 $this->_em->persist($farr);
@@ -987,7 +1010,7 @@ class Model_PipelineConsignments extends Model_Base {
                 $farr->setCreatedDate(App_Tools_Time::now());
                 $farr->setModifiedBy($user);
                 $farr->setModifiedDate(App_Tools_Time::now());
-                
+
                 $this->_em->persist($farr);
                 $counter++;
             }

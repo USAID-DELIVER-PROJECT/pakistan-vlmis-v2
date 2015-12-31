@@ -19,6 +19,15 @@ VvmGroups:
       nullable: false
       column: modified_date
   oneToOne:
+    vvmGroup:
+      targetEntity: VvmGroups
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        vvm_group_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
     vvmStage:
       targetEntity: VvmStages
       cascade: {  }
@@ -44,15 +53,6 @@ VvmGroups:
       inversedBy: null
       joinColumns:
         modified_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    vvmGroup:
-      targetEntity: VvmGroups
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        vvm_group_id:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

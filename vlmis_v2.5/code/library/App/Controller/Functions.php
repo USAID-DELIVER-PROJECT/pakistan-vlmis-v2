@@ -51,8 +51,10 @@ class App_Controller_Functions {
 
     public static function dateToUserFormat($datetime) {
         if (!empty($datetime)) {
-            list($date, $time) = explode(" ", $datetime);
-            list($yy, $mm, $dd) = explode("-", $date);
+//            list($date, $time) = explode(" ", $datetime); // Undefined offset 2
+//            list($yy, $mm, $dd) = explode("-", $date);
+            $date = explode(" ", $datetime);
+            list($yy, $mm, $dd) = explode("-", $date[0]);
             return $dd . "/" . $mm . "/" . $yy;
         }
     }

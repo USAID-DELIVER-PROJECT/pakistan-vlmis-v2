@@ -52,7 +52,7 @@ $config->setQueryCacheImpl($cache);
 $connectionOptions = array(
     'driver'   => 'pdo_mysql',
     'host'     => '192.168.1.72',
-    'dbname'   => 'vlmis_zr2',
+    'dbname'   => 'vlmis_zr2.5',
     'user'     => 'vlmis',
     'password' => 'v123lmis'
 );

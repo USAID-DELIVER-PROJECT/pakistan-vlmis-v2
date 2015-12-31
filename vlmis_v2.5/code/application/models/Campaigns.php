@@ -443,19 +443,7 @@ class Model_Campaigns extends Model_Base {
         return $result;
     }
 
-    public function getDistricts() {
-        $str_sql = $this->_em->createQueryBuilder()
-                ->select('l.pkId, l.locationName')
-                ->from("Locations", 'l')
-                ->where("l.geoLevel = 4");
-        if (!empty($this->form_values['district_id'])) {
-            $str_sql->andWhere("l.province = " . $this->form_values['province_id']);
-        }
-        $str_sql->orderBy('l.locationName', 'ASC');
-        $result = $str_sql->getQuery()->getResult();
-        return $result;
-    }
-
+   
     public function districtCampaigns() {
 
         if (!empty($this->form_values['district_id'])) {
@@ -839,16 +827,7 @@ class Model_Campaigns extends Model_Base {
         return $row->fetchAll();
     }
 
-    public function allCampaignsFutureDate() {
-        $str_sql = $this->_em->createQueryBuilder()
-                ->select('c.pkId, c.campaignName')
-                ->from("Campaigns", 'c')
-                ->where("c.dateFrom <= '" . date("Y-m-d") . "'")
-                ->orderBy("c.campaignName", 'ASC');
-        $result = $str_sql->getQuery()->getResult();
-        return $result;
-    }
-
+  
     public function getVaccinceByCampaignId() {
         $form_values = $this->form_values;
         $str_sql = $this->_em->createQueryBuilder()
@@ -923,15 +902,18 @@ class Model_Campaigns extends Model_Base {
         $item_pack_size_id = $result['0']['item_pack_size_id'];
 
         $querypro = "SELECT
-        stock_batch.quantity
+        stock_batch_warehouses.quantity
         FROM
         warehouses
-        INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-        INNER JOIN stock_batch ON stock_batch.warehouse_id = warehouses.pk_id
-        WHERE
+        INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id       
+        INNER JOIN stock_batch_warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.master_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+	WHERE
         warehouses.district_id = '" . $this->_identity->getDistrictId($this->_identity->getIdentity()) . "' AND
         stakeholders.geo_level_id = 4 AND
-        stock_batch.item_pack_size_id = '" . $item_pack_size_id . "' 
+        stakeholder_item_pack_sizes.item_pack_size_id = '" . $item_pack_size_id . "' 
         AND warehouses.status = 1";
         $this->_em = Zend_Registry::get('doctrine');
         $row = $this->_em->getConnection()->prepare($querypro);

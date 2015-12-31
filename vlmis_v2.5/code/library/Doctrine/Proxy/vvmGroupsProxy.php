@@ -66,6 +66,18 @@ class VvmGroupsProxy extends \VvmGroups implements \Doctrine\ORM\Proxy\Proxy
         return parent::getModifiedDate();
     }
 
+    public function setVvmGroup(\VvmGroups $vvmGroup)
+    {
+        $this->__load();
+        return parent::setVvmGroup($vvmGroup);
+    }
+
+    public function getVvmGroup()
+    {
+        $this->__load();
+        return parent::getVvmGroup();
+    }
+
     public function setVvmStage(\VvmStages $vvmStage)
     {
         $this->__load();
@@ -102,22 +114,10 @@ class VvmGroupsProxy extends \VvmGroups implements \Doctrine\ORM\Proxy\Proxy
         return parent::getModifiedBy();
     }
 
-    public function setVvmGroup(\VvmGroups $vvmGroup)
-    {
-        $this->__load();
-        return parent::setVvmGroup($vvmGroup);
-    }
-
-    public function getVvmGroup()
-    {
-        $this->__load();
-        return parent::getVvmGroup();
-    }
-
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'createdDate', 'modifiedDate', 'vvmStage', 'createdBy', 'modifiedBy', 'vvmGroup');
+        return array('__isInitialized__', 'pkId', 'createdDate', 'modifiedDate', 'vvmGroup', 'vvmStage', 'createdBy', 'modifiedBy');
     }
 
     public function __clone()

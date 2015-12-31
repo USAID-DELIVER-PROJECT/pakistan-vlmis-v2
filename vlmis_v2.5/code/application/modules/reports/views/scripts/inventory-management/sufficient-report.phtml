@@ -56,6 +56,7 @@
                             $count = 1;
                             foreach ($this->result as $row) {
                                 $month6 = ROUND($row['soh'] / $row['amc'], 1);
+                                $shipment_qty = $this->shipments()->getShipmentQuantity($row['item_pack_size_id'], $row['warehouse_id'], date("Y-m-d"));
                                 //if ($month6 < 12) {
                                 ?>
                                 <tr>
@@ -64,9 +65,9 @@
                                     <td class="right"><?php echo number_format($row['soh']); ?></td>
                                     <td style="background-color: #CDFFA5;" class="right"><?php echo number_format($row['amc']); ?></td>
                                     <td class="center" style="background-color: #CDFFA5;"><?php echo ROUND($row['soh'] / $row['amc'], 2) . " months"; ?></td>
-                                    <td class="right" style="background-color: #C0DDF9;"><?php echo number_format($row['quantity']); ?></td>
-                                    <td class="right" style="background-color: #C0DDF9;"><?php echo number_format($row['soh']+$row['quantity']); ?></td> 
-                                    <td class="center" style="background-color: #C0DDF9;"><?php echo ROUND(($row['soh']+$row['quantity'])/$row['amc'], 2) . " months"; ?></td>                                      
+                                    <td class="right" style="background-color: #C0DDF9;"><?php echo number_format($shipment_qty); ?></td>
+                                    <td class="right" style="background-color: #C0DDF9;"><?php echo number_format($row['soh']+$shipment_qty); ?></td>
+                                    <td class="center" style="background-color: #C0DDF9;"><?php echo ROUND(($row['soh']+$shipment_qty)/$row['amc'], 2) . " months"; ?></td>                                      
                                 </tr>
                                 <?php
                                 $count++;

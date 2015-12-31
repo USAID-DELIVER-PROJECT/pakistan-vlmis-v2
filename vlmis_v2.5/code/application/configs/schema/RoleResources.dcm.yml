@@ -21,15 +21,6 @@ RoleResources:
       nullable: true
       column: is_default
   oneToOne:
-    role:
-      targetEntity: Roles
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        role_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     resource:
       targetEntity: Resources
       cascade: {  }
@@ -37,6 +28,15 @@ RoleResources:
       inversedBy: null
       joinColumns:
         resource_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    role:
+      targetEntity: Roles
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        role_id:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

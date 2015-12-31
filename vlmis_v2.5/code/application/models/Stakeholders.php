@@ -94,15 +94,16 @@ class Model_Stakeholders extends Model_Base {
 
     public function getManufacturerByProduct() {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select("si.pkId,s.stakeholderName")
-                ->from('StakeholderItemPackSizes', 'si')
-                ->join('si.stakeholder', 's')
+                ->select("sip.pkId,s.stakeholderName")
+                ->from('PackInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->join('sip.stakeholder', 's')
                 ->where('s.stakeholderType = ' . Model_Stakeholders::TYPE_MANUFACTURER)
-                ->andWhere('si.packagingLevel = 140')
-                ->andWhere('si.itemPackSize = ' . $this->form_values['item_id'])
+                ->andWhere('pi.packagingLevel = 140')
+                ->andWhere('sip.itemPackSize = ' . $this->form_values['item_id'])
                 ->orderBy("s.listRank", "ASC");
-        // echo $str_sql->getQuery()->getSql();
-        //exit;
+       //  echo $str_sql->getQuery()->getSql();
+       // exit;
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -113,20 +114,21 @@ class Model_Stakeholders extends Model_Base {
 
     public function getUnaccociatedManufacturer($associated_array) {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select("si.pkId,s.stakeholderName")
-                ->from('StakeholderItemPackSizes', 'si')
-                ->join('si.stakeholder', 's')
+                ->select("sip.pkId,s.stakeholderName")
+                ->from('PackInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->join('sip.stakeholder', 's')
                 ->where('s.stakeholderType = ' . Model_Stakeholders::TYPE_MANUFACTURER)
-                ->andWhere('si.packagingLevel = 140')
-                ->andWhere('si.itemPackSize != ' . $this->form_values['item_id']);
+                ->andWhere('pi.packagingLevel = 140');
+                
         if (is_array($associated_array)) {
             $in_sips = "'" . implode("','", $associated_array) . "'";
             $str_sql->andWhere("s.stakeholderName NOT IN ($in_sips)");
         }
         $str_sql->orderBy("s.listRank", "ASC")
                 ->groupBy("s.stakeholderName");
-        //echo $str_sql->getQuery()->getSql();
-        //exit;
+      // echo $str_sql->getQuery()->getSql();
+      //  exit;
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;

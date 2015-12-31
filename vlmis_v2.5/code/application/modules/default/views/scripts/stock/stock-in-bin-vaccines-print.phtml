@@ -62,7 +62,7 @@
                                 <td class="left"><?php echo $row->getBatchNumber(); ?></td>
                                 <!--<td class="right"><?php //echo $row->getCartons();         ?></td> -->
                                 <td class="right"><?php echo number_format($row->getQuantity()); ?></td>
-                                <td class="right"><?php echo ($row->getStockBatch()->getItemPackSize()->getVvmGroup()->getPkId() == 1 ? $row->getVvmStage()->getPkId() : $row->getVvmStage()->getVvmStageValue() ); ?></td>
+                                <td class="right"><?php echo ($row->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getVvmGroup()->getPkId() == 1 ? $row->getVvmStage()->getPkId() : $row->getVvmStage()->getVvmStageValue() ); ?></td>
                             </tr>
                             <?php
                         }

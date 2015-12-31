@@ -112,6 +112,6 @@ $(document).on("click", "#print-monthly-consumption", function() {
 $(document).on("click", "#print-monthly-consumption2", function() {
 
     var monthly_report = $('#monthly_report').val();
-    window.open('print-monthly-consumption2?do=' + monthly_report, '_blank', 'scrollbars=1,width=860,height=595');
+    window.open('print-monthly-consumption2?do=' + monthly_report, '_blank', 'scrollbars=1,width=1010,height=595');
 
 });

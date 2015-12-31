@@ -326,8 +326,8 @@ function lastMonthsStats(tehsilId) {
         chart = response;
         $("#_list").html("");
 
-        table = "<table class='table table-condensed table-hover'>";
-        table += "<thead><th>S.No</th><th>Tehsil</th><th>Asset Type</th><th>Capacity</th></thead>";
+        table = "<table class='table table-condensed table-bordered table-hover'>";
+        table += "<thead><th>S.No</th><th>Tehsil</th><th>Asset Type</th><th class='center' colspan='2'>Capacity</th></thead>";
         for (var i = 0; i < chart.length; i++) {
             table += "<tr><td>" + (i + 1) + "</td><td>" + chart[i].tehsil_name + "</td><td>" + chart[i].asset_type_name + "</td><td align='center'>" + chart[i].capacity + "</td>";
         }
@@ -399,8 +399,8 @@ function drawGrid() {
     dataDownload.length = 0;
     jsonData.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>Province</th><th>District</th><th>Tehsil</th><th>Capacity</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>Province</th><th>District</th><th>Tehsil</th><th class='center' colspan='2'>Capacity</th></thead>";
     for (var i = 0; i < features.length; i++) {
         table += "<tr><td>" + features[i].attributes.province + "</td><td>" + features[i].attributes.district + "</td><td>" + features[i].attributes.tehsilName + "</td><td align='right'>" + features[i].attributes.capacity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
         jsonData.push({
@@ -489,7 +489,7 @@ function districtCountGraph() {
         type: 'pie2D',
         renderAt: 'chart-container',
         width: '100%',
-        height: '100%',
+        height: '98%',
         dataFormat: 'json',
         dataSource: {
             "chart": {
@@ -518,8 +518,8 @@ function gridFilter(color) {
     $("#attributeGrid").html("");
     dataDownload.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>Province</th><th>District</th><th>Tehsil</th><th>Capacity</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>Province</th><th>District</th><th>Tehsil</th><th class='center' colspan='2'>Capacity</th></thead>";
     for (var i = 0; i < features.length; i++) {
         if (features[i].attributes.color == color) {
             table += "<tr><td>" + features[i].attributes.province + "</td><td>" + features[i].attributes.district + "</td><td>" + features[i].attributes.tehsilName + "</td><td align='right'>" + features[i].attributes.capacity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";

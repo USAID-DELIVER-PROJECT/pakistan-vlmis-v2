@@ -48,7 +48,7 @@ class Form_ProductLocation extends Zend_Form {
         $this->_list["stock_batch_id"][''] = "Select Stock Batch";
         if ($result) {
             foreach ($result as $row) {
-                $this->_list["stock_batch_id"][$row->getPkId()] = $row->getNumber();
+            $this->_list["stock_batch_id"][$row['pkId']] = $row['number'];
             }
         }
         

@@ -36,6 +36,9 @@
                                 <form method="POST" name="stockplacement" action="<?php echo $this->baseUrl(); ?>/stock/ajax-add-stock-placement-vaccines" id="stockplacement">
                                     <!-- Table -->
                                     <!-- Table -->
+                                    <div class="right">
+                                        <button data-loading-text="Please Wait ..." class="btn btn-primary" id="btn-loading" type="submit"><?php echo $this->translate("Save"); ?></button>
+                                    </div><br>
                                     <table class="receiveSearch table table-striped table-bordered table-condensed"  >
                                         <!-- Table heading -->
                                         <thead>
@@ -68,7 +71,7 @@
                                                         ?>
                                                         <tr class="gradeX">
                                                             <td><?php echo date("d/m/Y", strtotime($row['transaction_date'])); ?></td>
-                                                            <td><!-- <a onclick="window.open('print-receive?id=<?php //echo $row['detail_id']; ?>', '_blank', 'scrollbars=1,width=860,height=595');" href="javascript:void(0);">--><?php echo $row['transaction_number']; ?><!--</a>--></td>
+                                                            <td><!-- <a onclick="window.open('print-receive?id=<?php //echo $row['detail_id'];  ?>', '_blank', 'scrollbars=1,width=860,height=595');" href="javascript:void(0);">--><?php echo $row['transaction_number']; ?><!--</a>--></td>
                                                             <td><?php echo $row['item_name']; ?></td>
                                                             <td><?php echo $row['number']; ?></td>
                                                             <td align="right"><?php echo number_format($pack); ?></td>
@@ -89,12 +92,12 @@
                                     </table>
                                     <!-- // Table END -->
                                     <!---->
-                                    <div class="form-actions fluid right">
+                                    <!--<div class="form-actions fluid right">
                                         <div class="col-md-offset-3 col-md-9">
                                             <button data-loading-text="Please Wait ..." class="btn btn-primary" id="btn-loading" type="submit"><?php echo $this->translate("Save"); ?></button>
                                             <!-- <button class="btn btn-primary" type="button" id="save" name="save">Save</button> -->
-                                        </div>
-                                    </div>
+                                        <!--</div>
+                                    </div>-->
                                 </form>
                             </div>
                         </div>

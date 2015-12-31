@@ -65,9 +65,9 @@ class ItemPackSizes
     private $modifiedDate;
 
     /**
-     * @var StakeholderActivities
+     * @var Users
      */
-    private $stakeholderActivity;
+    private $modifiedBy;
 
     /**
      * @var ItemCategories
@@ -85,19 +85,14 @@ class ItemPackSizes
     private $item;
 
     /**
-     * @var Users
-     */
-    private $createdBy;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
-
-    /**
      * @var VvmGroups
      */
     private $vvmGroup;
+
+    /**
+     * @var Users
+     */
+    private $createdBy;
 
 
     /**
@@ -311,23 +306,23 @@ class ItemPackSizes
     }
 
     /**
-     * Set stakeholderActivity
+     * Set modifiedBy
      *
-     * @param StakeholderActivities $stakeholderActivity
+     * @param Users $modifiedBy
      */
-    public function setStakeholderActivity(\StakeholderActivities $stakeholderActivity)
+    public function setModifiedBy(\Users $modifiedBy)
     {
-        $this->stakeholderActivity = $stakeholderActivity;
+        $this->modifiedBy = $modifiedBy;
     }
 
     /**
-     * Get stakeholderActivity
+     * Get modifiedBy
      *
-     * @return StakeholderActivities 
+     * @return Users 
      */
-    public function getStakeholderActivity()
+    public function getModifiedBy()
     {
-        return $this->stakeholderActivity;
+        return $this->modifiedBy;
     }
 
     /**
@@ -391,46 +386,6 @@ class ItemPackSizes
     }
 
     /**
-     * Set createdBy
-     *
-     * @param Users $createdBy
-     */
-    public function setCreatedBy(\Users $createdBy)
-    {
-        $this->createdBy = $createdBy;
-    }
-
-    /**
-     * Get createdBy
-     *
-     * @return Users 
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
      * Set vvmGroup
      *
      * @param VvmGroups $vvmGroup
@@ -448,5 +403,25 @@ class ItemPackSizes
     public function getVvmGroup()
     {
         return $this->vvmGroup;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param Users $createdBy
+     */
+    public function setCreatedBy(\Users $createdBy)
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return Users 
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
     }
 }

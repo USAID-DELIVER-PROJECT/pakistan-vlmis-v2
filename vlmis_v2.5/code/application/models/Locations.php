@@ -756,7 +756,8 @@ class Model_Locations extends Model_Base {
                     ->join('l.province', 'p')
                     ->join('l.geoLevel', 'gl')
                     ->AndWhere('gl.pkId=5')
-                    ->AndWhere('l.pkId=' . $this->form_values['dist_id']);
+                    ->AndWhere('l.pkId=' . $this->form_values['dist_id'])
+                    ->orderBy("l.locationName");
         } else {
             $str_sql = $this->_em->createQueryBuilder()
                     ->select("l.pkId,l.locationName")
@@ -765,7 +766,8 @@ class Model_Locations extends Model_Base {
                     ->join('l.province', 'p')
                     ->join('l.geoLevel', 'gl')
                     ->AndWhere('gl.pkId=4')
-                    ->AndWhere('p.pkId=' . $this->form_values['province_id']);
+                    ->AndWhere('p.pkId=' . $this->form_values['province_id'])
+                    ->orderBy("l.locationName");
         }
 
         $rs = $str_sql->getQuery()->getResult();
@@ -910,7 +912,7 @@ class Model_Locations extends Model_Base {
             cold_chain.asset_id AS location_name,
            IF (
 	ROUND(
-                    abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
+                    abs(Sum(placements.quantity)) / pack_info.quantity_per_pack
             ) = 0,
             NULL,
             item_pack_sizes.item_name
@@ -918,20 +920,23 @@ class Model_Locations extends Model_Base {
 
     IF (
             ROUND(
-                    abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
+                    abs(Sum(placements.quantity)) / pack_info.quantity_per_pack
             ) = 0,
             NULL,
             item_pack_sizes.pk_id
     ) AS item_id,
-            ROUND(abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack) AS pack_quantity,
+            ROUND(abs(Sum(placements.quantity)) / pack_info.quantity_per_pack) AS pack_quantity,
             abs(Sum(placements.quantity)) AS quantity
             FROM
             placement_locations
             LEFT JOIN placements ON placement_locations.pk_id = placements.placement_location_id
             INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
-            LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-            LEFT JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
-            LEFT JOIN  item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+            LEFT JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+            LEFT JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+            LEFT JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+            LEFT JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+            LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id            
+
             WHERE
                     cold_chain.warehouse_id =" . $wh_id . "
             GROUP BY
@@ -957,7 +962,7 @@ class Model_Locations extends Model_Base {
 
         IF (
                 ROUND(
-                        abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
+                        abs(Sum(placements.quantity)) / pack_info.quantity_per_pack
                 ) = 0,
                 NULL,
                 item_pack_sizes.item_name
@@ -965,22 +970,24 @@ class Model_Locations extends Model_Base {
 
         IF (
                 ROUND(
-                        abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
+                        abs(Sum(placements.quantity)) / pack_info.quantity_per_pack
                 ) = 0,
                 NULL,
                 item_pack_sizes.pk_id
         ) AS item_id,
          ROUND(
-                abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
+                abs(Sum(placements.quantity)) / pack_info.quantity_per_pack
         ) AS pack_quantity,
          abs(Sum(placements.quantity)) AS quantity
         FROM
                 placement_locations
         LEFT JOIN placements ON placement_locations.pk_id = placements.placement_location_id
         INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
-        LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-        LEFT JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
-        LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+        LEFT JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        LEFT JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        LEFT JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        LEFT JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id 
         WHERE
                 non_ccm_locations.warehouse_id = " . $wh_id . "
         GROUP BY
@@ -1176,22 +1183,25 @@ class Model_Locations extends Model_Base {
                             vvm_stages.vvm_stage_value,
                             vvm_stages.pk_id AS vvm_stage,
                             item_pack_sizes.vvm_group_id,
-                            stock_batch.pk_id as batch_id,
+                            stock_batch_warehouses.pk_id as batch_id,
                             placement_locations.pk_id as location_id
                     FROM
                             placements
                     INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
                     INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
                     INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
-                    INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                    INNER JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id    
                     WHERE
-                            placements.stock_batch_id = $batch_id
+                            placements.stock_batch_warehouse_id = $batch_id
                     AND placement_locations.location_type = " . Model_Placements::LOCATIONTYPE_CCM . "
                     GROUP BY
                             placements.vvm_stage,
                             placements.placement_location_id,
-                            placements.stock_batch_id";
+                            placements.stock_batch_warehouse_id";
 
         $rec = $this->_em->getConnection()->prepare($str_sql);
 

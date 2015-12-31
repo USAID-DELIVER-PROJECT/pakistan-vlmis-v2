@@ -19,13 +19,13 @@ function getColorName(color,description) {
    filtered_json = find_in_object(JSON.parse(my_json), {color: color});
    if(filtered_json.length == '0'){
         $("#attributeGrid").html("<p align='center' style='padding:50px'>No Data Found</p>");
-        $("#districtRanking").html("<p align='center' style='padding:50px'>No Data Found</p>");
+        //$("#districtRanking").html("<p align='center' style='padding:50px'>No Data Found</p>");
         dataDownload.length = 0;
         return;
    }
    var desc = "- "+ description;
    gridFilter(color); 
-   districtRanking(filtered_json,desc);   
+   //districtRanking(filtered_json,desc);   
 }
 
 function getFullColor() {

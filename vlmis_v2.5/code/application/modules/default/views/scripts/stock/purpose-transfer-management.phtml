@@ -107,7 +107,7 @@
                                                             <?php
                                                             $counter = 1;
                                                             foreach ($this->result as $row) {
-                                                                $key = $row['stock_batch_id'] . "_" . $row['vvm_stage'] . "_" . $row['placement_location_id'] . "_" . $row['stakeholder_activity_id'];
+                                                                $key = $row['stock_batch_warehouse_id'] . "_" . $row['vvm_stage'] . "_" . $row['placement_location_id'] . "_" . $row['stakeholder_activity_id'];
                                                                 ?>
                                                                 <tr class="gradeX">
                                                                     <td><?php echo $counter; ?></td>
@@ -174,7 +174,7 @@
                                     <div class="col-md-12">
                                         <?php if ($this->h_result && count($this->h_result) > 0) { ?>
 
-                                            <table class="table table-striped table-bordered table-condensed" id="sample_2">
+                                            <table class="table table-striped table-bordered table-condensed" id="sample_20">
                                                 <!-- Table heading -->
                                                 <thead>
                                                     <tr>

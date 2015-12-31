@@ -42,15 +42,6 @@ EpiAmc:
       nullable: false
       column: modified_date
   oneToOne:
-    item:
-      targetEntity: ItemPackSizes
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        item_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     warehouse:
       targetEntity: Warehouses
       cascade: {  }
@@ -58,6 +49,15 @@ EpiAmc:
       inversedBy: null
       joinColumns:
         warehouse_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    item:
+      targetEntity: ItemPackSizes
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        item_id:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

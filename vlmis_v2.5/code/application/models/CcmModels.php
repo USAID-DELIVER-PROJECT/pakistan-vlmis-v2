@@ -265,10 +265,7 @@ class Model_CcmModels extends Model_Base {
         return $result;
     }
 
-    public function updateAssetsQuantity() {
-        
-    }
-
+   
     public function getAllAssetsByType() {
 
         $str_sql = $this->_em->createQueryBuilder()
@@ -524,50 +521,7 @@ class Model_CcmModels extends Model_Base {
         return $row->fetchAll();
     }
 
-    public function getRefrigeratorModelsByAgeGroupGraph() {
-        $where = array();
-        $str_where = "";
-
-        if (!empty($this->form_values['facility_type'])) {
-            $where[] = "warehouse_types.pk_id = " . $this->form_values['facility_type'];
-        }
-        if (!empty($this->form_values['combo1']) && $this->form_values['office'] == 2) {
-            $where[] = "Province.province_id = " . $this->form_values['combo1'];
-        }
-        if (!empty($this->form_values['combo2']) && $this->form_values['office'] == 6) {
-            $where[] = "District.district_id = " . $this->form_values['combo2'];
-        }
-        if (count($where) > 0) {
-            $str_where .= " AND " . implode(" AND ", $where);
-        }
-
-        $str_qry = "
-        SELECT b.Model, 
-           sum(b.0-2 Years) AS `0-2 Years`,
-           sum(b.3-5 Years) as `3-5 Years`,
-           sum(b.6-10 Years) as `6-10 Years`,
-           sum(b.>10 Years) as `>10 Years`,
-           Sum(b.Unknown) AS `Unknown` 
-           from (            
-        SELECT
-	ccm_models.ccm_model_name AS Model,
-	SUM(IF(ADDDATE(CURDATE(), INTERVAL -2 YEAR) < DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') AND DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') != '0000-00-00', 1, 0))AS `0-2 Years`,
-	SUM(IF(ADDDATE(CURDATE(), INTERVAL -2 YEAR) > DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') AND ADDDATE(CURDATE(), INTERVAL -5 YEAR) < DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') AND DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') != '0000-00-00', 1, 0)) AS `3-5 Years`,
-	SUM(IF(ADDDATE(CURDATE(), INTERVAL -5 YEAR) > DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') AND ADDDATE(CURDATE(), INTERVAL -10 YEAR) < DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') AND DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') != '0000-00-00', 1, 0)) AS `6-10 Years`,
-	SUM(IF(ADDDATE(CURDATE(), INTERVAL -10 YEAR) > DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') AND DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') != '0000-00-00', 1, 0)) AS `>10 Years`,
-	SUM(IF(DATE_FORMAT(cold_chain.working_since, '%Y-%m-%d') = '0000-00-00' || cold_chain.working_since IS NULL, 1, 0)) AS `Unknown`
-        FROM
-	ccm_models
-        INNER JOIN cold_chain ON cold_chain.ccm_model_id = ccm_models.pk_id
-        GROUP BY
-        ccm_models.pk_id
-        LIMIT 0,10
-        ) b group by Model
-        LIMIT 0,10";
-        $row = $this->_em->getConnection()->prepare($str_qry);
-        $row->execute();
-        return $row->fetchAll();
-    }
+   
 
     public function refrigeratorFreezersUtilizationReport() {
         $where = array();
@@ -726,40 +680,7 @@ class Model_CcmModels extends Model_Base {
         return $row->fetchAll();
     }
 
-    public function equipmentByAvailabilityOfElectricity() {
-        $arr_data = array(
-            0 => array(
-                'EquipmentType' => '500Plus',
-                'Total' => '35',
-                'InUse' => '0',
-                'InUsePer' => '0.00',
-                'InStore' => '25',
-                'InStorePer' => '85.00',
-                'NotUsed' => '10',
-                'NotUsedPer' => '15.00',
-                'Unknown' => '0',
-                'UnknownPer' => '0.00',
-            ),
-            1 => array(
-                'ccm_model_name' => '252 Dultra',
-                'Total' => '1',
-                'InUse' => '1',
-                'InUsePer' => '100.00',
-                'InStore' => '0',
-                'InStorePer' => '0.00',
-                'NotUsed' => '0',
-                'NotUsedPer' => '0.00',
-                'Unknown' => '0',
-                'UnknownPer' => '0.00',
-            )
-        );
-        return $arr_data;
-        /* $str_qry = "
-          ";
-          $row = $this->_em->getConnection()->prepare($str_qry);
-          $row->execute();
-          return $row->fetchAll(); */
-    }
+   
 
     public function addNewMakeModel() {
 

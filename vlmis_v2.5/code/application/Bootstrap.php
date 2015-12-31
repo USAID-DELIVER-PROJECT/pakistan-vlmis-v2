@@ -27,7 +27,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
      * Initialize custom route for API
      */
     protected function _initCustomRoute() {
-
         $router = Zend_Controller_Front::getInstance()->getRouter();
         /* $router->addRoute('authenticate-user', new Zend_Controller_Router_Route('authenticate-user', array(
           'module' => 'api',

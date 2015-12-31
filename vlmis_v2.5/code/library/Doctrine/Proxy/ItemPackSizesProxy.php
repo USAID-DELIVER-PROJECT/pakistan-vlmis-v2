@@ -162,16 +162,16 @@ class ItemPackSizesProxy extends \ItemPackSizes implements \Doctrine\ORM\Proxy\P
         return parent::getModifiedDate();
     }
 
-    public function setStakeholderActivity(\StakeholderActivities $stakeholderActivity)
+    public function setModifiedBy(\Users $modifiedBy)
     {
         $this->__load();
-        return parent::setStakeholderActivity($stakeholderActivity);
+        return parent::setModifiedBy($modifiedBy);
     }
 
-    public function getStakeholderActivity()
+    public function getModifiedBy()
     {
         $this->__load();
-        return parent::getStakeholderActivity();
+        return parent::getModifiedBy();
     }
 
     public function setItemCategory(\ItemCategories $itemCategory)
@@ -210,30 +210,6 @@ class ItemPackSizesProxy extends \ItemPackSizes implements \Doctrine\ORM\Proxy\P
         return parent::getItem();
     }
 
-    public function setCreatedBy(\Users $createdBy)
-    {
-        $this->__load();
-        return parent::setCreatedBy($createdBy);
-    }
-
-    public function getCreatedBy()
-    {
-        $this->__load();
-        return parent::getCreatedBy();
-    }
-
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->__load();
-        return parent::setModifiedBy($modifiedBy);
-    }
-
-    public function getModifiedBy()
-    {
-        $this->__load();
-        return parent::getModifiedBy();
-    }
-
     public function setVvmGroup(\VvmGroups $vvmGroup)
     {
         $this->__load();
@@ -246,10 +222,22 @@ class ItemPackSizesProxy extends \ItemPackSizes implements \Doctrine\ORM\Proxy\P
         return parent::getVvmGroup();
     }
 
+    public function setCreatedBy(\Users $createdBy)
+    {
+        $this->__load();
+        return parent::setCreatedBy($createdBy);
+    }
+
+    public function getCreatedBy()
+    {
+        $this->__load();
+        return parent::getCreatedBy();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'itemName', 'description', 'numberOfDoses', 'status', 'listRank', 'multiplier', 'wastageRateAllowed', 'color', 'createdDate', 'modifiedDate', 'stakeholderActivity', 'itemCategory', 'itemUnit', 'item', 'createdBy', 'modifiedBy', 'vvmGroup');
+        return array('__isInitialized__', 'pkId', 'itemName', 'description', 'numberOfDoses', 'status', 'listRank', 'multiplier', 'wastageRateAllowed', 'color', 'createdDate', 'modifiedDate', 'modifiedBy', 'itemCategory', 'itemUnit', 'item', 'vvmGroup', 'createdBy');
     }
 
     public function __clone()

@@ -11,48 +11,49 @@ class Zend_View_Helper_IsReceiveDelete extends Zend_View_Helper_Abstract {
         $str_sql = $em->createQueryBuilder()
                 ->select("sb.pkId as stock_batch_id,sm.transactionDate")
                 ->from('StockDetail', 'sd')
-                ->join('sd.stockBatch', 'sb')
+                ->join('sd.stockBatchWarehouse', 'sb')
                 ->join('sd.stockMaster', 'sm')
                 ->andWhere("sd.pkId = $detail_id");
 
         $row = $str_sql->getQuery()->getResult();
-
+        
         $str_sql2 = $em->createQueryBuilder()
                 ->select("sd.pkId")
                 ->from('StockDetail', 'sd')
-                ->join('sd.stockBatch', 'sb')
+                ->join('sd.stockBatchWarehouse', 'sb')
                 ->join('sd.stockMaster', 'sm')
-                ->where("sm.transactionDate >= '" . $row[0]['transactionDate'] . "' ")
-                ->andWhere("sb.pkId= '" . $row[0]['stock_batch_id'] . "' ")
-                ->andWhere("sm.fromWarehouse = '" . $store_wh_id . "'  ")
+                ->where("sm.transactionDate >= '" . $row[0]['transactionDate'] . "'")
+                ->andWhere("sb.pkId= '" . $row[0]['stock_batch_id'] . "'")
+                ->andWhere("sm.fromWarehouse = '" . $store_wh_id . "'")
                 ->andWhere("sm.transactionType IN (2,5,6,7,9,11,13,14,17)");
-        
+        //echo $str_sql2->getQuery()->getSql();
+        //exit;
         $row2 = $str_sql2->getQuery()->getResult();
         if (count($row2) > 0) {
             return false;
         } else {
             return true;
         }
-        
-        $str_sql2 = $em->createQueryBuilder()
-                ->select("sd.pkId")
-                ->from('StockDetail', 'sd')
-                ->join('sd.stockBatch', 'sb')
-                ->join('sd.stockMaster', 'sm')
-                ->join('sm.fromWarehouse', 'w')
-                ->join('w.stakeholder', 's')
-                ->join('s.stakeholderType', 'st')
-                ->where("sd.pkId= '" . $detail_id . "' ")
-                ->andWhere("w.pkId = '" . $wh_id . "'  ")
-                ->andWhere("st.pkId = 2");
-        //echo $str_sql2->getQuery()->getSql();
-        //exit;
-        $row2 = $str_sql2->getQuery()->getResult();
-        if (!empty($row2) && count($row2) > 0) {
-            return true;
-        } else {
-            return false;
-        }
+//        
+//        $str_sql2 = $em->createQueryBuilder()
+//                ->select("sd.pkId")
+//                ->from('StockDetail', 'sd')
+//                ->join('sd.stockBatchWarehouse', 'sb')
+//                ->join('sd.stockMaster', 'sm')
+//                ->join('sm.fromWarehouse', 'w')
+//                ->join('w.stakeholder', 's')
+//                ->join('s.stakeholderType', 'st')
+//                ->where("sd.pkId= '" . $detail_id . "' ")
+//                ->andWhere("w.pkId = '" . $wh_id . "'  ")
+//                ->andWhere("st.pkId = 2");
+//        //echo $str_sql2->getQuery()->getSql();
+//        //exit;
+//        $row2 = $str_sql2->getQuery()->getResult();
+//        if (!empty($row2) && count($row2) > 0) {
+//            return true;
+//        } else {
+//            return false;
+//        }
     }
 
 }

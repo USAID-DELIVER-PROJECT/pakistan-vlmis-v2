@@ -40,14 +40,14 @@ class CcmTransferHistory
     private $modifiedDate;
 
     /**
-     * @var ColdChain
-     */
-    private $ccm;
-
-    /**
      * @var Users
      */
     private $modifiedBy;
+
+    /**
+     * @var ColdChain
+     */
+    private $ccm;
 
     /**
      * @var Warehouses
@@ -181,26 +181,6 @@ class CcmTransferHistory
     }
 
     /**
-     * Set ccm
-     *
-     * @param ColdChain $ccm
-     */
-    public function setCcm(\ColdChain $ccm)
-    {
-        $this->ccm = $ccm;
-    }
-
-    /**
-     * Get ccm
-     *
-     * @return ColdChain 
-     */
-    public function getCcm()
-    {
-        return $this->ccm;
-    }
-
-    /**
      * Set modifiedBy
      *
      * @param Users $modifiedBy
@@ -218,6 +198,26 @@ class CcmTransferHistory
     public function getModifiedBy()
     {
         return $this->modifiedBy;
+    }
+
+    /**
+     * Set ccm
+     *
+     * @param ColdChain $ccm
+     */
+    public function setCcm(\ColdChain $ccm)
+    {
+        $this->ccm = $ccm;
+    }
+
+    /**
+     * Get ccm
+     *
+     * @return ColdChain 
+     */
+    public function getCcm()
+    {
+        return $this->ccm;
     }
 
     /**

@@ -80,7 +80,7 @@
                                                     <?php echo $row->getExpiryDate()->format("d/m/Y"); ?>
                                                 </td>
                                                 <td>
-                                                    <?php echo $row->getManufacturer()->getStakeholder()->getStakeholderName(); ?>
+                                                    <?php echo $row->getManufacturer()->getStakeholderItemPackSize()->getStakeholder()->getStakeholderName(); ?>
                                                 </td>
                                                 <td>
                                                     <?php echo $row->getVvmType()->getVvmTypeName(); ?>

@@ -16,304 +16,64 @@ class Model_Geo extends Model_Base {
         parent::__construct();
     }
 
-    public function getDistrictMos($year, $month, $province, $product, $level) {
+    public function getProvinceMos($year, $month, $province, $product, $level) {
 
         $em = Zend_Registry::get('doctrine');
-
-        if ($month < 10) {
-            $month = "0" . $month;
-        }
-
-        $date = $year . "-" . $month;
-
-        if ($province == "all") {
-            $provFilter = "";
-        } else {
-            $provFilter = "AND locations.province_id =" . $province;
-        }
-
-        if ($level == "4") {
-            $level_type = "DW";
-        } else if ($level == "all") {
-            $level_type = "D";
-        } else {
-            $level_type = "DU";
-        }
-
-        //if ($level == "4" || $level == "all") {
-        $str_sql = "SELECT
-                            warehouses.district_id,
-                            locations.location_name AS district_name,
-                            ROUND(REPgetMOS (
-                                    '" . $level_type . "',
-                                    " . $month . ",
-                                    " . $year . ",
-                                    " . $product . ",
-                                    1,
-                                    warehouses.district_id,
-                                    warehouses.district_id
-                            ),2) mos
-                    FROM
-                            warehouses
-                    INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
-                    INNER JOIN locations ON warehouses.location_id = locations.pk_id
-                    WHERE
-                            locations.geo_level_id = 4
-                            and warehouses.status = 1
-                            $provFilter
-                    GROUP BY
-                            warehouses.district_id";
-
-
+        $province = ($province == 'all') ? 0 : $province;
+        $reporting_date = $year . '-' .str_pad($month, 2, "0" ,STR_PAD_LEFT) . '-01';
+        $str_sql = "CALL REPgetData ('D', '$reporting_date', 0, $product, 1)";
         $row = $em->getConnection()->prepare($str_sql);
         $row->execute();
         $data = $row->fetchAll(\PDO::FETCH_ASSOC);
+        return $data;
+    }
 
+    public function getDistrictMos($year, $month, $province, $product, $level) {
+
+        $em = Zend_Registry::get('doctrine');
+        $province = ($province == 'all') ? 0 : $province;
+        $reporting_date = $year . '-' .str_pad($month, 2, "0" ,STR_PAD_LEFT) . '-01';
+        $str_sql = "CALL REPgetData ('D', '$reporting_date', $province, $product, 1)";
+        $row = $em->getConnection()->prepare($str_sql);
+        $row->execute();
+        $data = $row->fetchAll(\PDO::FETCH_ASSOC);
         return $data;
     }
 
     public function getTehsilMos($year, $month, $province, $district, $product) {
         $em = Zend_Registry::get('doctrine');
-
-        if ($month < 10) {
-            $month = "0" . $month;
+        $reporting_date = $year . '-' .str_pad($month, 2, "0" ,STR_PAD_LEFT) . '-01';
+        if($district == 'all'){
+            $str_sql = "CALL REPgetData ('TP', '$reporting_date', $province, $product, 1)";   
+        }else{
+            $str_sql = "CALL REPgetData ('TD', '$reporting_date', $district, $product, 1)";
         }
-        if ($district != "all") {
-            $location = "AND locations.district_id = " . $district;
-            $location2 = "AND District.district_id = " . $district;
-        } else {
-            $location = "AND locations.province_id = " . $province;
-            $location2 = "AND District.province_id = " . $province;
-        }
-
-        $str_sql = "SELECT
-                            B.tehsil_id,
-                            B.tehsil_name,
-                            COALESCE (A.mos, NULL, 0) AS mos
-                    FROM
-                            (SELECT
-                            locations.pk_id AS tehsil_id,
-                            locations.location_name AS tehsil_name,
-                            ROUND(
-                                    REPgetMOS (
-                                            'H',
-                                            " . $month . ",
-                                            " . $year . ",
-                                            " . $product . ",
-                                            1,
-                                            locations.pk_id,
-                                            locations.pk_id
-                                    ),
-                                    2
-                            ) AS mos
-                    FROM
-                            locations
-                    INNER JOIN pilot_districts ON pilot_districts.district_id = locations.parent_id
-                    INNER JOIN warehouses ON warehouses.pk_id = locations.pk_id
-                    WHERE
-                            locations.geo_level_id = 5
-                    $location) A
-                    RIGHT JOIN( SELECT
-                                                District.pk_id AS tehsil_id,
-                                                District.location_name AS tehsil_name
-                                        FROM
-                                                locations AS District
-                                        INNER JOIN locations AS UC ON District.pk_id = UC.parent_id
-                                        INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                                        INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-                                        WHERE
-                                                stakeholders.geo_level_id = 6
-                                        AND warehouses.stakeholder_id = 1
-                                        AND warehouses. STATUS = 1
-					$location2
-                                        GROUP BY
-                                                District.pk_id
-                                        ORDER BY
-                                                tehsil_id ASC) B ON A.tehsil_id = B.tehsil_id ";
-        //echo $str_sql;
-        //exit;
+        
         $row = $em->getConnection()->prepare($str_sql);
         $row->execute();
         $data = $row->fetchAll(\PDO::FETCH_ASSOC);
-
         return $data;
     }
 
     public function getAmcMapData($year, $month, $product, $province, $type) {
-
         $em = Zend_Registry::get('doctrine');
-
-
-        if ($province == "all") {
-            $provFilter = "";
-        } else {
-            $provFilter = "AND locations.province_id =" . $province;
-        }
-
-
-        if ($type == "C") {
-
-            $str_sql = "SELECT
-                            warehouses.district_id,
-                            locations.location_name AS district_name,
-                            ROUND(COALESCE (
-                                    REPgetConsumption (
-                                            " . $month . ",
-                                            " . $year . ",
-                                            " . $product . ",
-                                             1,
-                                            'D',
-                                            warehouses.district_id
-                                    ),
-                                    NULL,
-                                    0
-                            )) AS consumption
-                    FROM
-                            warehouses
-                    INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
-                    INNER JOIN locations ON warehouses.location_id = locations.pk_id
-                    WHERE
-                            locations.geo_level_id = 4
-                            and warehouses.status = 1
-                    $provFilter
-                    GROUP BY
-                            warehouses.district_id";
-        } else {
-
-            $str_sql = "SELECT
-                            warehouses.district_id,
-                            locations.location_name AS district_name,
-                            ROUND(COALESCE (
-                                    REPgetConsumptionAVG('D'," . $month . "," . $year . "," . $product . ",1,warehouses.district_id,warehouses.district_id),
-                                    NULL,
-                                    0
-                            )) AS consumption
-                    FROM
-                            warehouses
-                    INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
-                    INNER JOIN locations ON warehouses.location_id = locations.pk_id
-                    WHERE
-                            locations.geo_level_id = 4
-                            and warehouses.status = 1
-                    $provFilter
-                    GROUP BY
-                            warehouses.district_id";
-        }
-
-
-
+        $province = ($province == 'all') ? 0 : $province;
+        $reporting_date = $year . '-' .str_pad($month, 2, "0" ,STR_PAD_LEFT) . '-01';
+        $str_sql = "CALL REPgetData ('D', '$reporting_date', $province, $product, 1)";
         $row = $em->getConnection()->prepare($str_sql);
         $row->execute();
         $data = $row->fetchAll(\PDO::FETCH_ASSOC);
-
         return $data;
     }
 
     public function getAmcTehsilMapData($year, $month, $province, $district, $product, $amctype) {
-
         $em = Zend_Registry::get('doctrine');
-
-        if ($month < 10) {
-            $month = "0" . $month;
+        $reporting_date = $year . '-' .str_pad($month, 2, "0" ,STR_PAD_LEFT) . '-01';
+        if($district == 'all'){
+            $str_sql = "CALL REPgetData ('TP', '$reporting_date', $province, $product, 1)";
+        }else{
+            $str_sql = "CALL REPgetData ('TD', '$reporting_date', $district, $product, 1)";
         }
-        if ($district != "all") {
-            $location = "AND locations.district_id = " . $district;
-            $location2 = "AND District.district_id = " . $district;
-        } else {
-            $location = "AND locations.province_id = " . $province;
-            $location2 = "AND District.province_id = " . $province;
-        }
-
-        if ($amctype == "C") {
-
-            $str_sql = "SELECT
-                                B.tehsil_id,
-                                B.tehsil_name,
-                                COALESCE(A.consumption, NULL, 0) AS consumption
-                        FROM
-                                (SELECT
-                        locations.pk_id AS tehsil_id,
-                        locations.location_name AS tehsil_name,
-                        ROUND(COALESCE (
-                                REPgetConsumption (
-                                        " . $month . ",
-                                        " . $year . ",
-                                        " . $product . ",
-                                         1,
-                                        'H',
-                                        locations.pk_id
-                                ),
-                                NULL,
-                                0
-                        )) AS consumption
-                        FROM
-                        locations
-                        INNER JOIN pilot_districts ON pilot_districts.district_id = locations.parent_id
-                        INNER JOIN warehouses ON warehouses.pk_id = locations.pk_id
-                        WHERE
-                        locations.geo_level_id = 5
-                       $location) A
-                        RIGHT JOIN (
-                                SELECT
-                                        District.pk_id AS tehsil_id,
-                                        District.location_name AS tehsil_name
-                                FROM
-                                        locations AS District
-                                INNER JOIN locations AS UC ON District.pk_id = UC.parent_id
-                                INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                                INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-                                WHERE
-                                        stakeholders.geo_level_id = 6
-                                AND warehouses.stakeholder_id = 1
-                                AND warehouses. STATUS = 1
-                                $location2
-                                GROUP BY
-                                        District.pk_id
-                                ORDER BY
-                                        tehsil_id ASC
-                        ) B ON A.tehsil_id = B.tehsil_id";
-        } else {
-            $str_sql = "SELECT
-                                B.tehsil_id,
-                                B.tehsil_name,
-                                COALESCE (A.consumption, NULL, 0) AS consumption
-                        FROM
-                                (SELECT
-                        locations.pk_id AS tehsil_id,
-                        locations.location_name AS tehsil_name,
-                       ROUND(COALESCE (
-                            REPgetConsumptionAVG('H'," . $month . "," . $year . "," . $product . ",1,locations.pk_id,locations.pk_id),
-                            NULL,
-                            0
-                    )) AS consumption
-                        FROM
-                        locations
-                        INNER JOIN pilot_districts ON pilot_districts.district_id = locations.parent_id
-                        INNER JOIN warehouses ON warehouses.pk_id = locations.pk_id
-                        WHERE
-                        locations.geo_level_id = 5
-                       $location) A
-                        RIGHT JOIN (
-                                SELECT
-                                        District.pk_id AS tehsil_id,
-                                        District.location_name AS tehsil_name
-                                FROM
-                                        locations AS District
-                                INNER JOIN locations AS UC ON District.pk_id = UC.parent_id
-                                INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                                INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-                                WHERE
-                                        stakeholders.geo_level_id = 6
-                                AND warehouses.stakeholder_id = 1
-                                AND warehouses. STATUS = 1
-                                $location2
-                                GROUP BY
-                                        District.pk_id
-                                ORDER BY
-                                        tehsil_id ASC
-                        ) B ON A.tehsil_id = B.tehsil_id";
-        }
-
         $row = $em->getConnection()->prepare($str_sql);
         $row->execute();
         $data = $row->fetchAll(\PDO::FETCH_ASSOC);
@@ -331,128 +91,63 @@ class Model_Geo extends Model_Base {
         $str_date = $year . "-" . $month;
 
         if ($province == 'all') {
-            $str_qry = "SELECT
-                    A.districtId AS district_id,
-                    A.districtName AS district_name,
-                    A.totalWH AS total_warehouse,
-                    IFNULL(B.reported, 0) AS reported,
-                    ROUND((IFNULL(B.reported, 0) / A.totalWH) * 100) AS reporting_rate
-                    from ( 
-               SELECT
-                          A.districtId AS district_id,
-                          A.districtName AS district_name,
-                          A.totalWH AS total_warehouse,
-                          IFNULL(B.reported, 0) AS reported,
-                          ROUND((IFNULL(B.reported, 0) / A.totalWH) * 100) AS reporting_rate
-                           from (
-                        SELECT
-                                District.pk_id AS districtId,
-                                District.location_name AS districtName,
-                                COUNT(DISTINCT UC.pk_id) AS totalWH
-                        FROM
-                                locations AS District
-                        INNER JOIN locations AS UC ON District.pk_id = UC.district_id
-                        INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                        INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-                        WHERE
-                                stakeholders.geo_level_id = 6
-                                AND warehouses.stakeholder_id = 1
-                                AND warehouses.status = 1
-                                AND District.province_id = 2
-
-                        GROUP BY
-                                        District.pk_id
-                        ORDER BY
-                                districtId ASC
-                        ) A
-                        LEFT JOIN (
-                        
-              
-                SELECT
-                        District.pk_id AS districtId,
-                        District.location_name AS districtName,
-                        COUNT(DISTINCT UC.pk_id) AS reported
-                FROM
-                locations AS District
-                INNER JOIN locations AS UC ON District.pk_id = UC.district_id
-                INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
-                INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-                WHERE
-                stakeholders.geo_level_id = 6
-                AND warehouses.stakeholder_id = 1
-                AND warehouses.STATUS = 1
-                AND District.province_id = 2
-                AND DATE_FORMAT(
-                        hf_data_master.reporting_start_date,
-                        '%Y-%m'
-                ) = '" . $str_date . "'
-                AND hf_data_master.issue_balance IS NOT NULL
-                AND hf_data_master.issue_balance != 0
-                GROUP BY
-                        District.pk_id
-                ORDER BY
-                        districtId ASC
-                        )B ON  A.districtId = B.districtId";
+            $prov_filter = "";
         } else {
-            $str_qry = "SELECT
-                          A.districtId AS district_id,
-                          A.districtName AS district_name,
-                          A.totalWH AS total_warehouse,
-                          IFNULL(B.reported, 0) AS reported,
-                          ROUND((IFNULL(B.reported, 0) / A.totalWH) * 100) AS reporting_rate
-                           from (
+            $prov_filter = "AND District.province_id = $province";
+        }
+        
+        $str_qry = "SELECT
+                        A.districtId AS district_id,
+                        A.districtName AS district_name,
+                        A.totalWH AS total_warehouse,
+                        IFNULL(B.reported, 0) AS reported,
+                        ROUND((IFNULL(B.reported, 0) / A.totalWH) * 100
+                        ) AS reporting_rate
+                    FROM
+                        (
                         SELECT
-                                District.pk_id AS districtId,
-                                District.location_name AS districtName,
-                                COUNT(DISTINCT UC.pk_id) AS totalWH
+                            District.pk_id AS districtId,
+                            District.location_name AS districtName,
+                            COUNT(DISTINCT UC.pk_id) AS totalWH
                         FROM
-                                locations AS District
+                            locations AS District
                         INNER JOIN locations AS UC ON District.pk_id = UC.district_id
                         INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
                         INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
                         WHERE
-                                stakeholders.geo_level_id = 6
-                                AND warehouses.stakeholder_id = 1
-                                AND warehouses.status = 1
-                                AND District.province_id = $province
-
+                            stakeholders.geo_level_id = 6
+                        AND warehouses.stakeholder_id = 1
+                        AND warehouses.status = 1
+                        $prov_filter
                         GROUP BY
-                                        District.pk_id
+                            District.pk_id
                         ORDER BY
-                                districtId ASC
+                            districtId ASC
                         ) A
-                        LEFT JOIN (
-                        
-              
-                SELECT
-                        District.pk_id AS districtId,
-                        District.location_name AS districtName,
-                        COUNT(DISTINCT UC.pk_id) AS reported
-                FROM
-                locations AS District
-                INNER JOIN locations AS UC ON District.pk_id = UC.district_id
-                INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
-                INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-                WHERE
-                stakeholders.geo_level_id = 6
-                AND warehouses.stakeholder_id = 1
-                AND warehouses. STATUS = 1
-                AND District.province_id = $province
-                AND DATE_FORMAT(
-                        hf_data_master.reporting_start_date,
-                        '%Y-%m'
-                ) = '" . $str_date . "'
-                AND hf_data_master.issue_balance IS NOT NULL
-                AND hf_data_master.issue_balance != 0
-                GROUP BY
-                        District.pk_id
-                ORDER BY
-                        districtId ASC
-                        )B ON  A.districtId = B.districtId";
-        }
-
+                    LEFT JOIN (
+                        SELECT
+                            District.pk_id AS districtId,
+                            District.location_name AS districtName,
+                            COUNT(DISTINCT UC.pk_id) AS reported
+                        FROM
+                            locations AS District
+                        INNER JOIN locations AS UC ON District.pk_id = UC.district_id
+                        INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
+                        INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+                        INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+                        WHERE
+                            stakeholders.geo_level_id = 6
+                        AND warehouses.stakeholder_id = 1
+                        AND warehouses.status = 1
+                        $prov_filter
+                        AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m') = '" . $str_date . "'
+                        AND hf_data_master.issue_balance IS NOT NULL
+                        AND hf_data_master.issue_balance != 0
+                        GROUP BY
+                            District.pk_id
+                        ORDER BY
+                            districtId ASC
+                    ) B ON A.districtId = B.districtId";
         $row = $em->getConnection()->prepare($str_qry);
         $row->execute();
         $data = $row->fetchAll(\PDO::FETCH_ASSOC);
@@ -476,67 +171,57 @@ class Model_Geo extends Model_Base {
             $location = "AND District.province_id = " . $province;
         }
 
-
-
-
         $str_qry = "SELECT
-                                A.districtId AS tehsil_id,
-                                A.districtName AS tehsil_name,
-                                A.totalWH AS total_warehouse,
-                                IFNULL(B.reported, 0) AS reported,
-                                ROUND(
-                                        (
-                                                IFNULL(B.reported, 0) / A.totalWH
-                                        ) * 100
-                                ) AS reporting_rate
+                        A.districtId AS tehsil_id,
+                        A.districtName AS tehsil_name,
+                        A.totalWH AS total_warehouse,
+                        IFNULL(B.reported, 0) AS reported,
+                        ROUND((IFNULL(B.reported, 0) / A.totalWH) * 100) AS reporting_rate
+                    FROM
+                        (
+                        SELECT
+                            District.pk_id AS districtId,
+                            District.location_name AS districtName,
+                            COUNT(DISTINCT UC.pk_id) AS totalWH
                         FROM
-                                (
-                                        SELECT
-                                                District.pk_id AS districtId,
-                                                District.location_name AS districtName,
-                                                COUNT(DISTINCT UC.pk_id) AS totalWH
-                                        FROM
-                                                locations AS District
-                                        INNER JOIN locations AS UC ON District.pk_id = UC.parent_id
-                                        INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                                        INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-                                        WHERE
-                                                stakeholders.geo_level_id = 6
-                                        AND warehouses.stakeholder_id = 1
-                                        AND warehouses. STATUS = 1
-                                       $location
-                                        GROUP BY
-                                                District.pk_id
-                                        ORDER BY
-                                                districtId ASC
-                                ) A
-                        LEFT JOIN (
-                                SELECT
-                                        District.pk_id AS districtId,
-                                        District.location_name AS districtName,
-                                        COUNT(DISTINCT UC.pk_id) AS reported
-                                FROM
-                                        locations AS District
-                                INNER JOIN locations AS UC ON District.pk_id = UC.parent_id
-                                INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                                INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
-                                INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-                                WHERE
-                                        stakeholders.geo_level_id = 6
-                                AND warehouses.stakeholder_id = 1
-                                AND warehouses. STATUS = 1
-                                $location
-                                AND DATE_FORMAT(
-                                        hf_data_master.reporting_start_date,
-                                        '%Y-%m'
-                                ) = '" . $str_date . "'
-                                AND hf_data_master.issue_balance IS NOT NULL
-                                AND hf_data_master.issue_balance != 0
-                                GROUP BY
-                                        District.pk_id
-                                ORDER BY
-                                        districtId ASC
-                        ) B ON A.districtId = B.districtId";
+                            locations AS District
+                        INNER JOIN locations AS UC ON District.pk_id = UC.parent_id
+                        INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
+                        INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+                        WHERE
+                            stakeholders.geo_level_id = 6
+                        AND warehouses.stakeholder_id = 1
+                        AND warehouses.status = 1
+                        $location
+                        GROUP BY
+                            District.pk_id
+                        ORDER BY
+                            districtId ASC
+                        ) A
+                    LEFT JOIN (
+                        SELECT
+                            District.pk_id AS districtId,
+                            District.location_name AS districtName,
+                            COUNT(DISTINCT UC.pk_id) AS reported
+                        FROM
+                            locations AS District
+                        INNER JOIN locations AS UC ON District.pk_id = UC.parent_id
+                        INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
+                        INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+                        INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+                        WHERE
+                            stakeholders.geo_level_id = 6
+                        AND warehouses.stakeholder_id = 1
+                        AND warehouses.status = 1
+                        $location
+                        AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m') = '" . $str_date . "'
+                        AND hf_data_master.issue_balance IS NOT NULL
+                        AND hf_data_master.issue_balance != 0
+                        GROUP BY
+                            District.pk_id
+                        ORDER BY
+                            districtId ASC
+                    ) B ON A.districtId = B.districtId";
 
 
         $row = $em->getConnection()->prepare($str_qry);
@@ -972,6 +657,7 @@ class Model_Geo extends Model_Base {
         }
 
         $query = "SELECT
+                        B.province_id,
                         B.district_id,
                         B.district_name,
                         COALESCE (A.quantity, NULL, 0) AS quantity,
@@ -991,23 +677,23 @@ class Model_Geo extends Model_Base {
                                 SELECT
                                         locations.pk_id AS district_id,
                                         locations.location_name AS district_name,
-                                        stock_batch.item_pack_size_id AS item_id,
+                                        stakeholder_item_pack_sizes.item_pack_size_id AS item_id,
                                         Sum(
 
                                                 IF (
                                                         stock_batch.expiry_date >= '" . $str_date . "',
-                                                        (stock_batch.quantity),
+                                                        (stock_batch_warehouses.quantity),
                                                         0
                                                 )
                                         ) AS quantity,
                                         Sum(
 
                                                 IF (
-                                                        stock_batch.expiry_date >= '" . $str_date . "' && stock_batch.expiry_date <= ADDDATE(
+                                                        stock_batch.expiry_date >= '" . $str_date . "' AND stock_batch.expiry_date <= ADDDATE(
                                                                 '" . $str_date . "',
                                                                 INTERVAL 6 MONTH
                                                         ),
-                                                        (stock_batch.quantity),
+                                                        (stock_batch_warehouses.quantity),
                                                         0
                                                 )
                                         ) AS ExpiringIn6Months,
@@ -1018,12 +704,12 @@ class Model_Geo extends Model_Base {
                                                                 stock_batch.expiry_date > ADDDATE(
                                                                         '" . $str_date . "',
                                                                         INTERVAL 6 MONTH
-                                                                ) && stock_batch.expiry_date <= ADDDATE(
+                                                                ) AND stock_batch.expiry_date <= ADDDATE(
                                                                         '" . $str_date . "',
                                                                         INTERVAL 13 MONTH
                                                                 )
                                                         ),
-                                                        (stock_batch.quantity),
+                                                        (stock_batch_warehouses.quantity),
                                                         0
                                                 )
                                         ) AS ExpiringIn12Months,
@@ -1034,27 +720,32 @@ class Model_Geo extends Model_Base {
                                                                 '" . $str_date . "',
                                                                 INTERVAL 13 MONTH
                                                         ),
-                                                        (stock_batch.quantity),
+                                                        (stock_batch_warehouses.quantity),
                                                         0
                                                 )
                                         ) AS ExpiringIn13Months
                                 FROM
                                         stock_batch
-                                INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+                                INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                                INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
                                 INNER JOIN locations ON warehouses.district_id = locations.pk_id
                                 INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
                                 WHERE
                                         stakeholders.geo_level_id = 4
-                                AND warehouses. STATUS = 1
-                                AND stock_batch. STATUS <> 'Finished'
-                                AND item_pack_size_id = '" . $product . "'
+                                AND warehouses.status = 1
+                                AND stock_batch_warehouses.status <> 'Finished'
+                                AND stakeholder_item_pack_sizes.item_pack_size_id = '" . $product . "'
                                 GROUP BY
                                         locations.district_id
                         ) A
                 RIGHT JOIN (
                         SELECT
                                 District.pk_id AS district_id,
-                                District.location_name AS district_name
+                                District.location_name AS district_name,
+                                District.province_id
                         FROM
                                 locations AS District
                         INNER JOIN locations AS UC ON District.pk_id = UC.district_id
@@ -1063,14 +754,17 @@ class Model_Geo extends Model_Base {
                         WHERE
                                 stakeholders.geo_level_id = 6
                         AND warehouses.stakeholder_id = 1
-                        AND warehouses. STATUS = 1
+                        AND warehouses.status = 1
                         $provFilter
                         $filter
                         GROUP BY
                                 District.pk_id
                         ORDER BY
                                 district_id ASC
-                ) B ON A.district_id = B.district_id";
+                ) B ON A.district_id = B.district_id
+                ORDER BY
+                    B.province_id,
+                    B.district_name";
 
         $row = $em->getConnection()->prepare($query);
         $row->execute();
@@ -1119,7 +813,7 @@ class Model_Geo extends Model_Base {
 
                                                         IF (
                                                                 stock_batch.expiry_date >= '" . $str_date . "',
-                                                                (stock_batch.quantity),
+                                                                (stock_batch_warehouses.quantity),
                                                                 0
                                                         )
                                                 ) AS quantity,
@@ -1130,7 +824,7 @@ class Model_Geo extends Model_Base {
                                                                         '" . $str_date . "',
                                                                         INTERVAL 6 MONTH
                                                                 ),
-                                                                (stock_batch.quantity),
+                                                                (stock_batch_warehouses.quantity),
                                                                 0
                                                         )
                                                 ) AS ExpiringIn6Months,
@@ -1146,7 +840,7 @@ class Model_Geo extends Model_Base {
                                                                                 INTERVAL 13 MONTH
                                                                         )
                                                                 ),
-                                                                (stock_batch.quantity),
+                                                                (stock_batch_warehouses.quantity),
                                                                 0
                                                         )
                                                 ) AS ExpiringIn12Months,
@@ -1157,7 +851,7 @@ class Model_Geo extends Model_Base {
                                                                         '" . $str_date . "',
                                                                         INTERVAL 13 MONTH
                                                                 ),
-                                                                (stock_batch.quantity),
+                                                                (stock_batch_warehouses.quantity),
                                                                 0
                                                         )
                                                 ) AS ExpiringIn13Months
@@ -1165,12 +859,19 @@ class Model_Geo extends Model_Base {
                                                 locations AS teh
                                         INNER JOIN locations AS uc ON uc.parent_id = teh.pk_id
                                         INNER JOIN warehouses ON uc.pk_id = warehouses.location_id
-                                        INNER JOIN stock_batch ON warehouses.pk_id = stock_batch.warehouse_id
+                                      
+                                        INNER JOIN stock_batch_warehouses ON warehouses.pk_id = stock_batch_warehouses.warehouse_id
+                                        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id                                        
+
+
                                         WHERE
                                                 teh.geo_level_id = 5
                                         AND warehouses. STATUS = 1
-                                        AND stock_batch. STATUS <> 'Finished'
-                                        AND item_pack_size_id = '" . $product . "'
+                                        AND stock_batch_warehouses. STATUS <> 'Finished'
+                                        AND stakeholder_item_pack_sizes.item_pack_size_id = '" . $product . "'
                                         GROUP BY
                                                 teh.pk_id
                                 ) A
@@ -1204,70 +905,126 @@ class Model_Geo extends Model_Base {
     public function getVaccineCoverage($year, $month, $province, $product) {
         $em = Zend_Registry::get('doctrine');
 
-        $query = "SELECT
-                        items.population_percent_increase_per_year,
-                        items.child_surviving_percent_per_year,
-                        items.doses_per_year
-                        FROM
-                        items
-                        INNER JOIN item_pack_sizes ON item_pack_sizes.item_id = items.pk_id
-                        WHERE
-                        item_pack_sizes.pk_id =" . $product;
+        if ($province == "all") {
+            $prov_filter = "";
+        } else {
+            $prov_filter = " AND warehouses.province_id = " . $province;
+        }
+        $reporting_date = $year . '-' .str_pad($month, 2, "0" ,STR_PAD_LEFT) . '-01';
 
+        $query = "SELECT
+                    A.district_id,
+                    A.district_name,
+                    A.consumption,
+                    A.target AS population,
+                    ROUND((A.consumption / A.target) * 100, 2) AS vaccine_coverage
+                FROM
+                    (
+                    SELECT
+                        warehouses.district_id AS district_id,
+                        locations.location_name AS district_name,
+                        SUM(hf_data_master.issue_balance) AS consumption,
+                        ROUND(
+                                (
+                                    (
+                                        (
+                                            (
+                                                location_populations.population / 100
+                                            ) * items.population_percent_increase_per_year
+                                        ) / 100 * items.child_surviving_percent_per_year
+                                    ) * items.doses_per_year
+                                ) / 12
+                        ) AS target
+                    FROM
+                         warehouses
+                    INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+                    INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+                    INNER JOIN locations ON locations.pk_id = warehouses.district_id
+                    INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+                    INNER JOIN location_populations ON warehouses.district_id = location_populations.location_id
+                    INNER JOIN item_pack_sizes ON hf_data_master.item_pack_size_id = item_pack_sizes.pk_id
+                    INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
+                    WHERE
+                        stakeholders.geo_level_id >= 4
+                    AND warehouses.stakeholder_id = 1
+                    AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = '$reporting_date'
+                    AND hf_data_master.item_pack_size_id = $product
+                    AND YEAR (location_populations.estimation_date) = YEAR ('$reporting_date')
+                    $prov_filter
+                    GROUP BY
+                        warehouses.district_id,
+                        Reporting_start_date
+                    ORDER BY
+                        warehouses.district_id,
+                        Reporting_start_date DESC
+                    ) A";
         $row = $em->getConnection()->prepare($query);
         $row->execute();
-        while ($data = $row->fetch()) {
-            $pop_percent = $data['population_percent_increase_per_year'];
-            $surviving_percent = $data['child_surviving_percent_per_year'];
-            $doses = $data['doses_per_year'];
-        }
+        $data = $row->fetchAll(\PDO::FETCH_ASSOC);
+        return $data;
+    }
 
-        if ($province == "all") {
-            $provFilter = "";
+    public function getVaccineCoverageTehsil($year, $month, $province, $district, $product) {
+        $em = Zend_Registry::get('doctrine');
+
+        if ($district != "all") {
+            $district_filter = " AND warehouses.district_id =" . $district;
         } else {
-            $provFilter = "WHERE map_district_mapping.province_id =" . $province;
+            $district_filter = "";
         }
-
+        
+        $reporting_date = $year . '-' .str_pad($month, 2, "0" ,STR_PAD_LEFT) . '-01';
         $query = "SELECT
-                            C.district_id,
-                            C.consumption,
-                            C.population,
-                            coalesce(ROUND(C.consumption/C.population * 100 ),null,0) AS vaccine_coverage
-                          FROM(
-                          SELECT
-                                  B.district_id,
-                                  B.consumption,
-                                  ROUND(COALESCE(ROUND((((location_populations.population*" . $doses . ")/100*" . $pop_percent . ")/100*" . $surviving_percent . "))/12,null,0)) AS population
-                          FROM
-                                  (
-                                          SELECT
-                                                  map_district_mapping.mapping_id AS district_id,
-                                                  SUM(A.consumption) AS consumption
-                                          FROM
-                                                  (
-                                                          SELECT
-                                                                  warehouses.district_id,
-                                                                  locations.location_name AS district_name,
-                                                                  COALESCE(REPgetConsumption (" . $month . "," . $year . "," . $product . ",1,'D',warehouses.district_id),NULL,0) AS consumption
-                                                          FROM
-                                                                  warehouses
-                                                          INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
-                                                          INNER JOIN locations ON warehouses.location_id = locations.pk_id
-                                                          WHERE
-                                                                  warehouses.status = 1
-                                                                  and 
-                                                                  locations.geo_level_id = 4
-                                                          GROUP BY
-                                                                  warehouses.district_id
-                                                  ) A
-                                          INNER JOIN map_district_mapping ON map_district_mapping.district_id = A.district_id
-                                          $provFilter
-                                          GROUP BY
-                                                  map_district_mapping.mapping_id
-                                  ) B
-                          LEFT JOIN location_populations ON B.district_id = location_id
-                          WHERE
-                                  DATE_FORMAT(location_populations.estimation_date,'%Y') = '" . $year . "' ) C";
+                    A.tehsil_id,
+                    A.tehsil_name,
+                    SUM(A.consumption) AS consumption,
+                    SUM(A.target) AS target,
+                    SUM(A.population) AS population,
+                    ROUND(SUM(A.consumption) / SUM(A.target) * 100, 2) AS vaccine_coverage
+                FROM
+                    (
+                    SELECT
+                        Tehsil.pk_id AS tehsil_id,
+                        Tehsil.location_name AS tehsil_name,
+                        warehouses.location_id,
+                        locations.location_name,
+                        SUM(hf_data_master.issue_balance) AS consumption,
+                        location_populations.population,
+                        ROUND(
+                                (
+                                    (
+                                        (
+                                            (
+                                                (
+                                                    location_populations.population / 100
+                                                ) * items.population_percent_increase_per_year
+                                            ) / 100 * items.child_surviving_percent_per_year
+                                        ) * items.doses_per_year
+                                    ) / 12
+                                )
+                        ) AS target
+                    FROM
+                        warehouses
+                    INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+                    INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+                    INNER JOIN locations ON locations.pk_id = warehouses.location_id
+                    INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+                    INNER JOIN location_populations ON location_populations.location_id = locations.pk_id
+                    INNER JOIN item_pack_sizes ON hf_data_master.item_pack_size_id = item_pack_sizes.pk_id
+                    INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
+                    INNER JOIN locations AS Tehsil ON locations.parent_id = Tehsil.pk_id
+                    WHERE
+                        stakeholders.geo_level_id >= 6
+                    AND warehouses.stakeholder_id = 1
+                    AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m-%d') = '$reporting_date'
+                    AND hf_data_master.item_pack_size_id = $product
+                    $district_filter
+                    AND YEAR (location_populations.estimation_date) = YEAR ('$reporting_date')
+                    GROUP BY
+                        locations.pk_id
+                    ) A
+                GROUP BY
+                    A.tehsil_id";
 
         $row = $em->getConnection()->prepare($query);
         $row->execute();
@@ -1276,121 +1033,93 @@ class Model_Geo extends Model_Base {
         return $data;
     }
 
-    public function getVaccineCoverageTehsil($year, $month, $province, $district, $product) {
+    public function getColdChainProvince($type) {
         $em = Zend_Registry::get('doctrine');
 
+//        $query = "SELECT
+//                        B.pk_id AS province_id,
+//                        B.location_name AS province_name,
+//                        COALESCE (ROUND(A.capacity), NULL, 0) AS capacity
+//                    FROM
+//                        (
+//                            SELECT
+//                                warehouses.province_id,
+//                                ROUND(SUM(ccm_models.net_capacity_4), 2) AS capacity
+//                            FROM
+//                                cold_chain
+//                            INNER JOIN ccm_models ON cold_chain.ccm_model_id = ccm_models.pk_id
+//                            INNER JOIN warehouses ON cold_chain.warehouse_id = warehouses.pk_id
+//                            INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+//                            INNER JOIN ccm_asset_types ON cold_chain.ccm_asset_type_id = ccm_asset_types.pk_id
+//                            WHERE
+//                                ccm_asset_types.parent_id = $type
+//                            AND warehouses.status = 1
+//                            GROUP BY
+//                                warehouses.province_id
+//                        ) A
+//                    RIGHT JOIN (
+//                        SELECT DISTINCT
+//                            locations.pk_id,
+//                            locations.location_name
+//                        FROM
+//                            warehouses
+//                        INNER JOIN stakeholders ON stakeholders.pk_id = warehouses.stakeholder_office_id
+//                        INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+//                        INNER JOIN locations ON warehouses.province_id = locations.pk_id
+//                        WHERE
+//                            stakeholders.geo_level_id = 2
+//                        AND warehouses.status = 1
+//                        AND DATE_FORMAT(warehouses.starting_on, '%Y-%m') IS NULL
+//                        ORDER BY
+//                            locations.pk_id ASC
+//                    ) B ON A.province_id = B.pk_id";
         $query = "SELECT
-                        items.population_percent_increase_per_year,
-                        items.child_surviving_percent_per_year,
-                        items.doses_per_year
-                        FROM
-                        items
-                        INNER JOIN item_pack_sizes ON item_pack_sizes.item_id = items.pk_id
-                        WHERE
-                        item_pack_sizes.pk_id =" . $product;
-
-        $row = $em->getConnection()->prepare($query);
-        $row->execute();
-        while ($data = $row->fetch()) {
-            $pop_percent = $data['population_percent_increase_per_year'];
-            $surviving_percent = $data['child_surviving_percent_per_year'];
-            $doses = $data['doses_per_year'];
-        }
-
-        if ($district != "all") {
-            $location = "AND locations.district_id=" . $district;
-            $location2 = "AND District.district_id = " . $district;
-        } else {
-            $location = "AND locations.province_id =" . $province;
-            $location2 = "AND District.province_id =" . $province;
-        }
-
-        $query = "SELECT
-                    C.tehsil_id,
-                    C.tehsil_name,
-                    C.consumption,
-                    C.population,
-                    C.target,
-                    coalesce(ROUND(C.consumption/C.target * 100 ),null,0) AS vaccine_coverage
-                FROM(SELECT
-                        B.tehsil_id,
-                        B.tehsil_name,
-                        B.consumption,
-                        A.population,
-                        ROUND(COALESCE(ROUND((((A.population*" . $doses . ")/100*" . $pop_percent . ")/100*" . $surviving_percent . "))/12,null,0)) AS target
-                FROM
-                        (
-                                SELECT
-                                        locations.parent_id AS tehsil_id,
-                                        SUM(location_populations.population) AS population
-                                FROM
-                                        location_populations
-                                INNER JOIN locations ON locations.pk_id = location_populations.location_id
-                                WHERE
-                                        locations.geo_level_id = 6
-                                AND YEAR (
-                                        location_populations.estimation_date
-                                ) = " . $year . "
-                                GROUP BY
-                                        locations.parent_id
-                        ) A
-                RIGHT JOIN (
-                        SELECT
-                                B.tehsil_id,
-                                B.tehsil_name,
-                                COALESCE (A.consumption, NULL, 0) AS consumption
-                        FROM
-                                (
-                                        SELECT
-                                                locations.pk_id AS tehsil_id,
-                                                locations.location_name AS tehsil_name,
-                                                ROUND(
-                                                        COALESCE (
-                                                                REPgetConsumption (
-                                                                        " . $month . ",
-                                                                        " . $year . ",
-                                                                        " . $product . ",
-                                                                        1,
-                                                                        'H',
-                                                                        locations.pk_id
-                                                                ),
-                                                                NULL,
-                                                                0
-                                                        )
-                                                ) AS consumption
-                                        FROM
-                                                locations
-                                        INNER JOIN pilot_districts ON pilot_districts.district_id = locations.parent_id
-                                        INNER JOIN warehouses ON warehouses.pk_id = locations.pk_id
-                                        WHERE
-                                                locations.geo_level_id = 5
-                                        $location
-                                ) A
-                        RIGHT JOIN (
-                                SELECT
-                                        District.pk_id AS tehsil_id,
-                                        District.location_name AS tehsil_name
-                                FROM
-                                        locations AS District
-                                INNER JOIN locations AS UC ON District.pk_id = UC.parent_id
-                                INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                                INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-                                WHERE
-                                        stakeholders.geo_level_id = 6
-                                AND warehouses.stakeholder_id = 1
-                                AND warehouses. STATUS = 1
-                                $location2
-                                GROUP BY
-                                        District.pk_id
-                                ORDER BY
-                                        tehsil_id ASC
-                        ) B ON A.tehsil_id = B.tehsil_id
-                ) B ON A.tehsil_id = B.tehsil_id) C";
+                            B.district_id,
+                            B.district_name,
+                            COALESCE (ROUND(A.capacity), NULL, 0) AS capacity
+                    FROM
+                            (
+                                    SELECT
+                                            warehouses.district_id AS district_id,
+                                            ROUND(
+                                                    SUM(ccm_models.net_capacity_4),
+                                                    2
+                                            ) AS capacity
+                                    FROM
+                                            cold_chain
+                                    INNER JOIN ccm_models ON cold_chain.ccm_model_id = ccm_models.pk_id
+                                    INNER JOIN warehouses ON cold_chain.warehouse_id = warehouses.pk_id
+                                    INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+                                    INNER JOIN ccm_asset_types ON cold_chain.ccm_asset_type_id = ccm_asset_types.pk_id
+                                    WHERE
+                                            ccm_asset_types.parent_id = " . $type . "
+                                    AND warehouses.status = 1
+                                    GROUP BY
+                                            warehouses.district_id
+                            ) A
+                    RIGHT JOIN (
+                            SELECT DISTINCT
+                                    warehouses.district_id,
+                                    locations.location_name AS district_name
+                            FROM
+                                    warehouses
+                            INNER JOIN stakeholders ON stakeholders.pk_id = warehouses.stakeholder_office_id
+                            INNER JOIN pilot_districts ON warehouses.district_id = pilot_districts.district_id
+                            INNER JOIN locations ON warehouses.district_id = locations.pk_id
+                            WHERE
+                                    stakeholders.geo_level_id = 4
+                            AND warehouses.status = 1
+                            AND DATE_FORMAT(
+                                    warehouses.starting_on,
+                                    '%Y-%m'
+                            ) IS NULL
+                            ORDER BY
+                                    district_id ASC
+                    ) B ON A.district_id = B.district_id";
 
         $row = $em->getConnection()->prepare($query);
         $row->execute();
         $data = $row->fetchAll(\PDO::FETCH_ASSOC);
-
         return $data;
     }
 
@@ -1532,9 +1261,9 @@ class Model_Geo extends Model_Base {
                             INNER JOIN geo_indicator_values ON geo_indicators.pk_id = geo_indicator_values.geo_indicator_id
                             INNER JOIN geo_color ON geo_indicator_values.geo_color_id = geo_color.pk_id
                         WHERE geo_indicators.pk_id = " . $id;
-
         $row = $em->getConnection()->prepare($str_sql);
         $row->execute();
+        //App_Controller_Functions::pr($row->fetchAll(\PDO::FETCH_ASSOC));
         return $row->fetchAll(\PDO::FETCH_ASSOC);
     }
 
@@ -1581,21 +1310,25 @@ class Model_Geo extends Model_Base {
                             map_district_mapping.mapping_id AS district_id,
                             map_district_mapping.district_name,
                             stock_batch.number AS batch_number,
-                            SUM(stock_batch.quantity) AS quantity,
-                            stock_batch.item_pack_size_id,
-                            stock_batch.`status`,
+                            SUM(stock_batch_warehouses.quantity) AS quantity,
+                            stakeholder_item_pack_sizes.item_pack_size_id,
+                            stock_batch_warehouses.`status`,
                             DATE_FORMAT(
                                     stock_batch.expiry_date,
                                     '%Y-%m-%d'
                             ) AS expiry_date
                     FROM
-                            stock_batch
-                    INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+                    stock_batch
+                    INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                    INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
                     INNER JOIN map_district_mapping ON warehouses.district_id = map_district_mapping.district_id
                     WHERE
                     stock_batch.number = '" . $batch . "'
                     AND warehouses. STATUS = 1
-                    AND stock_batch.`status` = 'Running'
+                    AND stock_batch_warehouses.`status` = 'Running'
                     GROUP BY
                             map_district_mapping.mapping_id
                     ORDER BY
@@ -1606,30 +1339,7 @@ class Model_Geo extends Model_Base {
         return $row->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function getBatchDetailData($batch, $district) {
-        $em = Zend_Registry::get('doctrine');
-
-        $query = "SELECT
-                            warehouses.warehouse_name,
-                            stock_batch.quantity AS quantity,
-                            stock_batch.`status`,
-                            DATE_FORMAT(stock_batch.expiry_date,'%Y-%m-%d') AS expiry_date
-                    FROM
-                            stock_batch
-                    INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
-                    INNER JOIN map_district_mapping ON warehouses.district_id = map_district_mapping.district_id
-                    WHERE
-                            stock_batch.number = '" . $batch . "'
-                    AND warehouses. STATUS = 1
-                    AND stock_batch.`status` = 'Running'
-                    AND map_district_mapping.mapping_id = '" . $district . "'
-                    ORDER BY
-                            warehouses.district_id";
-
-        $row = $em->getConnection()->prepare($query);
-        $row->execute();
-        return $row->fetchAll(\PDO::FETCH_ASSOC);
-    }
+  
 // ToDo
     public function getReportingRateTrend($year, $month, $district) {
         $em = Zend_Registry::get('doctrine');
@@ -1791,21 +1501,25 @@ class Model_Geo extends Model_Base {
         $query = "SELECT 
                         locations.location_name as district_name,
 			stock_batch.number,
-                        stock_batch.quantity as quantity,
+                        stock_batch_warehouses.quantity as quantity,
                         DATE_FORMAT(stock_batch.expiry_date, '%Y-%m-%d') AS expiry_date
                         FROM
                         stock_batch
-                        INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+                        INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                        INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
                         INNER JOIN locations ON warehouses.district_id = locations.pk_id
                         INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
                         WHERE
                         stakeholders.geo_level_id = 4
-			AND stock_batch.status <> 'Finished'
+			AND stock_batch_warehouses.status <> 'Finished'
                         AND stock_batch.expiry_date >= '" . $str_date . "'
                         AND stock_batch.expiry_date <= ADDDATE('" . $str_date . "',INTERVAL 6 MONTH)
 			AND warehouses.district_id = " . $district . "
                         and warehouses.status = 1
-                        and item_pack_size_id = " . $product . "";
+                        and stakeholder_item_pack_sizes.item_pack_size_id = " . $product . "";
 
         $row = $em->getConnection()->prepare($query);
         $row->execute();
@@ -1826,21 +1540,26 @@ class Model_Geo extends Model_Base {
         $query = "SELECT
                         teh.location_name AS tehsil_name,
                         stock_batch.number,
-                        stock_batch.quantity,
+                        stock_batch_warehouses.quantity,
                   DATE_FORMAT(stock_batch.expiry_date, '%Y-%m-%d') AS expiry_date
                 FROM
                         locations AS teh
                 INNER JOIN locations AS uc ON uc.parent_id = teh.pk_id
                 INNER JOIN warehouses ON uc.pk_id = warehouses.location_id
-                INNER JOIN stock_batch ON warehouses.pk_id = stock_batch.warehouse_id
+                INNER JOIN stock_batch_warehouses ON warehouses.pk_id = stock_batch_warehouses.warehouse_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id                
+
                 WHERE
                         teh.geo_level_id = 5
                 AND warehouses. STATUS = 1
-                AND stock_batch. STATUS <> 'Finished'
+                AND stock_batch_warehouses. STATUS <> 'Finished'
                 AND stock_batch.expiry_date >= '" . $str_date . "'
                 AND stock_batch.expiry_date <= ADDDATE('" . $str_date . "',INTERVAL 6 MONTH)
                 AND teh.pk_id = " . $tehsil . "
-                AND item_pack_size_id = " . $product . "";
+                AND stakeholder_item_pack_sizes.item_pack_size_id = " . $product . "";
 
         $row = $em->getConnection()->prepare($query);
         $row->execute();
@@ -2186,58 +1905,15 @@ class Model_Geo extends Model_Base {
 
         echo '<option value="all">All</option>';
         foreach ($data as $row) {
-            if ($row['pkId'] == '33') {
-                $sel = "selected='selected'";
-            } else if ($row['pkId'] == '63') {
-                $sel = "selected='selected'";
-            } else if ($row['pkId'] == '45') {
-                $sel = "selected='selected'";
-            } else if ($row['pkId'] == '110') {
-                $sel = "selected='selected'";
-            } else if ($row['pkId'] == '101') {
-                $sel = "selected='selected'";
-            } else if ($row['pkId'] == '78') {
-                $sel = "selected='selected'";
-            } else {
-                $sel = "";
-            }
-            echo "<option $sel value=" . $row['pkId'] . ">" . $row['locationName'] . "</option>";
+            echo "<option value=" . $row['pkId'] . ">" . $row['locationName'] . "</option>";
         }
     }
 
     public function getUcWiseMos($year, $month, $product, $tehsilId) {
         $em = Zend_Registry::get('doctrine');
-        if ($month < 10) {
-            $month = "0" . $month;
-        }
-        $query = "SELECT
-                                    UC.pk_id AS uc_id,
-                                    UC.location_name AS uc_name,
-                                    ROUND(
-                                            REPgetMOS (
-                                                    'U',
-                                                " . $month . ",
-                                                " . $year . ",
-                                                " . $product . ",
-                                                    1,
-                                                    UC.pk_id,
-                                                    UC.pk_id
-                                            ),
-                                            2
-                                    ) AS mos
-                            FROM
-                                    locations AS UC
-                            INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                            INNER JOIN locations ON UC.parent_id = locations.pk_id
-                            WHERE
-                                    UC.geo_level_id = 6
-                            AND warehouses.stakeholder_id = 1
-                            AND warehouses.STATUS = 1
-                            AND UC.parent_id = " . $tehsilId . "
-                            GROUP BY
-                                    UC.pk_id";
-
-        $row = $em->getConnection()->prepare($query);
+        $reporting_date = $year . '-' .str_pad($month, 2, "0" ,STR_PAD_LEFT) . '-01';
+        $str_sql = "CALL REPgetData ('UT', '$reporting_date', $tehsilId, $product, 1)";
+        $row = $em->getConnection()->prepare($str_sql);
         $row->execute();
         $data = $row->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -2246,61 +1922,9 @@ class Model_Geo extends Model_Base {
 
     public function getUcWiseConsumption($year, $month, $product, $tehsilId, $type) {
         $em = Zend_Registry::get('doctrine');
-        if ($month < 10) {
-            $month = "0" . $month;
-        }
-
-        if ($type == "C") {
-            $query = "SELECT
-                            UC.pk_id AS uc_id,
-                            UC.location_name AS uc_name,
-                            COALESCE (
-                                    REPgetConsumption (
-                                            " . $month . ",
-                                            " . $year . ",
-                                            " . $product . ",
-                                             1,
-                                            'U',
-                                             UC.pk_id
-                                    ),
-                                    NULL,
-                                    0
-                            ) AS consumption
-                       FROM
-                       locations AS UC
-                            INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                            INNER JOIN locations ON UC.parent_id = locations.pk_id
-                            WHERE
-                                    UC.geo_level_id = 6
-                            AND warehouses.stakeholder_id = 1
-                            AND warehouses.STATUS = 1
-                            AND UC.parent_id = " . $tehsilId . "
-                            GROUP BY
-                                    UC.pk_id";
-        } else {
-            $query = "SELECT
-                         UC.pk_id AS uc_id,
-                         UC.location_name AS uc_name,
-                            COALESCE (
-                                ROUND(REPgetConsumptionAVG('U'," . $month . "," . $year . "," . $product . ",1,UC.pk_id,UC.pk_id),2),
-                                NULL,
-                                0
-                        ) AS consumption
-                         FROM
-                       locations AS UC
-                            INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
-                            INNER JOIN locations ON UC.parent_id = locations.pk_id
-                            WHERE
-                                    UC.geo_level_id = 6
-                            AND warehouses.stakeholder_id = 1
-                            AND warehouses.STATUS = 1
-                            AND UC.parent_id = " . $tehsilId . "
-                            GROUP BY
-                                    UC.pk_id";
-        }
-
-
-        $row = $em->getConnection()->prepare($query);
+        $reporting_date = $year . '-' .str_pad($month, 2, "0" ,STR_PAD_LEFT) . '-01';
+        $str_sql = "CALL REPgetData ('UT', '$reporting_date', $tehsilId, $product, 1)";
+        $row = $em->getConnection()->prepare($str_sql);
         $row->execute();
         $data = $row->fetchAll(\PDO::FETCH_ASSOC);
 

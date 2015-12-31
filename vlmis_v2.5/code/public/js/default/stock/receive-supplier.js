@@ -327,7 +327,8 @@ $("#new_receive").validate({
             required: true
         },
         'transaction_reference': {
-            required: true
+            required: true,
+            refnum: true
         },
         'from_warehouse_id': {
             required: true
@@ -368,7 +369,8 @@ $("#new_receive").validate({
     },
     messages: {
         'transaction_reference': {
-            required: "Please enter reference number"
+            required: "Please enter reference number",
+            refnum: "Only these characters are allowed: Alphanumeric space * , .-_=/# |()"
         },
         'item_id': {
             required: "Please select product"
@@ -403,6 +405,25 @@ $("#new_receive").validate({
         }
     }
 });
+
+/* Characters allowed for Reference No: 
+ * Alphanumeric
+ * Space
+ * ,
+ * .
+ * -
+ * _
+ * =
+ * /
+ * # 
+ * |
+ * (
+ * )
+ */
+
+$.validator.addMethod("refnum", function (value, element) {
+        return this.optional(element) || value == value.match(/^[a-zA-Z0-9-\s\#\_/,/./=/|/(/)]+$/);
+    });
 
 $('#activity_id').change(function (e) {
     var activity_id = $('#activity_id').val();

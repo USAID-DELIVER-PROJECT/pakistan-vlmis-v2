@@ -292,7 +292,7 @@ function clearData(){
     $("#loader").show();
     $("#mapTitle").html("");
     $("#attributeGrid").html("");
-    $("#ucs_list").html("<h5 align='center' style='margin:70px auto;'>Click any tehsil for Non Reported <br/> UCs list</h5>");
+    $("#ucs_list").html("<h5 class='center' style='margin:70px auto;'>Click any tehsil for Non Reported <br/> UCs list</h5>");
     $("#submit").attr("disabled", true);
     $('.radio-button').prop('checked', false);
     pieArray.length = 0;
@@ -316,10 +316,10 @@ function drawGrid(){
     dataDownload.length = 0;
     jsonData.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>District</th><th>Tehsil</th><th align='center'>Total UCs</th><th align='center'>Reported UCs</th><th align='center'>Reporting Rate(%)</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>District</th><th>Tehsil</th><th class='center'>Total UCs</th><th class='center'>Reported UCs</th><th class='center' colspan='2'>Reporting Rate(%)</th></thead>";
     for (var i = 0; i < features.length; i++) {
-        table += "<tr><td>" + features[i].attributes.district + "</td><td>" + features[i].attributes.tehsil_name + "</td><td align='center'>" + features[i].attributes.total_warehouse + "</td><td align='center'>" + features[i].attributes.reported + "</td><td align='center'>" + features[i].attributes.reporting_rate + "</td><td align='left'><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
+        table += "<tr><td>" + features[i].attributes.district + "</td><td>" + features[i].attributes.tehsil_name + "</td><td class='center'>" + features[i].attributes.total_warehouse + "</td><td class='center'>" + features[i].attributes.reported + "</td><td class='center'>" + features[i].attributes.reporting_rate + "</td><td align='left'><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
         jsonData.push({
             label: features[i].attributes.tehsil_name,
             value: features[i].attributes.reporting_rate,
@@ -347,11 +347,11 @@ function gridFilter(color){
     $("#attributeGrid").html("");
     dataDownload.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>District</th><th>Tehsil</th><th>Total UCs</th><th>Reported UCs</th><th>Reporting Rate (%)</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>District</th><th>Tehsil</th><th>Total UCs</th><th>Reported UCs</th><th colspan='2' class='center'>Reporting Rate (%)</th></thead>";
     for (var i = 0; i < features.length; i++) {
         if (features[i].attributes.color == color) {
-            table += "<tr><td>" + features[i].attributes.district + "</td><td>" + features[i].attributes.tehsil_name + "</td><td align='center'>" + features[i].attributes.total_warehouse + "</td><td align='center'>" + features[i].attributes.reported + "</td><td align='center'>" + features[i].attributes.reporting_rate + "</td><td align='left'><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
+            table += "<tr><td>" + features[i].attributes.district + "</td><td>" + features[i].attributes.tehsil_name + "</td><td class='center'>" + features[i].attributes.total_warehouse + "</td><td class='center'>" + features[i].attributes.reported + "</td><td class='center'>" + features[i].attributes.reporting_rate + "</td><td align='left'><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
             dataDownload.push({
                 province: features[i].attributes.province,
                 district_name: features[i].attributes.district,
@@ -415,7 +415,7 @@ function districtCountGraph() {
         type: 'column2D',
         renderAt: 'chart-container',
         width: '100%',
-        height: '100%',
+        height: '98%',
         dataFormat: 'json',
         dataSource: {
             "chart": {
@@ -467,7 +467,7 @@ function getNonReportedUCs(tehsilId,provinceId){
         chart = response;
         $("#ucs_list").html("");
 
-        table = "<table class='table table-condensed table-hover'>";
+        table = "<table class='table table-condensed table-bordered table-hover'>";
         table += "<thead><th>Sr.No</th><th>Tehsil</th><th>UC Name</th></thead>";
         for (var i = 0; i < chart.length; i++) {
             table += "<tr><td>" + (i+1) + "</td><td>" + chart[i].tehsil_name + "</td><td>" + chart[i].location_name + "</td>";

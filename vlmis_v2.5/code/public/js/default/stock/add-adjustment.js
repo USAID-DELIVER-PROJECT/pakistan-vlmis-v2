@@ -38,10 +38,10 @@ $(function () {
         });
     });
 
-    $("#btn-new-batch").click(function(){
+    $("#btn-new-batch").click(function () {
         $("#new-batch-form").find("input[type=text], select").val("");
     });
-    
+
     $("#adjustment_type").change(function () {
         $('#location_id').val("");
         $("#batch_no").select2("val", "");
@@ -82,7 +82,7 @@ $(function () {
             dataType: 'html',
             success: function (data) {
                 var type = $('#adjustment_type').val();
-                if(type == 8 || type == 12 || type == 15) {
+                if (type == 8 || type == 12 || type == 15) {
                     $("#loc_vvm_qty").html("Location");
                 } else {
                     $("#loc_vvm_qty").html("Location | VVM | Quantity");
@@ -100,7 +100,7 @@ $(function () {
             dataType: 'html',
             success: function (data) {
                 var type = $('#adjustment_type').val();
-                if(type == 8 || type == 12 || type == 15){
+                if (type == 8 || type == 12 || type == 15) {
                     $("#loc_vvm_qty").html("Location");
                 } else {
                     $("#loc_vvm_qty").html("Location | VVM | Quantity");
@@ -239,6 +239,9 @@ $("#batch_search").validate({
         },
         location_id: {
             required: true
+        },
+        'ref_no': {
+            refnum: true
         }
     },
     messages: {
@@ -259,9 +262,32 @@ $("#batch_search").validate({
         },
         location_id: {
             required: "Please select batch location."
+        },
+        'ref_no': {
+            refnum: "Only these characters are allowed: Alphanumeric space * , .-_=/# |()"
         }
+        
     }
 });
+
+/* Characters allowed for Reference No: 
+ * Alphanumeric
+ * Space
+ * ,
+ * .
+ * -
+ * _
+ * =
+ * /
+ * # 
+ * |
+ * (
+ * )
+ */
+
+$.validator.addMethod("refnum", function (value, element) {
+        return this.optional(element) || value == value.match(/^[a-zA-Z0-9-\s\#\_/,/./=/|/(/)]+$/);
+    });
 
 $("#new-batch-form").validate({
     rules: {

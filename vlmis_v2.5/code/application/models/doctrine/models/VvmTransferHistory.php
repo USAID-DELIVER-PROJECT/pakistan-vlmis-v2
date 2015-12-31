@@ -35,9 +35,9 @@ class VvmTransferHistory
     private $modifiedBy;
 
     /**
-     * @var StockBatch
+     * @var StockBatchWarehouses
      */
-    private $batch;
+    private $stockBatchWarehouse;
 
     /**
      * @var VvmStages
@@ -146,23 +146,23 @@ class VvmTransferHistory
     }
 
     /**
-     * Set batch
+     * Set stockBatchWarehouse
      *
-     * @param StockBatch $batch
+     * @param StockBatchWarehouses $stockBatchWarehouse
      */
-    public function setBatch(\StockBatch $batch)
+    public function setStockBatchWarehouse(\StockBatchWarehouses $stockBatchWarehouse)
     {
-        $this->batch = $batch;
+        $this->stockBatchWarehouse = $stockBatchWarehouse;
     }
 
     /**
-     * Get batch
+     * Get stockBatchWarehouse
      *
-     * @return StockBatch 
+     * @return StockBatchWarehouses 
      */
-    public function getBatch()
+    public function getStockBatchWarehouse()
     {
-        return $this->batch;
+        return $this->stockBatchWarehouse;
     }
 
     /**

@@ -43,11 +43,9 @@ class Model_ItemPackSizes extends Model_Base {
     public function getAllVaccines() {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("DISTINCT ips.pkId, ips.itemName")
-                ->from("StakeholderItemPackSizes", "i")
-                ->join("i.stakeholder", "s")
-                ->join("i.itemPackSize", "ips")
-                ->where("s.pkId = 1")
-                ->andWhere("ips.itemCategory =1")
+                ->from("ItemActivities", "ia")
+                ->join("ia.itemPackSize", "ips")
+                ->andWhere("ips.itemCategory =" . parent::VACCINECATEGORY)
                 ->orderBy("ips.listRank", "ASC");
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
@@ -157,44 +155,6 @@ class Model_ItemPackSizes extends Model_Base {
         }
     }
 
-    public function getAllWarehouseProducts() {
-        $arr_data = array();
-        $str_sql = $this->_em->createQueryBuilder()
-                ->select('ips.pkId')
-                ->from('StockBatch', 'sb')
-                ->join("sb.itemPackSize", "ips")
-                ->where("sb.warehouse = " . $this->_identity->getWarehouseId())
-                ->andWhere("sb.status = '" . Model_StockBatch::RUNNING . "'")
-                ->andWhere("sb.quantity > 0")
-                ->orderBy("ips.listRank", "ASC");
-
-        $rows = $str_sql->getQuery()->getResult();
-        if (!empty($rows) && count($rows) > 0) {
-            foreach ($rows as $row) {
-                $item_ids[] = $row['pkId'];
-            }
-            $str_sql = $this->_em->createQueryBuilder()
-                    ->select('DISTINCT itemps.pkId, itemps.itemName')
-                    ->from('StakeholderItemPackSizes', 'si')
-                    ->join("si.itemPackSize", 'itemps')
-                    ->where("itemps.pkId IN (" . implode(",", $item_ids) . ") ")
-                    ->andWhere("si.stakeholder = 1")
-                    ->orderBy("itemps.listRank", "ASC");
-            $rows = $str_sql->getQuery()->getResult();
-            foreach ($rows as $row) {
-                $arr_data[] = array(
-                    'pk_id' => $row['pkId'],
-                    'item_name' => $row['itemName']
-                );
-            }
-
-            $this->_em->flush();
-            return $arr_data;
-        } else {
-            return false;
-        }
-    }
-
     public function monthlyConsumtion() {
         $str_sql = "SELECT
                 getMonthlyRcvQtyWH(" . $this->form_values['month'] . "," . $this->form_values['year'] . ",''," . $this->form_values['wh_id'] . ") as rcv,
@@ -204,10 +164,11 @@ class Model_ItemPackSizes extends Model_Base {
                 item_pack_sizes.number_of_doses as description
                 FROM
                 item_pack_sizes
+                INNER JOIN item_activities ON item_activities.item_pack_size_id = item_pack_sizes.pk_id
                 WHERE
                 item_pack_sizes.`status` = 1 AND
                 item_pack_sizes.item_category_id <> 3 AND
-                item_pack_sizes.pk_id IN (SELECT si.item_pack_size_id FROM stakeholder_item_pack_sizes si WHERE si.stakeholder_id = 1)
+                item_activities.stakeholder_activity_id = 1
                 ORDER BY
                 item_pack_sizes.list_rank ASC";
 
@@ -229,17 +190,17 @@ class Model_ItemPackSizes extends Model_Base {
                 item_pack_sizes.description,
                 item_pack_sizes.number_of_doses as description,
                 item_pack_sizes.item_category_id,
-                 item_schedule.pk_id as vaccine_schedule_id,
+                item_schedule.pk_id as vaccine_schedule_id,
                 item_schedule.number_of_doses as no_of_doses,
                 item_schedule.starting_no as start_no
                 FROM
                 item_pack_sizes
                 INNER JOIN item_schedule ON item_pack_sizes.pk_id = item_schedule.item_pack_size_id
+                INNER JOIN item_activities ON item_activities.item_pack_size_id = item_pack_sizes.pk_id
                 WHERE
                 item_pack_sizes.`status` = 1 AND
                 item_pack_sizes.item_category_id <> 3 AND
-                
-                item_pack_sizes.pk_id IN (SELECT si.item_pack_size_id FROM stakeholder_item_pack_sizes si WHERE si.stakeholder_id = 1)
+                item_activities.stakeholder_activity_id = 1
                 ORDER BY
                 item_schedule.pk_id ASC";
 //echo $str_sql;
@@ -270,8 +231,7 @@ class Model_ItemPackSizes extends Model_Base {
                 WHERE
                 item_pack_sizes.`status` = 1 AND
                 item_pack_sizes.item_category_id <> 3 AND
-                
-                item_pack_sizes.pk_id IN (SELECT si.item_pack_size_id FROM stakeholder_item_pack_sizes si WHERE si.stakeholder_id = 1)
+                item_pack_sizes.pk_id.stakeholder_activity_id = 1
                 ORDER BY
                 item_schedule.pk_id ASC";
 //echo $str_sql;
@@ -568,8 +528,11 @@ class Model_ItemPackSizes extends Model_Base {
                 ->select('DISTINCT ips.itemName as item_name, ips.pkId as item_pack_size_id')
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "sm")
-                ->join("sd.stockBatch", "sb")
-                ->join("sb.itemPackSize", "ips")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch","sb")
+                ->join("sb.packInfo","pi")
+                ->join("pi.stakeholderItemPackSize","sip")
+                ->join("sip.itemPackSize", "ips")
                 ->andWhere("(sm.fromWarehouse = " . $warehouse . " AND sd.adjustmentType >= 2) OR (sm.toWarehouse = " . $warehouse . " AND sd.adjustmentType = 1 )")
                 ->orderBy("ips.listRank");
         $row = $str_sql->getQuery()->getResult();
@@ -619,6 +582,23 @@ class Model_ItemPackSizes extends Model_Base {
             return $row;
         } else {
             return FALSE;
+        }
+    }
+
+    public function getAllItemsByCategoryAndActivity($activityIds, $categoriesIds) {
+        // App_Controller_Functions::pr($val);
+        $str_sql = $this->_em->createQueryBuilder()
+                ->select("DISTINCT ips.pkId, ips.itemName")
+                ->from("ItemActivities", "ia")
+                ->join("ia.itemPackSize", "ips")
+                ->andWhere("ia.stakeholderActivity IN (" . $activityIds . ")")
+                ->andWhere("ips.itemCategory IN (" . $categoriesIds . ")")
+                ->orderBy("ips.listRank", "ASC");
+        $row = $str_sql->getQuery()->getResult();
+        if (!empty($row) && count($row) > 0) {
+            return $row;
+        } else {
+            return false;
         }
     }
 

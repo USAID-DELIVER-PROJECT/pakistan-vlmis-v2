@@ -15,160 +15,147 @@ class MapsController extends App_Controller_Base {
 
     public function mosAction() {
         $id = $this->_request->getParam('id', '');
-        if($id == 4 || $id == "")
-        {
-                $form = new Form_Maps_Mos();
-                $form->province->setValue($this->_identity->getProvinceId());
-                $form->product->setValue('6');
+        if ($id == 4 || $id == "") {
+            $form = new Form_Maps_Mos();
+            $form->province->setValue($this->_identity->getProvinceId());
+            $form->product->setValue('6');
 
-                $date = new Zend_Date();
-                $day = $date->get(Zend_Date::DAY);
-                if ($day > 10) {
-                    $date->sub('1', 'MM');
-                } else {
-                    $date->sub('2', 'MM');
-                }
-                $form->year->setValue($date->get(Zend_Date::YEAR));
-                $form->month->setValue($date->get(Zend_Date::MONTH));
+            $date = new Zend_Date();
+            $day = $date->get(Zend_Date::DAY);
+            if ($day > 10) {
+                $date->sub('1', 'MM');
+            } else {
+                $date->sub('2', 'MM');
+            }
+            $form->year->setValue($date->get(Zend_Date::YEAR));
+            $form->month->setValue($date->get(Zend_Date::MONTH));
 
-                $this->view->form = $form;
-                
-                $this->render('mos');
-               
-                $baseurl = Zend_Registry::get('baseurl');
+            $this->view->form = $form;
 
-                $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/mos-district.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
-                
-        
-        }
-        else{
-                 
-                $form = new Form_Maps_Mos();
-                
-                if($this->_identity->getProvinceId()){
-                    $form->prov->setValue($this->_identity->getProvinceId());
-                }
-                if($this->_identity->getDistrictId()){
-                     $form->dist->setValue($this->_identity->getDistrictId());  
-                }
-                else{
-                    $form->dist->setValue('33');
-                }
+            $this->render('mos');
+
+            $baseurl = Zend_Registry::get('baseurl');
+
+            $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/mos-district.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
+        } else {
+
+            $form = new Form_Maps_Mos();
+
+            if ($this->_identity->getProvinceId()) {
+                $form->prov->setValue($this->_identity->getProvinceId());
+            }
+            if ($this->_identity->getDistrictId()) {
+                $form->dist->setValue($this->_identity->getDistrictId());
+            } else {
                 $form->dist->setValue('33');
-                $form->product->setValue('6');
+            }
+            $form->dist->setValue('33');
+            $form->product->setValue('6');
 
-               $date = new Zend_Date();
-               $day = $date->get(Zend_Date::DAY);
-               if ($day > 10) {
-                   $date->sub('1', 'MM');
-               } else {
-                   $date->sub('2', 'MM');
-               }
-               $form->year->setValue($date->get(Zend_Date::YEAR));
-               $form->month->setValue($date->get(Zend_Date::MONTH));
+            $date = new Zend_Date();
+            $day = $date->get(Zend_Date::DAY);
+            if ($day > 10) {
+                $date->sub('1', 'MM');
+            } else {
+                $date->sub('2', 'MM');
+            }
+            $form->year->setValue($date->get(Zend_Date::YEAR));
+            $form->month->setValue($date->get(Zend_Date::MONTH));
 
-               $this->view->form = $form;
-               
-               $this->render('mos-tehsil');
-               
-               $baseurl = Zend_Registry::get('baseurl');
+            $this->view->form = $form;
 
-               $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
-               $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
-               $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/mos-tehsil.js');
-               $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
-               $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
-               $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
+            $this->render('mos-tehsil');
+
+            $baseurl = Zend_Registry::get('baseurl');
+
+            $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/mos-tehsil.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
         }
-        
     }
-     
+
     public function amcAction() {
-       $id = $this->_request->getParam('id', '');
-        if($id == 4 || $id == "")
-        {
-                $form = new Form_Maps_Mos();
-                $form->province->setValue($this->_identity->getProvinceId());
-                $form->product->setValue('6');
+        $id = $this->_request->getParam('id', '');
+        if ($id == 4 || $id == "") {
+            $form = new Form_Maps_Mos();
+            $form->province->setValue($this->_identity->getProvinceId());
+            $form->product->setValue('6');
 
-                $date = new Zend_Date();
-                $day = $date->get(Zend_Date::DAY);
-                if ($day > 10) {
-                    $date->sub('1', 'MM');
-                } else {
-                    $date->sub('2', 'MM');
-                }
-                $form->year->setValue($date->get(Zend_Date::YEAR));
-                $form->month->setValue($date->get(Zend_Date::MONTH));
+            $date = new Zend_Date();
+            $day = $date->get(Zend_Date::DAY);
+            if ($day > 10) {
+                $date->sub('1', 'MM');
+            } else {
+                $date->sub('2', 'MM');
+            }
+            $form->year->setValue($date->get(Zend_Date::YEAR));
+            $form->month->setValue($date->get(Zend_Date::MONTH));
 
-                $this->view->form = $form;
-                
-                $this->render('amc');
-                
-                $baseurl = Zend_Registry::get('baseurl');
+            $this->view->form = $form;
 
-                $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/amc-district.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/IntervalLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
+            $this->render('amc');
+
+            $baseurl = Zend_Registry::get('baseurl');
+
+            $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/amc-district.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/IntervalLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
+        } else {
+
+            $form = new Form_Maps_Mos();
+            if ($this->_identity->getProvinceId()) {
+                $form->prov->setValue($this->_identity->getProvinceId());
+            }
+            if ($this->_identity->getDistrictId()) {
+                $form->dist->setValue($this->_identity->getDistrictId());
+            } else {
+                $form->dist->setValue('all');
+            }
+            $form->dist->setValue('all');
+            $form->product->setValue('26');
+
+            $date = new Zend_Date();
+            $day = $date->get(Zend_Date::DAY);
+            if ($day > 10) {
+                $date->sub('1', 'MM');
+            } else {
+                $date->sub('2', 'MM');
+            }
+            $form->year->setValue($date->get(Zend_Date::YEAR));
+            $form->month->setValue($date->get(Zend_Date::MONTH));
+
+            $this->view->form = $form;
+
+            $this->render('amc-tehsil');
+
+            $baseurl = Zend_Registry::get('baseurl');
+
+            $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/amc-tehsil.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/IntervalLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
         }
-        else{
-            
-                $form = new Form_Maps_Mos();
-                if($this->_identity->getProvinceId()){
-                    $form->prov->setValue($this->_identity->getProvinceId());
-                }
-                if($this->_identity->getDistrictId()){
-                     $form->dist->setValue($this->_identity->getDistrictId());  
-                }
-                else{
-                    $form->dist->setValue('33');
-                }
-                $form->dist->setValue('33');
-                $form->product->setValue('6');
-
-                $date = new Zend_Date();
-                $day = $date->get(Zend_Date::DAY);
-                if ($day > 10) {
-                    $date->sub('1', 'MM');
-                } else {
-                    $date->sub('2', 'MM');
-                }
-                $form->year->setValue($date->get(Zend_Date::YEAR));
-                $form->month->setValue($date->get(Zend_Date::MONTH));
-
-                $this->view->form = $form;
-                
-                $this->render('amc-tehsil');
-                
-                $baseurl = Zend_Registry::get('baseurl');
-                
-                $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/amc-tehsil.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/IntervalLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
-                
-            
-        }
-
     }
 
     public function reportingRateAction() {
-        
+
         $id = $this->_request->getParam('id', '');
-        if($id == 4 || $id == "")
-        {
+        if ($id == 4 || $id == "") {
             $form = new Form_Maps_Mos();
             $form->province->setValue($this->_identity->getProvinceId());
             $form->product->setValue('6');
@@ -194,14 +181,13 @@ class MapsController extends App_Controller_Base {
             $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
             $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
             $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
-        }
-        else{
-            
+        } else {
+
             $form = new Form_Maps_Mos();
-            if($this->_identity->getProvinceId()){
+            if ($this->_identity->getProvinceId()) {
                 $form->prov->setValue($this->_identity->getProvinceId());
             }
-            
+
             $date = new Zend_Date();
             $day = $date->get(Zend_Date::DAY);
             if ($day > 10) {
@@ -223,72 +209,67 @@ class MapsController extends App_Controller_Base {
             $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
             $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
             $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
-            
         }
-       
     }
 
     public function wastagesAction() {
-        
+
         $id = $this->_request->getParam('id', '');
-        if($id == 4 || $id == "")
-        {
-                $form = new Form_Maps_Mos();
-                $form->province->setValue($this->_identity->getProvinceId());
-                $form->product->setValue('6');
+        if ($id == 4 || $id == "") {
+            $form = new Form_Maps_Mos();
+            $form->province->setValue($this->_identity->getProvinceId());
+            $form->product->setValue('6');
 
-                $date = new Zend_Date();
-                $day = $date->get(Zend_Date::DAY);
-                if ($day > 10) {
-                    $date->sub('1', 'MM');
-                } else {
-                    $date->sub('2', 'MM');
-                }
-                $form->year->setValue($date->get(Zend_Date::YEAR));
-                $form->month->setValue($date->get(Zend_Date::MONTH));
+            $date = new Zend_Date();
+            $day = $date->get(Zend_Date::DAY);
+            if ($day > 10) {
+                $date->sub('1', 'MM');
+            } else {
+                $date->sub('2', 'MM');
+            }
+            $form->year->setValue($date->get(Zend_Date::YEAR));
+            $form->month->setValue($date->get(Zend_Date::MONTH));
 
-                $this->view->form = $form;
-                $this->render('wastages-district');
-                $baseurl = Zend_Registry::get('baseurl');
+            $this->view->form = $form;
+            $this->render('wastages-district');
+            $baseurl = Zend_Registry::get('baseurl');
 
-                $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/wastages-district.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Legend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
+            $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/wastages-district.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Legend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
+        } else {
+            $form = new Form_Maps_Mos();
+            if ($this->_identity->getProvinceId()) {
+                $form->prov->setValue($this->_identity->getProvinceId());
+            }
+
+            $date = new Zend_Date();
+            $day = $date->get(Zend_Date::DAY);
+            if ($day > 10) {
+                $date->sub('1', 'MM');
+            } else {
+                $date->sub('2', 'MM');
+            }
+            $form->year->setValue($date->get(Zend_Date::YEAR));
+            $form->month->setValue($date->get(Zend_Date::MONTH));
+            $form->product->setValue('6');
+
+            $this->view->form = $form;
+            $this->render('wastages-tehsil');
+            $baseurl = Zend_Registry::get('baseurl');
+
+            $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/wastages-tehsil.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Legend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
         }
-        else{
-                $form = new Form_Maps_Mos();
-                if($this->_identity->getProvinceId()){
-                    $form->prov->setValue($this->_identity->getProvinceId());
-                }
-
-                $date = new Zend_Date();
-                $day = $date->get(Zend_Date::DAY);
-                if ($day > 10) {
-                    $date->sub('1', 'MM');
-                } else {
-                    $date->sub('2', 'MM');
-                }
-                $form->year->setValue($date->get(Zend_Date::YEAR));
-                $form->month->setValue($date->get(Zend_Date::MONTH));
-                $form->product->setValue('6');
-                
-                $this->view->form = $form;
-                $this->render('wastages-tehsil');
-                $baseurl = Zend_Registry::get('baseurl');
-
-                $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/wastages-tehsil.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Legend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
-        }
-       
     }
 
     public function wastagesReportingAction() {
@@ -315,66 +296,58 @@ class MapsController extends App_Controller_Base {
     }
 
     public function expiryAlertAction() {
-        
+
         $id = $this->_request->getParam('id', '');
-        if($id == 4 || $id == "")
-        {
-                $form = new Form_Maps_Mos();
-                $form->province->setValue($this->_identity->getProvinceId());
-                $form->product->setValue('26');
+        if ($id == 4 || $id == "") {
+            $form = new Form_Maps_Mos();
+            $form->province->setValue($this->_identity->getProvinceId());
+            $form->product->setValue('26');
 
-                $this->view->form = $form;
-                
-                $this->render('expiry-district');
-                
-                $baseurl = Zend_Registry::get('baseurl');
+            $this->view->form = $form;
 
-                $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/expiry-district.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Legend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
-        
+            $this->render('expiry-district');
+
+            $baseurl = Zend_Registry::get('baseurl');
+
+            $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/expiry-district.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Legend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
+        } else {
+            $form = new Form_Maps_Mos();
+            if ($this->_identity->getProvinceId()) {
+                $form->prov->setValue($this->_identity->getProvinceId());
+            }
+            if ($this->_identity->getDistrictId()) {
+                $form->dist->setValue($this->_identity->getDistrictId());
+            } else {
+                $form->dist->setValue('33');
+            }
+            $form->product->setValue('26');
+
+            $this->view->form = $form;
+
+            $this->render('expiry-tehsil');
+
+            $baseurl = Zend_Registry::get('baseurl');
+
+            $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/expiry-tehsil.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Legend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
         }
-        else{
-                $form = new Form_Maps_Mos();
-                if($this->_identity->getProvinceId()){
-                    $form->prov->setValue($this->_identity->getProvinceId());
-                }
-                if($this->_identity->getDistrictId()){
-                     $form->dist->setValue($this->_identity->getDistrictId());  
-                }
-                else{
-                    $form->dist->setValue('33');
-                }
-                $form->product->setValue('26');
-
-                $this->view->form = $form;
-                
-                $this->render('expiry-tehsil');
-                
-                $baseurl = Zend_Registry::get('baseurl');
-
-                $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/expiry-tehsil.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Legend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
-        }
-        
-        
-      
     }
 
     public function vaccineCoverageAction() {
-        
+
         $id = $this->_request->getParam('id', '');
-        if($id == 4 || $id == "")
-        {
+        if ($id == 4 || $id == "") {
             $form = new Form_Maps_Mos();
             $form->province->setValue($this->_identity->getProvinceId());
             $form->product->setValue('6');
@@ -390,9 +363,9 @@ class MapsController extends App_Controller_Base {
             $form->month->setValue($date->get(Zend_Date::MONTH));
 
             $this->view->form = $form;
-            
+
             $this->render('coverage-district');
-            
+
             $baseurl = Zend_Registry::get('baseurl');
 
             $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
@@ -402,22 +375,20 @@ class MapsController extends App_Controller_Base {
             $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
             $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
             $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
-        }
-        else{
-            
+        } else {
+
             $form = new Form_Maps_Mos();
-            if($this->_identity->getProvinceId()){
-                    $form->prov->setValue($this->_identity->getProvinceId());
-                }
-            if($this->_identity->getDistrictId()){
-                     $form->dist->setValue($this->_identity->getDistrictId());  
-                }
-            else{
-                    $form->dist->setValue('33');
+            if ($this->_identity->getProvinceId()) {
+                $form->prov->setValue($this->_identity->getProvinceId());
+            }
+            if ($this->_identity->getDistrictId()) {
+                $form->dist->setValue($this->_identity->getDistrictId());
+            } else {
+                $form->dist->setValue('33');
             }
             $form->dist->setValue('33');
             $form->product->setValue('6');
-            
+
             $date = new Zend_Date();
             $day = $date->get(Zend_Date::DAY);
             if ($day > 10) {
@@ -427,11 +398,11 @@ class MapsController extends App_Controller_Base {
             }
             $form->year->setValue($date->get(Zend_Date::YEAR));
             $form->month->setValue($date->get(Zend_Date::MONTH));
-            
+
             $this->view->form = $form;
-            
+
             $this->render('coverage-tehsil');
-            
+
             $baseurl = Zend_Registry::get('baseurl');
 
             $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
@@ -441,97 +412,87 @@ class MapsController extends App_Controller_Base {
             $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
             $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
             $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
-            
         }
-        
-       
     }
 
     public function coldChainCapacityAction() {
-        
+
         $id = $this->_request->getParam('id', '');
-        if($id == 4 || $id == "")
-        {
-                $form = new Form_Maps_Mos();
-                $form->province->setValue($this->_identity->getProvinceId());
-                $form->coldchain_type->setValue('1');
+        if ($id == 4 || $id == "") {
+            $form = new Form_Maps_Mos();
+            $form->province->setValue($this->_identity->getProvinceId());
+            $form->coldchain_type->setValue('1');
 
-                $date = new Zend_Date();
-                $day = $date->get(Zend_Date::DAY);
-                if ($day > 10) {
-                    $date->sub('1', 'MM');
-                } else {
-                    $date->sub('2', 'MM');
-                }
-                $form->year->setValue($date->get(Zend_Date::YEAR));
-                $form->month->setValue($date->get(Zend_Date::MONTH));
+            $date = new Zend_Date();
+            $day = $date->get(Zend_Date::DAY);
+            if ($day > 10) {
+                $date->sub('1', 'MM');
+            } else {
+                $date->sub('2', 'MM');
+            }
+            $form->year->setValue($date->get(Zend_Date::YEAR));
+            $form->month->setValue($date->get(Zend_Date::MONTH));
 
-                $this->view->form = $form;
-                
-                $this->render('cold-chain-district');
-                
-                $baseurl = Zend_Registry::get('baseurl');
+            $this->view->form = $form;
 
-                $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/ccc-district.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/IntervalLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
-        
+            $this->render('cold-chain-district');
+
+            $baseurl = Zend_Registry::get('baseurl');
+
+            $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/ccc-district.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/IntervalLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
+        } else {
+
+            $form = new Form_Maps_Mos();
+            if ($this->_identity->getProvinceId()) {
+                $form->prov->setValue($this->_identity->getProvinceId());
+            }
+            if ($this->_identity->getDistrictId()) {
+                $form->dist->setValue($this->_identity->getDistrictId());
+            } else {
+                $form->dist->setValue('33');
+            }
+            $form->coldchain_type->setValue('1');
+
+            $date = new Zend_Date();
+            $day = $date->get(Zend_Date::DAY);
+            if ($day > 10) {
+                $date->sub('1', 'MM');
+            } else {
+                $date->sub('2', 'MM');
+            }
+            $form->year->setValue($date->get(Zend_Date::YEAR));
+            $form->month->setValue($date->get(Zend_Date::MONTH));
+
+            $this->view->form = $form;
+
+            $this->render('cold-chain-tehsil');
+
+            $baseurl = Zend_Registry::get('baseurl');
+
+            $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/ccc-tehsil.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/IntervalLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
+            $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
         }
-        else{
-            
-                $form = new Form_Maps_Mos();
-                if($this->_identity->getProvinceId()){
-                    $form->prov->setValue($this->_identity->getProvinceId());
-                }
-                if($this->_identity->getDistrictId()){
-                     $form->dist->setValue($this->_identity->getDistrictId());  
-                }
-                else{
-                    $form->dist->setValue('33');
-                }
-                $form->coldchain_type->setValue('1');
-
-                $date = new Zend_Date();
-                $day = $date->get(Zend_Date::DAY);
-                if ($day > 10) {
-                    $date->sub('1', 'MM');
-                } else {
-                    $date->sub('2', 'MM');
-                }
-                $form->year->setValue($date->get(Zend_Date::YEAR));
-                $form->month->setValue($date->get(Zend_Date::MONTH));
-
-                $this->view->form = $form;
-                
-                $this->render('cold-chain-tehsil');
-                
-                $baseurl = Zend_Registry::get('baseurl');
-
-                $this->view->headLink()->appendStylesheet($baseurl . '/css/default/maps/map.css');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/ccc-tehsil.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/IntervalLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/Filter.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/refineLegend.js');
-                $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
-                
-            
-        }
-       
     }
-    
-    public function demographicAction(){        
+
+    public function demographicAction() {
         $baseurl = Zend_Registry::get('baseurl');
         $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
         $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
     }
-    
-     public function batchTrackingAction() {
-            
+
+    public function batchTrackingAction() {
+
         $form = new Form_Maps_Mos();
         $form->batch_no->setValue('AOPVB977AA');
         $this->view->form = $form;

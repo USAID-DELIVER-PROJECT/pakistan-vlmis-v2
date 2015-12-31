@@ -199,7 +199,7 @@ function getFeatures() {
 
         for (var i = 0; i < data.length; i++)
         {
-            chkeArray(data[i].district_id, Number(data[i].mos));
+            chkeArray(data[i].district_id, Number(data[i].total_MOS));
         }
     }
 }

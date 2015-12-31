@@ -54,7 +54,7 @@ class Model_ColdChain extends Model_Base {
             WHERE
             cold_chain.warehouse_id = 1 AND
             placement_locations.location_type = 'ColdChain' AND
-            placements.stock_batch_id = '" . $this->form_values['batch'] . "'");
+            placements.stock_batch_warehouse_id = '" . $this->form_values['batch'] . "'");
         $str_sql->execute();
         return $str_sql->fetchAll();
     }
@@ -64,9 +64,8 @@ class Model_ColdChain extends Model_Base {
                     cold_chain.asset_id
             FROM
                     placement_locations
-            INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
-            WHERE
-                    placement_locations.pk_id = $location_id");
+            INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id            
+            WHERE  placement_locations.pk_id = $location_id");
         $str_sql->execute();
         $data = $str_sql->fetchAll();
 
@@ -141,36 +140,14 @@ class Model_ColdChain extends Model_Base {
                 INNER JOIN ccm_models ON cold_chain.ccm_model_id = ccm_models.pk_id
                 INNER JOIN ccm_asset_types ON cold_chain.ccm_asset_type_id = ccm_asset_types.pk_id
                 INNER JOIN ccm_makes ON ccm_models.ccm_make_id = ccm_makes.pk_id
-                WHERE
+                LEFT JOIN ccm_status_history ON ccm_status_history.pk_id = cold_chain.ccm_status_history_id
+                WHERE  ccm_status_history.ccm_status_list_id <> 3 AND
                 cold_chain.warehouse_id = ' . $wh_id . ' AND
                 placement_locations.location_type = ' . Model_PlacementLocations::LOCATIONTYPE_CCM . ' AND
                (ccm_asset_types.parent_id IN (' . $type . ') OR  cold_chain.ccm_asset_type_id IN (' . $type . ')) ';
-        $row = $this->_em->getConnection()->prepare($qry);
-        $row->execute();
-        return $row->fetchAll();
-    }
 
-    public function getRefrigeratorModelsByWorkingStatus() {
-        $qry = "SELECT
-            ccm_models.ccm_model_name,
-            Count(cold_chain.ccm_model_id) AS Total,
-            Sum(IF(ccm_status_history.ccm_status_list_id=1, 1, 0)) AS Working,
-            ROUND((SUM(IF(ccm_status_history.ccm_status_list_id=1, 1, 0))/COUNT(cold_chain.warehouse_id)) * 100, 1) AS WorkingPer,
-            Sum(IF(ccm_status_history.ccm_status_list_id=2, 1, 0)) AS NeedsService,
-            ROUND((SUM(IF(ccm_status_history.ccm_status_list_id=2, 1, 0))/COUNT(cold_chain.warehouse_id)) * 100, 1) AS NeedsServicePer,
-            Sum(IF(ccm_status_history.ccm_status_list_id=3, 1, 0)) AS NotWorking,
-            ROUND((SUM(IF(ccm_status_history.ccm_status_list_id=3, 1, 0))/COUNT(cold_chain.warehouse_id)) * 100, 1) AS NotWorkingPer
-            FROM
-             ccm_models
-            INNER JOIN cold_chain ON cold_chain.ccm_model_id = ccm_models.pk_id
-            INNER JOIN ccm_status_history ON cold_chain.ccm_status_history_id = ccm_status_history.pk_id
-            INNER JOIN ccm_asset_types AS AssetSubtype ON cold_chain.ccm_asset_type_id = AssetSubtype.pk_id
-            INNER JOIN ccm_asset_types AS AssetMainType ON AssetSubtype.parent_id = AssetMainType.pk_id
-            WHERE
-                AssetMainType.pk_id = " . Model_CcmAssetTypes::REFRIGERATOR . "
-            GROUP BY
-             ccm_models.pk_id";
-
+//        echo $qry;
+//        exit;
         $row = $this->_em->getConnection()->prepare($qry);
         $row->execute();
         return $row->fetchAll();
@@ -196,45 +173,6 @@ class Model_ColdChain extends Model_Base {
         return $row->fetchAll();
     }
 
-    public function updateIcePacks() {
-        $cc_id = $this->form_values['cold_chain_id'];
-        $qty = $this->form_values['quantity'];
-        $created_by = $this->_em->find('Users', $this->_user_id);
-        foreach (array_combine($cc_id, $qty) as $cold_chain_id => $quantity) {
-            $cold_chain = $this->_table->find($cold_chain_id);
-            $cold_chain->setQuantity($quantity);
-            $cold_chain->setCreatedBy($created_by);
-            $cold_chain->setCreatedDate(App_Tools_Time::now());
-            $cold_chain->setModifiedBy($created_by);
-            $cold_chain->setModifiedDate(App_Tools_Time::now());
-
-            $this->_em->persist($cold_chain);
-        }
-        $this->_em->flush();
-    }
-
-    public function getAllNonQuantityAsets() {
-        $auth = App_Auth::getInstance();
-
-        $str_sql = $this->_em->createQueryBuilder()
-                ->select("DISTINCT cc.pkId,cc.autoAssetId as generateAssetId,"
-                        . "at.pkId as ccmAssetId,at.assetTypeName,"
-                        . "cm.reasons,cm.utilizations")
-                ->from('ColdChain', 'cc')
-                ->join('cc.ccmModel', 'cm')
-                ->join('cc.warehouse', 'w')
-                ->join('cc.ccmAssetType', 'at')
-                ->where('w.pkId=' . $auth->getWarehouseId())
-                ->Andwhere('at.pkId IN (1,3,6,7)');
-
-        $row = $str_sql->getQuery()->getResult();
-        if (!empty($row) && count($row) > 0) {
-            return $row;
-        } else {
-            return false;
-        }
-    }
-
     /**
      * @uses API
      * @param type $wh_id
@@ -250,7 +188,7 @@ class Model_ColdChain extends Model_Base {
         ccm_models.ccm_asset_type_id,
         ROUND(
                         (
-                                Sum(placements.quantity) * stakeholder_item_pack_sizes.volum_per_vial
+                                Sum(placements.quantity) * pack_info.volum_per_vial
                         ) / (
                                 (
                                         ccm_models.net_capacity_20 + ccm_models.net_capacity_4
@@ -264,9 +202,11 @@ class Model_ColdChain extends Model_Base {
         INNER JOIN cold_chain ON cold_chain.ccm_model_id = ccm_models.pk_id
         LEFT JOIN placement_locations ON cold_chain.pk_id = placement_locations.location_id
         LEFT JOIN placements ON placements.placement_location_id = placement_locations.pk_id
-        LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-        LEFT JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-        INNER JOIN stakeholder_item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+        LEFT JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        LEFT JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.master_id
+        LEFT JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        LEFT JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+	LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
         WHERE ";
         if (!empty($type)) {
             $str_sql .= "ccm_models.ccm_asset_type_id IN ($type) AND ";
@@ -293,14 +233,17 @@ class Model_ColdChain extends Model_Base {
             cold_chain.asset_id,
             cold_chain.serial_number,
             ccm_models.ccm_asset_type_id,
-            ROUND((Sum(placements.quantity) * item_pack_sizes.volum_per_vial) / ((ccm_models.net_capacity_20+ccm_models.net_capacity_4)*1000) * 100,3) AS filled_percent
+            ROUND((Sum(placements.quantity) * pack_info.volum_per_vial) / ((ccm_models.net_capacity_20+ccm_models.net_capacity_4)*1000) * 100,3) AS filled_percent
             FROM
             ccm_asset_types
             INNER JOIN ccm_models ON ccm_models.ccm_asset_type_id = ccm_asset_types.pk_id
             INNER JOIN cold_chain ON cold_chain.ccm_model_id = ccm_models.pk_id
             LEFT JOIN placements ON cold_chain.pk_id = placements.ccm_id
-            LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-            LEFT JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+            LEFT JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+            LEFT JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.master_id
+            LEFT JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+            LEFT JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+            LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
             WHERE cold_chain.warehouse_id = $wh_id AND
             stock_batch.number = '$batch_no'
             GROUP BY cold_chain.pk_id";
@@ -319,8 +262,11 @@ class Model_ColdChain extends Model_Base {
                     w.pkId as warehouseId,w.warehouseName")
                 ->from('Placements', 'p')
                 ->join('p.ccm', 'cc')
-                ->join('p.stockBatch', 'sb')
-                ->join('sb.itemPackSize', 'ips')
+                ->join('p.stockBatchWarehouse', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->join('sip.itemPackSize', 'ips')
                 ->join('cc.warehouse', 'w')
                 ->where("cc.pkId = $asset_id");
         $row = $str_sql->getQuery()->getResult();
@@ -351,139 +297,6 @@ class Model_ColdChain extends Model_Base {
 
         $row->execute();
         return $row->fetchAll();
-    }
-
-// Not in use
-    public function getAllNonQuantityAssetsUpdate() {
-        $auth = App_Auth::getInstance();
-        $s_sql = $this->_em->createQueryBuilder()
-                ->select("MAX(cs.pkId)")
-                ->from("CcmStatusHistory", "cs");
-        $max_id = $s_sql->getQuery()->getResult();
-        $sub_sql = $this->_em->createQueryBuilder()
-                ->select("MAX(cs.statusDate)")
-                ->from("CcmStatusHistory", "cs")
-                ->where("cs.pkId='" . $max_id[0][1] . "'");
-        $max_date = $sub_sql->getQuery()->getResult();
-
-        $sub_sql_w = $this->_em->createQueryBuilder()
-                ->select("w.pkId")
-                ->from('WarehouseUsers', 'wu')
-                ->join('wu.warehouse', 'w')
-                ->join('wu.user', 'u')
-                ->where('u.pkId=' . $this->_user_id);
-        $sub_sql_w->getQuery()->getSql();
-        $row_sub = $sub_sql_w->getQuery()->getResult();
-        foreach ($row_sub as $rs) {
-            $wh_id[] = $rs['pkId'];
-            $warehouse_id = implode(',', $wh_id);
-        }
-
-        $str_sql = $this->_em->createQueryBuilder()
-                ->select("Max(csh.statusDate),at.pkId as ccmAssetId,cc.autoAssetId as generateAssetId,"
-                        . "at.assetTypeName ,csh.temperatureAlarm,csl.pkId as ccmStatusListId,"
-                        . "csl.reasonType as reason_type,cc.pkId,r.pkId as reasonId,u.pkId as utilizationId")
-                ->from('ColdChain', 'cc')
-                ->join('cc.ccmStatusHistory', 'csh')
-                ->join('csh.ccmStatusList', 'csl')
-                ->join('csh.reason', 'r')
-                ->join('csh.utilization', 'u')
-                ->join('cc.ccmAssetType', 'at')
-                ->join('cc.warehouse', 'w')
-                ->where("w.pkId IN ($warehouse_id) ")
-                ->Andwhere('at.pkId IN (1,3,6,7)')
-                ->orWhere('at.parent IN (1,3,6,7)')
-                // ->andWhere("csh.statusDate='" . $max_date[0][1] . "'")
-                ->groupBy('cc.pkId');
-        //echo $str_sql->getQuery()->getSql();
-        $row = $str_sql->getQuery()->getResult();
-        if (!empty($row) && count($row) > 0) {
-            return $row;
-        } else {
-            return false;
-        }
-    }
-
-// Not in use
-    public function getAllQuantityAssets() {
-        $auth = App_Auth::getInstance();
-
-        $sub_sql = $this->_em->createQueryBuilder()
-                ->select("w.pkId")
-                ->from('WarehouseUsers', 'wu')
-                ->join('wu.warehouse', 'w')
-                ->join('wu.user', 'u')
-                ->where('u.pkId=' . $this->_user_id);
-        // $sub_sql->getQuery()->getSql();
-        $row_sub = $sub_sql->getQuery()->getResult();
-        foreach ($row_sub as $rs) {
-            $wh_id[] = $rs['pkId'];
-            $warehouse_id = implode(',', $wh_id);
-        }
-
-
-        $str_sql = $this->_em->createQueryBuilder()
-                ->select("DISTINCT cc.pkId,cc.assetId,at.pkId as ccmAssetId,at.assetTypeName,"
-                        . "Sum(cc.quantity) as quantity")
-                ->from('ColdChain', 'cc')
-                ->join('cc.ccmAssetType', 'at')
-                ->join('cc.ccmStatusHistory', 'csh')
-                ->join('cc.warehouse', 'w')
-                ->where("w.pkId IN ($warehouse_id)")
-                ->andWhere('at.pkId IN (2,4,5)')
-                ->groupBy('at.assetTypeName');
-        //  echo $str_sql->getQuery()->getSql();
-        $row = $str_sql->getQuery()->getResult();
-        if (!empty($row) && count($row) > 0) {
-            return $row;
-        } else {
-            return false;
-        }
-    }
-
-// Not in use
-    public function getAllQuantityAssetsUpdate() {
-        $auth = App_Auth::getInstance();
-        $s_sql = $this->_em->createQueryBuilder()
-                ->select("MAX(cs.pkId)")
-                ->from("CcmStatusHistory", "cs");
-        $max_id = $s_sql->getQuery()->getResult();
-        $sub_sql = $this->_em->createQueryBuilder()
-                ->select("MAX(cs.statusDate)")
-                ->from("CcmStatusHistory", "cs")
-                ->where("cs.pkId='" . $max_id[0][1] . "'");
-        $max_date = $sub_sql->getQuery()->getResult();
-        $sub_sql_w = $this->_em->createQueryBuilder()
-                ->select("w.pkId")
-                ->from('WarehouseUsers', 'wu')
-                ->join('wu.warehouse', 'w')
-                ->join('wu.user', 'u')
-                ->where('u.pkId=' . $this->_user_id);
-        $sub_sql_w->getQuery()->getSql();
-        $row_sub = $sub_sql_w->getQuery()->getResult();
-        foreach ($row_sub as $rs) {
-            $wh_id[] = $rs['pkId'];
-            $warehouse_id = implode(',', $wh_id);
-        }
-
-        $str_sql = $this->_em->createQueryBuilder()
-                ->select("DISTINCT cc.pkId,cc.assetId,at.pkId as ccmAssetId,at.assetTypeName,"
-                        . "csh.workingQuantity as quantity")
-                ->from('CcmStatusHistory', 'csh')
-                ->join('csh.ccm', 'cc')
-                ->join('cc.ccmAssetType', 'at')
-                ->join('cc.warehouse', 'w')
-                ->where("w.pkId IN ($warehouse_id) ")
-                ->andWhere('at.pkId IN (2,4,5)')
-                ->andWhere("csh.statusDate='" . $max_date[0][1] . "'")
-                ->groupBy('at.assetTypeName');
-        //echo $str_sql->getQuery()->getSql();
-        $row = $str_sql->getQuery()->getResult();
-        if (!empty($row) && count($row) > 0) {
-            return $row;
-        } else {
-            return false;
-        }
     }
 
     public function addRefrigerator() {
@@ -678,23 +491,6 @@ class Model_ColdChain extends Model_Base {
         $cold_chain_model->updateCcmStatusHistory($cold_chain_id, $ccm_history_id);
     }
 
-    public function getAllColdChainAssetForTransfer() {
-        $str_sql = $this->_em->createQueryBuilder()
-                ->select("DISTINCT cc.pkId,cc.assetId,cc.autoAssetId,at.assetTypeName,cm.ccmModelName,at.pkId as assetTypeId,"
-                        . "cc.quantity")
-                ->from('ColdChain', 'cc')
-                ->join('cc.ccmModel', 'cm')
-                ->join('cc.ccmAssetType', 'at')
-                ->andWhere("cc.warehouse = " . $this->form_values['warehouse']);
-        //echo $str_sql->getQuery()->getSql();die;
-        $row = $str_sql->getQuery()->getResult();
-        if (!empty($row) && count($row) > 0) {
-            return $row;
-        } else {
-            return false;
-        }
-    }
-
     public function getQuantityColdChainAssetForTransfer() {
         $em = Zend_Registry::get('doctrine');
 
@@ -702,14 +498,15 @@ class Model_ColdChain extends Model_Base {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("DISTINCT cc.pkId,cc.assetId,cc.autoAssetId,at.assetTypeName,cm.ccmModelName,at.pkId as assetTypeId,"
                         . "csh.workingQuantity as quantity ")
-                ->from('ColdChain', 'cc')
-                ->join('cc.ccmStatusHistory', 'csh')
+               
+                ->from('CcmStatusHistory', 'csh')
+                ->join('csh.ccm', 'cc')
                 ->join('cc.ccmModel', 'cm')
                 ->join('cc.ccmAssetType', 'at')
                 ->Where("at.pkId IN (" . Model_CcmAssetTypes::VACCINECARRIER . "," . Model_CcmAssetTypes::ICEPACKS . "," . Model_CcmAssetTypes::VOLTAGEREGULATOR . ") OR at.parent IN (" . Model_CcmAssetTypes::VACCINECARRIER . "," . Model_CcmAssetTypes::ICEPACKS . "," . Model_CcmAssetTypes::VOLTAGEREGULATOR . ")")
                 ->andWhere("cc.warehouse = " . $this->form_values['warehouse'])
                 ->groupBy('cm.ccmModelName');
-        //echo $str_sql->getQuery()->getSql();die;
+       
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -727,7 +524,7 @@ class Model_ColdChain extends Model_Base {
                 ->join('cc.ccmAssetType', 'at')
                 ->andWhere("cc.warehouse = " . $this->form_values['warehouse'])
                 ->Andwhere("at.pkId IN (" . Model_CcmAssetTypes::REFRIGERATOR . "," . Model_CcmAssetTypes::COLDROOM . "," . Model_CcmAssetTypes::GENERATOR . "," . Model_CcmAssetTypes::TRANSPORT . ") OR at.parent IN (" . Model_CcmAssetTypes::REFRIGERATOR . "," . Model_CcmAssetTypes::COLDROOM . "," . Model_CcmAssetTypes::GENERATOR . "," . Model_CcmAssetTypes::TRANSPORT . ")");
-
+     
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -895,7 +692,7 @@ class Model_ColdChain extends Model_Base {
 
         $created_by = $this->_em->find('Users', $this->_user_id);
 
-      
+
         $cold_chain->setModifiedBy($created_by);
         $cold_chain->setModifiedDate(App_Tools_Time::now());
         $this->_em->persist($cold_chain);
@@ -1205,13 +1002,13 @@ class Model_ColdChain extends Model_Base {
 
         $str_sql = "SELECT DISTINCT
                 cold_chain.pk_id as pkId,
-                        cold_chain.asset_id as assetId
+                cold_chain.asset_id as assetId
                 FROM
                         cold_chain
                 INNER JOIN ccm_asset_types AS AssetSubtype ON cold_chain.ccm_asset_type_id = AssetSubtype.pk_id
                 LEFT JOIN ccm_asset_types AS AssetMainType ON AssetSubtype.parent_id = AssetMainType.pk_id
                 LEFT JOIN placement_locations ON cold_chain.pk_id = placement_locations.location_id
-                INNER JOIN ccm_status_history ON ccm_status_history.pk_id = cold_chain.ccm_status_history_id
+                LEFT JOIN ccm_status_history ON ccm_status_history.pk_id = cold_chain.ccm_status_history_id
                 WHERE
                         cold_chain.warehouse_id = $wh_id
                 AND (
@@ -1224,12 +1021,16 @@ class Model_ColdChain extends Model_Base {
                             OR AssetMainType.pk_id = " . Model_CcmAssetTypes::REFRIGERATOR . "
                     )
                 )
-                AND placement_locations.location_type = 99
+                AND placement_locations.location_type = 99 AND ccm_status_history.ccm_status_list_id <> 3
                 GROUP BY
                         cold_chain.auto_asset_id
                 ORDER BY
-                        cold_chain.asset_id,
+                        ccm_status_history.ccm_status_list_id,
+                        cold_chain.asset_id,                        
                         cold_chain.ccm_asset_type_id DESC";
+
+//        echo $str_sql;
+//        exit;
         $row_ref = $this->_em->getConnection()->prepare($str_sql);
         $row_ref->execute();
         return $row_ref->fetchAll();

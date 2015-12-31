@@ -164,9 +164,11 @@ class Model_Users extends Model_Base {
         $user_id = $this->getUserIdByWarehouseId($wh_id);
         $user = $em->getRepository('Users')->find($user_id);
         $user->setAuth($hash);
-        $modified_by = $em->getRepository('Users')->find($this->_user_id);
-        $user->setModifiedBy($modified_by);
+        //$user = $em->getRepository('Users')->find($user_id);
+        $user->setModifiedBy($user);
+        $user->setCreatedBy($user);
         $user->setModifiedDate(App_Tools_Time::now());
+        $user->setCreatedDate(App_Tools_Time::now());       
         $this->_em->persist($user);
         $this->_em->flush();
 

@@ -15,7 +15,7 @@ class Zend_View_Helper_IsExpiryEdit extends Zend_View_Helper_Abstract {
             $str_sql = $em->createQueryBuilder()
                     ->select("sd")
                     ->from('StockDetail', 'sd')
-                    ->join('sd.stockBatch', 'sb')
+                    ->join('sd.stockBatchWarehouse', 'sb')
                     ->join('sd.stockMaster', 'sm')
                     ->andWhere("sd.isReceived = 1")
                     ->andWhere("sm.fromWarehouse = $wh_id")

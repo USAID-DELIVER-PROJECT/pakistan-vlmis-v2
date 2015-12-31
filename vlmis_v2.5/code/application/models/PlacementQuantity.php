@@ -25,7 +25,7 @@ class Model_PlacementQuantity extends Model_Base {
                 ->select("pq.*")
                 ->from("Model_PlacementQuantity pq")
                 ->where("pq.ccm_id =2")
-                ->andWhere("pq.stock_batch_id=92");
+                ->andWhere("pq.stock_batch_warehouse_id=92");
 
         $result = $str_sql->fetchArray();
 
@@ -36,7 +36,7 @@ class Model_PlacementQuantity extends Model_Base {
         $placement_qty = new Model_PlacementQuantity();
         $placement_qty->ccm_id = $data['coldchain'];
         $placement_qty->quantity = $data['quantity'];
-        $placement_qty->stock_batch_id = $data['batchID'];
+        $placement_qty->stock_batch_warehouse_id = $data['batchID'];
         $placement_qty->save();
         return $placement_qty->getLast();
     }

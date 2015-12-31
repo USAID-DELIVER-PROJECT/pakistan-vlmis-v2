@@ -33,50 +33,55 @@ class Model_Dashlets extends Model_Base {
                 $where .= " AND warehouses.location_id = '" . $this->form_values['loc_id'] . "'";
                 break;
         }
+//        if ($this->form_values['level'] == 6) {
+//            $str_sql = "SELECT
+//                            item_pack_sizes.item_name,
+//                            Sum(hf_data_master.opening_balance) AS OB,
+//                            Sum(hf_data_master.received_balance) AS Rcv,
+//                            Sum(hf_data_master.issue_balance) AS Issue,
+//                            Sum(hf_data_master.closing_balance) AS CB
+//                    FROM
+//                    warehouses
+//                    INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+//                    INNER JOIN hf_data_master ON hf_data_master.warehouse_id = warehouses.pk_id
+//                    INNER JOIN item_pack_sizes ON hf_data_master.item_pack_size_id = item_pack_sizes.pk_id
+//                    WHERE
+//                    $where AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m') = '" . $this->form_values['date'] . "'
+//                    and warehouses.status = 1   
+//                    GROUP BY
+//                    hf_data_master.item_pack_size_id";
+//        } else {
+            $startDate = date('Y-m-01', strtotime($this->form_values['date']));
+            $endDate = date('Y-m-t', strtotime($this->form_values['date']));
 
-        $str_sql = "SELECT
-                            item_pack_sizes.item_name,
-                            Sum(hf_data_master.opening_balance) AS OB,
-                            Sum(hf_data_master.received_balance) AS Rcv,
-                            Sum(hf_data_master.issue_balance) AS Issue,
-                            Sum(hf_data_master.closing_balance) AS CB
-                    FROM
-                    warehouses
-                    INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-                    INNER JOIN hf_data_master ON hf_data_master.warehouse_id = warehouses.pk_id
-                    INNER JOIN item_pack_sizes ON hf_data_master.item_pack_size_id = item_pack_sizes.pk_id
-                    WHERE
-                    $where AND DATE_FORMAT(hf_data_master.reporting_start_date, '%Y-%m') = '" . $this->form_values['date'] . "'
-                    and warehouses.status = 1   
-                    GROUP BY
-                    hf_data_master.item_pack_size_id";
-        $row = $this->_em->getConnection()->prepare($str_sql);
-        $row->execute();
-        return $row->fetchAll();
-    }
-
-    public function stockIssues() {
-        $date = $this->form_values['date'];
-        $str_sql = "SELECT
-                    item_pack_sizes.item_name,
-                    SUM(ABS(stock_detail.quantity)) AS Qty,
-                    warehouses.warehouse_name,
-                    stock_master.transaction_date
-            FROM
-                    stock_batch
-            INNER JOIN stock_detail ON stock_detail.stock_batch_id = stock_batch.pk_id
-            INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-            INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-            INNER JOIN warehouses ON stock_master.to_warehouse_id = warehouses.pk_id
-            INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-            WHERE
-            stock_master.transaction_type_id = ".Model_TransactionTypes::TRANSACTION_ISSUE."
-            and warehouses.status = 1
-            AND DATE_FORMAT(stock_master.transaction_date, '%Y-%m') = $date 
-            AND stakeholders.geo_level_id = 2
-            GROUP BY
-                    stock_batch.item_pack_size_id,
-                    warehouses.pk_id";
+            $str_sql = "SELECT
+            SUM(IF (DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') < '$startDate', stock_detail.quantity, 0)) AS OB,
+            SUM(IF (DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') >= '$startDate' AND DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= '$endDate' AND stock_master.transaction_type_id = 1, stock_detail.quantity, 0)) AS Rcv,
+            SUM(IF (DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') >= '$startDate' AND DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= '$endDate' AND stock_master.transaction_type_id = 2, ABS(stock_detail.quantity), 0)) AS Issue,
+            SUM(IF (DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') >= '$startDate' AND DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= '$endDate' AND stock_master.transaction_type_id > 2 AND transaction_types.nature = '+', stock_detail.quantity, 0)) AS vials_used,
+            ABS(SUM(IF (DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') >= '$startDate' AND DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= '$endDate' AND stock_master.transaction_type_id > 2 AND transaction_types.nature = '-', stock_detail.quantity, 0))) AS adjustments,
+            SUM(stock_detail.quantity) AS CB,
+            item_pack_sizes.item_name
+           FROM
+            stock_master
+           INNER JOIN transaction_types ON stock_master.transaction_type_id = transaction_types.pk_id
+           INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
+           INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+           INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+           INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+           INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+           INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+           INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
+          
+           INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+           WHERE
+           $where AND DATE_FORMAT(
+             stock_master.transaction_date,
+             '%Y-%m-%d'
+            ) <= '$endDate' GROUP BY item_pack_sizes.pk_id";
+         
+//        }
+//        exit;
         $row = $this->_em->getConnection()->prepare($str_sql);
         $row->execute();
         return $row->fetchAll();
@@ -133,7 +138,6 @@ class Model_Dashlets extends Model_Base {
             }
         }
         return $data_arr;
-    
     }
 
     public function campaignVaccines() {

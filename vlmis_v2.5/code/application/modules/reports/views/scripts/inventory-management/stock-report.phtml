@@ -2,7 +2,7 @@
 <div class="page-content-wrapper">
     <div class="page-content">
         <h3 class="page-title">
-            Stock Balance Report <?php if(!empty($this->warehousename)) { ?>(<?php echo $this->warehousename; ?>)<?php } ?>
+            Stock Balance Report <?php if (!empty($this->warehousename)) { ?>(<?php echo $this->warehousename; ?>)<?php } ?>
         </h3>
         <div class="row">
             <div class="col-md-12">
@@ -17,10 +17,10 @@
                     </div>
                     <div class="portlet-body">
                         <form method="POST" name="ledger" action="" id="product_plac">
-                            <?php if($this->role_id != 24) { ?>
-                            <div class="row">
-                                <?php $this->allLevelCombo(); ?>
-                            </div>
+                            <?php if ($this->role_id != 24) { ?>
+                                <div class="row">
+                                    <?php $this->allLevelCombo(); ?>
+                                </div>
                             <?php } ?>
                             <div class="row">
                                 <div class="col-md-12">                                
@@ -150,5 +150,9 @@
     </div>
 </div>
 <input id="cmbo1" type="hidden" value="<?php echo (!empty($this->params['office']) ? $this->params['office'] : 1); ?>" />
-<input id="cmbo2" type="hidden" value="<?php echo $this->params['combo1']; ?>" />
+<input id="cmbo2" type="hidden" value="<?php
+if (isset($this->params['combo1'])) {
+    echo $this->params['combo1'];
+}
+?>" />
 <input id="cmbo3" type="hidden" value="<?php echo (!empty($this->params['warehouse']) ? $this->params['warehouse'] : 159); ?>" />

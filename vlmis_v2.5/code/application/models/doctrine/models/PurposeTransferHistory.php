@@ -45,14 +45,14 @@ class PurposeTransferHistory
     private $toActivity;
 
     /**
-     * @var StockBatch
+     * @var StockBatchWarehouses
      */
-    private $fromBatch;
+    private $fromStockBatchWarehouse;
 
     /**
-     * @var StockBatch
+     * @var StockBatchWarehouses
      */
-    private $toBatch;
+    private $toStockBatchWarehouse;
 
     /**
      * @var TransactionTypes
@@ -196,43 +196,43 @@ class PurposeTransferHistory
     }
 
     /**
-     * Set fromBatch
+     * Set fromStockBatchWarehouse
      *
-     * @param StockBatch $fromBatch
+     * @param StockBatchWarehouses $fromStockBatchWarehouse
      */
-    public function setFromBatch(\StockBatch $fromBatch)
+    public function setFromStockBatchWarehouse(\StockBatchWarehouses $fromStockBatchWarehouse)
     {
-        $this->fromBatch = $fromBatch;
+        $this->fromStockBatchWarehouse = $fromStockBatchWarehouse;
     }
 
     /**
-     * Get fromBatch
+     * Get fromStockBatchWarehouse
      *
-     * @return StockBatch 
+     * @return StockBatchWarehouses 
      */
-    public function getFromBatch()
+    public function getFromStockBatchWarehouse()
     {
-        return $this->fromBatch;
+        return $this->fromStockBatchWarehouse;
     }
 
     /**
-     * Set toBatch
+     * Set toStockBatchWarehouse
      *
-     * @param StockBatch $toBatch
+     * @param StockBatchWarehouses $toStockBatchWarehouse
      */
-    public function setToBatch(\StockBatch $toBatch)
+    public function setToStockBatchWarehouse(\StockBatchWarehouses $toStockBatchWarehouse)
     {
-        $this->toBatch = $toBatch;
+        $this->toStockBatchWarehouse = $toStockBatchWarehouse;
     }
 
     /**
-     * Get toBatch
+     * Get toStockBatchWarehouse
      *
-     * @return StockBatch 
+     * @return StockBatchWarehouses 
      */
-    public function getToBatch()
+    public function getToStockBatchWarehouse()
     {
-        return $this->toBatch;
+        return $this->toStockBatchWarehouse;
     }
 
     /**

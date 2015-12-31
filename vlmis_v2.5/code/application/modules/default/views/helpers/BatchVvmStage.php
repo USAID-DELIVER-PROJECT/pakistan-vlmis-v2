@@ -9,10 +9,14 @@ class Zend_View_Helper_BatchVvmStage extends Zend_View_Helper_Abstract {
         $str_sql = $em->createQueryBuilder()
                 ->select("IF(ips.vvmGroup = 1, MAX(vvm.pkId), vvm.vvmStageValue) as stage, COUNT(DISTINCT vvm.pkId) as total")
                 ->from('PlacementSummary', 'ps')
-                ->join('ps.stockBatch', 'sb')
+                ->join('ps.stockBatchWarehouse', 'sbw')
+                ->join('sbw.stockBatch','sb')
+                ->join('sb.packInfo','pi')
+                ->join('pi.stakeholderItemPackSize','sip')   
+                ->join('sip.itemPackSize','ips')
                 ->join('ps.vvmStage', 'vvm')
-                ->join('sb.itemPackSize', 'ips')
-                ->where("ps.stockBatch = $batch_id");
+               
+                ->where("ps.stockBatchWarehouse = $batch_id");
         $row = $str_sql->getQuery()->getResult();
 
         if (isset($row) && count($row) > 0) {

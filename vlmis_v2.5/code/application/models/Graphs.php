@@ -333,8 +333,7 @@ class Model_Graphs extends Model_Base {
                     $sql = str_replace("\$all_provinces", $all_provinces, $sql);
                     $sql = str_replace("\$all_districts", "'" . $all_districts . "'", $sql);
                     $dbg_sql.=$sql . '<br>';
-                    echo $sql."<br>";
-                    exit;
+
                     $str_sql = $this->_em->getConnection()->prepare($sql);
                     $str_sql->execute();
                     $row = $str_sql->fetchAll();
@@ -437,29 +436,32 @@ class Model_Graphs extends Model_Base {
 	ROUND(
 		SUM(
 			(
-				placements.quantity * stakeholder_item_pack_sizes.volum_per_vial
+				placements.quantity * pack_info.volum_per_vial
 			) / 1000
 		)
 	) AS being_used
-FROM
+        FROM
 	cold_chain
-INNER JOIN ccm_asset_types AS AssetSubtype ON cold_chain.ccm_asset_type_id = AssetSubtype.pk_id
-LEFT JOIN ccm_asset_types AS AssetMainType ON AssetSubtype.parent_id = AssetMainType.pk_id
-INNER JOIN placement_locations ON cold_chain.pk_id = placement_locations.location_id
-INNER JOIN ccm_models ON ccm_models.pk_id = cold_chain.ccm_model_id
-LEFT JOIN placements ON placements.placement_location_id = placement_locations.pk_id
-LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
-WHERE
-	cold_chain.warehouse_id = $warehouse_id
-$where
-AND placement_locations.location_type = " . Model_PlacementLocations::LOCATIONTYPE_CCM . "
-GROUP BY
-	cold_chain.auto_asset_id
-ORDER BY
-	cold_chain.asset_id,
-	cold_chain.ccm_asset_type_id DESC";
+        INNER JOIN ccm_asset_types AS AssetSubtype ON cold_chain.ccm_asset_type_id = AssetSubtype.pk_id
+        LEFT JOIN ccm_asset_types AS AssetMainType ON AssetSubtype.parent_id = AssetMainType.pk_id
+        INNER JOIN placement_locations ON cold_chain.pk_id = placement_locations.location_id
+        INNER JOIN ccm_models ON ccm_models.pk_id = cold_chain.ccm_model_id
+        LEFT JOIN placements ON placements.placement_location_id = placement_locations.pk_id
+        LEFT JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch_warehouses.stock_batch_id = stock_batch.pk_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        WHERE
+                cold_chain.warehouse_id = $warehouse_id
+        $where
+        AND placement_locations.location_type = " . Model_PlacementLocations::LOCATIONTYPE_CCM . "
+        GROUP BY
+                cold_chain.auto_asset_id
+        ORDER BY
+                cold_chain.asset_id,
+                cold_chain.ccm_asset_type_id DESC";
 //echo $str_sql."<br><br>";
+//exit;
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
         $rec->execute();
@@ -469,6 +471,7 @@ ORDER BY
             return $result;
         }
 
+        $title = '';
         if ($type == 3) {
             $title = "+2-8C Cold Rooms (In Litres)";
         }
@@ -959,12 +962,12 @@ ORDER BY
         $str_sql = "SELECT
                         cold_chain.asset_id,
                         i2_.item_name AS item_name,
-                         s1_.item_pack_size_id,
+                         stakeholder_item_pack_sizes.item_pack_size_id,
                          cold_chain.pk_id as location_id,
                         round(
                                 Sum(
                                         (
-                                                p0_.quantity * stakeholder_item_pack_sizes.volum_per_vial
+                                                p0_.quantity * pack_info.volum_per_vial
                                         ) / 1000
                                 )
                         ) AS quantity,
@@ -974,19 +977,22 @@ ORDER BY
 				p0_.quantity
 			
 		)
-	) AS quantityvials,
+	          ) AS quantityvials,
                         i2_.color
                 FROM
                         placements AS p0_
-                INNER JOIN stock_batch AS s1_ ON p0_.stock_batch_id = s1_.pk_id
-                INNER JOIN item_pack_sizes AS i2_ ON s1_.item_pack_size_id = i2_.pk_id
-                INNER JOIN stakeholder_item_pack_sizes ON s1_.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN stock_batch_warehouses AS sbw ON p0_.stock_batch_warehouse_id = sbw.pk_id        
+                INNER JOIN stock_batch AS s1_ ON sbw.stock_batch_id = s1_.pk_id 
+                
+                INNER JOIN pack_info ON s1_.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes AS i2_ ON stakeholder_item_pack_sizes.item_pack_size_id = i2_.pk_id
                 INNER JOIN placement_locations ON p0_.placement_location_id = placement_locations.pk_id
                 INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
                 INNER JOIN ccm_asset_types AS AssetSubtype ON cold_chain.ccm_asset_type_id = AssetSubtype.pk_id
                 LEFT JOIN ccm_asset_types AS AssetMainType ON AssetSubtype.parent_id = AssetMainType.pk_id
                 WHERE
-                        s1_.warehouse_id = $warehouse_id
+                        sbw.warehouse_id = $warehouse_id
                  $where AND 
                 i2_.item_category_id = 1
                 GROUP BY
@@ -1002,6 +1008,7 @@ ORDER BY
         $rec->execute();
         $result = $rec->fetchAll();
 
+        $title="";
         if ($is_return == 2) {
             return $result;
         }
@@ -1066,131 +1073,7 @@ ORDER BY
         return $xmlstore;
     }
 
-    public function coldChainCapacityProductSummary($type) {
-        $date = $this->form_values['to_date'];
-        list($d, $m, $y) = explode("/", $date);
-        $to_date = "$y-$m-$d";
-
-        $is_return = $type;
-        if ($type == 2) {
-            $where = " AND (
-                        (
-                                cold_chain.ccm_asset_type_id = 3
-                                OR AssetMainType.pk_id = 3
-                        )
-                        OR (
-                                cold_chain.ccm_asset_type_id = 1
-                                OR AssetMainType.pk_id = 1
-                        )
-                )";
-        } else {
-            $where = " AND (
-                        (
-                                cold_chain.ccm_asset_type_id = $type
-                                OR AssetMainType.pk_id = $type
-                        ) )";
-        }
-        $warehouse_id = $this->_identity->getWarehouseId();
-        //AND MainAsset.pk_id IN (" . Model_CcmAssetTypes::REFRIGERATOR . ", " . Model_CcmAssetTypes::COLDROOM . ")
-        $str_sql = "SELECT
-                cold_chain.asset_id,
-                cold_chain.pk_id AS location_id,
-                round(
-                                Sum(
-                                        (
-                                                p0_.quantity * stakeholder_item_pack_sizes.volum_per_vial
-                                        ) / 1000
-                                )
-                        ) AS quantity,
-                i2_.color,
-                items.description AS item_name
-                FROM
-                placements AS p0_
-                INNER JOIN stock_batch AS s1_ ON p0_.stock_batch_id = s1_.pk_id
-                INNER JOIN item_pack_sizes AS i2_ ON s1_.item_pack_size_id = i2_.pk_id
-                INNER JOIN stakeholder_item_pack_sizes ON s1_.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
-                INNER JOIN placement_locations ON p0_.placement_location_id = placement_locations.pk_id
-                INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
-                INNER JOIN ccm_asset_types AS AssetSubtype ON cold_chain.ccm_asset_type_id = AssetSubtype.pk_id
-LEFT JOIN ccm_asset_types AS AssetMainType ON AssetSubtype.parent_id = AssetMainType.pk_id
-                INNER JOIN items ON i2_.item_id = items.pk_id
-                WHERE
-                        s1_.warehouse_id = $warehouse_id
-                $where
-                GROUP BY
-                cold_chain.asset_id,
-                items.description
-                HAVING
-                        quantity > 0
-                ORDER BY
-                        cold_chain.asset_id,
-                        i2_.item_name ASC";
-//echo $str_sql."<br>";
-        $rec = $this->_em->getConnection()->prepare($str_sql);
-
-        $rec->execute();
-        $result = $rec->fetchAll();
-
-        if ($is_return == 2) {
-            return $result;
-        }
-
-        if ($type == 3) {
-            $title = "+2-8C Cold Rooms Capacity (In Litres)";
-        }
-        if ($type == 1) {
-            $title = "-20C Cold Rooms Capacity (In Litres)";
-        }
-
-        $number_prefix = "";
-        $xmlstore = "<?xml version=\"1.0\"?>";
-        $xmlstore .='<chart caption="' . $title . '" labelDisplay="rotate"  numberprefix="' . $number_prefix . '" showvalues="0" exportEnabled="1" rotateValues="1" formatNumberScale="0" theme="fint">';
-        $data_arr = array();
-        $items = array();
-        $asset_id = array();
-        foreach ($result as $row) {
-            if (!in_array($row['item_name'], $items)) {
-                $items[] = $row['item_name'];
-            }if (!in_array($row['asset_id'], $asset_id)) {
-                $asset_id[] = $row['asset_id'];
-            }
-        }
-
-        foreach ($items as $item) {
-            foreach ($asset_id as $asset) {
-                $data_arr[$item][$asset]['quantity'] = '';
-            }
-        }
-
-        //App_Controller_Functions::pr($data_arr);
-        foreach ($result as $row) {
-            $data_arr[$row['item_name']][$row['asset_id']]['quantity'] = $row['quantity'];
-            $data_arr[$row['item_name']]['color'] = $row['color'];
-        }
-
-        $dataset = "";
-        $categories = '<categories>';
-        foreach ($asset_id as $asset) {
-
-            $categories .='<category label="' . $asset . '" />';
-        }
-        $categories .= '</categories>';
-
-        foreach ($data_arr as $item => $sub) {
-            $dataset .= '<dataset seriesname="' . $item . '" color="' . $data_arr[$item]['color'] . '" >';
-            foreach ($sub as $key => $val) {
-                echo $data_arr[$item][$key]['color'];
-                $dataset .= '<set color="' . $data_arr[$item]['color'] . '" value="' . $data_arr[$item][$key]['quantity'] . '" />';
-            }
-            $dataset .='</dataset>';
-        }
-
-        $xmlstore .= $categories;
-        $xmlstore .= $dataset;
-        $xmlstore .="</chart>";
-        // App_Controller_Functions::pr($xmlstore);
-        return $xmlstore;
-    }
+   
 
     public function coldChainCapacityVvm($type) {
         $date = $this->form_values['to_date'];
@@ -1228,15 +1111,16 @@ LEFT JOIN ccm_asset_types AS AssetMainType ON AssetSubtype.parent_id = AssetMain
                         round(
                                 Sum(
                                         (
-                                                p0_.quantity * stakeholder_item_pack_sizes.volum_per_vial
+                                                p0_.quantity * pack_info.volum_per_vial
                                         ) / 1000
                                 )
                         ) AS quantity
                 FROM
                         placements AS p0_
-                INNER JOIN stock_batch AS s1_ ON p0_.stock_batch_id = s1_.pk_id
+                INNER JOIN stock_batch AS s1_ ON p0_.stock_batch_warehouse_id = s1_.pk_id
                 INNER JOIN item_pack_sizes AS i2_ ON s1_.item_pack_size_id = i2_.pk_id
-                INNER JOIN stakeholder_item_pack_sizes ON s1_.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN pack_info ON s1_.stakeholder_item_pack_size_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
                 INNER JOIN placement_locations ON p0_.placement_location_id = placement_locations.pk_id
                 INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
                 INNER JOIN ccm_asset_types AS AssetSubtype ON cold_chain.ccm_asset_type_id = AssetSubtype.pk_id

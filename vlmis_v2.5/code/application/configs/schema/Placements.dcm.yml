@@ -28,6 +28,15 @@ Placements:
       nullable: false
       column: modified_date
   oneToOne:
+    stockBatchWarehouse:
+      targetEntity: StockBatchWarehouses
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        stock_batch_warehouse_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
     stockDetail:
       targetEntity: StockDetail
       cascade: {  }
@@ -36,25 +45,7 @@ Placements:
       joinColumns:
         stock_detail_id:
           referencedColumnName: pk_id
-      orphanRemoval: false
-    vvmStage:
-      targetEntity: VvmStages
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        vvm_stage:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    stockBatch:
-      targetEntity: StockBatch
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        stock_batch_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
+      orphanRemoval: false  
     placementTransactionType:
       targetEntity: ListDetail
       cascade: {  }
@@ -89,6 +80,15 @@ Placements:
       inversedBy: null
       joinColumns:
         placement_location_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    vvmStage:
+      targetEntity: VvmStages
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        vvm_stage:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

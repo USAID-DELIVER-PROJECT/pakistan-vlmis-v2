@@ -879,7 +879,9 @@ class Reports_DashletController extends App_Controller_Base {
         $xmlstore = $wh_data->dayWiseCoverage();
         $this->view->xmlstore = $xmlstore;
         $this->view->camp = $params["camp"];
-        $this->view->prov = $params["prov"];
+        if (array_key_exists("prov", $params)) {
+            $this->view->prov = $params["prov"];
+        }
     }
 
     /**
@@ -1253,12 +1255,27 @@ class Reports_DashletController extends App_Controller_Base {
         }
         $graphs->form_values['to_date'] = $to_date;
         $this->view->to_date = $to_date;
-        $xmlstore1 = $graphs->coldChainCapacity(1);
+        $xmlstore1 = $graphs->coldChainCapacity(15);
         $this->view->xmlstore1 = $xmlstore1;
-        $xmlstore2 = $graphs->coldChainCapacity(3);
+        $xmlstore2 = $graphs->coldChainCapacity(16);
         $this->view->xmlstore2 = $xmlstore2;
         $this->view->data = $graphs->coldChainCapacity(2);
+
+        $auth = App_Auth::getInstance();
+        $role_id = $auth->getRoleId();
+
+//        echo $role_id;
+//        exit;
+
+        if ($role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7) {
+            $stock_master = new Model_StockMaster();
+            $this->view->pending_receive = $stock_master->getPendingReceive();
+        }
+
+        $this->view->user_role = $role_id;
         $this->view->warehousename = $this->_identity->getWarehouseName();
+        $base_url = Zend_Registry::get("baseurl");
+        //$this->view->inlineScript()->appendFile($base_url . '/common/assets/scripts/custom/table-advanced.js');
     }
 
     public function coldChainCapacityPrintAction() {
@@ -1282,14 +1299,24 @@ class Reports_DashletController extends App_Controller_Base {
         }
         $graphs->form_values['to_date'] = $to_date;
         $this->view->to_date = $to_date;
-        $xmlstore1 = $graphs->coldChainCapacityProduct(1);
+        $xmlstore1 = $graphs->coldChainCapacityProduct(15);
         $this->view->xmlstore1 = $xmlstore1;
         //$xmlstoresummary = $graphs->coldChainCapacityProductSummary(16);
         //$this->view->xmlstoresummary = $xmlstoresummary;
-        $xmlstore2 = $graphs->coldChainCapacityProduct(3);
+        $xmlstore2 = $graphs->coldChainCapacityProduct(16);
         $this->view->xmlstore2 = $xmlstore2;
         $this->view->warehousename = $this->_identity->getWarehouseName();
         $this->view->data = $graphs->coldChainCapacityProduct(2);
+
+        $auth = App_Auth::getInstance();
+        $role_id = $auth->getRoleId();
+
+        if ($role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7) {
+            $stock_master = new Model_StockMaster();
+            $this->view->pending_receive = $stock_master->getPendingReceive();
+        }
+        $this->view->user_role = $role_id;
+        $this->view->warehousename = $this->_identity->getWarehouseName();
 
         $base_url = Zend_Registry::get("baseurl");
         $this->view->inlineScript()->appendFile($base_url . '/js/reports/dashlet/cold-chain-capacity.js');
@@ -1304,9 +1331,9 @@ class Reports_DashletController extends App_Controller_Base {
         }
         $graphs->form_values['to_date'] = $to_date;
         $this->view->to_date = $to_date;
-        $xmlstore1 = $graphs->coldChainCapacityVvm(1);
+        $xmlstore1 = $graphs->coldChainCapacityVvm(15);
         $this->view->xmlstore1 = $xmlstore1;
-        $xmlstore2 = $graphs->coldChainCapacityVvm(3);
+        $xmlstore2 = $graphs->coldChainCapacityVvm(16);
         $this->view->xmlstore2 = $xmlstore2;
         $this->view->warehousename = $this->_identity->getWarehouseName();
         $this->view->data = $graphs->coldChainCapacityVvm(2);

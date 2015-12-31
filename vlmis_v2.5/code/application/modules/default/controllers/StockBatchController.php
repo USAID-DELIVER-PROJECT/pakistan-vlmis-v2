@@ -627,6 +627,7 @@ class StockBatchController extends App_Controller_Base {
         $stock_batch->form_values['batch_id'] = $arr[0];
         $this->view->data = $stock_batch->getPlacementHistory();
         $this->view->data1 = $stock_batch->getPlacementVvmStage();
+
         //$this->_em->getRepository("Placements")->findBy(array('stockBatch',$this->_request->id));
     }
 
@@ -638,11 +639,13 @@ class StockBatchController extends App_Controller_Base {
         $stock_batch->form_values['item_id'] = $this->_request->getParam('item_id');
         $stock_batch->form_values['type'] = $this->_request->getParam('type');
         $item_pack_size = $this->_em->getRepository('ItemPackSizes')->find($this->_request->getParam('item_id'));
-        //if vaccine
-        if ($item_pack_size->getItemCategory() != null && ($item_pack_size->getItemCategory()->getPkId() == 1 || $item_pack_size->getItemCategory()->getPkId() == 4)) {
-            $this->view->locations = $stock_batch->getBatchLocations();
-        } else {
-            $this->view->locations = $stock_batch->getBactchLocationDryStore();
+        if ($item_pack_size) {
+            //if vaccine
+            if ($item_pack_size->getItemCategory() != null && ($item_pack_size->getItemCategory()->getPkId() == 1 || $item_pack_size->getItemCategory()->getPkId() == 4)) {
+                $this->view->locations = $stock_batch->getBatchLocations();
+            } else {
+                $this->view->locations = $stock_batch->getBactchLocationDryStore();
+            }
         }
     }
 
@@ -657,8 +660,8 @@ class StockBatchController extends App_Controller_Base {
             list($batch_id, $priority) = explode("|", $batch_id);
         }
 
-        $batch = $this->_em->getRepository("StockBatch")->find($batch_id);
-        $item_cat = $batch->getItemPackSize()->getItemCategory()->getPkId();
+        $batch = $this->_em->getRepository("StockBatchWarehouses")->find($batch_id);
+        $item_cat = $batch->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemCategory()->getPkId();
 
         $placements->form_values['priority'] = $priority;
         $this->view->vvmstages = $placements->getAvailableVvmStages($batch_id, $item_cat);
@@ -773,8 +776,8 @@ class StockBatchController extends App_Controller_Base {
         $batch_id = $this->_request->getParam('batch');
         $priority = $this->_request->getParam('priority');
 
-        $batch = $this->_em->getRepository("StockBatch")->find($batch_id);
-        $item_cat = $batch->getItemPackSize()->getItemCategory()->getPkId();
+        $batch = $this->_em->getRepository("StockBatchWarehouses")->find($batch_id);
+        $item_cat = $batch->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemCategory()->getPkId();
 
         $placements->form_values['priority'] = $priority;
         $this->view->vvmstages = $placements->getAvailableVvmStages($batch_id, $item_cat);

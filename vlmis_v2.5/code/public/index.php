@@ -1,5 +1,4 @@
 <?php
-
 date_default_timezone_set('Asia/Karachi');
 
 // Define path to application directory

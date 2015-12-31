@@ -25,7 +25,7 @@ class Model_StockBatch extends Model_Base {
 
     public function __construct() {
         parent::__construct();
-        $this->_table = $this->_em->getRepository('StockBatch');
+        $this->_table = $this->_em->getRepository('StockBatchWarehouses');
     }
 
     public function addStockBatch($array) {
@@ -37,21 +37,36 @@ class Model_StockBatch extends Model_Base {
 
 
         if ($this->expiryDate != false) {
+            $str_sql_stacked = $this->_em->createQueryBuilder()
+                    ->select("sbw.pkId")
+                    ->from('StockBatchWarehouses', 'sbw')
+                    ->join('sbw.stockBatch', 'sb')
+                    ->join('sb.packInfo', 'pi')
+                    ->join('pi.stakeholderItemPackSize', 'sip')
+                    ->where("sip.itemPackSize = '" . $item_id . "' ")
+                    ->andWhere("sbw.warehouse = '" . $this->_identity->getWarehouseId() . "' ");
 
-            // Make stacked all the batches
-            $stock_stacked = $this->_table->find(array(
-                'itemPackSize' => $item_id,
-                'warehouse' => $this->_identity->getWarehouseId()
-            ));
+            $row_stacked = $str_sql_stacked->getQuery()->getResult();
+
+
+            $stock_stacked = $this->_table->find($row_stacked['0']['pkId']);
             $stock_stacked->setStatus(self::STACKED);
             $this->_em->flush();
 
+            $str_sql_running = $this->_em->createQueryBuilder()
+                    ->select("sbw.pkId")
+                    ->from('StockBatchWarehouses', 'sbw')
+                    ->join('sbw.stockBatch', 'sb')
+                    ->join('sb.packInfo', 'pi')
+                    ->join('pi.stakeholderItemPackSize', 'sip')
+                    ->where("sip.itemPackSize = '" . $item_id . "' ")
+                    ->andWhere("sbw.warehouse = '" . $this->_identity->getWarehouseId() . "' ")
+                    ->andWhere("sb.expiryDate= '" . $this->expiryDate . "' ");
+
+            $row_running = $str_sql_running->getQuery()->getResult();
+
             // Make Running near to expiry batch
-            $stock_running = $this->_table->find(array(
-                'itemPackSize' => $item_id,
-                'warehouse' => $this->_identity->getWarehouseId(),
-                'expiryDate' => $this->expiryDate
-            ));
+            $stock_running = $this->_table->find($row_running['0']['pkId']);
             $stock_running->setStatus(self::RUNNING);
             $this->_em->flush();
             return true;
@@ -63,10 +78,13 @@ class Model_StockBatch extends Model_Base {
     public function isBatchExists($item_id) {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("MIN(sb.expiryDate) AS MinDate")
-                ->from('StockBatch', 'sb')
-                ->where('sb.itemPackSize =' . $item_id)
-                ->andWhere('sb.warehouse =' . $this->_identity->getWarehouseId())
-                ->andWhere('sb.quantity <> 0');
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->where("sip.itemPackSize = '" . $item_id . "' ")
+                ->andWhere("sbw.warehouse = '" . $this->_identity->getWarehouseId() . "' ")
+                ->andWhere('sbw.quantity <> 0');
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row['0']['MinDate'];
@@ -77,9 +95,10 @@ class Model_StockBatch extends Model_Base {
 
     public function getBatchQuantityById($id) {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select('sb.quantity')
-                ->from('StockBatch', 'sb')
-                ->where('sb.pkId =' . $id);
+                ->select('sbw.quantity')
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->where('sbw.pkId =' . $id);
         $row = $str_sql->getQuery()->getResult();
 
         if (!empty($row) && count($row) > 0) {
@@ -90,7 +109,10 @@ class Model_StockBatch extends Model_Base {
     }
 
     public function deleteStockBatch($id) {
-        $stockBatch = $this->_table->find($id);
+        $stockBatchWarehouse = $this->_table->find($id);
+        $this->_em->remove($stockBatchWarehouse);
+        $stockBatchId = $stockBatchWarehouse->getStockBatch()->getPkId();
+        $stockBatch = $this->_em->getRepository('StockBatch')->find($stockBatchId);
         $this->_em->remove($stockBatch);
         return $this->_em->flush();
     }
@@ -123,51 +145,58 @@ class Model_StockBatch extends Model_Base {
      */
     public function getItemAllBatches($wh_id) {
         $str_sql = $this->_em->getConnection()->prepare("SELECT
-                                                        stock_batch.pk_id AS 'pkId',
+                                                        stock_batch_warehouses.pk_id AS 'pkId',
                                                         stock_batch.number,
-                                                        stock_batch.batch_master_id,
+                                                        stock_batch_warehouses.stock_batch_id,
                                                         stock_batch.expiry_date AS 'expiryDate',
-                                                        stock_batch.quantity,
-                                                        stock_batch.`status`,
+                                                        stock_batch_warehouses.quantity,
+                                                        stock_batch_warehouses.`status`,
                                                         stock_batch.unit_price,
                                                         stock_batch.production_date,
-                                                        stock_batch.last_update,
-                                                        stock_batch.item_pack_size_id AS 'itemPackSize',
+                                                        last_update,
+                                                        stakeholder_item_pack_sizes.item_pack_size_id AS 'itemPackSize',
                                                         stock_batch.vvm_type_id,
-                                                        stock_batch.warehouse_id,
-                                                        stock_batch.stakeholder_item_pack_size_id AS 'StakeholderItemPackSizeID'
+                                                        stock_batch_warehouses.warehouse_id,
+                                                        stock_batch.pack_info_id AS 'StakeholderItemPackSizeID'
                                                         FROM
                                                         stock_batch
+                                                        INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                                                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                                                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                                                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                                                         WHERE
-                                                        stock_batch.`status` <> 'Finished' AND warehouse_id= '" . $wh_id . "'");
+                                                        stock_batch_warehouses.`status` <> 'Finished' AND stock_batch_warehouses.warehouse_id= '" . $wh_id . "'");
         $str_sql->execute();
         return $str_sql->fetchAll();
     }
 
     public function getBatchesByStatus($status) {
         $date_curr = date('Y-m-d');
-        $str_sql = $this->_em->createQueryBuilder()->select('DISTINCT sb.pkId,
+        $str_sql = $this->_em->createQueryBuilder()->select('DISTINCT sbw.pkId,
 		sb.number,
 		sb.expiryDate,
-		sb.status,
-		sb.quantity AS BatchQty,
+		sbw.status,
+		sbw.quantity AS BatchQty,
 		ips.itemName,
 		iu.itemUnitName,
                 ips.numberOfDoses as description,
                 sd.temporary')
                 ->from('StockDetail', 'sd')
                 ->innerJoin("sd.stockMaster", "sm")
-                ->innerJoin("sd.stockBatch", "sb")
-                ->innerJoin("sb.itemPackSize", "ips")
+                ->innerJoin("sd.stockBatchWarehouse", "sbw")
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->join('sip.itemPackSize', 'ips')
                 ->innerJoin("ips.itemUnit", "iu")
-                ->where('sb.warehouse =' . $this->_identity->getWarehouseId())
+                ->where('sbw.warehouse =' . $this->_identity->getWarehouseId())
                 ->andWhere('sd.temporary = 0');
 
         if (!empty($this->form_values['item_pack_size_id'])) {
-            $str_sql->andWhere("sb.itemPackSize = " . $this->form_values['item_pack_size_id']);
+            $str_sql->andWhere("sip.itemPackSize = " . $this->form_values['item_pack_size_id']);
         }
         if (!empty($this->form_values['number'])) {
-            $str_sql->andWhere("sb.number LIKE '" . $this->form_values['number'] . "%'");
+            $str_sql->andWhere("sb.number LIKE '%" . $this->form_values['number'] . "%'");
         }
         if (!empty($this->form_values['transaction_refernece'])) {
             $str_sql->andWhere("sm.transactionReference LIKE '%" . $this->form_values['transaction_refernece'] . "%'");
@@ -179,16 +208,17 @@ class Model_StockBatch extends Model_Base {
         }
 
         if ($status == self::TOTAL) {
-            $str_sql->andWhere("sb.status IN ('STACKED','RUNNING')");
+            $str_sql->andWhere("sbw.status IN ('STACKED','RUNNING')");
         } else if ($status == self::EXPIRED) {
             $date_curr = date('Y-m-d');
             $str_sql->andWhere("DATE_FORMAT(sb.expiryDate,'%Y-%m-%d') < '$date_curr'");
+            $str_sql->andWhere("sbw.quantity > 0");
         } else if (!empty($status)) {
-            $str_sql->andWhere("sb.status = '" . $status . "'");
+            $str_sql->andWhere("sbw.status = '" . $status . "'");
         } else {
             $status = self::TOTAL;
         }
-//echo $str_sql->getQuery()->getSql();
+        //   exit;
         // Finished means 0 quantity, We don't need this check for Finished Qty
         /* if (!empty($this->form_values['status']) && $status != self::FINISHED && $status != self::TOTAL) {
           $str_sql->andWhere("sb.quantity <> 0");
@@ -202,9 +232,15 @@ class Model_StockBatch extends Model_Base {
     }
 
     public function searchStockBatch() {
+//        $search_by = $this->form_values['searchby']; // Undefined index: searchby 
+//        $search_input = $this->form_values['searchinput']; // Undefined index: searchinput
 
-        $search_by = $this->form_values['searchby'];
-        $search_input = $this->form_values['searchinput'];
+        if (isset($this->form_values['searchby'])) {
+            $search_by = $this->form_values['searchby'];
+        }
+        if (isset($this->form_values['searchinput'])) {
+            $search_input = $this->form_values['searchinput'];
+        }
 
         if (!empty($search_by) || !empty($search_input)) {
             switch ($search_by) {
@@ -307,11 +343,11 @@ class Model_StockBatch extends Model_Base {
 FROM
 	(
 		SELECT
-			stock_batch.pk_id AS pkId,
+			stock_batch_warehouses.pk_id AS pkId,
 			stock_batch.number,
 			stock_batch.expiry_date AS expiryDate,
-			stock_batch.`status`,
-			stock_batch.quantity AS BatchQty,
+			stock_batch_warehouses.`status`,
+			stock_batch_warehouses.quantity AS BatchQty,
 			item_pack_sizes.item_name AS itemName,
 			item_units.item_unit_name AS itemUnitName,
 			item_pack_sizes.number_of_doses AS description,
@@ -319,15 +355,19 @@ FROM
 		FROM
 			stock_detail
 		INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-		INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+
+                INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
 		INNER JOIN item_units ON item_pack_sizes.item_unit_id = item_units.pk_id
 		WHERE
-			stock_batch.warehouse_id = $wh_id
+			stock_batch_warehouses.warehouse_id = $wh_id
 		AND stock_detail.`temporary` = 0
-		AND stock_batch.item_pack_size_id = $item_id
+		AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id
 		GROUP BY
-			stock_batch.pk_id
+			stock_batch_warehouses.pk_id
 		HAVING
 			BatchQty > 0
 	) A";
@@ -358,7 +398,7 @@ FROM
 FROM
 	(
 		SELECT
-			stock_batch.pk_id,
+			stock_batch_warehouses.pk_id,
 			stock_batch.number,
 			item_pack_sizes.item_name AS itemName,
 			item_pack_sizes.number_of_doses AS description,
@@ -369,14 +409,17 @@ FROM
 			stock_batch.expiry_date
 		FROM
 			stock_batch
-		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-		LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+		LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 		INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 		INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 		INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
 		INNER JOIN item_units ON item_pack_sizes.item_unit_id = item_units.pk_id
 		WHERE
-			stock_batch.warehouse_id = $wh_id
+			stock_batch_warehouses.warehouse_id = $wh_id
 		AND item_pack_sizes.item_category_id = 1
 		AND (
 			placements.vvm_stage = 2
@@ -394,12 +437,12 @@ FROM
 		) > '$today'
 		AND item_pack_sizes.pk_id = $item_id
 		GROUP BY
-			placements.stock_batch_id
+			placements.stock_batch_warehouse_id
 		HAVING
 			BatchQty > 0
 		UNION
 			SELECT
-				stock_batch.pk_id,
+				stock_batch_warehouses.pk_id,
 				stock_batch.number,
 				item_pack_sizes.item_name AS itemName,
 				item_pack_sizes.number_of_doses AS description,
@@ -410,14 +453,17 @@ FROM
 				stock_batch.expiry_date
 			FROM
 				stock_batch
-			INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-			LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                        INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                        LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 			INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 			INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 			INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
 			INNER JOIN item_units ON item_pack_sizes.item_unit_id = item_units.pk_id
 			WHERE
-				stock_batch.warehouse_id = $wh_id
+				stock_batch_warehouses.warehouse_id = $wh_id
 			AND item_pack_sizes.item_category_id = 1
 			AND placements.vvm_stage = 1
 			AND DATE_FORMAT(
@@ -427,12 +473,12 @@ FROM
 			AND '$afteryear'
 			AND item_pack_sizes.pk_id = $item_id
 			GROUP BY
-				placements.stock_batch_id
+				placements.stock_batch_warehouse_id
 			HAVING
 				BatchQty > 0
 			UNION
 				SELECT
-					stock_batch.pk_id,
+					stock_batch_warehouses.pk_id,
 					stock_batch.number,
 					item_pack_sizes.item_name AS itemName,
 					item_pack_sizes.number_of_doses AS description,
@@ -443,14 +489,17 @@ FROM
 					stock_batch.expiry_date
 				FROM
 					stock_batch
-				INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-				LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                                INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                                LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 				INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 				INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 				INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
 				INNER JOIN item_units ON item_pack_sizes.item_unit_id = item_units.pk_id
 				WHERE
-					stock_batch.warehouse_id = $wh_id
+					stock_batch_warehouses.warehouse_id = $wh_id
 				AND item_pack_sizes.item_category_id = 1
 				AND placements.vvm_stage = 1
 				AND DATE_FORMAT(
@@ -459,7 +508,7 @@ FROM
 				) > '$afteryear'
 				AND item_pack_sizes.pk_id = $item_id
 				GROUP BY
-					placements.stock_batch_id
+					placements.stock_batch_warehouse_id
 				HAVING
 					BatchQty > 0
 	) A
@@ -513,24 +562,27 @@ ORDER BY
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("ips.itemName,
                         ips.numberOfDoses as description,
-			SUM(sb.quantity) AS Vials,
-			SUM(ips.numberOfDoses * sb.quantity) AS Doses,
+			SUM(sbw.quantity) AS Vials,
+			SUM(ips.numberOfDoses * sbw.quantity) AS Doses,
                         sb.number")
-                ->from("StockBatch", "sb")
-                ->join("sb.itemPackSize", "ips")
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->join('sip.itemPackSize', 'ips')
                 ->join("ips.itemUnit", "iu")
                 ->where("ips.itemCategory = 1")
-                ->andWhere("sb.warehouse = " . $wh_id)
+                ->andWhere("sbw.warehouse = " . $wh_id)
                 ->andWhere("sb.expiryDate >= '" . date("Y-m-d") . "'");
 
         if ($wh_id == 159) {
-            $str_sql->andWhere("ips.pkId NOT IN(35,10,38)");
+            $str_sql->andWhere("ips.pkId NOT IN(35,38)");
         }
 
         $str_sql->groupBy("ips.pkId")
                 ->orderBy("ips.listRank");
 
-        //echo $str_sql->getQuery()->getSql()."<br>";
+        // echo $str_sql->getQuery()->getSql()."<br>";
 
         $result = $str_sql->getQuery()->getResult();
         return $result;
@@ -540,14 +592,17 @@ ORDER BY
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("ips.itemName,
                         ips.numberOfDoses as description,
-			SUM(sb.quantity) AS Vials,
-			SUM(ips.numberOfDoses * sb.quantity) AS Doses,
+			SUM(sbw.quantity) AS Vials,
+			SUM(ips.numberOfDoses * sbw.quantity) AS Doses,
                         sb.number")
-                ->from("StockBatch", "sb")
-                ->join("sb.itemPackSize", "ips")
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->join('sip.itemPackSize', 'ips')
                 ->join("ips.itemUnit", "iu")
                 ->where("ips.itemCategory = 1")
-                ->andWhere("sb.warehouse = " . $this->_identity->getWarehouseId())
+                ->andWhere("sbw.warehouse = " . $this->_identity->getWarehouseId())
                 ->andWhere("sb.expiryDate < '" . date("Y-m-d") . "'");
         $str_sql->groupBy("ips.pkId")
                 ->having("Vials > 0")
@@ -563,15 +618,18 @@ ORDER BY
                 ->select("
                          i.description as itemName,
                         ips.numberOfDoses as description,
-			SUM(sb.quantity) AS Vials,
-			SUM(ips.numberOfDoses * sb.quantity) AS Doses,
+			SUM(sbw.quantity) AS Vials,
+			SUM(ips.numberOfDoses * sbw.quantity) AS Doses,
                         sb.number")
-                ->from("StockBatch", "sb")
-                ->join("sb.itemPackSize", "ips")
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->join('sip.itemPackSize', 'ips')
                 ->join("ips.item", 'i')
                 ->join("ips.itemUnit", "iu")
                 ->where("ips.itemCategory = 1")
-                ->andWhere("sb.warehouse = " . $this->_identity->getWarehouseId());
+                ->andWhere("sbw.warehouse = " . $this->_identity->getWarehouseId());
 
         $str_sql->groupBy("ips.pkId")
                 ->groupBy("ips.item")
@@ -621,15 +679,17 @@ ORDER BY
     public function stakeholderProductSummary() {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("ips.itemName,
-			SUM(sb.quantity) AS Vials,
-			SUM(ips.numberOfDoses * sb.quantity) AS Doses,
+			SUM(sbw.quantity) AS Vials,
+			SUM(ips.numberOfDoses * sbw.quantity) AS Doses,
                         s.stakeholderName")
-                ->from("StockBatch", "sb")
-                ->innerJoin("sb.stakeholderItemPackSize", "sips")
-                ->innerJoin("sb.itemPackSize", "ips")
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sips')
+                ->join('sips.itemPackSize', 'ips')
                 ->innerJoin("sips.stakeholder", "s")
                 ->where("s.stakeholderType = 3")
-                ->andWhere("sb.warehouse = " . $this->_identity->getWarehouseId())
+                ->andWhere("sbw.warehouse = " . $this->_identity->getWarehouseId())
                 ->andWhere("sb.expiryDate >= '" . date("Y-m-d") . "'") // Usable produts only
                 ->groupBy("ips.itemName,s.stakeholderName")
                 ->orderBy("ips.listRank", "ASC")
@@ -642,15 +702,17 @@ ORDER BY
     public function stakeholderExpiredProductSummary() {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("ips.itemName,
-			SUM(sb.quantity) AS Vials,
-			SUM(ips.numberOfDoses * sb.quantity) AS Doses,
+			SUM(sbw.quantity) AS Vials,
+			SUM(ips.numberOfDoses * sbw.quantity) AS Doses,
                         s.stakeholderName")
-                ->from("StockBatch", "sb")
-                ->innerJoin("sb.stakeholderItemPackSize", "sips")
-                ->innerJoin("sb.itemPackSize", "ips")
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sips')
+                ->join('sips.itemPackSize', 'ips')
                 ->innerJoin("sips.stakeholder", "s")
                 ->where("s.stakeholderType = 3")
-                ->andWhere("sb.warehouse = " . $this->_identity->getWarehouseId())
+                ->andWhere("sbw.warehouse = " . $this->_identity->getWarehouseId())
                 ->andWhere("sb.expiryDate < '" . date("Y-m-d") . "'") // Expired produts only
                 ->groupBy("ips.itemName,s.stakeholderName")
                 ->orderBy("ips.listRank", "ASC")
@@ -668,15 +730,17 @@ ORDER BY
 
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("ips.itemName,
-			SUM(sb.quantity) AS Vials,
-			SUM(ips.numberOfDoses * sb.quantity) AS Doses,
+			SUM(sbw.quantity) AS Vials,
+			SUM(ips.numberOfDoses * sbw.quantity) AS Doses,
                         s.stakeholderName")
-                ->from("StockBatch", "sb")
-                ->innerJoin("sb.stakeholderItemPackSize", "sips")
-                ->innerJoin("sb.itemPackSize", "ips")
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sips')
+                ->join('sips.itemPackSize', 'ips')
                 ->innerJoin("sips.stakeholder", "s")
                 ->where("s.stakeholderType = 3")
-                ->andWhere("sb.warehouse = " . $wh_id)                
+                ->andWhere("sbw.warehouse = " . $wh_id)
                 ->groupBy("ips.itemName")
                 ->orderBy("ips.listRank", "ASC")
                 ->having("Vials > 0");
@@ -685,7 +749,7 @@ ORDER BY
         //->andWhere("sb.expiryDate >= '" . date("Y-m-d") . "'")
 //        echo $str_sql->getQuery()->getSql()."<br>";
 //        exit();
-        
+
         return $result;
     }
 
@@ -708,10 +772,13 @@ ORDER BY
 	IFNULL(placements.vvm_stage, 1) AS vvm
 FROM
 	stock_batch
-INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+    INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+    LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 WHERE
-	stock_batch.warehouse_id = $wh_id
+	stock_batch_warehouses.warehouse_id = $wh_id
 GROUP BY
 	item_pack_sizes.pk_id
 
@@ -732,27 +799,25 @@ ORDER BY
         if (!empty($this->form_values['wh_id'])) {
             $wh_id = $this->form_values['wh_id'];
         }
-
-        //$wh_id = $this->_identity->getWarehouseId();
-
         $str_sql = "
             SELECT
-                i0_.item_name AS 'Product',
-                s1_.number AS 'Batch No',
-                Sum(s1_.quantity) AS 'Quantity'
+                item_pack_sizes.item_name AS 'Product',
+                Sum(stock_batch_warehouses.quantity) AS 'Quantity'
             FROM
-                stock_batch s1_
-                INNER JOIN item_pack_sizes i0_ ON s1_.item_pack_size_id = i0_.pk_id
-                INNER JOIN item_units i2_ ON i0_.item_unit_id = i2_.pk_id
+               stock_batch
+                INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                INNER JOIN item_units i2_ ON item_pack_sizes.item_unit_id = i2_.pk_id
             WHERE
-                i0_.item_category_id IN (2, 3)
-                AND s1_.warehouse_id = $wh_id              
-                AND i0_.pk_id NOT IN (35, 10, 38)
+                item_pack_sizes.item_category_id IN (2, 3)
+                AND stock_batch_warehouses.warehouse_id = $wh_id
+                AND item_pack_sizes.pk_id NOT IN (35,38)
             GROUP BY
-                i0_.pk_id
+                item_pack_sizes.pk_id
             ORDER BY
-                i0_.list_rank ASC";
-
+                item_pack_sizes.list_rank ASC";
 
         $this->_em = Zend_Registry::get('doctrine');
         $row = $this->_em->getConnection()->prepare($str_sql);
@@ -766,24 +831,24 @@ ORDER BY
 
         $str_sql = "
             SELECT
-                i0_.item_name AS Product,
-                SUM(s1_.quantity) AS 'Quantity',
-                s2_.stakeholder_name AS StakeholderName
+                item_pack_sizes.item_name AS Product,
+                SUM(stock_batch_warehouses.quantity) AS 'Quantity'
             FROM
-                stock_batch s1_
-                INNER JOIN stakeholder_item_pack_sizes s3_ ON s1_.stakeholder_item_pack_size_id = s3_.pk_id
-                INNER JOIN item_pack_sizes i0_ ON s1_.item_pack_size_id = i0_.pk_id
-                INNER JOIN stakeholders s2_ ON s3_.stakeholder_id = s2_.pk_id
+                stock_batch
+        INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+	INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+         INNER JOIN stakeholders  ON stakeholder_item_pack_sizes.stakeholder_id = stakeholders.pk_id
+
             WHERE
-                s2_.stakeholder_type_id = 3
-                AND s1_.warehouse_id = $wh_id
-                AND i0_.item_category_id IN (2, 3)
+                stakeholders.stakeholder_type_id = 3
+                AND stock_batch_warehouses.warehouse_id = $wh_id
+                AND item_pack_sizes.item_category_id IN (2, 3)
             GROUP BY
-                i0_.item_name
-            HAVING
-                Quantity > 0
+                item_pack_sizes.pk_id
             ORDER BY
-                i0_.list_rank ASC";
+                item_pack_sizes.list_rank ASC";
 
 
         $this->_em = Zend_Registry::get('doctrine');
@@ -799,21 +864,21 @@ ORDER BY
         $str_sql = "
             SELECT
                 item_pack_sizes.item_name as 'Product',
-                stock_batch.number as 'BatchNo',
-                DATE_FORMAT(stock_batch.expiry_date, '%d-%m-%y') AS 'Expiry',
                 SUM(placements.quantity) AS 'Quantity'
             FROM
                 stock_batch
-                INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-                LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+            INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+            INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+            INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+            LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
             WHERE
-                stock_batch.warehouse_id = $wh_id 
+                stock_batch_warehouses.warehouse_id = $wh_id
                 AND item_pack_sizes.item_category_id IN (2,3)
             GROUP BY
                 item_pack_sizes.pk_id
             ORDER BY
-                item_pack_sizes.list_rank,
-                stock_batch.expiry_date";
+                item_pack_sizes.list_rank";
 
 
         $this->_em = Zend_Registry::get('doctrine');
@@ -826,20 +891,26 @@ ORDER BY
 
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("sb.number,
-			sb.pkId,
+			sbw.pkId,
 			sb.expiryDate,
-			sb.quantity")
-                ->from("StockBatch", "sb")
-                ->where("sb.quantity > 0 ")
+			sbw.quantity")
+                ->from("StockBatchWarehouses", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->where("sbw.quantity > 0 ")
                 //->andWhere("sb.status = '" . self::RUNNING . "'")
-                ->andWhere("sb.itemPackSize = " . $this->form_values['item_pack_size_id']);
+                ->andWhere("sip.itemPackSize = " . $this->form_values['item_pack_size_id']);
 
         if (!empty($this->form_values['transaction_date'])) {
             $str_sql->andWhere("sb.expiryDate >= '" . App_Controller_Functions::dateToDbFormat($this->form_values['transaction_date']) . "' ");
         }
 
-        $str_sql->andWhere("sb.warehouse = " . $this->_identity->getWarehouseId())
-                ->orderBy("sb.quantity", "DESC");
+        $str_sql->andWhere("sbw.warehouse = " . $this->_identity->getWarehouseId())
+                ->orderBy("sbw.quantity", "DESC");
+
+//        echo $str_sql->getQuery()->getSql();
+//        exit;
 
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
@@ -887,21 +958,24 @@ ORDER BY
 		stock_batch.expiry_date AS expiryDate,
                 stock_batch.number,
                 Sum(placements.quantity) AS BatchQty,
-                stock_batch.pk_id AS pkId,
+                stock_batch_warehouses.pk_id AS pkId,
                 item_pack_sizes.item_name AS itemName,
                 'Priority 1' AS `status`,
                 item_units.item_unit_name AS itemUnitName,
                 item_pack_sizes.number_of_doses AS description
 	FROM
 		stock_batch
-	INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-	LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+        INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+        LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 	INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 	INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 	INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
         INNER JOIN item_units ON item_pack_sizes.item_unit_id = item_units.pk_id
 	WHERE
-		stock_batch.warehouse_id = $wh_id
+		stock_batch_warehouses.warehouse_id = $wh_id
 	AND item_pack_sizes.item_category_id = 1
 	AND (
 		placements.vvm_stage = 2
@@ -915,7 +989,7 @@ ORDER BY
 		)
 	) $wr
 	GROUP BY
-		placements.stock_batch_id
+		placements.stock_batch_warehouse_id
 	HAVING
 		BatchQty > 0
 	ORDER BY
@@ -965,21 +1039,24 @@ ORDER BY
 			stock_batch.expiry_date AS expiryDate,
                 stock_batch.number,
                 Sum(placements.quantity) AS BatchQty,
-                stock_batch.pk_id AS pkId,
+                stock_batch_warehouses.pk_id AS pkId,
                 item_pack_sizes.item_name AS itemName,
                 'Priority 2' AS `status`,
                 item_units.item_unit_name AS itemUnitName,
                 item_pack_sizes.number_of_doses AS description
 		FROM
 			stock_batch
-		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-		LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 		INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 		INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 		INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
                 INNER JOIN item_units ON item_pack_sizes.item_unit_id = item_units.pk_id
 		WHERE
-			stock_batch.warehouse_id = $wh_id
+			stock_batch_warehouses.warehouse_id = $wh_id
 		AND item_pack_sizes.item_category_id = 1
 		AND placements.vvm_stage = 1
 		AND DATE_FORMAT(
@@ -989,7 +1066,7 @@ ORDER BY
 		AND '$afteryear'
                 $wr
 		GROUP BY
-			placements.stock_batch_id
+			placements.stock_batch_warehouse_id
 		HAVING
 			BatchQty > 0
 		ORDER BY
@@ -1037,21 +1114,24 @@ ORDER BY
 			stock_batch.expiry_date AS expiryDate,
                 stock_batch.number,
                 Sum(placements.quantity) AS BatchQty,
-                stock_batch.pk_id AS pkId,
+                stock_batch_warehouses.pk_id AS pkId,
                 item_pack_sizes.item_name AS itemName,
                 'Priority 3' AS `status`,
                 item_units.item_unit_name AS itemUnitName,
                 item_pack_sizes.number_of_doses AS description
 		FROM
 			stock_batch
-		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-		LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 		INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 		INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 		INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
                 INNER JOIN item_units ON item_pack_sizes.item_unit_id = item_units.pk_id
 		WHERE
-			stock_batch.warehouse_id = $wh_id
+			stock_batch_warehouses.warehouse_id = $wh_id
 		AND item_pack_sizes.item_category_id = 1
 		AND placements.vvm_stage = 1
 		AND DATE_FORMAT(
@@ -1059,7 +1139,7 @@ ORDER BY
 			'%Y-%m-%d'
 		) > '$afteryear' $wr
 		GROUP BY
-			placements.stock_batch_id
+			placements.stock_batch_warehouse_id
 		HAVING
 			BatchQty > 0
 		ORDER BY
@@ -1107,26 +1187,29 @@ ORDER BY
 			stock_batch.expiry_date AS expiryDate,
                 stock_batch.number,
                 Sum(placements.quantity) AS BatchQty,
-                stock_batch.pk_id AS pkId,
+                stock_batch_warehouses.pk_id AS pkId,
                 item_pack_sizes.item_name AS itemName,
                 'Unusable' AS `status`,
                 item_units.item_unit_name AS itemUnitName,
                 item_pack_sizes.number_of_doses AS description
 		FROM
 			stock_batch
-		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-		LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 		INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 		INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 		INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
                 INNER JOIN item_units ON item_pack_sizes.item_unit_id = item_units.pk_id
 		WHERE
-			stock_batch.warehouse_id = $wh_id
+			stock_batch_warehouses.warehouse_id = $wh_id
 		AND item_pack_sizes.item_category_id = 1
 		AND placements.vvm_stage IN (3,4)
 		$wr
 		GROUP BY
-			placements.stock_batch_id
+			placements.stock_batch_warehouse_id
 		HAVING
 			BatchQty > 0
 		ORDER BY
@@ -1183,21 +1266,24 @@ ORDER BY
 		stock_batch.expiry_date AS expiryDate,
                 stock_batch.number,
                 Sum(placements.quantity) AS BatchQty,
-                stock_batch.pk_id AS pkId,
+                stock_batch_warehouses.pk_id AS pkId,
                 item_pack_sizes.item_name AS itemName,
                 'Priority 1' AS `status`,
                 item_units.item_unit_name AS itemUnitName,
                 item_pack_sizes.number_of_doses AS description
 	FROM
 		stock_batch
-	INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-	LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+        INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+        LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 	INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 	INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 	INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
         INNER JOIN item_units ON item_pack_sizes.item_unit_id = item_units.pk_id
 	WHERE
-		stock_batch.warehouse_id = $wh_id
+		stock_batch_warehouses.warehouse_id = $wh_id
 	AND item_pack_sizes.item_category_id = 1
 	AND (
 		placements.vvm_stage = 2
@@ -1211,7 +1297,7 @@ ORDER BY
 		)
 	) $wr
 	GROUP BY
-		placements.stock_batch_id
+		placements.stock_batch_warehouse_id
         HAVING BatchQty > 0
 	ORDER BY
 		item_pack_sizes.list_rank,
@@ -1223,21 +1309,24 @@ UNION
 			stock_batch.expiry_date AS expiryDate,
                 stock_batch.number,
                 Sum(placements.quantity) AS BatchQty,
-                stock_batch.pk_id AS pkId,
+                stock_batch_warehouses.pk_id AS pkId,
                 item_pack_sizes.item_name AS itemName,
                 'Priority 2' AS `status`,
                 item_units.item_unit_name AS itemUnitName,
                 item_pack_sizes.number_of_doses AS description
 		FROM
 			stock_batch
-		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-		LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 		INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 		INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 		INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
                 INNER JOIN item_units ON item_pack_sizes.item_unit_id = item_units.pk_id
 		WHERE
-			stock_batch.warehouse_id = $wh_id
+			stock_batch_warehouses.warehouse_id = $wh_id
 		AND item_pack_sizes.item_category_id = 1
 		AND placements.vvm_stage = 1
 		AND DATE_FORMAT(
@@ -1247,7 +1336,7 @@ UNION
 		AND '$afteryear'
                 $wr
 		GROUP BY
-			placements.stock_batch_id
+			placements.stock_batch_warehouse_id
                 HAVING BatchQty > 0
 		ORDER BY
 			item_pack_sizes.list_rank,
@@ -1259,21 +1348,24 @@ UNION
 			stock_batch.expiry_date AS expiryDate,
                 stock_batch.number,
                 Sum(placements.quantity) AS BatchQty,
-                stock_batch.pk_id AS pkId,
+                stock_batch_warehouses.pk_id AS pkId,
                 item_pack_sizes.item_name AS itemName,
                 'Priority 3' AS `status`,
                 item_units.item_unit_name AS itemUnitName,
                 item_pack_sizes.number_of_doses AS description
 		FROM
 			stock_batch
-		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-		LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 		INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 		INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 		INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
                 INNER JOIN item_units ON item_pack_sizes.item_unit_id = item_units.pk_id
 		WHERE
-			stock_batch.warehouse_id = $wh_id
+			stock_batch_warehouses.warehouse_id = $wh_id
 		AND item_pack_sizes.item_category_id = 1
 		AND placements.vvm_stage = 1
 		AND DATE_FORMAT(
@@ -1281,13 +1373,13 @@ UNION
 			'%Y-%m-%d'
 		) > '$afteryear' $wr
 		GROUP BY
-			placements.stock_batch_id
+			placements.stock_batch_warehouse_id
                 HAVING BatchQty > 0
 		ORDER BY
 			item_pack_sizes.list_rank,
 			stock_batch.expiry_date
 	)";
-//echo $str_sql;
+
         $this->_em = Zend_Registry::get('doctrine');
         $row = $this->_em->getConnection()->prepare($str_sql);
         $row->execute();
@@ -1314,17 +1406,20 @@ UNION
 		stock_batch.expiry_date AS expiryDate,
 		stock_batch.number,
 		SUM(placements.quantity) AS quantity,
-		stock_batch.pk_id AS pkId,
+		stock_batch_warehouses.pk_id AS pkId,
 		'P1' AS priority
 	FROM
 		stock_batch
-	INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-	LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+        INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+	INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+	LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 	INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 	INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 	INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
 	WHERE
-		stock_batch.warehouse_id = $wh_id
+	stock_batch_warehouses.warehouse_id = $wh_id
 	AND item_pack_sizes.item_category_id = 1
 	AND (
 		placements.vvm_stage = 2
@@ -1341,9 +1436,9 @@ UNION
 		stock_batch.expiry_date,
 		'%Y-%m-%d'
 	) >= '$trans_date'
-	AND stock_batch.item_pack_size_id = $item_id
+	AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id
 	GROUP BY
-		placements.stock_batch_id
+		placements.stock_batch_warehouse_id
 	HAVING
 		quantity > 0
 	ORDER BY
@@ -1356,17 +1451,20 @@ UNION
 			stock_batch.expiry_date AS expiryDate,
 			stock_batch.number,
 			SUM(placements.quantity) AS quantity,
-			stock_batch.pk_id AS pkId,
+			stock_batch_warehouses.pk_id AS pkId,
 			'P2' AS priority
 		FROM
-			stock_batch
-		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-		LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                stock_batch
+		INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+		LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 		INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 		INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 		INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
 		WHERE
-			stock_batch.warehouse_id = $wh_id
+			stock_batch_warehouses.warehouse_id = $wh_id
 		AND item_pack_sizes.item_category_id = 1
 		AND placements.vvm_stage = 1
 		AND DATE_FORMAT(
@@ -1378,9 +1476,9 @@ UNION
 			stock_batch.expiry_date,
 			'%Y-%m-%d'
 		) >= '$trans_date'
-		AND stock_batch.item_pack_size_id = $item_id
+		AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id
 		GROUP BY
-			placements.stock_batch_id
+			placements.stock_batch_warehouse_id
 		HAVING
 			quantity > 0
 		ORDER BY
@@ -1393,17 +1491,20 @@ UNION
 			stock_batch.expiry_date AS expiryDate,
 			stock_batch.number,
 			SUM(placements.quantity) AS quantity,
-			stock_batch.pk_id AS pkId,
+			stock_batch_warehouses.pk_id AS pkId,
 			'P3' AS priority
 		FROM
-			stock_batch
-		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-		LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                stock_batch
+		INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+		INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+		LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 		INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 		INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 		INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
 		WHERE
-			stock_batch.warehouse_id = $wh_id
+			stock_batch_warehouses.warehouse_id = $wh_id
 		AND item_pack_sizes.item_category_id = 1
 		AND placements.vvm_stage = 1
 		AND DATE_FORMAT(
@@ -1414,9 +1515,9 @@ UNION
 			stock_batch.expiry_date,
 			'%Y-%m-%d'
 		) >= '$trans_date'
-		AND stock_batch.item_pack_size_id = $item_id
+		AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id
 		GROUP BY
-			placements.stock_batch_id
+			placements.stock_batch_warehouse_id
 		HAVING
 			quantity > 0
 		ORDER BY
@@ -1428,26 +1529,29 @@ UNION
 		stock_batch.expiry_date AS expiryDate,
 		stock_batch.number,
 		SUM(placements.quantity) AS quantity,
-		stock_batch.pk_id AS pkId,
+		stock_batch_warehouses.pk_id AS pkId,
 		'Expired' AS priority
 	FROM
-		stock_batch
-	INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-	LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+         stock_batch
+        INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+	INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+	LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 	INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 	INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 	INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
 	WHERE
-		stock_batch.warehouse_id = $wh_id
+		stock_batch_warehouses.warehouse_id = $wh_id
 	AND item_pack_sizes.item_category_id = 1
 	AND DATE_FORMAT(
 				stock_batch.expiry_date,
 				'%Y-%m-%d'
 			) BETWEEN '$trans_date'
 			AND '$todaymin1date'
-	AND stock_batch.item_pack_size_id = $item_id
+	AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id
 	GROUP BY
-		placements.stock_batch_id
+		placements.stock_batch_warehouse_id
 	HAVING
 		quantity > 0
 	ORDER BY
@@ -1474,17 +1578,21 @@ UNION
         }
 
         $str_sql = $this->_em->createQueryBuilder()
-                ->select("sb.pkId,sb.number,
+                ->select("sbw.pkId,sb.number,
 			sb.expiryDate,
-			sb.quantity")
-                ->from("StockBatch", "sb")
-                ->andWhere("sb.itemPackSize = " . $this->form_values['item_id'])
-                ->andWhere("sb.warehouse = " . $this->_identity->getWarehouseId());
+			sbw.quantity")
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->where('sip.itemPackSize =' . $this->form_values['item_id'])
+                ->andWhere('sbw.warehouse =' . $this->_identity->getWarehouseId());
+
         if ($type == 9) {
             $str_sql->andWhere("DATE_FORMAT(sb.expiryDate,'%Y-%m-%d') < '" . date("Y-m-d") . "'");
         }
         if ($type_sign == '-') {
-            $str_sql->having("sb.quantity > 0");
+            $str_sql->having("sbw.quantity > 0");
         }
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
@@ -1496,10 +1604,13 @@ UNION
 
     public function getBatchesByItem() {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select("sb")
-                ->from("StockBatch", "sb")
-                ->andWhere("sb.itemPackSize = " . $this->form_values['item_id'])
-                ->andWhere("sb.warehouse = " . $this->form_values['wh_id'])
+                ->select("sbw,sb")
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->where('sip.itemPackSize =' . $this->form_values['item_id'])
+                ->andWhere('sbw.warehouse =' . $this->form_values['wh_id'])
                 ->orderBy("sb.number", "ASC");
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
@@ -1512,12 +1623,15 @@ UNION
     public function getBatchExpiry() {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("sb.expiryDate,
-			sb.quantity,
+			sbw.quantity,
                         ips.pkId as itemCategory")
-                ->from("StockBatch", "sb")
-                ->join("sb.itemPackSize", "ips")
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->join('sip.itemPackSize ', 'ips')
                 ->join("ips.itemCategory", "ic")
-                ->where("sb.pkId = " . $this->form_values['pk_id']);
+                ->where("sbw.pkId = " . $this->form_values['pk_id']);
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             $data = array(
@@ -1537,11 +1651,14 @@ UNION
 			SUM(sd.quantity) as quantity,
                         ips.pkId as itemCategory")
                 ->from("StockDetail", "sd")
-                ->join("sd.stockBatch", "sb")
+                ->join("sd.stockBatchWarehouse", "sbw")
                 ->join("sd.stockMaster", "sm")
-                ->join("sb.itemPackSize", "ips")
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->join('sip.itemPackSize ', 'ips')
                 ->join("ips.itemCategory", "ic")
-                ->where("sb.pkId = " . $this->form_values['pk_id'])
+                ->where("sbw.pkId = " . $this->form_values['pk_id'])
                 ->andWhere("DATE_FORMAT(sm.transactionDate,'%Y-%m-%d') <= '" . $this->form_values['trans_date'] . "'");
 
         $row = $str_sql->getQuery()->getResult();
@@ -1571,7 +1688,7 @@ UNION
     public function getBatchCB() {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("sb.quantity")
-                ->from("StockBatch", "sb")
+                ->from("StockBatchWarehouses", "sb")
                 ->where("sb.pkId = " . $this->form_values['pk_id']);
 
         $row = $str_sql->getQuery()->getResult();
@@ -1586,7 +1703,7 @@ UNION
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("SUM(pc.quantity) as qty")
                 ->from("PipelineConsignments", "pc")
-                ->where("pc.stockBatch = " . $this->form_values['pk_id'])
+                ->where("pc.stockBatchWarehouse = " . $this->form_values['pk_id'])
                 ->andWhere("pc.transactionType = 2")
                 ->andWhere("pc.status != 'Received'");
         $row = $str_sql->getQuery()->getResult();
@@ -1675,7 +1792,7 @@ UNION
 
     public function updateWarehouseId() {
 
-        $querypro = "Update stock_batch set warehouse_id='0' where stock_batch.pk_id=$this->batch_id  ";
+        $querypro = "Update stock_batch_warehouses set warehouse_id='0' where stock_batch.pk_id=$this->batch_id  ";
 
         $this->_em = Zend_Registry::get('doctrine');
         $row = $this->_em->getConnection()->prepare($querypro);
@@ -1690,15 +1807,14 @@ UNION
         $created_by = $this->_em->getRepository('Users')->find($this->_user_id);
 
         if ($batchid === 0) {
+
             $wh_id = $this->_identity->getWarehouseId();
 
             $stock_batch = new StockBatch();
             $stock_batch->setNumber(strtoupper($array['number']));
             $stock_batch->setExpiryDate(new \DateTime(App_Controller_Functions::dateToDbFormat($array['expiry_date'])));
-            $item_id = $this->_em->getRepository('ItemPackSizes')->find($array['item_id']);
-            $stock_batch->setItemPackSize($item_id);
-            $stock_batch->setQuantity(str_replace(",", "", $array['quantity']));
-            $stock_batch->setStatus(self::STACKED);
+
+
             if (!empty($array['production_date'])) {
                 $stock_batch->setProductionDate(new \DateTime(App_Controller_Functions::dateToDbFormat($array['production_date'])));
             }
@@ -1707,34 +1823,54 @@ UNION
                 $stock_batch->setVvmType($vvm_type_id);
             }
             $stock_batch->setUnitPrice($array['unit_price']);
-            $warehouse_id = $this->_em->getRepository('Warehouses')->find($wh_id);
-            $stock_batch->setWarehouse($warehouse_id);
+
 
             if (!empty($array['manufacturer_id'])) {
                 $stakeholder_item_pack_size = $this->_em->getRepository('StakeholderItemPackSizes')->find($array['manufacturer_id']);
+
                 if ($stakeholder_item_pack_size->getItemPackSize()->getPkId() == $array['item_id']) {
-                    $stock_batch->setStakeholderItemPackSize($stakeholder_item_pack_size);
+
+                    $pack_info_id = $this->_em->getRepository('PackInfo')->findOneBy(array("stakeholderItemPackSize" => $stakeholder_item_pack_size->getPkId(), "packagingLevel" => '140'));
+
+                    $stock_batch->setPackInfo($pack_info_id);
                 } else {
                     $check_sips = $this->_em->getRepository('StakeholderItemPackSizes')->findOneBy(array("stakeholder" => $stakeholder_item_pack_size->getStakeholder()->getPkId(), "itemPackSize" => $array['item_id']));
                     if (count($check_sips) > 0) {
-                        $stock_batch->setStakeholderItemPackSize($check_sips);
+//                       echo $check_sips->getPkId();
+//                       exit;
+                        $pack_info_id = $this->_em->getRepository('PackInfo')->findOneBy(array("stakeholderItemPackSize" => $check_sips->getPkId(), "packagingLevel" => '140'));
+                        $stock_batch->setPackInfo($pack_info_id);
                     } else {
                         $add_sips = new StakeholderItemPackSizes();
-                        $add_sips->setQuantityPerPack($stakeholder_item_pack_size->getQuantityPerPack());
-                        $add_sips->setStatus($stakeholder_item_pack_size->getStatus());
-                        $add_sips->setListRank($stakeholder_item_pack_size->getListRank());
-                        $add_sips->setVolumPerVial($stakeholder_item_pack_size->getVolumPerVial());
-                        $add_sips->setItemGtin($stakeholder_item_pack_size->getItemGtin());
-                        $add_sips->setPackagingLevel($stakeholder_item_pack_size->getPackagingLevel());
+
                         $add_sips->setStakeholder($stakeholder_item_pack_size->getStakeholder());
-                        $add_sips->setItemPackSize($item_id);
+                        $item_pack_size_id = $this->_em->getRepository('ItemPackSizes')->find($array['item_id']);
+                        $add_sips->setItemPackSize($item_pack_size_id);
                         $add_sips->setModifiedBy($created_by);
                         $add_sips->setModifiedDate(App_Tools_Time::now());
                         $add_sips->setCreatedBy($created_by);
                         $add_sips->setCreatedDate(App_Tools_Time::now());
                         $this->_em->persist($add_sips);
                         $this->_em->flush();
-                        $stock_batch->setStakeholderItemPackSize($add_sips);
+                        $sips_id = $add_sips->getPkId();
+                        $pack_info_id_add = $this->_em->getRepository('PackInfo')->findOneBy(array("stakeholderItemPackSize" => $stakeholder_item_pack_size->getPkId(), "packagingLevel" => '140'));
+
+                        $pack_info = new PackInfo();
+                        $stakholder_item_pack_id = $this->_em->getRepository('StakeholderItemPackSizes')->find($sips_id);
+                        $pack_info->setStakeholderItemPackSize($stakholder_item_pack_id);
+                        $pack_info->setQuantityPerPack($pack_info_id_add->getQuantityPerPack());
+                        $pack_info->setStatus($pack_info_id_add->getStatus());
+                        $pack_info->setListRank($pack_info_id_add->getListRank());
+                        $pack_info->setVolumPerVial($pack_info_id_add->getVolumPerVial());
+                        $pack_info->setItemGtin($pack_info_id_add->getItemGtin());
+                        $pack_info->setPackagingLevel($pack_info_id_add->getPackagingLevel());
+                        $pack_info->setModifiedBy($created_by);
+                        $pack_info->setModifiedDate(App_Tools_Time::now());
+                        $pack_info->setCreatedBy($created_by);
+                        $pack_info->setCreatedDate(App_Tools_Time::now());
+                        $this->_em->persist($pack_info);
+                        $this->_em->flush();
+                        $stock_batch->setPackInfo($pack_info);
                     }
                 }
             }
@@ -1747,14 +1883,23 @@ UNION
             $this->_em->flush();
             $batchid = $stock_batch->getPkId();
 
-            if ($wh_id == Model_Warehouses::FEDERAL_WHID) {
-                $stock_batch->setBatchMasterId($batchid);
-                $this->_em->persist($stock_batch);
-                $this->_em->flush();
-            }
+            $stock_batch_warehouses = new StockBatchWarehouses;
+            $stock_batch_warehouses->setQuantity(str_replace(",", "", $array['quantity']));
+            $stock_batch_warehouses->setStatus(self::STACKED);
+            $warehouse_id = $this->_em->getRepository('Warehouses')->find($wh_id);
+            $stock_batch_warehouses->setWarehouse($warehouse_id);
+            $stock_batch_id = $this->_em->getRepository('StockBatch')->find($batchid);
+            $stock_batch_warehouses->setStockBatch($stock_batch_id);
+            $stock_batch_warehouses->setModifiedBy($created_by);
+            $stock_batch_warehouses->setModifiedDate(App_Tools_Time::now());
+            $stock_batch_warehouses->setCreatedBy($created_by);
+            $stock_batch_warehouses->setCreatedDate(App_Tools_Time::now());
+            $this->_em->persist($stock_batch_warehouses);
+            $this->_em->flush();
+            $stockBatchWarehousId = $stock_batch_warehouses->getPkId();
 
-            if ($batchid) {
-                return $batchid;
+            if ($stockBatchWarehousId) {
+                return $stockBatchWarehousId;
             } else {
                 return false;
             }
@@ -1810,16 +1955,31 @@ UNION
             $wh_id = $this->_identity->getWarehouseId();
         }
 
-        $stock_batch = $this->_em->getRepository("StockBatch")->findOneBy(array(
-            "number" => $array['number'],
-            "itemPackSize" => $array['item_id'],
-            "warehouse" => $wh_id
-        ));
+        $str_sql = $this->_em->createQueryBuilder()
+                ->select("sbw.pkId")
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->where("sip.itemPackSize = '" . $array['item_id'] . "' ")
+                ->andWhere("sbw.warehouse = '" . $wh_id . "' ")
+                ->andWhere("sb.number = '" . $array['number'] . "' ");
+//echo $str_sql->getQuery()->getSql();
+//exit;
 
-        if (count($stock_batch) > 0) {
-            $this->adjustQuantityByWarehouse($stock_batch->getPkId());
+        $row = $str_sql->getQuery()->getResult();
 
-            if ($stock_batch->getStatus() == 'Finished' && $role_id == 3 && !empty($array['expiry_date'])) {
+
+
+
+        $stock_batch_warehouses = $this->_em->getRepository("StockBatchWarehouses")->find($row['0']['pkId']);
+
+        if (count($stock_batch_warehouses) > 0) {
+            $this->adjustQuantityByWarehouse($stock_batch_warehouses->getPkId());
+
+            if ($stock_batch_warehouses->getStatus() == 'Finished' && $role_id == 3 && !empty($array['expiry_date'])) {
+
+                $stock_batch = $this->_em->getRepository("StockBatch")->find($stock_batch_warehouses->getStockBatch()->getPkId());
                 $stock_batch->setExpiryDate(new \DateTime(App_Controller_Functions::dateToDbFormat($array['expiry_date'])));
                 $stock_batch->setProductionDate(new \DateTime(App_Controller_Functions::dateToDbFormat($array['production_date'])));
                 $created_by = $this->_em->getRepository('Users')->find($this->_user_id);
@@ -1828,7 +1988,7 @@ UNION
                 $this->_em->persist($stock_batch);
                 $this->_em->flush();
             }
-            return $stock_batch->getPkId();
+            return $stock_batch_warehouses->getPkId();
         } else {
             return 0;
         }
@@ -1836,18 +1996,21 @@ UNION
 
     public function checkNewBatch($array) {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select("sd.pkId as detailId,sb.pkId as batchId")
+                ->select("sd.pkId as detailId,sbw.pkId as batchId")
                 ->from("StockDetail", 'sd')
                 ->join("sd.stockMaster", "sm")
                 ->join("sm.transactionType", "tt")
-                ->join("sd.stockBatch", 'sb')
-                ->join("sb.itemPackSize", 'ips')
-                ->where("sb.pkId = '" . $array['batch_id'] . "'")
+                ->join("sd.stockBatchWarehouse", 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->where('sip.itemPackSize ', 'ips')
+                ->where("sbw.pkId = '" . $array['batch_id'] . "'")
                 ->andWhere("tt.pkId=1 ")
                 ->orWhere("tt.pkId=2 ")
                 ->andWhere("sm.draft=0")
-                ->andWhere("sb.itemPackSize = " . $array['item_id'])
-                ->andWhere("sb.warehouse = " . $this->_identity->getWarehouseId());
+                ->andWhere("sip.itemPackSize = " . $array['item_id'])
+                ->andWhere("sbw.warehouse = " . $this->_identity->getWarehouseId());
 
         //  echo $str_sql->getQuery()->getSql();
         //   exit;
@@ -1865,9 +2028,12 @@ UNION
     public function getBatchNumberByProducts() {
 
         $str_sql = $this->_em->createQueryBuilder()
-                ->select('sb.pkId', 'sb.number')
-                ->from("StockBatch", "sb")
-                ->where("sb.itemPackSize = " . $this->form_values['item_pack_size_id']);
+                ->select('sbw.pkId', 'sb.number')
+                ->from("StockBatchWarehouses", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->where('sip.itemPackSize =' . $this->form_values['item_pack_size_id']);
         $result = $str_sql->getQuery()->getResult();
 
         return $result;
@@ -1877,8 +2043,11 @@ UNION
         $str_sql = $this->_em->createQueryBuilder()
                 ->select('ips.itemName, sd.quantity, sd.vvmStage, sb.expiryDate, sb.number')
                 ->from("StockDetail", "sd")
-                ->leftJoin("sd.stockBatch", 'sb')
-                ->leftJoin("sb.itemPackSize", 'ips')
+                ->leftJoin("sd.stockBatchWarehous", "sbw")
+                ->leftJoin("sbw.stockBatch", "sb")
+                ->leftJoin('sb.packInfo', 'pi')
+                ->leftJoin('pi.stakeholderItemPackSize', 'sip')
+                ->leftJoin("sip.itemPackSize", 'ips')
                 ->where("sd.pkId = " . $this->form_values['stock_detail']);
         $result = $str_sql->getQuery()->getResult();
         return $result[0];
@@ -1889,15 +2058,18 @@ UNION
                 ->select('Sum(sd.quantity) AS total,
                         ips.quantityPerPack')
                 ->from("StockDetail", "sd")
-                ->join("sd.stockBatch", "sb")
-                ->join("sb.itemPackSize", "ips")
-                ->where("sb.pkId =" . $this->form_values['stock_batch_id']);
+                ->join("sd.stockBatchWarehous", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->join("sip.itemPackSize", 'ips')
+                ->where("sbw.pkId =" . $this->form_values['stock_batch_id']);
         $result = $str_sql->getQuery()->getResult();
 
         $str_sql2 = $this->_em->createQueryBuilder()
                 ->select('Sum(p.quantity) AS placement_qty')
                 ->from("Placements", "p")
-                ->where("p.stockBatch =" . $this->form_values['stock_batch_id']);
+                ->where("p.stockBatchWarehouse =" . $this->form_values['stock_batch_id']);
         $result2 = $str_sql2->getQuery()->getResult();
 
         $total = $result[0]['total'] - $result2[0]['placement_qty'];
@@ -1905,24 +2077,43 @@ UNION
     }
 
     public function getBatches() {
-        return $this->_table->findAll();
+
+        $str_sql = $this->_em->createQueryBuilder()
+                ->select("sb.number,
+			sbw.pkId")
+                ->from("StockBatchWarehouses", "sbw")
+                ->join("sbw.stockBatch", "sb");
+
+
+
+        $row = $str_sql->getQuery()->getResult();
+        if (!empty($row) && count($row) > 0) {
+            return $row;
+        } else {
+            return false;
+        }
+
+
+        //return $this->_table->findAll();
     }
 
     public function getItemBatches() {
         $wh_id = $this->form_values['wh_id'];
 
         $str_sql = $this->_em->createQueryBuilder()
-                ->select("sb.pkId,sb.number,
+                ->select("sbw.pkId,sb.number,
 			sb.expiryDate,
                         ips.pkId as itemPackSize,
                         sips.pkId as StakeholderItemPackSizeID,
-			sb.quantity")
-                ->from("StockBatch", "sb")
-                ->join("sb.itemPackSize", "ips")
-                ->join("sb.stakeholderItemPackSize", "sips")
+			sbw.quantity")
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sips')
+                ->join('sips.itemPackSize', 'ips')
                 ->where("sb.expiryDate >= " . date("Y-m-d"))
-                ->andWhere("sb.warehouse = " . $wh_id)
-                ->andWhere("sb.status != 'Finished'");
+                ->andWhere("sbw.warehouse = " . $wh_id)
+                ->andWhere("sbw.status != 'Finished'");
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -1933,6 +2124,7 @@ UNION
 
     public function stockGatepassSearch() {
         //$wh_id = $this->_identity->getWarehouseId();
+        $where = "";
         if (!empty($this->form_values['vehicle_type_id'])) {
             $where[] = "gpv.vehicleType= '" . $this->form_values['vehicle_type_id'] . "'";
         }
@@ -1942,7 +2134,7 @@ UNION
         }
 
         if (!empty($this->form_values['stock_batch_id'])) {
-            $where[] = "sd.stockBatch = '" . $this->form_values['stock_batch_id'] . "'";
+            $where[] = "sd.stockBatchWarehouse = '" . $this->form_values['stock_batch_id'] . "'";
         }
 
 
@@ -1958,9 +2150,11 @@ UNION
                 ->join("gpd.gatepassMaster", "gpm")
                 ->join("gpm.gatepassVehicle", "gpv")
                 ->join("gpd.stockDetail", "sd")
-                ->join("sd.stockBatch", "sb")
-                ->join("sb.stakeholderItemPackSize", "sip")
-                ->join("sip.itemPackSize", "ip");
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->join("sip.itemPackSize", 'ip');
         if (is_array($where)) {
             $where_s = implode(" AND ", $where);
             $str_sqlee->where($where_s);
@@ -1993,34 +2187,49 @@ UNION
 
     function getPlacementHistory() {
 
-        $batch = $this->_em->getRepository("StockBatch")->find($this->form_values['batch_id']);
+        $batch = $this->_em->getRepository("StockBatchWarehouses")->find($this->form_values['batch_id']);
 
-        if ($batch->getItemPackSize()->getItemCategory()->getPkId() == 1 || $batch->getItemPackSize()->getItemCategory()->getPkId() == 4) {
+        //  if ($batch->getItemPackSize()->getItemCategory()->getPkId() == 1 || $batch->getItemPackSize()->getItemCategory()->getPkId() == 4)
+        if ($batch->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemCategory()->getPkId() == Model_Base::VACCINECATEGORY || $batch->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemCategory()->getPkId() == Model_Base::INACTIVEVACCINE) {
             $sql = "SELECT
-                    cold_chain.asset_id,
-                    placement_summary.quantity,
-                    placement_summary.batch_number,
-                    IF(item_pack_sizes.vvm_group_id = 1, vvm_stages.pk_id, vvm_stages.vvm_stage_value) vvm_stage
+                        cold_chain.asset_id,
+                        placement_summary.quantity,
+                        placement_summary.batch_number,
+
+                    IF (
+                        item_pack_sizes.vvm_group_id = 1,
+                        vvm_stages.pk_id,
+                        vvm_stages.vvm_stage_value
+                        ) AS vvm_stage,
+                        placement_locations.pk_id AS place_loc_id,
+                        vvm_stages.pk_id AS vvm_stage_id,
+                        stock_batch_warehouses.pk_id AS batch_id
                     FROM
-                    placement_summary
-                    INNER JOIN placement_locations ON placement_summary.placement_location_id = placement_locations.pk_id
-                    INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
-                    INNER JOIN vvm_stages ON placement_summary.vvm_stage = vvm_stages.pk_id
-                    INNER JOIN stock_batch ON placement_summary.stock_batch_id = stock_batch.pk_id
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                        placement_summary
+                        INNER JOIN placement_locations ON placement_summary.placement_location_id = placement_locations.pk_id
+                        INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
+                        INNER JOIN vvm_stages ON placement_summary.vvm_stage = vvm_stages.pk_id
+                        INNER JOIN stock_batch_warehouses ON placement_summary.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                     WHERE
-                    placement_summary.stock_batch_id = " . $this->form_values['batch_id'];
+                        placement_summary.stock_batch_warehouse_id = " . $this->form_values['batch_id'];
         } else {
             $sql = "SELECT
-                            placement_summary.quantity,
-                            placement_summary.batch_number,
-                            non_ccm_locations.location_name AS asset_id,
-                            'NA' vvm_stage
+                        placement_summary.quantity,
+                        placement_summary.batch_number,
+                        non_ccm_locations.location_name AS asset_id,
+                        'NA' AS vvm_stage,
+                        placement_locations.pk_id AS place_loc_id,
+                        placement_summary.stock_batch_warehouse_id AS batch_id
                     FROM
-                            placement_summary
-                    INNER JOIN placement_locations ON placement_summary.placement_location_id = placement_locations.pk_id
-                    INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
-                    WHERE placement_summary.stock_batch_id = " . $this->form_values['batch_id'];
+                        placement_summary
+                        INNER JOIN placement_locations ON placement_summary.placement_location_id = placement_locations.pk_id
+                        INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
+                    WHERE
+                        placement_summary.stock_batch_warehouse_id = " . $this->form_values['batch_id'];
         }
 
         $row = $this->_em->getConnection()->prepare($sql);
@@ -2036,9 +2245,12 @@ UNION
               placement_summary
               INNER JOIN non_ccm_locations ON placement_summary.placement_location_id = non_ccm_locations.pk_id
               INNER JOIN vvm_stages ON placement_summary.vvm_stage = vvm_stages.pk_id
-              INNER JOIN stock_batch ON placement_summary.stock_batch_id = stock_batch.pk_id
-              INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-              where placement_summary.stock_batch_id = " . $this->form_values['batch_id'] . "
+              INNER JOIN stock_batch_warehouses ON placement_summary.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+              INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+              INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+              INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+              INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+              where placement_summary.stock_batch_warehouse_id = " . $this->form_values['batch_id'] . "
               AND non_ccm_locations.warehouse_id = " . $this->_identity->getWarehouseId();
 
         $row = $this->_em->getConnection()->prepare($sql);
@@ -2064,13 +2276,16 @@ UNION
                FROM
                 stock_master
                INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-               INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-               INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+               INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
                WHERE
                 DATE_FORMAT(stock_master.transaction_date,'%Y-%m-%d') BETWEEN '$from_date'
                AND '$to_date'
-               AND stock_batch.warehouse_id = $wh_id
+               AND stock_batch_warehouses.warehouse_id = $wh_id
                GROUP BY
                 items.pk_id
                ORDER BY
@@ -2111,13 +2326,16 @@ UNION
                 INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
                 INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
                 INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
-                INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-                INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                INNER JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                 WHERE
-                        placements.stock_batch_id = $batch_id
+                placements.stock_batch_warehouse_id = $batch_id
                 GROUP BY
-                        placements.placement_location_id,
-                        placements.vvm_stage ORDER BY cold_chain.asset_id";
+                placements.placement_location_id,
+                placements.vvm_stage ORDER BY cold_chain.asset_id";
 
         if (!empty($type)) {
             $tran_type = $this->_em->getRepository("TransactionTypes")->find($type);
@@ -2135,7 +2353,6 @@ UNION
                         INNER JOIN ccm_asset_types AS AssetSubtype ON cold_chain.ccm_asset_type_id = AssetSubtype.pk_id
                         LEFT JOIN ccm_asset_types AS AssetMainType ON AssetSubtype.parent_id = AssetMainType.pk_id
                         LEFT JOIN placement_locations ON cold_chain.pk_id = placement_locations.location_id
-                        INNER JOIN ccm_status_history ON ccm_status_history.pk_id = cold_chain.ccm_status_history_id
                         WHERE
                                 cold_chain.warehouse_id = $wh_id
                         AND (
@@ -2156,7 +2373,6 @@ UNION
                                 cold_chain.ccm_asset_type_id DESC";
             }
         }
-
         $row = $this->_em->getConnection()->prepare($sql);
         $row->execute();
         $result = $row->fetchAll();
@@ -2168,7 +2384,7 @@ UNION
      * This Function is using in 'receive from store' screen for vaccines'locations.
      * @return array Cold Stores Locations
      * @author Ajmal Hussain <ajmaleyetii@gmail.com>
-     * 
+     *
      */
     public function getAllColdStores() {
         $wh_id = $this->_identity->getWarehouseId();
@@ -2227,7 +2443,7 @@ UNION
                 INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
                 INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
                 WHERE
-                        placements.stock_batch_id = $batch_id
+                        placements.stock_batch_warehouse_id = $batch_id
                         and placement_locations.location_type = $loc_type
                 GROUP BY
                         placements.placement_location_id,
@@ -2271,19 +2487,23 @@ UNION
         try {
 
             $this->_em = Zend_Registry::get('doctrine');
-            $str_upd_fin = "UPDATE stock_batch "
-                    . "SET `status` = '$finised' "
-                    . "WHERE quantity = 0 "
-                    . "and stock_batch.item_pack_size_id = $product_id "
-                    . "and stock_batch.warehouse_id=$wh_id";
+            $str_upd_fin = "UPDATE stock_batch_warehouses"
+                    . "SET `stock_batch_warehouses.status` = '$finised' "
+                    . "INNER JOIN pack_info ON stock_batch_warehouses.pack_info_id = pack_info.pk_id"
+                    . "INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id "
+                    . "WHERE stock_batch_warehouses.quantity = 0 "
+                    . "and stakeholder_item_pack_sizes.item_pack_size_id = $product_id "
+                    . "and stock_batch_warehouses.warehouse_id=$wh_id";
 
             $row_finish = $this->_em->getConnection()->prepare($str_upd_fin);
             $row_finish->execute();
-            $str_upd_stack = "UPDATE stock_batch SET "
+            $str_upd_stack = "UPDATE stock_batch_warehouses SET "
                     . "`status` = '$stacked'  "
-                    . "WHERE quantity > 0 "
-                    . "and stock_batch.item_pack_size_id = $product_id "
-                    . "and stock_batch.warehouse_id=$wh_id";
+                    . "INNER JOIN pack_info ON stock_batch_warehouses.pack_info_id = pack_info.pk_id"
+                    . "INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id "
+                    . "WHERE stock_batch_warehouses.quantity > 0 "
+                    . "and stakeholder_item_pack_sizes.item_pack_size_id = $product_id "
+                    . "and stock_batch_warehouses.warehouse_id=$wh_id";
             $row_stack = $this->_em->getConnection()->prepare($str_upd_stack);
             $row_stack->execute();
 
@@ -2297,26 +2517,29 @@ UNION
 
 
             $str_qry = "SELECT
-                           stock_batch.pk_id as batch_id,
-                           stock_batch.`status`,
-                           stock_batch.quantity
+                           stock_batch_warehouses.pk_id as batch_id,
+                           stock_batch_warehouses.`status`,
+                           stock_batch_warehouses.quantity
                     FROM
-                            stock_batch
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-                    LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                    stock_batch
+                    INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                    LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
                     INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
                     INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
                     WHERE
-                    stock_batch.warehouse_id = $wh_id AND
+                    stock_batch_warehouses.warehouse_id = $wh_id AND
                     item_pack_sizes.item_category_id = 1
                     AND
                     (placements.vvm_stage = 2 OR
                     (placements.vvm_stage = 1 AND
                     DATE_FORMAT(stock_batch.expiry_date,'%Y-%m-%d')
                     BETWEEN '$today' AND '$after3month')) AND
-                    stock_batch.item_pack_size_id = $product_id
+                    stakeholder_item_pack_sizes.item_pack_size_id = $product_id
                     GROUP BY
-                           stock_batch.pk_id
+                           stock_batch_warehouses.pk_id
                     HAVING
                             quantity > 0
                     ORDER BY
@@ -2343,17 +2566,20 @@ UNION
             } else {
 
                 $str_qry1 = "SELECT
-                           stock_batch.pk_id as batch_id,
-                           stock_batch.`status`,
-                           stock_batch.quantity
+                           stock_batch_warehouses.pk_id as batch_id,
+                           stock_batch_warehouses.`status`,
+                           stock_batch_warehouses.quantity
                     FROM
                             stock_batch
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-                    LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                    INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                    LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
                     INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
                     INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
                     WHERE
-                    stock_batch.warehouse_id = $wh_id AND
+                    stock_batch_warehouses.warehouse_id = $wh_id AND
                     item_pack_sizes.item_category_id = 1
                     AND
                     placements.vvm_stage = 1 AND
@@ -2361,11 +2587,11 @@ UNION
                             stock_batch.expiry_date,
                             '%Y-%m-%d'
                     ) BETWEEN '$after3month' AND '$afteryear' AND
-                    stock_batch.item_pack_size_id = $product_id
+                    stakeholder_item_pack_sizes.item_pack_size_id = $product_id
                     GROUP BY
-                           stock_batch.pk_id
+                           stock_batch_warehouses.pk_id
                     HAVING
-                            quantity > 0
+                           stock_batch_warehouses.quantity > 0
                     ORDER BY
                             item_pack_sizes.list_rank, stock_batch.expiry_date";
 
@@ -2399,8 +2625,11 @@ UNION
     public function getExistingBatches($product) {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("DISTINCT sb.number")
-                ->from("StockBatch", "sb")
-                ->where("sb.itemPackSize = $product");
+                ->from("StockBatchWarehouses", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->where("sip.itemPackSize = $product");
         $result = $str_sql->getQuery()->getResult();
         $resultarray = array();
         if (count($result) > 0) {
@@ -2417,18 +2646,23 @@ UNION
 
         $str_sql = "
                         SELECT DISTINCT
-                            s1_.pk_id,
-                            s1_.number,
-                            s1_.quantity
+                            stock_batch_warehouses.pk_id,
+                            stock_batch.number,
+                            stock_batch_warehouses.quantity
                         FROM
                             stock_detail AS s2_
                                 INNER JOIN stock_master AS s0_ ON s2_.stock_master_id = s0_.pk_id
-                                INNER JOIN stock_batch AS s1_ ON s2_.stock_batch_id = s1_.pk_id
+
+                                INNER JOIN stock_batch_warehouses ON s2_.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+
                         WHERE
                                 s0_.from_warehouse_id = $wh_id
                                 AND s0_.to_warehouse_id = $wh_id
                                 AND s0_.transaction_type_id > 2
-                                AND s1_.item_pack_size_id = '$item_id'";
+                                AND stakeholder_item_pack_sizes.item_pack_size_id = '$item_id'";
 
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
@@ -2455,7 +2689,7 @@ UNION
         } else {
             $result = $this->getAllIssueRunningBatches();
         }
-        //  App_Controller_Functions::pr($result);
+
         return $result;
     }
 
@@ -2473,24 +2707,28 @@ UNION
         $trans_date = App_Controller_Functions::dateToDbFormat($this->form_values['transaction_date']);
         $batch_no = implode(",", $this->form_values['batch_no']);
         if (!empty($batch_no)) {
-            $batch_number = "AND stock_batch.pk_id NOT IN ($batch_no)";
+            $batch_number = "AND stock_batch_warehouses.pk_id NOT IN ($batch_no)";
         }
         $str_sql = "(
 	SELECT
 		stock_batch.expiry_date AS expiryDate,
 		stock_batch.number,
 		SUM(placements.quantity) AS quantity,
-		stock_batch.pk_id AS pkId,
+		stock_batch_warehouses.pk_id AS pkId,
 		'P1' AS priority
 	FROM
 		stock_batch
-	INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-	LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+        INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+	INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+	LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 	INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 	INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 	INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
 	WHERE
-		stock_batch.warehouse_id = $wh_id
+		stock_batch_warehouses.warehouse_id = $wh_id
+                    
 	AND item_pack_sizes.item_category_id = 1
 	AND (
 		placements.vvm_stage = 2
@@ -2507,10 +2745,10 @@ UNION
 		stock_batch.expiry_date,
 		'%Y-%m-%d'
 	) >= '$trans_date'
-	AND stock_batch.item_pack_size_id = $item_id
+	AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id
             $batch_number
 	GROUP BY
-		placements.stock_batch_id
+		placements.stock_batch_warehouse_id
 	HAVING
 		quantity > 0
 	ORDER BY
@@ -2523,17 +2761,20 @@ UNION
 			stock_batch.expiry_date AS expiryDate,
 			stock_batch.number,
 			SUM(placements.quantity) AS quantity,
-			stock_batch.pk_id AS pkId,
+			stock_batch_warehouses.pk_id AS pkId,
 			'P2' AS priority
 		FROM
 			stock_batch
-		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-		LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 		INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 		INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 		INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
 		WHERE
-			stock_batch.warehouse_id = $wh_id
+			stock_batch_warehouses.warehouse_id = $wh_id
 		AND item_pack_sizes.item_category_id = 1
 		AND placements.vvm_stage = 1
 		AND DATE_FORMAT(
@@ -2545,10 +2786,10 @@ UNION
 			stock_batch.expiry_date,
 			'%Y-%m-%d'
 		) >= '$trans_date'
-		AND stock_batch.item_pack_size_id = $item_id
+		AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id
                     $batch_number
 		GROUP BY
-			placements.stock_batch_id
+			placements.stock_batch_warehouse_id
 		HAVING
 			quantity > 0
 		ORDER BY
@@ -2561,17 +2802,20 @@ UNION
 			stock_batch.expiry_date AS expiryDate,
 			stock_batch.number,
 			SUM(placements.quantity) AS quantity,
-			stock_batch.pk_id AS pkId,
+			stock_batch_warehouses.pk_id AS pkId,
 			'P3' AS priority
 		FROM
 			stock_batch
-		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-		LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                INNER JOIN stock_batch_warehouses ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                LEFT JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
 		INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 		INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 		INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
 		WHERE
-			stock_batch.warehouse_id = $wh_id
+			stock_batch_warehouses.warehouse_id = $wh_id
 		AND item_pack_sizes.item_category_id = 1
 		AND placements.vvm_stage = 1
 		AND DATE_FORMAT(
@@ -2582,10 +2826,10 @@ UNION
 			stock_batch.expiry_date,
 			'%Y-%m-%d'
 		) >= '$trans_date'
-		AND stock_batch.item_pack_size_id = $item_id
+		AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id
                     $batch_number
 		GROUP BY
-			placements.stock_batch_id
+			placements.stock_batch_warehouse_id
 		HAVING
 			quantity > 0
 		ORDER BY
@@ -2608,23 +2852,26 @@ UNION
 
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("sb.number,
-			sb.pkId,
+			sbw.pkId,
 			sb.expiryDate,
-			sb.quantity")
-                ->from("StockBatch", "sb")
-                ->where("sb.quantity > 0 ")
+			sbw.quantity")
+                ->from("StockBatchWarehouses", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->where("sbw.quantity > 0 ")
                 // ->andWhere("sb.status = '" . self::RUNNING . "'")
-                ->andWhere("sb.itemPackSize = " . $this->form_values['item_pack_size_id']);
+                ->andWhere("sip.itemPackSize = " . $this->form_values['item_pack_size_id']);
 
         if (!empty($this->form_values['transaction_date'])) {
             $str_sql->andWhere("sb.expiryDate >= '" . App_Controller_Functions::dateToDbFormat($this->form_values['transaction_date']) . "' ");
         }
         if (!empty($batch_no)) {
-            $str_sql->andWhere("sb.pkId NOT IN ($batch_no)");
+            $str_sql->andWhere("sbw.pkId NOT IN ($batch_no)");
         }
 
-        $str_sql->andWhere("sb.warehouse = " . $this->_identity->getWarehouseId())
-                ->orderBy("sb.quantity", "DESC");
+        $str_sql->andWhere("sbw.warehouse = " . $this->_identity->getWarehouseId())
+                ->orderBy("sbw.quantity", "DESC");
         //  echo $str_sql->getQuery()->getSql();
         //  exit;
         $row = $str_sql->getQuery()->getResult();
@@ -2646,25 +2893,25 @@ UNION
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("ips.itemName,
                         ips.numberOfDoses as description,
-			SUM(sb.quantity) AS Vials,
-			SUM(ips.numberOfDoses * sb.quantity) AS Doses,
+			SUM(sbw.quantity) AS Vials,
+			SUM(ips.numberOfDoses * sbw.quantity) AS Doses,
                         sb.number")
-                ->from("StockBatch", "sb")
-                ->join("sb.itemPackSize", "ips")
+                ->from("StockBatchWarehouses", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "ips")
                 ->join("ips.itemUnit", "iu")
                 ->where("ips.itemCategory = 1")
-                ->andWhere("sb.warehouse = " . $wh_id);
+                ->andWhere("sbw.warehouse = " . $wh_id);
 
         if ($wh_id == 159) {
             //$str_sql->andWhere("sb.expiryDate >= '" . date("Y-m-d") . "'");
-            $str_sql->andWhere("ips.pkId NOT IN(35,10,38)");
+            $str_sql->andWhere("ips.pkId NOT IN(35,38)");
         }
 
         $str_sql->groupBy("ips.pkId")
                 ->orderBy("ips.listRank");
-
-//        echo $str_sql->getQuery()->getSql()."<br>";
-//        exit();
 
         $result = $str_sql->getQuery()->getResult();
         return $result;

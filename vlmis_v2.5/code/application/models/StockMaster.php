@@ -119,10 +119,11 @@ class Model_StockMaster extends Model_Base {
                         ),'%d, %M %Y') AS trans_date
                 FROM
                         stock_detail
-                INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+                INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
                 INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
                 WHERE
-                        stock_batch.warehouse_id = $wh_id
+                        stock_batch_warehouses.warehouse_id = $wh_id
                 AND DATE_FORMAT(
                         stock_master.transaction_date,
                         '%Y-%m'
@@ -234,7 +235,7 @@ class Model_StockMaster extends Model_Base {
                 ->select('DISTINCT fw.pkId,fw.warehouseName')
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "sm")
-                ->join("sd.stockBatch", "sb")
+                ->join("sd.stockBatchWarehouse", "sb")
                 ->join("sm.fromWarehouse", "fw")
                 ->join("fw.stakeholderOffice", "so")
                 ->where("sm.transactionType = 2")
@@ -292,7 +293,7 @@ class Model_StockMaster extends Model_Base {
                 ->select('DISTINCT sb.pkId,sb.number')
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "sm")
-                ->join("sd.stockBatch", "sb")
+                ->join("sd.stockBatchWarehouse", "sb")
                 ->where("sm.fromWarehouse = " . $form_values['from_wh'])
                 ->andWhere("sm.toWarehouse = " . $form_values['to_wh'])
                 ->andWhere("sb.itemPackSize = " . $form_values['product'])
@@ -308,7 +309,7 @@ class Model_StockMaster extends Model_Base {
                 ->select('DISTINCT fw.pkId,fw.warehouseName')
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "sm")
-                ->join("sd.stockBatch", "sb")
+                ->join("sd.stockBatchWarehouse", "sb")
                 ->join("sm.toWarehouse", "fw")
                 ->join("fw.stakeholderOffice", "so")
                 ->where("sm.transactionType = 2")
@@ -348,7 +349,7 @@ class Model_StockMaster extends Model_Base {
                         sb.quantity')
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "sm")
-                ->join("sd.stockBatch", "sb")
+                ->join("sd.stockBatchWarehouse", "sb")
                 ->join("sb.itemPackSize", "ips")
                 ->where("sm.transactionType = 1")
                 ->andWhere("sm.transactionNumber = '$voucher'");
@@ -428,7 +429,7 @@ class Model_StockMaster extends Model_Base {
                         sb.quantity')
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "sm")
-                ->join("sd.stockBatch", "sb")
+                ->join("sd.stockBatchWarehouse", "sb")
                 ->join("sb.itemPackSize", "ips")
                 ->where("sm.transactionType = 2")
                 ->andWhere("sm.transactionNumber = '$voucher'");
@@ -488,9 +489,9 @@ class Model_StockMaster extends Model_Base {
                         sd.pkId AS stock_detail_id,
                         sd.quantity,
                         vvm.pkId AS vvm_stage,
-                        sb.pkId AS stock_batch_id,
+                        sbw.pkId AS stock_batch_id,
                         sb.number,
-                        sb.quantity as no_ofvials,
+                        sbw.quantity as no_ofvials,
                         sb.unitPrice AS unit_price,
                         sb.productionDate AS production_date,
                         sb.expiryDate AS expiry_date,
@@ -507,7 +508,8 @@ class Model_StockMaster extends Model_Base {
                         ips.numberOfDoses as description,
                         vt.vvmTypeName AS vvm_type_name,
                         vt.pkId AS vvm_type_id,
-                        ic.pkId item_category
+                        ic.pkId item_category,
+                        s.stakeholderName as manufacturer
                         ')
                 ->from("StockDetail", "sd")
                 ->join("sd.vvmStage", "vvm")
@@ -515,14 +517,19 @@ class Model_StockMaster extends Model_Base {
                 ->join("sm.fromWarehouse", "fw")
                 ->join("sm.toWarehouse", "tw")
                 ->join("sm.stakeholderActivity", "a")
-                ->join("sd.stockBatch", "sb")
-                ->join("sb.itemPackSize", "ips")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "ips")
+                ->join("sip.stakeholder", "s")
                 ->leftJoin("sb.vvmType", "vt")
                 ->join("ips.itemUnit", "iu")
                 ->join("ips.itemCategory", "ic")
                 ->where("sd.temporary =  1")
                 ->andWhere("sm.draft =  1")
                 ->andWhere("fw.status =  1");
+
         if ($this->form_values['transaction_type_id'] == 1) {
             $str_sql->andWhere("sm.toWarehouse =  " . $this->_identity->getWarehouseId());
         } else {
@@ -531,8 +538,8 @@ class Model_StockMaster extends Model_Base {
 
         $str_sql->andWhere("sm.createdBy = " . $this->_user_id)
                 ->andWhere("sm.transactionType = " . $this->form_values['transaction_type_id']);
-        // echo $str_sql->getQuery()->getSql();
-        //  exit;
+//       echo $str_sql->getQuery()->getSql();
+//        exit;
 //vvm_types.vvm_type_name as vvm_type,
 //        ->leftJoin("stock_detail.VvmTypes vvm_types")
 //echo $str_sql->getQuery()->getSql();
@@ -600,10 +607,10 @@ class Model_StockMaster extends Model_Base {
         if (count($stock_detail) > 0) {
             $month = $stock_detail->getStockMaster()->getTransactionDate()->format("m");
             $year = $stock_detail->getStockMaster()->getTransactionDate()->format("Y");
-            $item = $stock_detail->getStockBatch()->getItemPackSize()->getPkId();
-            $warehouse = $stock_detail->getStockBatch()->getWarehouse()->getPkId();
+            $item = $stock_detail->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId();
+            $warehouse = $stock_detail->getStockBatchWarehouse()->getWarehouse()->getPkId();
             $user = $stock_detail->getStockMaster()->getCreatedBy()->getPkId();
-            $batch_id = $stock_detail->getStockBatch()->getPkId();
+            $batch_id = $stock_detail->getStockBatchWarehouse()->getPkId();
             $master_id = $stock_detail->getStockMaster()->getPkId();
             $issue_detail_id = $stock_detail->getIsReceived();
 
@@ -612,6 +619,7 @@ class Model_StockMaster extends Model_Base {
 
             $issue_stock_detail = $this->_em->getRepository("StockDetail")->find($issue_detail_id);
             if (count($issue_stock_detail) > 0) {
+
                 $issue_stock_detail->setIsReceived(0);
                 $created_by = $this->_em->getRepository('Users')->find($this->_user_id);
                 $issue_stock_detail->setModifiedBy($created_by);
@@ -684,6 +692,7 @@ class Model_StockMaster extends Model_Base {
     }
 
     public function getItemDetailFromStock() {
+
         $str_sql = $this->_em->createQueryBuilder()
                 ->select('sm.transactionDate as transaction_date,
                         ips.pkId as item_pack_size_id,
@@ -693,14 +702,20 @@ class Model_StockMaster extends Model_Base {
                         ')
                 ->from("StockDetail", "sd")
                 ->innerJoin("sd.stockMaster", "sm")
-                ->innerJoin("sd.stockBatch", "sb")
-                ->innerJoin("sb.itemPackSize", "ips")
+                ->innerJoin("sd.stockBatchWarehouse", "sbw")
+                ->innerJoin("sbw.stockBatch", "sb")
+                ->innerJoin("sb.packInfo", "pi")
+                ->innerJoin("pi.stakeholderItemPackSize", "sip")
+                ->innerJoin("sip.itemPackSize", "ips")
                 ->where("sm.pkId = ?1 ");
 
         $str_sql->setParameter(1, $this->form_values['pk_id']);
         if ($this->form_values['from'] == 'wh') {
             $str_sql->andWhere("sd.isReceived = 1 ");
         }
+        // echo $str_sql->getQuery()->getSql();
+        // exit;
+
         $rs = $str_sql->getQuery()->getResult();
         if (!empty($rs) && count($rs) > 0) {
             foreach ($rs as $row) {
@@ -720,7 +735,7 @@ class Model_StockMaster extends Model_Base {
     public function getAllItemStock() {
         $wh_id = $this->_identity->getWarehouseId();
         $where = array();
-        $sa_select='';
+        $sa_select = '';
         if (!empty($this->form_values['number'])) {
             switch ($this->form_values['searchby']) {
                 case 1:
@@ -739,7 +754,7 @@ class Model_StockMaster extends Model_Base {
             $where[] = "s.fromWarehouse  = '" . $this->form_values['warehouses'] . "'";
         }
         if (!empty($this->form_values['product'])) {
-            $where[] = "b.itemPackSize = '" . $this->form_values['product'] . "'";
+            $where[] = "sip.itemPackSize = '" . $this->form_values['product'] . "'";
         }
         $sa_join = false;
         if (!empty($this->form_values['activity_id'])) {
@@ -756,7 +771,7 @@ class Model_StockMaster extends Model_Base {
         }
         $where[] = "w.status=1";
         $where[] = "s.transactionType=1";
-        $where[] = "b.warehouse = $wh_id";
+        $where[] = "sbw.warehouse = $wh_id";
         $where[] = "sd.temporary=0";
 
         if (is_array($where)) {
@@ -767,7 +782,7 @@ class Model_StockMaster extends Model_Base {
                 ->select("sd.pkId as detailId,s.transactionDate,"
                         . " s.pkId,s.transactionNumber,"
                         . "s.transactionReference,"
-                        . "w.warehouseName,b.number,w.pkId as fromWarehouseId,"
+                        . "w.warehouseName,b.number,sbw.pkId as batchId,w.pkId as fromWarehouseId,"
                         . "b.expiryDate,sd.quantity,"
                         . "i.itemUnitName,"
                         . "p.pkId as itemPackSizeId,"
@@ -776,9 +791,13 @@ class Model_StockMaster extends Model_Base {
                         . "p.numberOfDoses as description")
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "s")
-                ->join("sd.stockBatch", "b")
-                ->join("s.fromWarehouse", "w")
-                ->join("b.itemPackSize", "p");
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "b")
+                ->join("b.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "p")
+                ->join("s.fromWarehouse", "w");
+
         if ($sa_join) {
             $str_sql->join("s.stakeholderActivity", "a");
         }
@@ -788,7 +807,6 @@ class Model_StockMaster extends Model_Base {
 
 
         $row = $str_sql->getQuery()->getResult();
-        $str_sql->getQuery()->getSql();
 
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -807,7 +825,7 @@ class Model_StockMaster extends Model_Base {
 //     . "p.itemName")
 //      ->from("StockDetail", "sd")
 //      ->join("sd.stockMaster", "s")
-//      ->join("sd.stockBatch", "b")
+//      ->join("sd.stockBatchWarehouse", "b")
 //      ->join("b.itemPackSize", "p")
 //      ->where("p.itemCategory =" . Model_ItemCategories::NONVACCINES);
 //       echo $str_sql = "SELECT
@@ -815,7 +833,7 @@ class Model_StockMaster extends Model_Base {
 //stock_master.transaction_date,
 //stock_detail.quantity AS quantity,
 //stock_detail.pk_id as detail_id,
-//stock_detail.stock_batch_id as batch_id,
+//stock_detail.stock_batch_warehouse_id as batch_id,
 //stock_batch.number,
 //Sum(placements.quantity) AS plc_qty,
 //item_pack_sizes.item_name,
@@ -823,35 +841,38 @@ class Model_StockMaster extends Model_Base {
 //FROM
 //stock_master
 //INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-//INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-//INNER JOIN placements ON placements.stock_batch_id = stock_batch.pk_id AND placements.stock_detail_id = stock_detail.pk_id
+//INNER JOIN stock_batch ON stock_detail.stock_batch_warehouse_id = stock_batch.pk_id
+//INNER JOIN placements ON placements.stock_batch_warehouse_id = stock_batch.pk_id AND placements.stock_detail_id = stock_detail.pk_id
 //INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 //INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
 //WHERE
 //stock_master.transaction_type_id =" . Model_TransactionTypes::TRANSACTION_RECIEVE . " AND
 //stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_id IN (" . Model_ItemCategories::NONVACCINES . "," . Model_ItemCategories::DILUENT . ")
 //GROUP BY
-//placements.stock_batch_id";exit;
+//placements.stock_batch_warehouse_id";exit;
 
         $str_sql = "SELECT
 	stock_master.transaction_number,
 	stock_master.transaction_date,
 	stock_detail.quantity AS quantity,
 	stock_detail.pk_id AS detail_id,
-	stock_detail.stock_batch_id AS batch_id,
+	stock_detail.stock_batch_warehouse_id AS batch_id,
 	stock_batch.number,
 	GetPlaced(stock_detail.pk_id) AS plc_qty,
 	item_pack_sizes.item_name,
-	stakeholder_item_pack_sizes.quantity_per_pack AS quantity_per_pack
-FROM
-stock_master
-INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-INNER JOIN stakeholder_item_pack_sizes ON stakeholder_item_pack_sizes.pk_id = stock_batch.stakeholder_item_pack_size_id
-WHERE
-stock_master.transaction_type_id =" . Model_TransactionTypes::TRANSACTION_RECIEVE . " AND
-stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_id IN (" . Model_ItemCategories::NONVACCINES . "," . Model_ItemCategories::DILUENT . ")";
+	pack_info.quantity_per_pack AS quantity_per_pack
+        FROM
+        stock_master
+        INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
+        INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+        WHERE
+        stock_master.transaction_type_id =" . Model_TransactionTypes::TRANSACTION_RECIEVE . " AND
+        stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_id IN (" . Model_ItemCategories::NONVACCINES . "," . Model_ItemCategories::DILUENT . ")"
+                . " ORDER BY stock_master.transaction_date DESC ";
 
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
@@ -884,17 +905,20 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                             stock_detail.quantity AS quantity,
                             stock_detail.pk_id AS detail_id,
                             stock_master.pk_id AS master_id,
-                            stock_detail.stock_batch_id AS batch_id,
+                            stock_detail.stock_batch_warehouse_id AS batch_id,
                             stock_batch.number,
                             GetPlaced(stock_detail.pk_id) AS plc_qty,
                             item_pack_sizes.item_name,
-                            stakeholder_item_pack_sizes.quantity_per_pack AS quantity_per_pack
+                            pack_info.quantity_per_pack AS quantity_per_pack
                     FROM
                     stock_master
                     INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-                    INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-                    INNER JOIN stakeholder_item_pack_sizes ON stakeholder_item_pack_sizes.pk_id = stock_batch.stakeholder_item_pack_size_id
+                    INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+
                     WHERE
                     stock_master.transaction_type_id IN (" . Model_TransactionTypes::TRANSACTION_RECIEVE . "," . Model_TransactionTypes::LOST_RECOVERED . "," . Model_TransactionTypes::PHYSICALLY_FOUND . ") AND
                     stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_id IN (" . Model_ItemCategories::VACCINES . ")";
@@ -923,19 +947,19 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         }
 
         if (!empty($tranNo)) {
-            $where[] = "s.transactionNumber like '" . $this->form_values['number'] . "%'";
+            $where[] = "s.transactionNumber like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($batchNo)) {
-            $where[] = "b.number like '" . $this->form_values['number'] . "%'";
+            $where[] = "b.number like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($tranRef)) {
-            $where[] = "s.transactionReference like '" . $this->form_values['number'] . "%'";
+            $where[] = "s.transactionReference like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($this->form_values['warehouses'])) {
             $where[] = "s.toWarehouse  = '" . $this->form_values['warehouses'] . "'";
         }
         if (!empty($this->form_values['product'])) {
-            $where[] = "b.itemPackSize = '" . $this->form_values['product'] . "'";
+            $where[] = "sip.itemPackSize = '" . $this->form_values['product'] . "'";
         }
         if (!empty($this->form_values['date_from']) && !empty($this->form_values['date_to'])) {
             $where[] = "DATE_FORMAT(s.transactionDate,'%Y-%m-%d') BETWEEN '" . App_Controller_Functions::dateToDbFormat($this->form_values['date_from']) . "' AND '" . App_Controller_Functions::dateToDbFormat($this->form_values['date_to']) . "'";
@@ -946,9 +970,18 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         }
 
         $where[] = "s.transactionType=2";
-        $where[] = "b.warehouse = $wh_id";
+        $where[] = "sbw.warehouse = $wh_id";
         $where[] = "sd.temporary=0";
         $where[] = "w.status=1";
+
+        $sa_join = false;
+        //echo $this->form_values['activity_id'];
+        //exit;
+        if (!empty($this->form_values['activity_id'])) {
+            $where[] = "s.stakeholderActivity = '" . $this->form_values['activity_id'] . "'";
+            //$sa_select = "a.pkId as activity_id,";
+            $sa_join = true;
+        }
 
         if (is_array($where)) {
             $where_s = implode(" AND ", $where);
@@ -968,14 +1001,20 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->from("StockDetail", "sd")
                 ->join("sd.vvmStage", "vvm")
                 ->join("sd.stockMaster", "s")
-                ->join("sd.stockBatch", "b")
-                ->join("b.warehouse", "w")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "b")
+                ->join("b.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sbw.warehouse", "w")
                 ->join("s.toWarehouse", "tw")
-                ->join("b.itemPackSize", "p")
-                ->join("p.itemUnit", "i")
-                ->where("$where_s")
-                ->orderBy("p.listRank,s.transactionDate,tw.warehouseName");
-//echo $str_sql->getQuery()->getSql();
+                ->join("sip.itemPackSize", "p")
+                ->join("p.itemUnit", "i");
+        if ($sa_join) {
+            $str_sql->join("s.stakeholderActivity", "a");
+        }
+        $str_sql->where("$where_s");
+        $str_sql->orderBy("p.listRank,s.transactionDate,tw.warehouseName");
+        //echo $str_sql->getQuery()->getSql();
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -995,19 +1034,19 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         }
 
         if (!empty($tranNo)) {
-            $where[] = "s.transactionNumber like '" . $this->form_values['number'] . "%'";
+            $where[] = "s.transactionNumber like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($batchNo)) {
-            $where[] = "b.number like '" . $this->form_values['number'] . "%'";
+            $where[] = "b.number like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($tranRef)) {
-            $where[] = "s.transactionReference like '" . $this->form_values['number'] . "%'";
+            $where[] = "s.transactionReference like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($this->form_values['warehouses'])) {
             $where[] = "s.fromWarehouse  = '" . $this->form_values['warehouses'] . "'";
         }
         if (!empty($this->form_values['product'])) {
-            $where[] = "b.itemPackSize = '" . $this->form_values['product'] . "'";
+            $where[] = "sip.itemPackSize = '" . $this->form_values['product'] . "'";
         }
         if (!empty($this->form_values['date_from']) && !empty($this->form_values['date_to'])) {
             $where[] = "DATE_FORMAT(s.transactionDate,'%Y-%m-%d') BETWEEN '" . App_Controller_Functions::dateToDbFormat($this->form_values['date_from']) . "' AND '" . App_Controller_Functions::dateToDbFormat($this->form_values['date_to']) . "'";
@@ -1018,9 +1057,18 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         }
 
         $where[] = "s.transactionType=1";
-        $where[] = "b.warehouse = $wh_id";
+        $where[] = "sbw.warehouse = $wh_id";
         $where[] = "sd.temporary=0";
         $where[] = "w.status=1";
+
+        $sa_join = false;
+        //echo $this->form_values['activity_id'];
+        //exit;
+        if (!empty($this->form_values['activity_id'])) {
+            $where[] = "s.stakeholderActivity = '" . $this->form_values['activity_id'] . "'";
+            //$sa_select = "a.pkId as activity_id,";
+            $sa_join = true;
+        }
 
         if (is_array($where)) {
             $where_s = implode(" AND ", $where);
@@ -1036,14 +1084,22 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->from("StockDetail", "sd")
                 ->join("sd.vvmStage", "vvm")
                 ->join("sd.stockMaster", "s")
-                ->join("sd.stockBatch", "b")
-                ->join("b.warehouse", "w")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.warehouse", "w")
+                ->join("sbw.stockBatch", "b")
+                ->join("b.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
                 ->join("s.fromWarehouse", "tw")
-                ->join("b.itemPackSize", "p")
-                ->join("p.itemUnit", "i")
-                ->where("$where_s")
-                ->orderBy("p.listRank,s.transactionDate,tw.warehouseName");
-        //echo $str_sql->getQuery()->getSql();
+                ->join("sip.itemPackSize", "p")
+                ->join("p.itemUnit", "i");
+
+        if ($sa_join) {
+            $str_sql->join("s.stakeholderActivity", "a");
+        }
+        $str_sql->where("$where_s");
+        $str_sql->orderBy("p.listRank,s.transactionDate,tw.warehouseName");
+//        echo $str_sql->getQuery()->getSql();
+//        exit;
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -1076,19 +1132,19 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         }
 
         if (!empty($tranNo)) {
-            $where[] = "s.transactionNumber like '" . $this->form_values['number'] . "%'";
+            $where[] = "s.transactionNumber like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($batchNo)) {
-            $where[] = "b.number like '" . $this->form_values['number'] . "%'";
+            $where[] = "b.number like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($tranRef)) {
-            $where[] = "s.transactionReference like '" . $this->form_values['number'] . "%'";
+            $where[] = "s.transactionReference like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($this->form_values['warehouses'])) {
             $where[] = "s.toWarehouse  = '" . $this->form_values['warehouses'] . "'";
         }
         if (!empty($this->form_values['product'])) {
-            $where[] = "b.itemPackSize = '" . $this->form_values['product'] . "'";
+            $where[] = "sip.itemPackSize = '" . $this->form_values['product'] . "'";
         }
         if (!empty($this->form_values['date_from']) && !empty($this->form_values['date_to'])) {
             $where[] = "DATE_FORMAT(s.transactionDate,'%Y-%m-%d') BETWEEN '" . App_Controller_Functions::dateToDbFormat($this->form_values['date_from']) . "' AND '" . App_Controller_Functions::dateToDbFormat($this->form_values['date_to']) . "'";
@@ -1099,9 +1155,18 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         }
 
         $where[] = "s.transactionType=2";
-        $where[] = "b.warehouse = $wh_id";
+        $where[] = "sbw.warehouse = $wh_id";
         $where[] = "sd.temporary=0";
         $where[] = "w.status=1";
+
+        $sa_join = false;
+        //echo $this->form_values['activity_id'];
+        //exit;
+        if (!empty($this->form_values['activity_id'])) {
+            $where[] = "s.stakeholderActivity = '" . $this->form_values['activity_id'] . "'";
+            //$sa_select = "a.pkId as activity_id,";
+            $sa_join = true;
+        }
 
         if (is_array($where)) {
             $where_s = implode(" AND ", $where);
@@ -1122,15 +1187,21 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->from("StockDetail", "sd")
                 ->join("sd.vvmStage", "vvm")
                 ->join("sd.stockMaster", "s")
-                ->join("sd.stockBatch", "b")
-                ->join("b.warehouse", "w")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "b")
+                ->join("b.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sbw.warehouse", "w")
                 ->join("s.toWarehouse", "tw")
-                ->join("b.itemPackSize", "p")
+                ->join("sip.itemPackSize", "p")
                 ->leftjoin("p.itemUnit", "i")
-                ->leftjoin("b.vvmType", "v")
-                ->where("$where_s")
-                ->groupBy("$groupBy")
-                ->orderBy("s.transactionDate,tw.warehouseName");
+                ->leftjoin("b.vvmType", "v");
+        if ($sa_join) {
+            $str_sql->join("s.stakeholderActivity", "a");
+        }
+        $str_sql->where("$where_s");
+        $str_sql->groupBy("$groupBy");
+        $str_sql->orderBy("s.transactionDate,tw.warehouseName");
 //echo $str_sql->getQuery()->getSql();
 
         $row = $str_sql->getQuery()->getResult();
@@ -1165,19 +1236,19 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         }
 
         if (!empty($tranNo)) {
-            $where[] = "s.transactionNumber like '" . $this->form_values['number'] . "%'";
+            $where[] = "s.transactionNumber like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($batchNo)) {
-            $where[] = "b.number like '" . $this->form_values['number'] . "%'";
+            $where[] = "b.number like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($tranRef)) {
-            $where[] = "s.transactionReference like '" . $this->form_values['number'] . "%'";
+            $where[] = "s.transactionReference like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($this->form_values['warehouses'])) {
             $where[] = "s.fromWarehouse  = '" . $this->form_values['warehouses'] . "'";
         }
         if (!empty($this->form_values['product'])) {
-            $where[] = "b.itemPackSize = '" . $this->form_values['product'] . "'";
+            $where[] = "sip.itemPackSize = '" . $this->form_values['product'] . "'";
         }
         if (!empty($this->form_values['date_from']) && !empty($this->form_values['date_to'])) {
             $where[] = "DATE_FORMAT(s.transactionDate,'%Y-%m-%d') BETWEEN '" . App_Controller_Functions::dateToDbFormat($this->form_values['date_from']) . "' AND '" . App_Controller_Functions::dateToDbFormat($this->form_values['date_to']) . "'";
@@ -1187,8 +1258,17 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
             $where[] = "DATE_FORMAT(s.transactionDate,'%Y-%m-%d') BETWEEN '" . $date_from . "' AND '" . $date_to . "'";
         }
 
+        $sa_join = false;
+        //echo $this->form_values['activity_id'];
+        //exit;
+        if (!empty($this->form_values['activity_id'])) {
+            $where[] = "s.stakeholderActivity = '" . $this->form_values['activity_id'] . "'";
+            //$sa_select = "a.pkId as activity_id,";
+            $sa_join = true;
+        }
+
         $where[] = "s.transactionType=1";
-        $where[] = "b.warehouse = $wh_id";
+        $where[] = "sbw.warehouse = $wh_id";
         $where[] = "sd.temporary=0";
         $where[] = "w.status=1";
 
@@ -1211,16 +1291,23 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->from("StockDetail", "sd")
                 ->join("sd.vvmStage", "vvm")
                 ->join("sd.stockMaster", "s")
-                ->join("sd.stockBatch", "b")
-                ->join("b.warehouse", "w")
-                ->join("s.fromWarehouse", "tw")
-                ->join("b.itemPackSize", "p")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "b")
+                ->join("b.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "p")
                 ->leftjoin("p.itemUnit", "i")
                 ->leftjoin("b.vvmType", "v")
-                ->where("$where_s");
+                ->join("sbw.warehouse", "w")
+                ->join("s.fromWarehouse", "tw");
+        if ($sa_join) {
+            $str_sql->join("s.stakeholderActivity", "a");
+        }
+        $str_sql->where("$where_s");
         //->groupBy("$groupBy");
 // ->orderBy("$orderBy");
-        //$str_sql->getQuery()->getSql();
+//        echo $str_sql->getQuery()->getSql();
+//        exit;
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -1246,19 +1333,19 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
             $tranRef = "";
         }
         if (!empty($tranNo)) {
-            $where[] = "s.transactionNumber like '" . $this->form_values['number'] . "%'";
+            $where[] = "s.transactionNumber like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($batchNo)) {
-            $where[] = "b.number like '" . $this->form_values['number'] . "%'";
+            $where[] = "b.number like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($tranRef)) {
-            $where[] = "s.transactionReference like '" . $this->form_values['number'] . "%'";
+            $where[] = "s.transactionReference like '%" . $this->form_values['number'] . "%'";
         }
         if (!empty($this->form_values['warehouses'])) {
             $where[] = "s.toWarehouse  = '" . $this->form_values['warehouses'] . "'";
         }
         if (!empty($this->form_values['product'])) {
-            $where[] = "b.itemPackSize = '" . $this->form_values['product'] . "'";
+            $where[] = "sip.itemPackSize = '" . $this->form_values['product'] . "'";
         }
         $sa_join = false;
         if (!empty($this->form_values['activity_id'])) {
@@ -1275,7 +1362,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         }
 
         $where[] = "s.transactionType=2";
-        $where[] = "b.warehouse = $wh_id";
+        $where[] = "sbw.warehouse = $wh_id";
         $where[] = "sd.temporary=0";
         $where[] = "w.status=1";
 
@@ -1298,7 +1385,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 . " $master, s.transactionNumber,"
                 . "s.transactionReference,"
                 . "w.warehouseName,b.number,"
-                . "b.expiryDate,ABS(sd.quantity) as quantity,"
+                . "b.expiryDate,ABS(sd.quantity) as quantity,sbw.pkId as batchId,"
                 . "i.itemUnitName,"
                 . $sa_select
                 . "$detail as detailId,"
@@ -1307,16 +1394,20 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
 
         if ($this->form_values['voucher_type'] == 2) {
             $str_sql->from("StockDetailHistory", "sd")
-                    ->join("sd.stockMasterHistory", "s")
-                    ->join("sd.stockBatch", "b");
+                    ->join("sd.stockMaster", "s")
+                    ->join("sd.stockBatchWarehouse", "sbw")
+                    ->join("sbw.stockBatch", "b");
         } else {
             $str_sql->from("StockDetail", "sd")
                     ->join("sd.stockMaster", "s")
-                    ->join("sd.stockBatch", "b");
+                    ->join("sd.stockBatchWarehouse", "sbw")
+                    ->join("sbw.stockBatch", "b");
         }
 
         $str_sql->join("s.toWarehouse", "w")
-                ->join("b.itemPackSize", "p");
+                ->join("b.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "p");
 
         if ($sa_join) {
             $str_sql->join("s.stakeholderActivity", "a");
@@ -1325,7 +1416,8 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->where($where_s)
                 ->orderBy("s.transactionNumber");
         $str_sql->getQuery()->getSql();
-//echo $str_sql->getQuery()->getSql();
+//        echo $str_sql->getQuery()->getSql();
+//        exit;
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -1362,9 +1454,13 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                     FROM
                         stock_detail AS s3_
                         INNER JOIN stock_master AS s0_ ON s3_.stock_master_id = s0_.pk_id
-                        INNER JOIN stock_batch AS s2_ ON s3_.stock_batch_id = s2_.pk_id
+                        INNER JOIN stock_batch AS s2_ ON s3_.stock_batch_warehouse_id = s2_.pk_id
+                        INNER JOIN stock_batch_warehouses ON s3_.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                        INNER JOIN item_pack_sizes AS i5_ ON stakeholder_item_pack_sizes.item_pack_size_id = i5_.pk_id
                         INNER JOIN warehouses AS w1_ ON s0_.to_warehouse_id = w1_.pk_id
-                        INNER JOIN item_pack_sizes AS i5_ ON s2_.item_pack_size_id = i5_.pk_id
                         INNER JOIN items ON i5_.item_id = items.pk_id
                         INNER JOIN item_units AS i4_ ON i5_.item_unit_id = i4_.pk_id
                         INNER JOIN epi_amc ON i5_.pk_id = epi_amc.item_id
@@ -1403,10 +1499,10 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
             $where[] = "s.toWarehouse   = '" . $wh_id . "'";
         }
         if (!empty($this->form_values['product'])) {
-            $where[] = "b.itemPackSize = '" . $this->form_values['product'] . "'";
+            $where[] = "sip.itemPackSize = '" . $this->form_values['product'] . "'";
         }
         if (!empty($this->form_values['batch_no']) && $this->form_values['batch_no'] != 'null') {
-            $where[] = "b.pkId = '" . $this->form_values['batch_no'] . "'";
+            $where[] = "sbw.pkId = '" . $this->form_values['batch_no'] . "'";
         }
         if (!empty($this->form_values['date_from']) && !empty($this->form_values['date_to'])) {
             $where[] = "s.transactionDate BETWEEN '" . App_Controller_Functions::dateToDbFormat($this->form_values['date_from']) . "' AND '" . App_Controller_Functions::dateToDbFormat($this->form_values['date_to']) . "'";
@@ -1430,8 +1526,11 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                         . "t.transactionTypeName")
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "s")
-                ->join("sd.stockBatch", "b")
-                ->join("b.itemPackSize", "p")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "b")
+                ->join("b.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "p")
                 ->join("s.transactionType", "t")
                 ->where($where_s);
         //echo $str_sql->getQuery()->getSql();
@@ -1454,8 +1553,12 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
             FROM
                 stock_detail s2_
                     INNER JOIN stock_master s0_ ON s2_.stock_master_id = s0_.pk_id
-                    INNER JOIN stock_batch s1_ ON s2_.stock_batch_id = s1_.pk_id
-                    INNER JOIN item_pack_sizes i4_ ON s1_.item_pack_size_id = i4_.pk_id
+                    INNER JOIN stock_batch_warehouses ON s2_.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes i4_  ON stakeholder_item_pack_sizes.item_pack_size_id = i4_ .pk_id
+
                     INNER JOIN item_units i3_ ON i4_.item_unit_id = i3_.pk_id
                     INNER JOIN transaction_types t5_ ON s0_.transaction_type_id = t5_.pk_id
             WHERE
@@ -1489,10 +1592,10 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
             $where[] = "s.toWarehouse   = '" . $wh_id . "'";
         }
         if (!empty($this->form_values['product'])) {
-            $where[] = "b.itemPackSize = '" . $this->form_values['product'] . "'";
+            $where[] = "sip.itemPackSize = '" . $this->form_values['product'] . "'";
         }
         if (!empty($this->form_values['batch_no'])) {
-            $where[] = "b.pkId = '" . $this->form_values['batch_no'] . "'";
+            $where[] = "sbw.pkId = '" . $this->form_values['batch_no'] . "'";
         }
         if (!empty($this->form_values['expiry_date'])) {
             $where[] = "DATE_FORMAT(b.expiryDate,'%Y-%m-%d') = '" . App_Controller_Functions::dateToDbFormat($this->form_values['expiry_date']) . "'";
@@ -1524,8 +1627,11 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                         . "t.transactionTypeName")
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "s")
-                ->join("sd.stockBatch", "b")
-                ->join("b.itemPackSize", "p")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "b")
+                ->join("b.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "p")
                 ->join("p.itemUnit", "i")
                 ->join("s.transactionType", "t")
                 ->where($where_s)
@@ -1544,7 +1650,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         $wh_id = $this->_identity->getWarehouseId();
 
         $str_sql = "SELECT
-	i4_.item_name,
+	        i4_.item_name,
                 ABS(SUM(s2_.quantity)) AS vails,
                 DATE_FORMAT(s1_.expiry_date,'%d/%m/%Y') expiry_date,
                 transaction_types.transaction_type_name as reason,
@@ -1553,16 +1659,19 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         FROM
                 stock_detail s2_
         INNER JOIN stock_master s0_ ON s2_.stock_master_id = s0_.pk_id
-        INNER JOIN stock_batch s1_ ON s2_.stock_batch_id = s1_.pk_id
-        INNER JOIN item_pack_sizes i4_ ON s1_.item_pack_size_id = i4_.pk_id
+        INNER JOIN stock_batch_warehouses ON s2_.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch s1_  ON s1_ .pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON s1_.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes i4_ ON stakeholder_item_pack_sizes.item_pack_size_id = i4_.pk_id
         INNER JOIN transaction_types ON s0_.transaction_type_id = transaction_types.pk_id
         WHERE
-        s1_.warehouse_id = $wh_id AND
+        stock_batch_warehouses.warehouse_id = $wh_id AND
         s0_.transaction_type_id IN (" . $this->form_values['adjustment_type'] . ") AND
         DATE_FORMAT(s0_.transaction_date,'%Y-%m-%d') BETWEEN '" . App_Controller_Functions::dateToDbFormat($this->form_values['date_from']) . "' AND '" . App_Controller_Functions::dateToDbFormat($this->form_values['date_to']) . "'
         GROUP BY
-                s1_.item_pack_size_id,
-                s1_.pk_id,
+                stakeholder_item_pack_sizes.item_pack_size_id,
+                stock_batch_warehouses.pk_id,
                 s1_.expiry_date
         ORDER BY
                 i4_.list_rank ASC";
@@ -1591,9 +1700,9 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
             s1_.pk_id AS masterId,
             s1_.comments,
             w2_.warehouse_name AS warehouseName,
-            s3_.number AS number,
-            s3_.expiry_date AS expiryDate,
-            s3_.production_date AS productionDate,
+            sb.number AS number,
+            sb.expiry_date AS expiryDate,
+            sb.production_date AS productionDate,
             s0_.quantity AS quantity,
             i4_.item_unit_name AS itemUnitName,
             i5_.pk_id AS itemPackSizeId,
@@ -1606,11 +1715,14 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         FROM
         stock_detail AS s0_
             INNER JOIN stock_master AS s1_ ON s0_.stock_master_id = s1_.pk_id
-            INNER JOIN stock_batch AS s3_ ON s0_.stock_batch_id = s3_.pk_id
+            INNER JOIN stock_batch_warehouses AS s3_ ON s0_.stock_batch_warehouse_id = s3_.pk_id
             INNER JOIN warehouses AS w2_ ON s3_.warehouse_id = w2_.pk_id
-            INNER JOIN item_pack_sizes AS i5_ ON s3_.item_pack_size_id = i5_.pk_id
+            INNER JOIN stock_batch AS sb ON s3_.stock_batch_id = sb.pk_id  
+            INNER JOIN pack_info AS pi ON sb.pack_info_id= pi.pk_id
+            INNER JOIN stakeholder_item_pack_sizes AS sip ON pi.stakeholder_item_pack_size_id= sip.pk_id
+            INNER JOIN item_pack_sizes AS i5_ ON sip.item_pack_size_id = i5_.pk_id
             INNER JOIN item_units AS i4_ ON i5_.item_unit_id = i4_.pk_id
-            LEFT JOIN vvm_types AS v6_ ON s3_.vvm_type_id = v6_.pk_id
+            LEFT JOIN vvm_types AS v6_ ON sb.vvm_type_id = v6_.pk_id
             LEFT JOIN stock_master ON s1_.parent_id = stock_master.pk_id
             LEFT JOIN stakeholder_activities ON s1_.stakeholder_activity_id = stakeholder_activities.pk_id
             LEFT JOIN vvm_stages ON s0_.vvm_stage = vvm_stages.pk_id
@@ -1653,10 +1765,13 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->join("sd.vvmStage", "vvm")
                 ->join("sd.stockMaster", "s")
                 ->leftJoin("s.stakeholderActivity", "sa")
-                ->join("sd.stockBatch", "b")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "b")
+                ->join("b.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
                 ->join("s.fromWarehouse", 'fw')
-                ->join("b.warehouse", "w")
-                ->join("b.itemPackSize", "p")
+                ->join("sbw.warehouse", "w")
+                ->join("sip.itemPackSize", "p")
                 ->join("p.itemUnit", "i")
                 ->leftJoin("b.vvmType", "v")
                 ->where("s.transactionType = 1")
@@ -1695,12 +1810,14 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->join("sd.vvmStage", "vvm")
                 ->join("sd.stockMaster", "s")
                 ->join("s.stakeholderActivity", "sa")
-                ->join("sd.stockBatch", "b")
-                ->join("b.stakeholderItemPackSize", "sips")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "b")
+                ->join("b.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sips")
                 ->join("sips.stakeholder", "stk")
                 ->join("s.toWarehouse", "tw")
-                ->join("b.warehouse", "w")
-                ->join("b.itemPackSize", "p")
+                ->join("sbw.warehouse", "w")
+                ->join("sips.itemPackSize", "p")
                 ->join("p.itemCategory", "ic")
                 ->join("p.itemUnit", "i")
                 ->leftJoin("b.vvmType", "v")
@@ -1708,7 +1825,8 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->andWhere("w.status=1")
                 ->andWhere("s.pkId=" . $this->form_values['pk_id'])
                 ->orderBy("s.transactionNumber,p.listRank, ic.pkId", "ASC");
-
+//        echo $str_sql->getQuery()->getSql();
+//        exit;
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -1739,12 +1857,14 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->join("sd.vvmStage", "vvm")
                 ->join("sd.stockMaster", "s")
                 ->join("s.stakeholderActivity", "sa")
-                ->join("sd.stockBatch", "b")
-                ->join("b.stakeholderItemPackSize", "sips")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "b")
+                ->join("b.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sips")
                 ->join("sips.stakeholder", "stk")
                 ->join("s.toWarehouse", "tw")
-                ->join("b.warehouse", "w")
-                ->join("b.itemPackSize", "p")
+                ->join("sbw.warehouse", "w")
+                ->join("sips.itemPackSize", "p")
                 ->join("p.itemUnit", "i")
                 ->leftJoin("b.vvmType", "v")
                 ->where("s.transactionType = 2 ")
@@ -1769,9 +1889,9 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                         . "s.createdDate as transactionDate,"
                         . "s.masterId as pkId,s.transactionNumber,"
                         . "s.transactionReference,s.comments,"
-                        . "tw.warehouseName,b.number,"
-                        . "b.expiryDate,"
-                        . "b.productionDate,"
+                        . "tw.warehouseName,sb.number,"
+                        . "sb.expiryDate,"
+                        . "sb.productionDate,"
                         . "p.numberOfDoses,"
                         . "ABS(sd.quantity) as quantity,"
                         . "i.itemUnitName,"
@@ -1782,17 +1902,19 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                         . "stk.stakeholderName, sa.activity")
                 ->from("StockDetailHistory", "sd")
                 ->join("sd.vvmStage", "vvm")
-                ->join("sd.stockMasterHistory", "s")
+                ->join("sd.stockMaster", "s")
                 ->join("s.stakeholderActivity", "sa")
-                ->join("sd.stockBatch", "b")
-                ->join("b.stakeholderItemPackSize", "sips")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sips")
+                ->join("sips.itemPackSize", "p")
+                ->join("sbw.warehouse", "w")
                 ->join("sips.stakeholder", "stk")
                 ->join("s.toWarehouse", "tw")
-                ->join("b.warehouse", "w")
-                ->join("b.itemPackSize", "p")
                 ->join("p.itemCategory", "ic")
                 ->join("p.itemUnit", "i")
-                ->leftJoin("b.vvmType", "v")
+                ->leftJoin("sb.vvmType", "v")
                 ->where("s.transactionType = 2 ")
                 ->andWhere("w.status=1")
                 ->andWhere("s.actionType=2")
@@ -1815,9 +1937,9 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                         . "s.transactionDate,"
                         . " s.pkId,s.transactionNumber,"
                         . "s.transactionReference,s.comments,w.warehouseName as warehouse_name,"
-                        . "tw.warehouseName,b.number,"
-                        . "b.expiryDate,"
-                        . "b.productionDate,"
+                        . "tw.warehouseName,sb.number,"
+                        . "sb.expiryDate,"
+                        . "sb.productionDate,"
                         . "p.numberOfDoses,"
                         . "ABS(sd.quantity) as quantity,"
                         . "i.itemUnitName,"
@@ -1830,20 +1952,24 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->from("StockDetail", "sd")
                 ->join("sd.vvmStage", "vvm")
                 ->join("sd.stockMaster", "s")
-                ->join("sd.stockBatch", "b")
-                ->join("b.stakeholderItemPackSize", "sips")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sips")
                 ->join("sips.stakeholder", "stk")
                 ->join("s.toWarehouse", "tw")
-                ->join("b.warehouse", "w")
-                ->join("b.itemPackSize", "p")
+                ->join("sbw.warehouse", "w")
+                ->join("sips.itemPackSize", "p")
                 ->join("p.itemUnit", "i")
-                ->join("b.vvmType", "v")
+                ->leftJoin("sb.vvmType", "v")
                 ->where("s.transactionType = 2 ")
                 ->andWhere("w.status=1")
                 ->andWhere("s.toWarehouse= " . $this->form_values['warehouse_id'])
                 ->andWhere("s.pkId=" . $this->form_values['pk_id'])
                 ->orderBy("s.transactionNumber", "ASC");
 
+//        echo $str_sql->getQuery()->getSql();
+//        exit;
         $row = $str_sql->getQuery()->getResult();
         if (!empty($row) && count($row) > 0) {
             return $row;
@@ -1865,7 +1991,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
 //                ->from("StockDetail", "sd")
 //                //->from("StockMaster", "sm")
 //                ->innerJoin("sd.stockMaster", "sm")
-//                ->innerJoin("sd.stockBatch", "sb")
+//                ->innerJoin("sd.stockBatchWarehouse", "sb")
 //                ->innerJoin("sb.itemPackSize", "ips")
 //                ->innerJoin("sm.toWarehouse", "ws")
 //                ->innerJoin("ws.stakeholderOffice", "sh")
@@ -1937,7 +2063,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
 
                 foreach ($detail_result as $detail_row) {
                     $detail_id = $detail_row->getPkId();
-                    $item_id = $detail_row->getStockBatch()->getItemPackSize()->getPkId();
+                    $item_id = $detail_row->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId();
                     $batch_number = $detail_row->getStockBatch()->getNumber();
                     $from_batch_id = $detail_row->getStockBatch()->getPkId();
 
@@ -2077,7 +2203,8 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         }
     }
 
-    public function addAjustment() {
+    public function addAdjustment() {
+
         $wh_id = $this->_identity->getWarehouseId();
         $ref_no = '';
         $quantity = '';
@@ -2093,6 +2220,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         if (isset($this->form_values['ref_no']) && !empty($this->form_values['ref_no'])) {
             $ref_no = $this->form_values['ref_no'];
         }
+
         if (isset($this->form_values['product']) && !empty($this->form_values['product'])) {
             $product = $this->form_values['product'];
         }
@@ -2125,12 +2253,12 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
             $is_received = $this->form_values['is_received'];
         }
 
-        $stock_batch = $this->_em->getRepository('StockBatch')->find($batch_id);
+        $stock_batch_warehouse = $this->_em->getRepository('StockBatchWarehouses')->find($batch_id);
         $tranaction_type = new Model_TransactionTypes();
         $type_nature = $tranaction_type->findById($type);
         $trans_nature = $type_nature[0]['nature'];
 
-        if ($stock_batch->getQuantity() == 0 && $trans_nature == '-') {
+        if ($stock_batch_warehouse->getQuantity() == 0 && $trans_nature == '-') {
             throw new Exception('NEGATIVE_OR_ZERO_QTY');
         }
 
@@ -2139,7 +2267,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
             $old_vvm = $this->form_values['vvm_stage'];
         }
 
-        if ($quantity > $stock_batch->getQuantity() && $trans_nature == '-') {
+        if ($quantity > $stock_batch_warehouse->getQuantity() && $trans_nature == '-') {
             throw new Exception('ADJ_QTY_GREATER_BATCH_QTY');
         }
 
@@ -2161,9 +2289,9 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         $warehouse_id = $this->_em->getRepository('Warehouses')->find($wh_id);
         $stock_master->setFromWarehouse($warehouse_id);
         $stock_master->setToWarehouse($warehouse_id);
-        $created_by = $this->_em->getRepository('Users')->find($this->_user_id);
-        $stock_master->setCreatedBy($created_by);
-        $stock_master->setModifiedBy($created_by);
+        $user_id = $this->_em->getRepository('Users')->find($this->_user_id);
+        $stock_master->setCreatedBy($user_id);
+        $stock_master->setModifiedBy($user_id);
         $stock_master->setCreatedDate(App_Tools_Time::now());
         $stock_master->setModifiedDate(App_Tools_Time::now());
         $stock_master->setComments($comments);
@@ -2188,8 +2316,8 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         $stock_detail = new StockDetail();
         $s_id = $this->_em->getRepository('StockMaster')->find($stock_ID);
         $stock_detail->setStockMaster($s_id);
-        $b_id = $this->_em->getRepository('StockBatch')->find($batch_id);
-        $stock_detail->setStockBatch($b_id);
+        $b_id = $this->_em->getRepository('StockBatchWarehouses')->find($batch_id);
+        $stock_detail->setStockBatchWarehouse($b_id);
         $stock_detail->setQuantity($type_nature[0]['nature'] . $quantity);
         $stock_detail->setAdjustmentType($type);
         $stock_detail->setTemporary(0);
@@ -2202,9 +2330,8 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         $u_id = $this->_em->getRepository('ItemUnits')->find($unit);
         $stock_detail->setItemUnit($u_id);
         $stock_detail->setIsReceived($is_received);
-        $created_by = $this->_em->getRepository('Users')->find($this->_user_id);
-        $stock_detail->setCreatedBy($created_by);
-        $stock_detail->setModifiedBy($created_by);
+        $stock_detail->setCreatedBy($user_id);
+        $stock_detail->setModifiedBy($user_id);
         $stock_detail->setCreatedDate(App_Tools_Time::now());
         $stock_detail->setModifiedDate(App_Tools_Time::now());
         $this->_em->persist($stock_detail);
@@ -2248,7 +2375,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                         ->select("SUM(ps.quantity) as quantity")
                         ->from("Placements", "ps")
                         ->where("ps.placementLocation = " . $location)
-                        ->andWhere("ps.stockBatch = " . $batch_id);
+                        ->andWhere("ps.stockBatchWarehouse = " . $batch_id);
                 $row = $str_sql->getQuery()->getResult();
                 if (count($row) > 0) {
                     $qty = $row[0]['quantity'];
@@ -2329,13 +2456,16 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                         . "ABS(sd.quantity) as quantity,(ABS(sd.quantity)*p.numberOfDoses) as doses,p.numberOfDoses,"
                         . "vvm.pkId as vvmStage,vvm.vvmStageValue,"
                         . "sd.pkId as detailId,"
-                        . "b.number,"
+                        . "sb.number,"
                         . "p.itemName,DATE_FORMAT(s.transactionDate,'%d/%m/%Y') as transactionDate, ic.pkId as itemCategory,s.transactionDate as receiveDate")
                 ->from("StockDetail", "sd")
                 ->join("sd.vvmStage", "vvm")
                 ->join("sd.stockMaster", "s")
-                ->join("sd.stockBatch", "b")
-                ->join("b.itemPackSize", "p")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "p")
                 ->join("p.itemCategory", "ic")
                 ->where("s.transactionType= 2")
                 ->andWhere("s.transactionNumber = '" . $this->transaction_number . "'")
@@ -2343,6 +2473,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->andWhere("sd.isReceived IS NULL OR sd.isReceived=0")
                 ->andWhere("s.draft=0");
         $row = $str_sql->getQuery()->getResult();
+
         if (!empty($row) && count($row) > 0) {
             return $row;
         } else {
@@ -2386,7 +2517,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
             $received_location = $this->_em->getRepository("StockReceiveFromScanner")->findBy(array("stockDetail" => $detail_id));
 
             $obj_stock_batch = new Model_StockBatch();
-            $array = array('number' => $stock_detail->getStockBatch()->getNumber(), 'item_id' => $stock_detail->getStockBatch()->getItemPackSize()->getPkId());
+            $array = array('number' => $stock_detail->getStockBatch()->getNumber(), 'item_id' => $stock_detail->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId());
             $batch_id = $obj_stock_batch->checkBatch($array);
 
             if ($batch_id === 0) {
@@ -2395,7 +2526,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 $stock_batch->setBatchMasterId($stock_detail->getStockBatch()->getBatchMasterId());
                 $stock_batch->setExpiryDate($stock_detail->getStockBatch()->getExpiryDate());
                 $stock_batch->setQuantity(ABS($stock_detail->getQuantity()));
-                $stock_batch->setItemPackSize($stock_detail->getStockBatch()->getItemPackSize());
+                $stock_batch->setItemPackSize($stock_detail->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize());
                 $stock_batch->setStatus('Stacked');
                 $stock_batch->setUnitPrice($stock_detail->getStockBatch()->getUnitPrice());
                 $stock_batch->setProductionDate($stock_detail->getStockBatch()->getProductionDate());
@@ -2442,7 +2573,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                     $placements->setIsPlaced(1);
                     $placements->setPlacementLocation($placement->getPlacementLocation());
                     $placements->setStockBatch($sb_id);
-                    $placements->setStockDetail($stk_detail);
+//                    $placements->setStockDetail($stk_detail);
                     $trans_type = $this->_em->getRepository("ListDetail")->find(Model_ListDetail::STOCK_PLACEMENT);
                     $placements->setPlacementTransactionType($trans_type);
                     $placements->setCreatedBy($stk_detail->getStockMaster()->getCreatedBy());
@@ -2541,7 +2672,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
 
         foreach ($details as $obj_stock_detail) {
             $obj_stock_batch->adjustQuantityByWarehouse($obj_stock_detail->getStockBatch()->getPkId());
-            $obj_stock_batch->autoRunningLEFOBatch($obj_stock_detail->getStockBatch()->getItemPackSize()->getPkId());
+            $obj_stock_batch->autoRunningLEFOBatch($obj_stock_detail->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId());
         }
 
         $warehouse_data = new Model_HfDataMaster();
@@ -2644,6 +2775,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 $stock_detail->stockReceived($detail_id);
 
                 $stockBatch = $stock_detail->GetBatchDetail($detail_id);
+
                 $stockDetail = $stock_detail->findByDetailId($detail_id);
                 $array_missing = $this->form_values['missing'];
 
@@ -2657,24 +2789,17 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 if ($batch_id1 === 0) {
                     $stock_batch = new StockBatch();
                     $stock_batch->setNumber(strtoupper($stockBatch['0']['number']));
-                    $stock_batch->setBatchMasterId($stockBatch['0']['batchMasterId']);
                     $stock_batch->setExpiryDate(new \DateTime($stockBatch[0]['expiryDate']));
-                    $stock_batch->setQuantity($quantity);
-                    $ips_id = $this->_em->getRepository('ItemPackSizes')->find($product_id);
-                    $stock_batch->setItemPackSize($ips_id);
-                    $stock_batch->setStatus('Stacked');
                     $stock_batch->setUnitPrice($stockBatch['0']['unitPrice']);
-                    $stock_batch->setProductionDate(new \DateTime($stockBatch[0]['productionDate']));                    
+                    $stock_batch->setProductionDate(new \DateTime($stockBatch[0]['productionDate']));
+                    if (!empty($stockBatch['0']['stakeholderItemPackSize'])) {
+                        $pack_info_id = $this->_em->getRepository('PackInfo')->findOneBy(array("stakeholderItemPackSize" => $stockBatch['0']['stakeholderItemPackSize']));
+                        $stock_batch->setPackInfo($pack_info_id);
+                    }
+
                     if (!empty($stockBatch['0']['vvmType'])) {
                         $vvm_id = $this->_em->getRepository('VvmTypes')->find($stockBatch['0']['vvmType']);
                         $stock_batch->setVvmType($vvm_id);
-                    }
-                    $wb_id = $this->_em->getRepository('Warehouses')->find($wh_id);
-                    $stock_batch->setWarehouse($wb_id);
-
-                    if (!empty($stockBatch['0']['stakeholderItemPackSize'])) {
-                        $stk_ips = $this->_em->getRepository('StakeholderItemPackSizes')->find($stockBatch['0']['stakeholderItemPackSize']);
-                        $stock_batch->setStakeholderItemPackSize($stk_ips);
                     }
 
                     $stock_batch->setModifiedBy($created_by);
@@ -2684,14 +2809,29 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
 
                     $this->_em->persist($stock_batch);
                     $this->_em->flush();
-                    $batch_id1 = $stock_batch->getPkId();
+                    $batch_id2 = $stock_batch->getPkId();
+
+                    $stock_batch_warehouses = new StockBatchWarehouses;
+                    $stock_batch_warehouses->setQuantity($quantity);
+                    $stock_batch_warehouses->setStatus(Model_StockBatch::STACKED);
+                    $warehouse_id = $this->_em->getRepository('Warehouses')->find($wh_id);
+                    $stock_batch_warehouses->setWarehouse($warehouse_id);
+                    $stock_batch_id = $this->_em->getRepository('StockBatch')->find($batch_id2);
+                    $stock_batch_warehouses->setStockBatch($stock_batch_id);
+                    $stock_batch_warehouses->setModifiedBy($created_by);
+                    $stock_batch_warehouses->setModifiedDate(App_Tools_Time::now());
+                    $stock_batch_warehouses->setCreatedBy($created_by);
+                    $stock_batch_warehouses->setCreatedDate(App_Tools_Time::now());
+                    $this->_em->persist($stock_batch_warehouses);
+                    $this->_em->flush();
+                    $batch_id1 = $stock_batch_warehouses->getPkId();
                 }
 
                 $stock_detail = new StockDetail();
                 $sm_id = $this->_em->getRepository('StockMaster')->find($fk_stock_ID);
                 $stock_detail->setStockMaster($sm_id);
-                $sb_id = $this->_em->getRepository('StockBatch')->find($batch_id1);
-                $stock_detail->setStockBatch($sb_id);
+                $sb_id = $this->_em->getRepository('StockBatchWarehouses')->find($batch_id1);
+                $stock_detail->setStockBatchWarehouse($sb_id);
                 $iu_id = $this->_em->getRepository('ItemUnits')->find($stockDetail['0']['itemUnit']);
                 $stock_detail->setItemUnit($iu_id);
                 $stock_detail->setQuantity($array_types[$type_id] . $quantity);
@@ -2759,8 +2899,8 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                     $stock_detail_a = new StockDetail();
                     $s_id = $this->_em->getRepository('StockMaster')->find($stock_id);
                     $stock_detail_a->setStockMaster($s_id);
-                    $sb_id = $this->_em->getRepository('StockBatch')->find($batch_id1);
-                    $stock_detail_a->setStockBatch($sb_id);
+                    $sb_id = $this->_em->getRepository('StockBatchWarehouses')->find($batch_id1);
+                    $stock_detail_a->setStockBatchWarehouse($sb_id);
                     $iu_id = $this->_em->getRepository('ItemUnits')->find($stockDetail['0']['itemUnit']);
                     $stock_detail_a->setItemUnit($iu_id);
                     $stock_detail_a->setQuantity($array_types[$type[$index]] . $array_missing[$index]);
@@ -2877,9 +3017,12 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 ->select("sd")
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "sm")
-                ->join("sd.stockBatch", "sb")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stocBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.staekholderItemPackSize", "sip")
                 ->where("sm.toWarehouse = " . $wh_id)
-                ->andWhere("sb.itemPackSize IN (" . Zend_Registry::get('barcode_products') . ")")
+                ->andWhere("sip.itemPackSize IN (" . Zend_Registry::get('barcode_products') . ")")
                 ->andWhere("sm.transactionType = 2")
                 ->andWhere("sd.isReceived = 0")
                 ->andWhere("DATE_FORMAT(sm.transactionDate,'%Y-%m') BETWEEN '$from_date' AND '$to_date'");
@@ -2910,9 +3053,9 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                     'description' => $row->getStockMaster()->getComments(),
                     'gtin' => $row->getStockBatch()->getStakeholderItemPackSize()->getGtin(),
                     'quantity_per_pack' => $row->getStockBatch()->getStakeholderItemPackSize()->getQuantityPerPack(),
-                    'item_pack_size_id' => $row->getStockBatch()->getItemPackSize()->getPkId(),
-                    'item_category' => $row->getStockBatch()->getItemPackSize()->getItemCategory()->getPkId(),
-                    'item_name' => $row->getStockBatch()->getItemPackSize()->getItemName(),
+                    'item_pack_size_id' => $row->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId(),
+                    'item_category' => $row->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemCategory()->getPkId(),
+                    'item_name' => $row->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemName(),
                     'batch_no' => $row->getStockBatch()->getNumber(),
                     'production_date' => $prod_date,
                     'expiry_date' => $row->getStockBatch()->getExpiryDate()->format("Y-m-d"),
@@ -2947,6 +3090,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         $location_id = $params['location_id'];
         $is_update = $params['update'];
         $vvmstage = $params['vvmstage'];
+        $auth=$params['auth'];
 
         $stock_detail = $this->_em->getRepository("StockDetail")->find($rec_id);
         /**
@@ -2973,13 +3117,19 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
          * Add entry in Placement table
          */
         $stock_receive = new StockReceiveFromScanner();
-        $stock_receive->setStockDetail($stock_detail);
+        // $stock_receive->setStockDetail($stock_detail);
         $stock_receive->setPlacementLocation($plac_loc_id);
         $stock_receive->setQuantity($qty);
         $vvms = $this->_em->getRepository("VvmStages")->find($vvmstage);
         $stock_receive->setVvmStage($vvms);
 
-        $created_by = $this->_em->getRepository('Users')->find($this->_user_id);
+       // $created_by = $this->_em->getRepository('Users')->find($this->_user_id);
+        //$created_by = $this->_em->getRepository("Users")->find("159");//(array('auth' => $auth));
+        
+        $created_by = $this->_em->getRepository("Users")->findOneBy((array('auth' => $auth)));
+        
+//        echo 'users'.$created_by;
+//        exit;
         $stock_receive->setModifiedBy($created_by);
         $stock_receive->setModifiedDate(App_Tools_Time::now());
         $stock_receive->setCreatedBy($created_by);
@@ -3069,7 +3219,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
       }
 
       $batch_no = $stock_detail->getStockBatch()->getNumber();
-      $array = array("item_id" => $stock_detail->getStockBatch()->getItemPackSize()->getPkId(), "number" => $batch_no, "wh_id" => $stock_detail->getStockMaster()->getToWarehouse()->getPkId());
+      $array = array("item_id" => $stock_detail->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId(), "number" => $batch_no, "wh_id" => $stock_detail->getStockMaster()->getToWarehouse()->getPkId());
       $sb = new Model_StockBatch();
       $batch_id = $sb->checkBatch($array);
 
@@ -3087,7 +3237,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
       $stock_batch->setUnitPrice(0);
       $stock_batch->setProductionDate($stock_detail->getStockBatch()->getProductionDate());
       $stock_batch->setLastUpdate(new DateTime(date("Y-m-d")));
-      $stock_batch->setItemPackSize($stock_detail->getStockBatch()->getItemPackSize());
+      $stock_batch->setItemPackSize($stock_detail->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize());
       $vvm_type = $this->_em->getRepository("VvmTypes")->find(2);
       $stock_batch->setVvmType($vvm_type);
       $stock_batch->setWarehouse($stock_detail->getStockMaster()->getToWarehouse());
@@ -3111,7 +3261,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
       $obj_stock_detail->setStockMaster($stock_master);
       $stock_batch = $this->_em->getRepository("StockBatch")->find($batch_id);
       $obj_stock_detail->setStockBatch($stock_batch);
-      $obj_stock_detail->setItemUnit($stock_detail->getStockBatch()->getItemPackSize()->getItemUnit());
+      $obj_stock_detail->setItemUnit($stock_detail->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemUnit());
       $this->_em->persist($obj_stock_detail);
       $this->_em->flush();
 
@@ -3144,7 +3294,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
       $warehouse_data->form_values = array(
       'report_month' => date("m"),
       'report_year' => date("Y"),
-      'item_id' => $stock_detail->getStockBatch()->getItemPackSize()->getPkId(),
+      'item_id' => $stock_detail->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId(),
       'warehouse_id' => $stock_detail->getStockMaster()->getToWarehouse()->getPkId(),
       'created_by' => $stock_detail->getStockMaster()->getCreatedBy()->getPkId()
       );
@@ -3203,9 +3353,13 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         FROM
                 stock_master
         INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-        INNER JOIN stock_batch ON stock_batch.pk_id = stock_detail.stock_batch_id
+        INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
         INNER JOIN warehouses ON stock_master.to_warehouse_id = warehouses.pk_id
-        INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+
         WHERE
         stock_master.transaction_type_id IN (" . Model_TransactionTypes::TRANSACTION_ISSUE . ")
         AND stock_master.from_warehouse_id = " . $wh_id . "
@@ -3214,7 +3368,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         item_pack_sizes.item_category_id = 1 AND
         stock_detail.`temporary` = 0 AND stock_master.draft = 0
         GROUP BY
-	stock_detail.stock_batch_id,
+	stock_detail.stock_batch_warehouse_id,
 	stock_detail.stock_master_id,
         stock_detail.pk_id
         having quantity > place_quantity
@@ -3247,7 +3401,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
 //			stock_master.transaction_type_id = " . Model_TransactionTypes :: TRANSACTION_ISSUE . "
 //		AND stock_master.from_warehouse_id = " . $wh_id . "
 //		GROUP BY
-//			stock_detail.stock_batch_id,
+//			stock_detail.stock_batch_warehouse_id,
 //			stock_detail.stock_master_id
 //	) A
 //LEFT JOIN (
@@ -3304,7 +3458,11 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                         FROM
                                 stock_master
                         INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-                        INNER JOIN stock_batch ON stock_batch.pk_id = stock_detail.stock_batch_id
+                        INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                         INNER JOIN warehouses ON stock_master.from_warehouse_id = warehouses.pk_id
                         WHERE
                         stock_master.transaction_type_id = " . Model_TransactionTypes :: TRANSACTION_RECIEVE . "
@@ -3313,7 +3471,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                         DATE_FORMAT(stock_master.transaction_date,'%Y-%m') BETWEEN '$from_date' AND '$to_date'
                             AND stock_batch.item_pack_size_id IN (" . Zend_Registry::get('barcode_products') . ")
                         GROUP BY
-                                stock_detail.stock_batch_id,
+                                stock_detail.stock_batch_warehouse_id,
                                 stock_detail.stock_master_id
                         HAVING
                                 quantity > place_quantity
@@ -3339,7 +3497,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
 //        WHERE
 //                stock_master.transaction_type_id = " . Model_TransactionTypes :: TRANSACTION_RECIEVE . " and stock_master.to_warehouse_id =" . $wh_id . "
 //        GROUP BY
-//                stock_detail.stock_batch_id,
+//                stock_detail.stock_batch_warehouse_id,
 //                stock_detail.stock_master_id
 //        ) A
 //        LEFT JOIN  (SELECT
@@ -3399,14 +3557,14 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
           FROM
           stock_master
           INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-          INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+          INNER JOIN stock_batch ON stock_detail.stock_batch_warehouse_id = stock_batch.pk_id
           INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
           INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
           WHERE
           stock_master.transaction_type_id = " . Model_TransactionTypes :: TRANSACTION_ISSUE . "
           AND stock_detail.stock_master_id =" . $stockmasterId . "
           GROUP BY
-          stock_detail.stock_batch_id,
+          stock_detail.stock_batch_warehouse_id,
           stock_detail.stock_master_id
           ) A
           LEFT JOIN (
@@ -3433,25 +3591,27 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         stock_detail.pk_id,
         stock_master.pk_id AS stc_master_pkid,
         stock_batch.number,
-         stock_batch.pk_id as batch_id,
+        stock_batch.pk_id as batch_id,
         stock_batch.expiry_date,
         item_pack_sizes.item_name,
-        stock_batch.item_pack_size_id as ItemID,
-        stakeholder_item_pack_sizes.quantity_per_pack,
+        stakeholder_item_pack_sizes.item_pack_size_id as ItemID,
+        pack_info.quantity_per_pack,
         item_pack_sizes.item_category_id,
         abs(GetPicked(stock_detail.pk_id)) as place_quantity
         FROM
         stock_master
         INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-        INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-    	INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
-	INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+        INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
             WHERE
          stock_master.transaction_type_id NOT IN (" . Model_TransactionTypes::TRANSACTION_RECIEVE . "," . Model_TransactionTypes::LOST_RECOVERED . "," . Model_TransactionTypes::PHYSICALLY_FOUND . ")
          AND stock_detail.stock_master_id =" . $stockmasterId . " AND
         item_pack_sizes.item_category_id = 1
         GROUP BY
-            stock_detail.stock_batch_id,
+            stock_detail.stock_batch_warehouse_id,
             stock_detail.stock_master_id,
             stock_detail.pk_id";
 
@@ -3492,14 +3652,14 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
 //        FROM
 //        stock_master
 //        INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-//        INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+//        INNER JOIN stock_batch ON stock_detail.stock_batch_warehouse_id = stock_batch.pk_id
 //    	INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 //		INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
 //		WHERE
 //                                stock_master.transaction_type_id = " . Model_TransactionTypes :: TRANSACTION_ISSUE . "
 //                        AND stock_detail.stock_master_id =" . $stockmasterId . "
 //        GROUP BY
-//                                stock_detail.stock_batch_id,
+//                                stock_detail.stock_batch_warehouse_id,
 //                                stock_detail.stock_master_id
 //                ) A
 //        LEFT JOIN (
@@ -3525,7 +3685,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         stock_detail.pk_id,
         stock_master.pk_id AS stc_master_pkid,
         stock_batch.number,
-         stock_batch.pk_id as batch_id,
+        stock_batch_warehouses.pk_id as batch_id,
         stock_batch.expiry_date,
         item_pack_sizes.item_name,
         item_pack_sizes.pk_id as ItemID,
@@ -3535,14 +3695,18 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         FROM
         stock_master
         INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-        INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+        INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
     	INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
         INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
 	WHERE
         stock_master.transaction_type_id = " . Model_TransactionTypes :: TRANSACTION_ISSUE . "
         AND stock_detail.stock_master_id =" . $stockmasterId . "
         GROUP BY
-                                stock_detail.stock_batch_id,
+                                stock_detail.stock_batch_warehouse_id,
                                 stock_detail.stock_master_id";
 
 
@@ -3565,7 +3729,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         stock_detail.pk_id,
         stock_master.pk_id AS stc_master_pkid,
         stock_batch.number,
-        stock_batch.pk_id as batch_id,
+        stock_batch_warehouses.pk_id as batch_id,
         stock_batch.expiry_date,
         item_pack_sizes.item_name,
         item_pack_sizes.item_category_id,
@@ -3576,7 +3740,11 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         FROM
         stock_master
         INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-        INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+        INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
         INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
         INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
         WHERE
@@ -3584,7 +3752,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
         AND stock_detail.stock_master_id =" . $stockmasterId . "
             AND item_pack_sizes.pk_id IN (" . Zend_Registry::get('barcode_products') . ")
         GROUP BY
-                                stock_detail.stock_batch_id,
+                                stock_detail.stock_batch_warehouse_id,
                                 stock_detail.stock_master_id
                                 having quantity > place_quantity";
 //        $str_sql = "SELECT A.transaction_number,
@@ -3614,14 +3782,14 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
 //        FROM
 //        stock_master
 //        INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-//        INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+//        INNER JOIN stock_batch ON stock_detail.stock_batch_warehouse_id = stock_batch.pk_id
 //        INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 //		INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
 //        WHERE
 //                                stock_master.transaction_type_id = " . Model_TransactionTypes :: TRANSACTION_RECIEVE . "
 //                        AND stock_detail.stock_master_id =" . $stockmasterId . "
 //        GROUP BY
-//                                stock_detail.stock_batch_id,
+//                                stock_detail.stock_batch_warehouse_id,
 //                                stock_detail.stock_master_id
 //                ) A
 //       LEFT JOIN (
@@ -3657,18 +3825,22 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
             stock_detail.pk_id,
             stock_master.pk_id AS stc_master_pkid,
             stock_batch.number,
-            stock_batch.pk_id as batch_id,
+            stock_batch_warehouses.pk_id as batch_id,
             stock_batch.expiry_date,
             item_pack_sizes.item_name,
             item_pack_sizes.item_category_id,
             item_pack_sizes.pk_id as ItemID,
-            stakeholder_item_pack_sizes.quantity_per_pack,
+            pack_info.quantity_per_pack,
             abs(GetPicked(stock_detail.pk_id)) as place_quantity,
             stakeholder_item_pack_sizes.pk_id as stakeholder_item_pack_size_id
         FROM
         stock_master
             INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-            INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+            INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+            INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+            INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+            INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
             INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
             INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
         WHERE
@@ -3676,7 +3848,7 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
              AND stock_detail.stock_master_id =" . $stockmasterId . "
              AND item_pack_sizes.pk_id IN (" . Zend_Registry::get('barcode_products') . ")
         GROUP BY
-                                stock_detail.stock_batch_id,
+                                stock_detail.stock_batch_warehouse_id,
                                 stock_detail.stock_master_id
                                 having quantity > place_quantity";
 
@@ -3707,14 +3879,14 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
 //        FROM
 //        stock_master
 //        INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-//        INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+//        INNER JOIN stock_batch ON stock_detail.stock_batch_warehouse_id = stock_batch.pk_id
 //    	  INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 //	  INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
 //		WHERE
 //                        stock_master.transaction_type_id = " . Model_TransactionTypes :: TRANSACTION_ISSUE . "
 //                        AND stock_detail.stock_master_id =" . $stockmasterId . "
 //        GROUP BY
-//                                stock_detail.stock_batch_id,
+//                                stock_detail.stock_batch_warehouse_id,
 //                                stock_detail.stock_master_id
 //                ) A
 //        LEFT JOIN (
@@ -3751,8 +3923,12 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 FROM
                         stock_master
                 INNER JOIN stock_detail ON stock_detail.stock_master_id = stock_master.pk_id
-                INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-                INNER JOIN item_pack_sizes ON item_pack_sizes.pk_id = stock_batch.item_pack_size_id
+                INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+
                 WHERE
                         stock_master.to_warehouse_id = $wh_id
                 AND (
@@ -3763,6 +3939,9 @@ stock_master.to_warehouse_id =" . $wh_id . " AND item_pack_sizes.item_category_i
                 AND stock_master.transaction_date > '2014-07-31' AND
                 stock_master.draft = 0 AND
                 stock_detail.`temporary` = 0";
+
+//        echo $str_sql;
+//        exit;
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
         $rec->execute();
@@ -4041,11 +4220,14 @@ UNION
                 ->select('sd')
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "sm")
-                ->join("sd.stockBatch", "sb")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
                 ->where("sm.fromWarehouse = " . $form_values['from_wh'])
                 ->andWhere("sm.toWarehouse = " . $form_values['to_wh'])
-                ->andWhere("sb.itemPackSize = " . $form_values['product'])
-                ->andWhere("sb.pkId = " . $form_values['batch_id'])
+                ->andWhere("sip.itemPackSize = " . $form_values['product'])
+                ->andWhere("sbw.pkId = " . $form_values['batch_id'])
                 ->andWhere("sm.transactionType = 2")
                 ->orderBy("sd.quantity", "DESC");
 
@@ -4061,11 +4243,14 @@ UNION
                 ->select('sd')
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "sm")
-                ->join("sd.stockBatch", "sb")
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
                 ->where("sm.fromWarehouse = " . $form_values['from_wh'])
                 ->andWhere("sm.toWarehouse = " . $form_values['to_wh'])
-                ->andWhere("sb.itemPackSize = " . $form_values['product'])
-                ->andWhere("sb.number = '" . $form_values['batch_number'] . "'")
+                ->andWhere("sip.itemPackSize = " . $form_values['product'])
+                ->andWhere("sbw.number = '" . $form_values['batch_number'] . "'")
                 ->andWhere("sm.transactionType = 1")
                 ->orderBy("sd.quantity", "ASC");
         $row = $str_sql->getQuery()->getResult();
@@ -4087,13 +4272,18 @@ UNION
                 ->select('sd')
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "sm")
-                ->join("sd.stockBatch", "sb")
-                ->where("sb.itemPackSize = " . $form_values['product'])
-                ->andWhere("sb.warehouse = " . $warehouse)
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->where("sip.itemPackSize = " . $form_values['product'])
+                ->andWhere("sbw.warehouse = " . $warehouse)
                 ->andWhere("DATE_FORMAT(sm.transactionDate,'%Y-%m-%d') BETWEEN '" . App_Controller_Functions::dateToDbFormat($form_values['from_date']) . "' AND '" . App_Controller_Functions::dateToDbFormat($form_values['to_date']) . "'")
                 ->orderBy("sm.transactionDate")
                 ->addOrderBy("sd.adjustmentType");
 
+//        echo $str_sql->getQuery()->getSql();
+//        exit;
         $row = $str_sql->getQuery()->getResult();
         return $row;
     }
@@ -4112,9 +4302,12 @@ UNION
                 ->select('SUM(sd.quantity) as qty')
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "sm")
-                ->join("sd.stockBatch", "sb")
-                ->where("sb.itemPackSize = " . $form_values['product'])
-                ->andWhere("sb.warehouse = " . $warehouse)
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->where("sip.itemPackSize = " . $form_values['product'])
+                ->andWhere("sbw.warehouse = " . $warehouse)
                 ->andWhere("DATE_FORMAT(sm.transactionDate,'%Y-%m-%d') < '" . App_Controller_Functions::dateToDbFormat($form_values['from_date']) . "'")
                 ->orderBy("sm.transactionDate", "ASC");
 
@@ -4140,12 +4333,15 @@ UNION
                 ->select('SUM(sd.quantity) as qty, sb.number, sb.pkId, (SUM(sd.quantity)*ips.numberOfDoses) as qty_doses')
                 ->from("StockDetail", "sd")
                 ->join("sd.stockMaster", "sm")
-                ->join("sd.stockBatch", "sb")
-                ->join("sb.itemPackSize", "ips")
-                ->where("sb.itemPackSize = " . $form_values['product'])
-                ->andWhere("sb.warehouse = " . $warehouse)
+                ->join("sd.stockBatchWarehouse", "sbw")
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "ips")
+                ->where("sip.itemPackSize = " . $form_values['product'])
+                ->andWhere("sbw.warehouse = " . $warehouse)
                 ->andWhere("DATE_FORMAT(sm.transactionDate,'%Y-%m-%d') < '" . App_Controller_Functions::dateToDbFormat($form_values['from_date']) . "'")
-                ->groupBy("sb.pkId")
+                ->groupBy("sbw.pkId")
                 ->having("qty <> 0");
 
         $row = $str_sql->getQuery()->getResult();
@@ -4206,8 +4402,6 @@ UNION
             $created_by = $this->_em->getRepository('Users')->find($this->_user_id);
             $stockMaster->setModifiedBy($created_by);
             $stockMaster->setModifiedDate(App_Tools_Time::now());
-            $stockMaster->setCreatedBy($created_by);
-            $stockMaster->setCreatedDate(App_Tools_Time::now());
 
             $this->_em->persist($stockMaster);
             $this->_em->flush();
@@ -4222,7 +4416,7 @@ UNION
                     $wh_data->form_values = array(
                         'report_month' => $row1->getStockMaster()->getTransactionDate()->format("m"),
                         'report_year' => $row1->getStockMaster()->getTransactionDate()->format("Y"),
-                        'item_id' => $row1->getStockBatch()->getItemPackSize()->getPkId(),
+                        'item_id' => $row1->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId(),
                         'warehouse_id' => $wh_id,
                         'created_by' => $row1->getStockMaster()->getCreatedBy()->getPkId()
                     );
@@ -4234,7 +4428,7 @@ UNION
                     $wh_data->form_values = array(
                         'report_month' => $previous_month,
                         'report_year' => $previous_year,
-                        'item_id' => $row2->getStockBatch()->getItemPackSize()->getPkId(),
+                        'item_id' => $row2->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId(),
                         'warehouse_id' => $wh_id,
                         'created_by' => $row2->getStockMaster()->getCreatedBy()->getPkId()
                     );
@@ -4355,20 +4549,23 @@ UNION
         A.amc,
         IFNULL(C.quantity,1) quantity,
         C.eta
-FROM
+      FROM
 	(
 		SELECT
 			IFNULL(
 				Sum(stock_detail.quantity),
 				0
-			) * item_pack_sizes.number_of_doses AS issue,
-			stock_batch.item_pack_size_id,
+			) * pack_info.number_of_doses AS issue,
+			stakeholder_item_pack_sizes.item_pack_size_id,
 			item_pack_sizes.item_name,
                         epi_amc.amc
 		FROM
 			stock_detail
-		INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-		INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
+		INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
 		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
                 INNER JOIN epi_amc ON epi_amc.item_id = item_pack_sizes.pk_id
 		WHERE
@@ -4381,7 +4578,7 @@ FROM
 		AND '$to_date' AND
                 item_pack_sizes.multiplier = 1 AND epi_amc.warehouse_id = $warehouse
 		GROUP BY
-			stock_batch.item_pack_size_id
+			stakeholder_item_pack_sizes.item_pack_size_id
                 ORDER BY item_pack_sizes.list_rank
 	) A
 INNER JOIN (
@@ -4389,18 +4586,21 @@ INNER JOIN (
 		IFNULL(
 			Sum(stock_detail.quantity),
 			0
-		) * item_pack_sizes.number_of_doses AS soh,
-		stock_batch.item_pack_size_id,
+		) * pack_info.number_of_doses AS soh,
+		stakeholder_item_pack_sizes.item_pack_size_id,
 		item_pack_sizes.item_name
 	FROM
 		stock_detail
-	INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+	INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 	INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
 	INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
 	WHERE
-		stock_batch.warehouse_id = $warehouse
+		stock_batch_warehouses.warehouse_id = $warehouse
 	GROUP BY
-		stock_batch.item_pack_size_id
+		stakeholder_item_pack_sizes.item_pack_size_id
 ) B ON A.item_pack_size_id = B.item_pack_size_id
     INNER JOIN
 (SELECT
@@ -4458,8 +4658,8 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
 	A.item_name,
 	B.soh,
         A.amc,
-        IFNULL(C.quantity,1) quantity,
-        C.eta
+        A.item_pack_size_id,
+        A.warehouse_id
 FROM
 	(
 		SELECT
@@ -4467,14 +4667,19 @@ FROM
 				Sum(stock_detail.quantity),
 				0
 			) * item_pack_sizes.number_of_doses AS issue,
-			stock_batch.item_pack_size_id,
+			stakeholder_item_pack_sizes.item_pack_size_id,
 			item_pack_sizes.item_name,
-                        epi_amc.amc
+                        epi_amc.amc,
+                        epi_amc.warehouse_id
 		FROM
 			stock_detail
-		INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+		INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
 		INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-		INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+
                 INNER JOIN epi_amc ON epi_amc.item_id = item_pack_sizes.pk_id
 		WHERE
 			stock_master.transaction_type_id = 2
@@ -4486,7 +4691,7 @@ FROM
 		AND '$to_date' AND
                 item_pack_sizes.multiplier = 1 AND epi_amc.warehouse_id = $warehouse
 		GROUP BY
-			stock_batch.item_pack_size_id
+			stakeholder_item_pack_sizes.item_pack_size_id
                 ORDER BY item_pack_sizes.list_rank
 	) A
 INNER JOIN (
@@ -4495,42 +4700,46 @@ INNER JOIN (
 			Sum(stock_detail.quantity),
 			0
 		) * item_pack_sizes.number_of_doses AS soh,
-		stock_batch.item_pack_size_id,
+		stakeholder_item_pack_sizes.item_pack_size_id,
 		item_pack_sizes.item_name
 	FROM
 		stock_detail
-	INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+	INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
 	INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-	INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+
 	WHERE
-		stock_batch.warehouse_id = $warehouse
+		stock_batch_warehouses.warehouse_id = $warehouse
 	GROUP BY
-		stock_batch.item_pack_size_id
-) B ON A.item_pack_size_id = B.item_pack_size_id
-    INNER JOIN
-(SELECT
-	DATE_FORMAT(
-		shipments.shipment_date,
-		'%M, %Y'
-	) eta,
-	Sum(
-		shipments.shipment_quantity
-	) AS quantity,
-	shipments.item_pack_size_id,
-	item_pack_sizes.item_name,
-	stakeholder_activities.activity
-FROM
-	shipments
-INNER JOIN item_pack_sizes ON shipments.item_pack_size_id = item_pack_sizes.pk_id
-INNER JOIN stakeholder_activities ON shipments.stakeholder_activity_id = stakeholder_activities.pk_id
-GROUP BY
-	shipments.item_pack_size_id,
-	DATE_FORMAT(
-		shipments.shipment_date,
-		'%Y-%m'
-	),
-	shipments.stakeholder_activity_id) C
-ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
+		stakeholder_item_pack_sizes.item_pack_size_id
+) B ON A.item_pack_size_id = B.item_pack_size_id";
+        /* INNER JOIN
+          (SELECT
+          DATE_FORMAT(
+          shipments.shipment_date,
+          '%M, %Y'
+          ) eta,
+          Sum(
+          shipments.shipment_quantity
+          ) AS quantity,
+          shipments.item_pack_size_id,
+          item_pack_sizes.item_name,
+          stakeholder_activities.activity
+          FROM
+          shipments
+          INNER JOIN item_pack_sizes ON shipments.item_pack_size_id = item_pack_sizes.pk_id
+          INNER JOIN stakeholder_activities ON shipments.stakeholder_activity_id = stakeholder_activities.pk_id
+          GROUP BY
+          shipments.item_pack_size_id,
+          DATE_FORMAT(
+          shipments.shipment_date,
+          '%Y-%m'
+          ),
+          shipments.stakeholder_activity_id) C
+          ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'"; */
 //echo $str_qry;
         $this->_em = Zend_Registry::get('doctrine');
         $row = $this->_em->getConnection()->prepare($str_qry);
@@ -4558,7 +4767,7 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                     (placements.vvm_stage = 1 AND
                     DATE_FORMAT(stock_batch.expiry_date,'%Y-%m-%d')
                     BETWEEN '$today' AND '$after3month')) AND
-                    stock_batch.item_pack_size_id = $product_id ";
+                    stakeholder_item_pack_sizes.item_pack_size_id = $product_id ";
                 break;
             case 2:
                 $where = " AND
@@ -4567,7 +4776,7 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                             stock_batch.expiry_date,
                             '%Y-%m-%d'
                     ) BETWEEN '$after3month' AND '$afteryear' AND
-                    stock_batch.item_pack_size_id = $product_id ";
+                    stakeholder_item_pack_sizes.item_pack_size_id = $product_id ";
                 break;
             case 3:
                 $where = " AND
@@ -4576,13 +4785,13 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                             stock_batch.expiry_date,
                             '%Y-%m-%d'
                     ) > '$afteryear' AND
-                    stock_batch.item_pack_size_id = $product_id ";
+                    stakeholder_item_pack_sizes.item_pack_size_id = $product_id ";
                 break;
             case 4:
                 $where = " AND
                     (placements.vvm_stage >= 3 OR
                     DATE_FORMAT(stock_batch.expiry_date,'%Y-%m-%d') < '$today')
-                    AND stock_batch.item_pack_size_id = $product_id ";
+                    AND stakeholder_item_pack_sizes.item_pack_size_id = $product_id ";
                 break;
         }
 
@@ -4599,19 +4808,22 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                             placement_locations.pk_id as coldroom_id,
                             IF(item_pack_sizes.vvm_group_id=1,IFNULL(vvm_stages.pk_id, 1),vvm_stages.vvm_stage_value) vvm
                     FROM
-                            stock_batch
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-                    LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                            stock_batch_warehouses
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                    INNER JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
                     INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
                     INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
                     INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
                     WHERE
-                    stock_batch.warehouse_id = $wh_id AND
+                    stock_batch_warehouses.warehouse_id = $wh_id AND
                     item_pack_sizes.item_category_id = 1
                     $where
                     GROUP BY
                             placements.vvm_stage,
-                            placements.stock_batch_id,
+                            placements.stock_batch_warehouse_id,
                             cold_chain.asset_id
                     HAVING
                             quantity > 0
@@ -4645,7 +4857,7 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                     (placements.vvm_stage = 1 AND
                     DATE_FORMAT(stock_batch.expiry_date,'%Y-%m-%d')
                     BETWEEN '$today' AND '$after3month')) AND
-                    stock_batch.item_pack_size_id = $product_id ";
+                    stakeholder_item_pack_sizes.item_pack_size_id = $product_id ";
                 break;
             case 2:
                 $where = " AND
@@ -4654,7 +4866,7 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                             stock_batch.expiry_date,
                             '%Y-%m-%d'
                     ) BETWEEN '$after3month' AND '$afteryear' AND
-                    stock_batch.item_pack_size_id = $product_id ";
+                    stakeholder_item_pack_sizes.item_pack_size_id = $product_id ";
                 break;
             case 3:
                 $where = " AND
@@ -4663,13 +4875,13 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                             stock_batch.expiry_date,
                             '%Y-%m-%d'
                     ) > '$afteryear' AND
-                    stock_batch.item_pack_size_id = $product_id ";
+                    stakeholder_item_pack_sizes.item_pack_size_id = $product_id ";
                 break;
             case 4:
                 $where = " AND
                     (placements.vvm_stage >= 3 OR
                     DATE_FORMAT(stock_batch.expiry_date,'%Y-%m-%d') < '$today')
-                    AND stock_batch.item_pack_size_id = $product_id ";
+                    AND stakeholder_item_pack_sizes.item_pack_size_id = $product_id ";
                 break;
         }
 
@@ -4685,12 +4897,15 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                             IFNULL(vvm_stages.pk_id, 1) AS vvm,
                             vvm_stages.vvm_stage_value
                     FROM
-                            stock_batch
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-                    LEFT JOIN placements ON placements.stock_batch_id = stock_batch.pk_id
+                            stock_batch_warehouses
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                    INNER JOIN placements ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
                     INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
                     WHERE
-                    stock_batch.warehouse_id = $wh_id AND
+                    stock_batch_warehouses.warehouse_id = $wh_id AND
                     item_pack_sizes.item_category_id = 1
                     $where
                     GROUP BY
@@ -4723,16 +4938,20 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                             item_pack_sizes.number_of_doses as doses_per_vial
                     FROM
                             stock_detail
-                            INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+                            INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                            INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                            INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                            INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                             INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-                            INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+
                     WHERE
                             stock_master.transaction_type_id = 2 AND
-                            stock_batch.warehouse_id = $wh_id AND
+                            stock_batch_warehouses.warehouse_id = $wh_id AND
                             DATE_FORMAT(stock_master.transaction_date,'%Y-%m') = '$date' AND
                             item_pack_sizes.item_category_id = 1
                     GROUP BY
-                            stock_batch.item_pack_size_id
+                            stakeholder_item_pack_sizes.item_pack_size_id
                     ORDER BY
                             item_pack_sizes.list_rank ASC";
 
@@ -4745,8 +4964,9 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
     public function getStockReportByDate() {
         $form_values = $this->form_values;
         $role_id = $this->_identity->getRoleId();
-        $wh_id = $form_values['warehouse'];
-        if (empty($wh_id)) {
+        if (!empty($form_values['warehouse'])) {
+            $wh_id = $form_values['warehouse'];
+        } else {
             $wh_id = $this->_identity->getWarehouseId();
         }
 
@@ -4759,15 +4979,19 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                             item_pack_sizes.number_of_doses as doses_per_vial
                     FROM
                             stock_detail
-                            INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+                            INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                            INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                            INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                            INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                             INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-                            INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+
                     WHERE
-                            stock_batch.warehouse_id = $wh_id AND
+                            stock_batch_warehouses.warehouse_id = $wh_id AND
                             DATE_FORMAT(stock_master.transaction_date,'%Y-%m') <= '$date' AND
                             item_pack_sizes.item_category_id = 1
                     GROUP BY
-                            stock_batch.item_pack_size_id
+                            stakeholder_item_pack_sizes.item_pack_size_id
                     ORDER BY
                             item_pack_sizes.list_rank ASC";
 
@@ -4819,7 +5043,7 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
             distribution_plan
             INNER JOIN warehouses ON distribution_plan.receiver_warehouse_id = warehouses.pk_id
             WHERE
-            distribution_plan.sender_warehouse_id = '$wh_id' AND warehouses.status='".parent::ACTIVE."') B  ON A.to_warehouse_id = B.receiver_warehouse_id
+            distribution_plan.sender_warehouse_id = '$wh_id' AND warehouses.status='" . parent::ACTIVE . "') B  ON A.to_warehouse_id = B.receiver_warehouse_id
             ORDER BY warehouse_name";
 
         $this->_em = Zend_Registry::get('doctrine');
@@ -4833,7 +5057,7 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
         $to_warehouse_id = $array['hdn_receive_warehouse_id'];
         $from_warehouse_id = $this->_identity->getWarehouseId();
 
-        $str_qry_del = "DELETE stock_detail.*,stock_master.*
+        $str_qry_del_detail = "DELETE stock_detail.*
                             FROM
                             stock_detail,stock_master
                             where
@@ -4843,8 +5067,21 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                             and stock_master.draft=1 and stock_master.transaction_type_id = 2";
 
         $this->_em = Zend_Registry::get('doctrine');
-        $row = $row = $this->_em->getConnection()->prepare($str_qry_del);
-        $row->execute();
+        $row_detail = $row = $this->_em->getConnection()->prepare($str_qry_del_detail);
+        $row_detail->execute();
+
+        $str_qry_del_master = "DELETE stock_master.*
+                            FROM
+                            stock_detail,stock_master
+                            where
+                            stock_master.pk_id = stock_detail.stock_master_id
+                            and stock_master.to_warehouse_id='$to_warehouse_id'
+                            and stock_master.from_warehouse_id = '$from_warehouse_id'
+                            and stock_master.draft=1 and stock_master.transaction_type_id = 2";
+
+        $this->_em = Zend_Registry::get('doctrine');
+        $row_master = $row = $this->_em->getConnection()->prepare($str_qry_del_master);
+        $row_master->execute();
 
         if (!empty($array['hdn_stock_master_id'])) {
             $stock_master = $this->_em->getRepository("StockMaster")->find($array['hdn_stock_master_id']);
@@ -4911,46 +5148,40 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
     }
 
     public function addStockMasterTemp($array) {
-        //  App_Controller_Functions::pr($array);
-
+        // App_Controller_Functions::pr($array);
         $to_warehouse_id = $array['hdn_receive_warehouse_id'];
         $from_warehouse_id = $this->_identity->getWarehouseId();
-
-
-
-        $str_qry_del = "DELETE stock_detail.*,stock_master.*
+        $transaction_date = App_Controller_Functions::dateToDbFormat($array['transaction_date']);
+        $str_qry = "SELECT stock_master.pk_id
                             FROM
-                            stock_detail,stock_master
+                            stock_master
                             where
-                            stock_master.pk_id = stock_detail.stock_master_id
-                            and stock_master.to_warehouse_id='$to_warehouse_id'
+                            stock_master.to_warehouse_id='$to_warehouse_id'
                             and stock_master.from_warehouse_id = '$from_warehouse_id'
-                            and stock_master.draft=1 and stock_master.transaction_type_id = 2";
+                            and stock_master.draft=1 and stock_master.transaction_type_id = 2   AND DATE_FORMAT(
+                                stock_master.transaction_date,
+                                '%Y-%m-%d'
+                        ) = '$transaction_date' ";
 
         $this->_em = Zend_Registry::get('doctrine');
-        $row = $row = $this->_em->getConnection()->prepare($str_qry_del);
+        $row = $this->_em->getConnection()->prepare($str_qry);
         $row->execute();
+        $result = $row->fetchAll();
 
 
-
-        if (!empty($array['hdn_stock_master_id'])) {
-            $hdn_stock_master_id = $array['hdn_stock_master_id'];
-            $str_qry_del = "DELETE stock_detail.*
-                            FROM
-                            stock_detail,stock_master
-                            where
-                            stock_master.pk_id = stock_detail.stock_master_id
-                            and stock_master.pk_id='$hdn_stock_master_id' ";
-
-
-            $this->_em = Zend_Registry::get('doctrine');
-            $row = $row = $this->_em->getConnection()->prepare($str_qry_del);
-            $row->execute();
-
-            $stock_master = $this->_em->getRepository("StockMaster")->find($array['hdn_stock_master_id']);
-        } else {
-            $stock_master = new StockMaster();
+        $stock_master_id = $result[0]['pk_id'];
+        $detail = $this->_em->getRepository("StockDetail")->findBy(array("stockMaster" => $stock_master_id));
+        if (count($detail) > 0) {
+            $master = $detail[0]->getStockMaster();
+            foreach ($detail as $row) {
+                $this->_em->remove($row);
+            }
+            $this->_em->remove($master);
+            $this->_em->flush();
         }
+
+        $stock_master = new StockMaster();
+     
         $type = $array['transaction_type_id'];
 
         $time_arr = explode(' ', $array['transaction_date']);
@@ -4997,7 +5228,8 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
         $this->_em->flush();
 
         $id = $stock_master->getPkId();
-
+//echo $id;
+//exit;
         return $id;
     }
 
@@ -5008,8 +5240,8 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
         $str_sql = "SELECT
 
             DATE_FORMAT(stock_master.transaction_date,'%d/%m/%Y %h:%i %p') as transaction_date,
-            stock_batch.item_pack_size_id,
-            stock_detail.stock_batch_id,
+            stakeholder_item_pack_sizes.item_pack_size_id,
+            stock_detail.stock_batch_warehouse_id as stock_batch_id,
             DATE_FORMAT(stock_batch.expiry_date,'%d %M, %Y') as expiry_date,
             stock_detail.quantity,
             stock_master.transaction_reference,
@@ -5017,7 +5249,11 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
             FROM
             stock_detail
             INNER JOIN stock_master ON stock_master.pk_id = stock_detail.stock_master_id
-            INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+            INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+            INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+            INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+            INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
             WHERE
             stock_master.from_warehouse_id = '$sender_warehouse_id' and "
                 . "stock_master.to_warehouse_id = '$receive_warehouse_id' and "
@@ -5066,9 +5302,12 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                 users.user_name
                 FROM
                 stock_master_history as stock_master
-                INNER JOIN stock_detail_history  as stock_detail ON stock_master.master_id = stock_detail.stock_master_id 
-                INNER JOIN stock_batch as stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-                INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                INNER JOIN stock_detail_history  as stock_detail ON stock_master.master_id = stock_detail.stock_master_id
+                INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                 INNER JOIN item_units ON item_pack_sizes.item_unit_id = item_units.pk_id
                 INNER JOIN warehouses AS `from_warehouse` ON stock_master.from_warehouse_id = from_warehouse.pk_id
                 INNER JOIN warehouses AS `to_warehouse` ON stock_master.to_warehouse_id = to_warehouse.pk_id
@@ -5076,7 +5315,7 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                 WHERE
                 stock_master.draft = 0 AND
                 stock_detail.temporary = 0 AND
-                stock_batch.warehouse_id = '$wh_id'
+                stock_batch_warehouses.warehouse_id = '$wh_id'
                 $date_where
                 ORDER BY transaction_type_id,transaction_date";
 
@@ -5128,7 +5367,7 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                     WHERE
                         stakeholders.geo_level_id = 2
                         AND stakeholders.pk_id = 2
-                        $provFilter    
+                        $provFilter
                     ORDER BY
                         warehouses.warehouse_name";
 
@@ -5166,7 +5405,7 @@ ON C.item_pack_size_id = B.item_pack_size_id WHERE C.eta > '$to_date'";
                     FROM
                         warehouses
                         INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
-                      
+
                     WHERE
                         stakeholders.geo_level_id = 4
                         AND stakeholders.pk_id = 4
@@ -5217,7 +5456,7 @@ FROM
 		SELECT
 			warehouses.pk_id,
 			warehouses.warehouse_name
-			
+
 		FROM
 			stock_detail
 		INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
@@ -5252,25 +5491,50 @@ GROUP BY
         }
 
         $str_sql = "SELECT
-                        stock_batch.warehouse_id,
+                        stock_batch_warehouses.warehouse_id,
                         item_pack_sizes.item_name,
                         stock_batch.number AS batch_number,
-                        stock_batch.quantity AS batch_qty,
+                        stock_batch_warehouses.quantity AS batch_qty,
                         stock_batch.expiry_date,
                         placement_summary.quantity AS placed_qty,
                         placement_summary.placement_location_id
                     FROM
-                        stock_batch
-                        INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-                        LEFT JOIN placement_summary ON stock_batch.pk_id = placement_summary.stock_batch_id
+                        INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                        LEFT JOIN placement_summary ON stock_batch.pk_id = placement_summary.stock_batch_warehouse_id
                     WHERE
-                        stock_batch.quantity > 0
-                        AND stock_batch.warehouse_id = $wh_id";
+                        stock_batch_warehouses.quantity > 0
+                        AND stock_batch_warehouses.warehouse_id = $wh_id";
 
         $this->_em = Zend_Registry::get('doctrine');
         $row = $this->_em->getConnection()->prepare($str_sql);
         $row->execute();
         return $row->fetchAll();
+    }
+
+    public function getIssueDetail() {
+        $detail_id = $this->form_values['$detail_id'];
+        $stock_detail = $this->_em->getRepository("StockDetail")->find($detail_id);
+        $vvm_stage_id = $stock_detail->getVvmStage()->getPkId();
+        $qty_issued = abs($stock_detail->getQuantity());
+        $batch_id = $stock_detail->getStockBatchWarehouse()->getPkId();
+        $batch_number = $stock_detail->getStockBatchWarehouse()->getStockBatch()->getNumber();
+        $expiray_date = $stock_detail->getStockBatchWarehouse()->getStockBatch()->getExpiryDate()->format("d/m/Y");
+        $product = $stock_detail->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemName();
+        $item_category_id = $stock_detail->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemCategory()->getPkId();
+        $result = array(
+            "vvm_stage_id" => $vvm_stage_id,
+            "qty_issued" => $qty_issued,
+            "batch_id" => $batch_id,
+            "batch_number" => $batch_number,
+            "expiray_date" => $expiray_date,
+            "product" => $product,
+            "item_category_id" => $item_category_id
+        );
+        return $result;
     }
 
 }

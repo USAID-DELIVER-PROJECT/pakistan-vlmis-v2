@@ -15,35 +15,18 @@ StockBatch:
       length: 100
       fixed: false
       nullable: true
-    batchMasterId:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: batch_master_id
     expiryDate:
-      type: datetime
+      type: date
       nullable: true
       column: expiry_date
-    quantity:
-      type: bigint
-      nullable: true
-    status:
-      type: string
-      length: null
-      fixed: false
-      nullable: true
     unitPrice:
       type: float
       nullable: true
       column: unit_price
     productionDate:
-      type: datetime
+      type: date
       nullable: true
       column: production_date
-    lastUpdate:
-      type: datetime
-      nullable: true
-      column: last_update
     createdDate:
       type: datetime
       nullable: true
@@ -53,24 +36,6 @@ StockBatch:
       nullable: false
       column: modified_date
   oneToOne:
-    modifiedBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        modified_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    itemPackSize:
-      targetEntity: ItemPackSizes
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        item_pack_size_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     vvmType:
       targetEntity: VvmTypes
       cascade: {  }
@@ -80,24 +45,6 @@ StockBatch:
         vvm_type_id:
           referencedColumnName: pk_id
       orphanRemoval: false
-    warehouse:
-      targetEntity: Warehouses
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        warehouse_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    stakeholderItemPackSize:
-      targetEntity: StakeholderItemPackSizes
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        stakeholder_item_pack_size_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     createdBy:
       targetEntity: Users
       cascade: {  }
@@ -105,6 +52,24 @@ StockBatch:
       inversedBy: null
       joinColumns:
         created_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    packInfo:
+      targetEntity: PackInfo
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        pack_info_id:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

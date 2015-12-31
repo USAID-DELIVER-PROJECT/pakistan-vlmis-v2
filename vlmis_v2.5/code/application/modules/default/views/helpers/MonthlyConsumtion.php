@@ -73,7 +73,7 @@ class Zend_View_Helper_MonthlyConsumtion extends Zend_View_Helper_Abstract {
            w0_.reporting_start_date = '$prev_month_date'
            AND w0_.item_pack_size_id = $pk_id";
         }
-        //echo $querypro;
+
         // exit;
         $row = $this->_em->getConnection()->prepare($querypro);
 
@@ -85,7 +85,7 @@ class Zend_View_Helper_MonthlyConsumtion extends Zend_View_Helper_Abstract {
 //         return $result[0];
 //      } else {
 //          return '0';
-//      }
+        //  }
     }
 
 }

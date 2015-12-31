@@ -9,23 +9,34 @@ $in_rg = $this->in_rg1;
 $in_type = $this->in_type1;
 $sel_item = $this->sel_item;
 $sel_prov = $this->prov_sel;
+$in_stk = $this->in_stk;
 $counter = 1;
 
 $rpt_date = $sel_year . '-' . str_pad($sel_month, 2, "0", STR_PAD_LEFT) . '-01';
-$query_consumption = $this->reports()->reportConsumption($in_type, $rpt_date, $sel_prov, $sel_item, $in_stk);
-$query_amc = $this->reports()->reportAmc($in_type, $rpt_date, $sel_prov, $sel_item, $in_stk);
-$query_cb = $this->reports()->reportCb($in_type, $rpt_date, $sel_prov, $sel_item, $in_stk);
+//$query_consumption = $this->reports()->reportConsumption($in_type, $rpt_date, $sel_prov, $sel_item, $in_stk);
+//$query_amc = $this->reports()->reportAmc($in_type, $rpt_date, $sel_prov, $sel_item, $in_stk);
+//$query_cb = $this->reports()->reportCb($in_type, $rpt_date, $sel_prov, $sel_item, $in_stk);
+//
+//foreach ($query_consumption as $consumption) {
+//    $data_arr[$consumption['pk_id']]['location'] = $consumption['location_name'];
+//    $data_arr[$consumption['pk_id']]['cons'] = $consumption['consumption'];
+//}
+//foreach ($query_amc as $amc) {
+//    $data_arr[$amc['pk_id']]['amc'] = $amc['AMC'];
+//}
+//foreach ($query_cb as $cb) {
+//    $data_arr[$cb['pk_id']]['cb'] = $cb['CB'];
+//}
 
-foreach ($query_consumption as $consumption) {
-    $data_arr[$consumption['pk_id']]['location'] = $consumption['location_name'];
-    $data_arr[$consumption['pk_id']]['cons'] = $consumption['consumption'];
+$result = $this->reports()->getReportData($in_type, $rpt_date, $sel_prov, $sel_item, $in_stk);
+foreach ($result as $row) {
+    $data_arr[$row['district_id']]['location'] = $row['district_name'];
+    $data_arr[$row['district_id']]['cons'] = $row['Vaccinated'];
+    $data_arr[$row['district_id']]['amc'] = $row['AMC'];
+    $data_arr[$row['district_id']]['cb'] = $row['total_SOH'];
+    $data_arr[$row['district_id']]['mos'] = $row['total_MOS'];
 }
-foreach ($query_amc as $amc) {
-    $data_arr[$amc['pk_id']]['amc'] = $amc['AMC'];
-}
-foreach ($query_cb as $cb) {
-    $data_arr[$cb['pk_id']]['cb'] = $cb['CB'];
-}
+
 //App_Controller_Functions::pr($data_arr);
 foreach ($data_arr as $item_id => $items) {
     $item_name = $items['location'];
@@ -39,7 +50,7 @@ foreach ($data_arr as $item_id => $items) {
     $tmp[] = $data_arr[$item_id]['cons'];
     $tmp[] = $data_arr[$item_id]['amc'];
     $tmp[] = $data_arr[$item_id]['cb'];
-    $tmp[] = (!empty($data_arr[$item_id]['cb'])) ? round($data_arr[$item_id]['cb'] / $data_arr[$item_id]['amc'], 1) : '0';
+    $tmp[] = $data_arr[$item_id]['mos'];
 
     $sel_stk = 1;
     $sel_lvl = 4;

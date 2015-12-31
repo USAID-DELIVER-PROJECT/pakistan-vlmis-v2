@@ -266,23 +266,29 @@
                                                         <?php echo $this->translate("Date"); ?>
                                                     </th>
                                                     <th>
+                                                        <?php echo $this->translate("From Supplier"); ?>
+                                                    </th>
+                                                    <th>
                                                         <?php echo $this->translate("Product"); ?>
+                                                    </th>
+                                                    <th class="col-md-2">
+                                                        <?php echo $this->translate("Batch"); ?>
+                                                    </th>
+                                                    <th class="col-md-2">
+                                                        <?php echo $this->translate("Received"); ?>
                                                     </th>
                                                     <th>
                                                         <?php echo $this->translate("Unit"); ?>
                                                     </th>
                                                     <th>
-                                                        <?php echo $this->translate("From Warehouse"); ?>
-                                                    </th>
-                                                    <th class="col-md-2">
-                                                        <?php echo $this->translate("Received"); ?>
-                                                    </th>
-                                                    <th class="col-md-2">
-                                                        <?php echo $this->translate("Batch"); ?>
+                                                        <?php echo $this->translate("Manufacturer"); ?>
+                                                    </th>                                                  
+                                                    <th>
+                                                        <?php echo $this->translate("Location"); ?>
                                                     </th>
                                                     <th nowrap>
                                                         <?php echo $this->translate("Expiry Date"); ?>
-                                                    </th>
+                                                    </th>                                                    
                                                     <th>
                                                         <?php echo $this->translate("Action"); ?>
                                                     </th>
@@ -308,25 +314,30 @@
                                                     ?>
                                                     <tr class="gradeX">
                                                         <td nowrap>
-                                                            <?php
-                                                            echo $this->arr_data['transaction_date'];
-                                                            ?>
+                                                            <?php echo $this->arr_data['transaction_date']; ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php echo $currRow['from_warehouse']; ?>
                                                         </td>
                                                         <td>
                                                             <?php echo $currRow['item_name']; ?>
+                                                        </td>
+                                                        <td class="id<?php echo $currRow['stock_detail_id']; ?>" >
+                                                            <?php echo $currRow['number']; ?>
+                                                        </td>
+                                                        <td class="id<?php echo $currRow['stock_detail_id']; ?>" >
+                                                            <?php echo number_format(abs($currRow['quantity'])); ?>
                                                         </td>
                                                         <td>
                                                             <?php echo $currRow['item_unit_name']; ?>
                                                         </td>
                                                         <td>
-                                                            <?php echo $currRow['from_warehouse']; ?>
+                                                            <?php echo $currRow['manufacturer']; ?>
                                                         </td>
-                                                        <td class="id<?php echo $currRow['stock_detail_id']; ?>" >
-                                                            <?php echo number_format(abs($currRow['quantity'])); ?>
+                                                        <td>
+                                                            <?php echo $this->getLocation($currRow['stock_detail_id'], $currRow['item_category']); ?>
                                                         </td>
-                                                        <td class="id<?php echo $currRow['stock_detail_id']; ?>" >
-                                                            <?php echo $currRow['number']; ?>
-                                                        </td>
+                                                        
                                                         <td>
                                                             <?php echo App_Controller_Functions::dateToUserFormat($currRow['expiry_date']); ?>
                                                         </td>

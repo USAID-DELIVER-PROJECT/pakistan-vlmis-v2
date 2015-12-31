@@ -75,22 +75,22 @@
 
                                                         <?php
                                                         $current_date = date("y/m/d");
-                                                        $expiray_date = $row->getStockBatch()->getExpiryDate()->format("y/m/d");
+                                                        $expiray_date = $row->getStockBatchWarehouse()->getStockBatch()->getExpiryDate()->format("y/m/d");
 
                                                         if ($expiray_date < $current_date) {
                                                             ?>
-                                                            <td align="right" style="color:red"><?php echo $row->getStockBatch()->getExpiryDate()->format("d/m/y"); ?></td>
+                                                            <td align="right" style="color:red"><?php echo $row->getStockBatchWarehouse()->getStockBatch()->getExpiryDate()->format("d/m/y"); ?></td>
                                                             <?php
                                                         } else {
                                                             ?>
-                                                            <td align="right" style="color:green"><?php echo $row->getStockBatch()->getExpiryDate()->format("d/m/y"); ?></td>
+                                                            <td align="right" style="color:green"><?php echo $row->getStockBatchWarehouse()->getStockBatch()->getExpiryDate()->format("d/m/y"); ?></td>
                                                             <?php
                                                         }
                                                         ?>
 
 
                                                         <td class="right"><?php echo number_format($row->getQuantity()); ?></td>
-                                                        <td class="left"><?php echo ($row->getStockBatch()->getItemPackSize()->getVvmGroup()->getPkId() == 1 ? $row->getVvmStage()->getPkId() : $row->getVvmStage()->getVvmStageValue() ); ?></td>
+                                                        <td class="left"><?php echo ($row->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getVvmGroup()->getPkId() == 1 ? $row->getVvmStage()->getPkId() : $row->getVvmStage()->getVvmStageValue() ); ?></td>
                                                         <td>
                                                             <a editid="<?php echo $row->getPkId(); ?>" class="btn transfer-stock-vaccines btn-link btn-success btn-sm" data-toggle="modal" href="#modal-transfer-stock-vaccines">
                                                                 <?php echo $this->translate("Transfer") ?>
@@ -98,7 +98,7 @@
                                                             <!-- <a data-toggle="notyfy" id="<?php //echo $row->getPkId();  ?>" data-type="confirm" data-layout="top" class="cursor-hand btn btn-danger btn-sm">
                                                             <?php //echo $this->translate("Delete") ?>
                                                             </a> -->
-                                                            <a class="btn btn-info btn-sm" id="<?php echo $row->getStockBatch()->getPkId(); ?>-batchdetail" data-id="<?php echo $row->getStockBatch()->getPkId(); ?>" data-toggle="modal" href="#information"><i class="fa fa-search"></i></a>
+                                                            <a class="btn btn-info btn-sm" id="<?php echo $row->getStockBatchWarehouse()->getPkId(); ?>-batchdetail" data-id="<?php echo $row->getStockBatchWarehouse()->getPkId(); ?>" data-toggle="modal" href="#information"><i class="fa fa-search"></i></a>
                                                         </td>        
                                                     </tr>
                                                     <?php
@@ -120,7 +120,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                    <h3>Transfer Stock form: <?php echo $this->title; ?></h3>
+                                                    <h3>Transfer Stock from: <?php echo $this->title; ?></h3>
                                                 </div>
                                                 <div class="modal-body" id="modal-body-contents">
                                                     <div style="text-align: center; "><img src="<?php echo $this->baseUrl(); ?>/images/loader.gif"/></div>

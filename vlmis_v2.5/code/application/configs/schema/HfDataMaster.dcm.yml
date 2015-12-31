@@ -59,45 +59,12 @@ HfDataMaster:
       type: datetime
       nullable: false
       column: modified_date
-    childrenLiveBirth:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: children_live_birth
-    survivingChildren011:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: surviving_children_0_11
-    childrenAged1223:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: children_aged_12_23
-    pregnantWomen:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: pregnant_women
     itemAmc:
       type: integer
       unsigned: false
       nullable: true
       column: item_amc
-    cbas:
-      type: integer
-      unsigned: false
-      nullable: true
   oneToOne:
-    modifiedBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        modified_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     itemPackSize:
       targetEntity: ItemPackSizes
       cascade: {  }
@@ -123,6 +90,15 @@ HfDataMaster:
       inversedBy: null
       joinColumns:
         created_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

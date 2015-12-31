@@ -281,10 +281,10 @@ function lastMonthsStats(district_id,province_id){
         chart = response;
         $("#ucs_list").html("");
 
-        table = "<table class='table table-condensed table-hover'>";
+        table = "<table class='table table-condensed table-bordered table-hover'>";
         table += "<thead><th>S.No</th><th>UC Name</th><th>Wastages(%)</th></thead>";
         for (var i = 0; i < chart.length; i++) {
-            table += "<tr><td>" + (i+1) + "</td><td>" + chart[i].location_name + "</td><td align='center'>" + chart[i].wastages_rate + "</td>";
+            table += "<tr><td>" + (i+1) + "</td><td>" + chart[i].location_name + "</td><td class='center'>" + chart[i].wastages_rate + "</td>";
         }
         table += "</table>";
         $("#ucs_list").append(table);     
@@ -323,7 +323,7 @@ function clearData(){
     $("#mapTitle").html("");
     $('.radio-button').prop('checked', false);
     $("#prod_limit").html("");
-    $("#ucs_list").html("<h5 align='center' style='margin:70px auto;'>Click any district for Unacceptable Wastages <br/> UCs list</h5>");
+    $("#ucs_list").html("<h5 class='center' style='margin:70px auto;'>Click any district for Unacceptable Wastages <br/> UCs list</h5>");
     $("#submit").attr("disabled", true);
     $("#attributeGrid").html("");
     $("#districtRanking").html("");
@@ -353,10 +353,10 @@ function drawGrid(){
     jsonData.length = 0;
     var features = vLMIS.features;
     
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>District</th><th>Total UCs</th><th>Reported UCs</th><th>Wastages UCs</th><th>Wastages Rate(%)</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>District</th><th>Total UCs</th><th>Reported UCs</th><th class='right'>Wastages UCs</th><th class='center' colspan='2'>Wastages Rate(%)</th></thead>";
     for (var i = 0; i < features.length; i++) {
-        table += "<tr><td>" + features[i].attributes.district + "</td><td align='right'>" + features[i].attributes.total_ucs + "</td><td align='right'>" + features[i].attributes.reported + "</td><td align='right'>" + features[i].attributes.wastages + "</td><td align='right'>" + features[i].attributes.wastages_rate + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
+        table += "<tr><td>" + features[i].attributes.district + "</td><td class='right'>" + features[i].attributes.total_ucs + "</td><td class='right'>" + features[i].attributes.reported + "</td><td class='right'>" + features[i].attributes.wastages + "</td><td class='right'>" + features[i].attributes.wastages_rate + "</td><td class='right'><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
         jsonData.push({
             label: features[i].attributes.district,
             value: features[i].attributes.wastages_rate,
@@ -394,7 +394,7 @@ function districtRanking(records,title) {
         type: 'column2D',
         renderAt: 'chart-container',
         width: width,
-        height: '100%',
+        height: '98%',
         dataFormat: 'json',
         dataSource: {
             "chart": {
@@ -426,11 +426,11 @@ function gridFilter(color){
     $("#attributeGrid").html("");
     dataDownload.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>District</th><th>Total UCs</th><th>Reported UCs</th><th>Wastages UCs</th><th>Wastages Rate(%)</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>District</th><th>Total UCs</th><th>Reported UCs</th><th class='right'>Wastages UCs</th><th class='center' colspan='2'>Wastages Rate(%)</th></thead>";
     for (var i = 0; i < features.length; i++) {
         if (features[i].attributes.color == color) {
-             table += "<tr><td>" + features[i].attributes.district + "</td><td align='right'>" + features[i].attributes.total_ucs + "</td><td align='right'>" + features[i].attributes.reported + "</td><td align='right'>" + features[i].attributes.wastages + "</td><td align='right'>" + features[i].attributes.wastages_rate + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
+             table += "<tr><td>" + features[i].attributes.district + "</td><td class='right'>" + features[i].attributes.total_ucs + "</td><td class='right'>" + features[i].attributes.reported + "</td><td class='right'>" + features[i].attributes.wastages + "</td><td class='right'>" + features[i].attributes.wastages_rate + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
              dataDownload.push({
                 province: features[i].attributes.province,
                 district_name: features[i].attributes.district,

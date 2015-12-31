@@ -67,28 +67,30 @@ class Model_PlacementLocations extends Model_Base {
             $str_sql = "SELECT
                     Sum(placements.quantity) AS qty,
                     placements.placement_location_id,
-                    placements.stock_batch_id AS batch_id,
+                    placements.stock_batch_warehouse_id AS batch_id,
                     stock_batch.number AS batch_no,
                     item_pack_sizes.item_name,
                     item_pack_sizes.pk_id AS item_id,
                     placement_locations.location_barcode AS location_name,
                     ROUND(
-                                    Sum(placements.quantity) / stakeholder_item_pack_sizes.quantity_per_pack
+                                    Sum(placements.quantity) / pack_info.quantity_per_pack
                             ) AS cartons,
                     placements.vvm_stage
                     FROM
                             placements
                     INNER JOIN placement_locations ON placement_locations.pk_id = placements.placement_location_id
                     INNER JOIN cold_chain ON cold_chain.pk_id = placement_locations.location_id
-                    INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
-                    LEFT JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    LEFT JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id 
                     WHERE
                             cold_chain.warehouse_id = $wh_id
                     AND placement_locations.location_type = $type
                     GROUP BY
                     placements.placement_location_id,
-                    placements.stock_batch_id,
+                    placements.stock_batch_warehouse_id,
                     stock_batch.number,
                     item_pack_sizes.item_name,
                     item_pack_sizes.pk_id,
@@ -101,25 +103,28 @@ class Model_PlacementLocations extends Model_Base {
             $str_sql = "SELECT
                                 Sum(placements.quantity) AS qty,
                                 placements.placement_location_id,
-                                placements.stock_batch_id AS batch_id,
+                                placements.stock_batch_warehouse_id AS batch_id,
                                 stock_batch.number AS batch_no,
                                 item_pack_sizes.item_name,
                                 item_pack_sizes.pk_id AS item_id,
                                 placement_locations.location_barcode AS location_name,
-                                ROUND(Sum(placements.quantity) / stakeholder_item_pack_sizes.quantity_per_pack) as cartons
+                                ROUND(Sum(placements.quantity) / pack_info.quantity_per_pack) as cartons
                         FROM
                                 placements
                         INNER JOIN placement_locations ON placement_locations.pk_id = placements.placement_location_id
-                        INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-                        INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                        INNER JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                        LEFT JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id 
                         INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
-                        LEFT JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                      
                         WHERE
                                 placement_locations.location_type = $type
                         AND non_ccm_locations.warehouse_id = $wh_id
                         GROUP BY
                                 placements.placement_location_id,
-                                placements.stock_batch_id,
+                                placements.stock_batch_warehouse_id,
                                 stock_batch.number,
                                 item_pack_sizes.item_name,
                                 item_pack_sizes.pk_id
@@ -159,11 +164,12 @@ class Model_PlacementLocations extends Model_Base {
                 AssetSubtype.asset_type_name,
                 placement_locations.pk_id AS plc_pk_id,
                 ccm_models.ccm_model_name,
+                ccm_status_history.ccm_status_list_id,
                 round(
 		 (
 			SUM(
 				(
-					placements.quantity * stakeholder_item_pack_sizes.volum_per_vial
+					placements.quantity * pack_info.volum_per_vial
 				) / 1000
 			)
 		) / (
@@ -177,27 +183,30 @@ class Model_PlacementLocations extends Model_Base {
                 LEFT JOIN ccm_asset_types AS AssetMainType ON AssetSubtype.parent_id = AssetMainType.pk_id
                 LEFT JOIN placement_locations ON cold_chain.pk_id = placement_locations.location_id
                 INNER JOIN ccm_models ON ccm_models.pk_id = cold_chain.ccm_model_id
-                LEFT JOIN placements ON placements.placement_location_id = placement_locations.pk_id
-                LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-                LEFT JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
-                INNER JOIN ccm_status_history ON ccm_status_history.pk_id = cold_chain.ccm_status_history_id
+                LEFT JOIN placements ON placements.placement_location_id = placement_locations.pk_id                
+                LEFT JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                LEFT JOIN stock_batch ON stock_batch_warehouses.stock_batch_id=stock_batch.pk_id
+                LEFT JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                LEFT JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id   
+                LEFT JOIN ccm_status_history ON ccm_status_history.pk_id = cold_chain.ccm_status_history_id
                 WHERE
-                        cold_chain.warehouse_id = $warehouse_id
+                 cold_chain.warehouse_id = $warehouse_id
                 AND (
                         (
-                                cold_chain.ccm_asset_type_id = ".Model_CcmAssetTypes::COLDROOM."
-                                OR AssetMainType.pk_id = ".Model_CcmAssetTypes::COLDROOM."
+                                cold_chain.ccm_asset_type_id = " . Model_CcmAssetTypes::COLDROOM . "
+                                OR AssetMainType.pk_id = " . Model_CcmAssetTypes::COLDROOM . "
                         )
                         OR (
-                                cold_chain.ccm_asset_type_id = ".Model_CcmAssetTypes::REFRIGERATOR."
-                                OR AssetMainType.pk_id = ".Model_CcmAssetTypes::REFRIGERATOR."
+                                cold_chain.ccm_asset_type_id = " . Model_CcmAssetTypes::REFRIGERATOR . "
+                                OR AssetMainType.pk_id = " . Model_CcmAssetTypes::REFRIGERATOR . "
                         )
                 )
                 AND placement_locations.location_type = " . self::LOCATIONTYPE_CCM . "
                 GROUP BY
-                cold_chain.auto_asset_id ORDER BY cold_chain.asset_id,cold_chain.ccm_asset_type_id DESC";
-        //echo $str_sql;
-
+                cold_chain.auto_asset_id ORDER BY ccm_status_history.ccm_status_list_id,cold_chain.asset_id,cold_chain.ccm_asset_type_id DESC";
+//        echo $str_sql;
+//        exit;
         /* $str_sql = "SELECT
           cold_chain.pk_id,
           cold_chain.asset_id,

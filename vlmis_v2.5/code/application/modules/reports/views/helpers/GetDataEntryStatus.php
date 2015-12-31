@@ -20,10 +20,14 @@ class Zend_View_Helper_GetDataEntryStatus extends Zend_View_Helper_Abstract {
 			stock_detail
 		INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
 	  	$join
-                INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id    
+                INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id  
 		WHERE
 			stock_detail.temporary = 0
-		AND stock_batch.warehouse_id = $warehouse_id
+		AND stock_batch_warehouses.warehouse_id = $warehouse_id
 		AND warehouses.`status` = 1
 		AND stock_master.transaction_type_id = $transaction_type
 		ORDER BY

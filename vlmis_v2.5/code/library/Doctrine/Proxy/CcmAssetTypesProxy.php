@@ -66,6 +66,30 @@ class CcmAssetTypesProxy extends \CcmAssetTypes implements \Doctrine\ORM\Proxy\P
         return parent::getStatus();
     }
 
+    public function setParentId($parentId)
+    {
+        $this->__load();
+        return parent::setParentId($parentId);
+    }
+
+    public function getParentId()
+    {
+        $this->__load();
+        return parent::getParentId();
+    }
+
+    public function setCcmEquipmentTypeId($ccmEquipmentTypeId)
+    {
+        $this->__load();
+        return parent::setCcmEquipmentTypeId($ccmEquipmentTypeId);
+    }
+
+    public function getCcmEquipmentTypeId()
+    {
+        $this->__load();
+        return parent::getCcmEquipmentTypeId();
+    }
+
     public function setCreatedDate($createdDate)
     {
         $this->__load();
@@ -90,28 +114,16 @@ class CcmAssetTypesProxy extends \CcmAssetTypes implements \Doctrine\ORM\Proxy\P
         return parent::getModifiedDate();
     }
 
-    public function setParent(\CcmAssetTypes $parent)
+    public function setModifiedBy(\Users $modifiedBy)
     {
         $this->__load();
-        return parent::setParent($parent);
+        return parent::setModifiedBy($modifiedBy);
     }
 
-    public function getParent()
+    public function getModifiedBy()
     {
         $this->__load();
-        return parent::getParent();
-    }
-
-    public function setCcmEquipmentType(\CcmEquipmentTypes $ccmEquipmentType)
-    {
-        $this->__load();
-        return parent::setCcmEquipmentType($ccmEquipmentType);
-    }
-
-    public function getCcmEquipmentType()
-    {
-        $this->__load();
-        return parent::getCcmEquipmentType();
+        return parent::getModifiedBy();
     }
 
     public function setCreatedBy(\Users $createdBy)
@@ -126,22 +138,10 @@ class CcmAssetTypesProxy extends \CcmAssetTypes implements \Doctrine\ORM\Proxy\P
         return parent::getCreatedBy();
     }
 
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->__load();
-        return parent::setModifiedBy($modifiedBy);
-    }
-
-    public function getModifiedBy()
-    {
-        $this->__load();
-        return parent::getModifiedBy();
-    }
-
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'assetTypeName', 'status', 'createdDate', 'modifiedDate', 'parent', 'ccmEquipmentType', 'createdBy', 'modifiedBy');
+        return array('__isInitialized__', 'pkId', 'assetTypeName', 'status', 'parentId', 'ccmEquipmentTypeId', 'createdDate', 'modifiedDate', 'modifiedBy', 'createdBy');
     }
 
     public function __clone()

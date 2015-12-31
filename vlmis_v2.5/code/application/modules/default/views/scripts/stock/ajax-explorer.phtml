@@ -64,6 +64,7 @@
                                         $serial_no = ((strlen($serial_no) < 2) ? "0" . $serial_no : $serial_no);
 
                                         $rsRow2 = $this->explorerReport()->getWarehouseDataByItemAndWarehouseId($this->wh_id, $rsRow1['pk_id'], $this->prev_month_date);
+                                        
                                         $itemid = $rsRow1['pk_id'];
                                         if (!empty($rsRow2['nearest_expiry'])) {
                                             $nearest_expiry = App_Controller_Functions::dateToUserFormat($rsRow2['nearest_expiry']);

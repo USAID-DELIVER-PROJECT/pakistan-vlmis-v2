@@ -34,7 +34,7 @@
 
 <table style="width:100%;">
     <tr>
-        <td class="center" colspan="3"><b style="font-size: 16px;"><?php echo $this->print_title?>  </b></td>
+        <td class="center" colspan="3"><b style="font-size: 16px;"><?php echo $this->print_title ?>  </b></td>
     </tr>
 </table>
 <br />
@@ -59,9 +59,8 @@
         <?php
         $m_res = array();
         $i = 1;
-        if (count($this->result) > 0) :
+        if ((!empty($this->result)) && count($this->result) > 0) :
             foreach ($this->result as $row):
-
                 ?>
                 <tr >
                     <td align="center"><?php echo date("d/m/Y", strtotime($row['transactionDate'])); ?></td>
@@ -77,9 +76,8 @@
                 </tr>
 
                 <!-- // Table row END --><?php
-                $i++;
-            endforeach;
-        endif;
+        $i++;    endforeach;
+endif;
         ?>
     </tbody>
 

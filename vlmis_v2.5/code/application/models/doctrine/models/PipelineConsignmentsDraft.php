@@ -65,9 +65,9 @@ class PipelineConsignmentsDraft
     private $modifiedDate;
 
     /**
-     * @var Users
+     * @var PackInfo
      */
-    private $modifiedBy;
+    private $manufacturer;
 
     /**
      * @var StakeholderActivities
@@ -75,14 +75,14 @@ class PipelineConsignmentsDraft
     private $stakeholderActivity;
 
     /**
+     * @var Users
+     */
+    private $modifiedBy;
+
+    /**
      * @var ItemPackSizes
      */
     private $itemPackSize;
-
-    /**
-     * @var StakeholderItemPackSizes
-     */
-    private $manufacturer;
 
     /**
      * @var VvmTypes
@@ -105,9 +105,9 @@ class PipelineConsignmentsDraft
     private $createdBy;
 
     /**
-     * @var StockBatch
+     * @var StockBatchWarehouses
      */
-    private $stockBatch;
+    private $stockBatchWarehouse;
 
     /**
      * @var TransactionTypes
@@ -326,23 +326,23 @@ class PipelineConsignmentsDraft
     }
 
     /**
-     * Set modifiedBy
+     * Set manufacturer
      *
-     * @param Users $modifiedBy
+     * @param PackInfo $manufacturer
      */
-    public function setModifiedBy(\Users $modifiedBy)
+    public function setManufacturer(\PackInfo $manufacturer)
     {
-        $this->modifiedBy = $modifiedBy;
+        $this->manufacturer = $manufacturer;
     }
 
     /**
-     * Get modifiedBy
+     * Get manufacturer
      *
-     * @return Users 
+     * @return PackInfo 
      */
-    public function getModifiedBy()
+    public function getManufacturer()
     {
-        return $this->modifiedBy;
+        return $this->manufacturer;
     }
 
     /**
@@ -366,6 +366,26 @@ class PipelineConsignmentsDraft
     }
 
     /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+
+    /**
      * Set itemPackSize
      *
      * @param ItemPackSizes $itemPackSize
@@ -383,26 +403,6 @@ class PipelineConsignmentsDraft
     public function getItemPackSize()
     {
         return $this->itemPackSize;
-    }
-
-    /**
-     * Set manufacturer
-     *
-     * @param StakeholderItemPackSizes $manufacturer
-     */
-    public function setManufacturer(\StakeholderItemPackSizes $manufacturer)
-    {
-        $this->manufacturer = $manufacturer;
-    }
-
-    /**
-     * Get manufacturer
-     *
-     * @return StakeholderItemPackSizes 
-     */
-    public function getManufacturer()
-    {
-        return $this->manufacturer;
     }
 
     /**
@@ -486,23 +486,23 @@ class PipelineConsignmentsDraft
     }
 
     /**
-     * Set stockBatch
+     * Set stockBatchWarehouse
      *
-     * @param StockBatch $stockBatch
+     * @param StockBatchWarehouses $stockBatchWarehouse
      */
-    public function setStockBatch(\StockBatch $stockBatch)
+    public function setStockBatchWarehouse(\StockBatchWarehouses $stockBatchWarehouse)
     {
-        $this->stockBatch = $stockBatch;
+        $this->stockBatchWarehouse = $stockBatchWarehouse;
     }
 
     /**
-     * Get stockBatch
+     * Get stockBatchWarehouse
      *
-     * @return StockBatch 
+     * @return StockBatchWarehouses 
      */
-    public function getStockBatch()
+    public function getStockBatchWarehouse()
     {
-        return $this->stockBatch;
+        return $this->stockBatchWarehouse;
     }
 
     /**

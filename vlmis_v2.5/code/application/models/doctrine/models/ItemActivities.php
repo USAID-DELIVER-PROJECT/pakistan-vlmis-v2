@@ -25,6 +25,11 @@ class ItemActivities
     private $modifiedDate;
 
     /**
+     * @var ItemPackSizes
+     */
+    private $itemPackSize;
+
+    /**
      * @var StakeholderActivities
      */
     private $stakeholderActivity;
@@ -38,11 +43,6 @@ class ItemActivities
      * @var Users
      */
     private $modifiedBy;
-
-    /**
-     * @var ItemPackSizes
-     */
-    private $itemPackSize;
 
 
     /**
@@ -93,6 +93,26 @@ class ItemActivities
     public function getModifiedDate()
     {
         return $this->modifiedDate;
+    }
+
+    /**
+     * Set itemPackSize
+     *
+     * @param ItemPackSizes $itemPackSize
+     */
+    public function setItemPackSize(\ItemPackSizes $itemPackSize)
+    {
+        $this->itemPackSize = $itemPackSize;
+    }
+
+    /**
+     * Get itemPackSize
+     *
+     * @return ItemPackSizes 
+     */
+    public function getItemPackSize()
+    {
+        return $this->itemPackSize;
     }
 
     /**
@@ -153,25 +173,5 @@ class ItemActivities
     public function getModifiedBy()
     {
         return $this->modifiedBy;
-    }
-
-    /**
-     * Set itemPackSize
-     *
-     * @param ItemPackSizes $itemPackSize
-     */
-    public function setItemPackSize(\ItemPackSizes $itemPackSize)
-    {
-        $this->itemPackSize = $itemPackSize;
-    }
-
-    /**
-     * Get itemPackSize
-     *
-     * @return ItemPackSizes 
-     */
-    public function getItemPackSize()
-    {
-        return $this->itemPackSize;
     }
 }

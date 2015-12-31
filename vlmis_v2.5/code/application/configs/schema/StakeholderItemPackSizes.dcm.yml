@@ -10,42 +10,6 @@ StakeholderItemPackSizes:
       column: pk_id
       generator:
         strategy: IDENTITY
-    packSizeDescription:
-      type: text
-      nullable: true
-      column: pack_size_description
-    length:
-      type: decimal
-      nullable: true
-    width:
-      type: decimal
-      nullable: true
-    height:
-      type: decimal
-      nullable: true
-    quantityPerPack:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: quantity_per_pack
-    status:
-      type: boolean
-      nullable: true
-    listRank:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: list_rank
-    volumPerVial:
-      type: decimal
-      nullable: true
-      column: volum_per_vial
-    itemGtin:
-      type: string
-      length: 20
-      fixed: false
-      nullable: true
-      column: item_gtin
     createdDate:
       type: datetime
       nullable: true
@@ -71,15 +35,6 @@ StakeholderItemPackSizes:
       inversedBy: null
       joinColumns:
         stakeholder_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    packagingLevel:
-      targetEntity: ListDetail
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        packaging_level:
           referencedColumnName: pk_id
       orphanRemoval: false
     createdBy:

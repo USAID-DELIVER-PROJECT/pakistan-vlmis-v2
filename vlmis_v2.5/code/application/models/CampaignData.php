@@ -19,20 +19,7 @@ class Model_CampaignData extends Model_Base {
         $this->_table = $this->_em->getRepository('CampaignData');
     }
 
-    public function getSummaryHistory() {
-        /* $str_qry = "
-          ";
-          $row = $this->_em->getConnection()->prepare($str_qry);
-          $row->execute();
-          return $row->fetchAll();
-         */
-        $arr_data = array(
-            'a' => '90',
-            'b' => '7',
-            'c' => '3'
-        );
-        return $arr_data;
-    }
+   
 
     public function getCoverageReport() {
         $str_qry = "SELECT

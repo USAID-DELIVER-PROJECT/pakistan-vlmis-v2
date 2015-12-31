@@ -20,22 +20,7 @@ class Model_Item extends Model_Base {
         $this->_table = $this->_em->getRepository('Items');
     }
 
-    public function getUnitByItemId() {
-        $str_sql = $this->_em->createQueryBuilder()
-                ->select("iu.pkId, iu.itemUnitName, ips.itemName")
-                ->from("ItemPackSizes", "ips")
-                ->join("ips.itemUnit", "iu")
-                ->where("ips.pkId = " . $this->form_values['item_pack_size_id']);
-        $row = $str_sql->getQuery()->getResult();
-        if (!empty($row) && count($row) > 0) {
-            return array(
-                'id' => $row[0]['pkId'],
-                'type' => $row[0]['itemUnitName']
-            );
-        } else {
-            return FALSE;
-        }
-    }
+  
 
     public function getProductList() {
           $str_sql = $this->_em->createQueryBuilder()

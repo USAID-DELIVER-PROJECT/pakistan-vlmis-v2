@@ -23,11 +23,11 @@ $getWHName = $this->reports()->getWarehousename($warehouse_id);
 $whName = $getWHName[0]['warehouse_name'];
 
 if ($sel_indicator == 1) {
-    $where = "stock_batch.warehouse_id = $warehouse_id AND stock_master.transaction_type_id = 2 AND DATE_FORMAT(stock_master.transaction_date,'%Y-%m') = ";
+    $where = "stock_batch_warehouses.warehouse_id = $warehouse_id AND stock_master.transaction_type_id = 2 AND DATE_FORMAT(stock_master.transaction_date,'%Y-%m') = ";
 } else if ($sel_indicator == 2) {
-    $where = "stock_batch.warehouse_id = $warehouse_id AND DATE_FORMAT(stock_master.transaction_date,'%Y-%m') <= ";
+    $where = "stock_batch_warehouses.warehouse_id = $warehouse_id AND DATE_FORMAT(stock_master.transaction_date,'%Y-%m') <= ";
 } else if ($sel_indicator == 3) {
-    $where = "stock_batch.warehouse_id = $warehouse_id AND stock_master.transaction_type_id = 1 AND DATE_FORMAT(stock_master.transaction_date,'%Y-%m') = ";
+    $where = "stock_batch_warehouses.warehouse_id = $warehouse_id AND stock_master.transaction_type_id = 1 AND DATE_FORMAT(stock_master.transaction_date,'%Y-%m') = ";
 }
 
 $data_arr = array();

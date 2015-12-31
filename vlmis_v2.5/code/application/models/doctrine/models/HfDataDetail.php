@@ -55,6 +55,16 @@ class HfDataDetail
     private $outreachFemale;
 
     /**
+     * @var decimal $outreachOutsideMale
+     */
+    private $outreachOutsideMale;
+
+    /**
+     * @var decimal $outreachOutsideFemale
+     */
+    private $outreachOutsideFemale;
+
+    /**
      * @var decimal $pregnantWomen
      */
     private $pregnantWomen;
@@ -268,6 +278,46 @@ class HfDataDetail
     public function getOutreachFemale()
     {
         return $this->outreachFemale;
+    }
+
+    /**
+     * Set outreachOutsideMale
+     *
+     * @param decimal $outreachOutsideMale
+     */
+    public function setOutreachOutsideMale($outreachOutsideMale)
+    {
+        $this->outreachOutsideMale = $outreachOutsideMale;
+    }
+
+    /**
+     * Get outreachOutsideMale
+     *
+     * @return decimal 
+     */
+    public function getOutreachOutsideMale()
+    {
+        return $this->outreachOutsideMale;
+    }
+
+    /**
+     * Set outreachOutsideFemale
+     *
+     * @param decimal $outreachOutsideFemale
+     */
+    public function setOutreachOutsideFemale($outreachOutsideFemale)
+    {
+        $this->outreachOutsideFemale = $outreachOutsideFemale;
+    }
+
+    /**
+     * Get outreachOutsideFemale
+     *
+     * @return decimal 
+     */
+    public function getOutreachOutsideFemale()
+    {
+        return $this->outreachOutsideFemale;
     }
 
     /**

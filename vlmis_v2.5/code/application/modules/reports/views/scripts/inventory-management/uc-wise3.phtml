@@ -138,7 +138,7 @@
                                                 ?>
                                                 <?php ($i == 1 && $i == $nod) ? '' : $i; ?>
                                                 <!--0-11 months-->
-                                                <?php $row0 = $this->reports()->ucWiseReport3($row['pk_id'], $items['pk_id'], '145', $this->year_sel, $this->month_sel, $i); ?>
+                                                <?php $row0 = $this->reports()->ucWiseReport3($row['pk_id'], $items['pk_id'], 'Model_ListDetail::AGE_0_11', $this->year_sel, $this->month_sel, $i); ?>
                                                 <td class="right">
                                                     <?php echo (!empty($row0['inside_uc_male'])) ? $row0['inside_uc_male'] : '0'; ?>
                                                 </td>

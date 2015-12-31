@@ -65,15 +65,6 @@ Items:
       nullable: true
       column: child_surviving_percent_till_second_year
   oneToOne:
-    createdBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        created_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     modifiedBy:
       targetEntity: Users
       cascade: {  }
@@ -81,6 +72,15 @@ Items:
       inversedBy: null
       joinColumns:
         modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    createdBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        created_by:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

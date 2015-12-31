@@ -35,15 +35,6 @@ CcmStatusList:
       nullable: true
       column: modified_date
   oneToOne:
-    createdBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        created_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     modifiedBy:
       targetEntity: Warehouses
       cascade: {  }
@@ -51,6 +42,15 @@ CcmStatusList:
       inversedBy: null
       joinColumns:
         modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    createdBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        created_by:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

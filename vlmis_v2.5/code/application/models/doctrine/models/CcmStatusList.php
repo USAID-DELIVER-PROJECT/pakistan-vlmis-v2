@@ -45,14 +45,14 @@ class CcmStatusList
     private $modifiedDate;
 
     /**
-     * @var Users
-     */
-    private $createdBy;
-
-    /**
      * @var Warehouses
      */
     private $modifiedBy;
+
+    /**
+     * @var Users
+     */
+    private $createdBy;
 
 
     /**
@@ -186,26 +186,6 @@ class CcmStatusList
     }
 
     /**
-     * Set createdBy
-     *
-     * @param Users $createdBy
-     */
-    public function setCreatedBy(\Users $createdBy)
-    {
-        $this->createdBy = $createdBy;
-    }
-
-    /**
-     * Get createdBy
-     *
-     * @return Users 
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
      * Set modifiedBy
      *
      * @param Warehouses $modifiedBy
@@ -223,5 +203,25 @@ class CcmStatusList
     public function getModifiedBy()
     {
         return $this->modifiedBy;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param Users $createdBy
+     */
+    public function setCreatedBy(\Users $createdBy)
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return Users 
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
     }
 }

@@ -44,44 +44,38 @@ $ro = 'ro,ro,ro,ro,ro,ro,ro,ro';
 //$query = $this->reports()->vaccineDropoutRate($wh_type, $sel_dist, $sel_tehsil, $year, $month, $item,$from_sel_month,$from_sel_year);
 
 $district = 'District:';
-$query = $this->reports()->vaccineDropoutRate($wh_type, $sel_dist, $sel_tehsil, $year, $month, $item,$from_sel_month,$from_sel_year,7,1);
+$query = $this->reports()->vaccineDropoutRate($wh_type, $sel_dist, $sel_tehsil, $year, $month, $item, $from_sel_month, $from_sel_year, 7, 1);
 foreach ($query as $row) {
     $item_id = $row['pk_id'];
 
     $data_arr[$item_id][] = $row['teh'];
     $data_arr[$item_id][] = $row['uc'];
     $data_arr[$item_id][] = $row['doses'];
-    $penta_doses_1 = $row['doses'];
-  
+    $penta_doses[$item_id] = $row['doses'];
 }
-$query_1 = $this->reports()->vaccineDropoutRate($wh_type, $sel_dist, $sel_tehsil, $year, $month, $item,$from_sel_month,$from_sel_year,7,3);
+$query_1 = $this->reports()->vaccineDropoutRate($wh_type, $sel_dist, $sel_tehsil, $year, $month, $item, $from_sel_month, $from_sel_year, 7, 3);
 foreach ($query_1 as $row1) {
     $item_id = $row1['pk_id'];
-
-    
+   
     $data_arr[$item_id][] = $row1['doses'];
-    $data_arr[$item_id][] = Round(((($penta_doses_1 -  $row1['doses']) / $penta_doses_1) * 100),2);
-  
+    $data_arr[$item_id][] = Round(((($penta_doses[$item_id] - $row1['doses']) / $penta_doses[$item_id]) * 100), 2);
 }
-$query_2 = $this->reports()->vaccineDropoutRate($wh_type, $sel_dist, $sel_tehsil, $year, $month, $item,$from_sel_month,$from_sel_year,6,1);
+$query_2 = $this->reports()->vaccineDropoutRate($wh_type, $sel_dist, $sel_tehsil, $year, $month, $item, $from_sel_month, $from_sel_year, 6, 1);
 foreach ($query_2 as $row2) {
     $item_id = $row2['pk_id'];
 
     $data_arr[$item_id][] = $row2['doses'];
-     $bcg_doses = $row2['doses'];
-  
+    $bcg_doses[$item_id] = $row2['doses'];
 }
-$query_3 = $this->reports()->vaccineDropoutRate($wh_type, $sel_dist, $sel_tehsil, $year, $month, $item,$from_sel_month,$from_sel_year,9,1);
+$query_3 = $this->reports()->vaccineDropoutRate($wh_type, $sel_dist, $sel_tehsil, $year, $month, $item, $from_sel_month, $from_sel_year, 9, 1);
 foreach ($query_3 as $row3) {
     $item_id = $row3['pk_id'];
 
     $data_arr[$item_id][] = $row3['doses'];
-       $data_arr[$item_id][] = Round(((($bcg_doses -  $row3['doses']) / $penta_doses_1) * 100),2);
-  
+    $data_arr[$item_id][] = Round(((($bcg_doses[$item_id] - $row3['doses']) / $bcg_doses[$item_id]) * 100), 2);
 }
 
 
-//App_Controller_Functions::pr($data_arr);
 $s_date = $this->start_date;
 $e_date = $this->end_date;
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -132,14 +126,14 @@ if (!empty($sel_month)) {
             <table width="99%">
                 <tr>
                     <td colspan="2">
-                        <?php
-                        echo App_Controller_Functions::getPageNarrative(Zend_Registry::get('resource'));
-                        ?>
+<?php
+echo App_Controller_Functions::getPageNarrative(Zend_Registry::get('resource'));
+?>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                     <?php echo $this->render('inventory-management/reports-header_coverage.phtml') ?>
+<?php echo $this->render('inventory-management/reports-header_coverage.phtml') ?>
                     </td>
                 </tr>
 
@@ -165,8 +159,8 @@ if (!empty($sel_month)) {
                     <td>
                         Dropout Rate = ((Penta I - Penta III)/Penta I)*100 
                     </td>
-                   </tr>
-                 
+                </tr>
+
             </table>
         </div>
     </div>
@@ -179,9 +173,9 @@ if (!empty($sel_month)) {
         mygrid.setImagePath(
                 "<?php echo $this->baseUrl(); ?>/common/reports/dhtmlxGrid/dhtmlxGrid/codebase/imgs/");
         //mygrid.setHeader("Province,Consumption,AMC,On Hand,MOS,#cspan");
-        mygrid.setHeader("<div style='text-align:center; font-size:14px; font-weight:bold; font-family:Helvetica'><?php echo "'$report_title at  $this->loc_name'   for (" . date('F', mktime(0, 0, 0, $this->from_month_sel)) . '-' . $this->from_year_sel .') to ('. date('F', mktime(0, 0, 0, $this->month_sel)) . '-' . $this->from_year_sel; ?>)  (Doses)<?php echo $cspan; ?>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan");
+        mygrid.setHeader("<div style='text-align:center; font-size:14px; font-weight:bold; font-family:Helvetica'><?php echo "'$report_title at  $this->loc_name'   for (" . date('F', mktime(0, 0, 0, $this->from_month_sel)) . '-' . $this->from_year_sel . ') to (' . date('F', mktime(0, 0, 0, $this->month_sel)) . '-' . $this->from_year_sel; ?>)  (Doses)<?php echo $cspan; ?>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan");
         mygrid.attachHeader("<?php echo $header; ?>");
-        //   mygrid.attachHeader("<?php //echo $header1;                       ?>");
+        //   mygrid.attachHeader("<?php //echo $header1;                        ?>");
         mygrid.setInitWidths("<?php echo $width; ?>");
         mygrid.setColAlign("left,left,right,right,right,right,right,right");
         //mygrid.setColSorting("str,int");

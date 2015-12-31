@@ -341,8 +341,6 @@ class Model_NonCcmLocations extends Model_Base {
 				GROUP BY
 					non_ccm_locations.warehouse_id";
 
-echo $sql;
-
         $str_sql1 = $this->_em->getConnection()->prepare($sql);
 
         $str_sql1->execute();
@@ -366,8 +364,6 @@ echo $sql;
 					area=" . $area . " AND `row` = " . $lvl . " AND warehouse_id =" . $warehouse_id . "
 				GROUP BY
 					non_ccm_locations.warehouse_id";
-
-echo $sql;
         $str_sql1 = $this->_em->getConnection()->prepare($sql);
 
         $str_sql1->execute();
@@ -407,15 +403,6 @@ echo $sql;
         INNER JOIN list_detail ON non_ccm_locations.`pallet` = list_detail.pk_id
         WHERE
         list_detail.list_master_id =" . Model_ListMaster::PALLET);
-        
-echo "SELECT
-        max(list_detail.list_value) as maxVal
-        FROM
-        non_ccm_locations
-        INNER JOIN list_detail ON non_ccm_locations.`pallet` = list_detail.pk_id
-        WHERE
-        list_detail.list_master_id =" . Model_ListMaster::PALLET;
-
         $str_sql1->execute();
         $result = $str_sql1->fetchAll();
         if (count($result) > 0) {

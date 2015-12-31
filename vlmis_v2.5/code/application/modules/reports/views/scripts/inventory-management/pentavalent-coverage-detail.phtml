@@ -124,7 +124,7 @@ $xml_store .= "<rows>";
 
 $sum_arr = array();
 
-$query = $this->reports()->pentaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 145, 1, 0, 11);
+$query = $this->reports()->pentaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 1, 0, 11);
 $j = 1;
 foreach ($query as $row) {
     $location_id = $row['location_id'];
@@ -142,7 +142,7 @@ foreach ($query as $row) {
     $data_arr[$location_id][] = $row['consumptionPercentage_1_0_11'];
     $j++;
 }
-$query1 = $this->reports()->pentaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 145, 2, 0, 11);
+$query1 = $this->reports()->pentaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 2, 0, 11);
 
 foreach ($query1 as $row1) {
 
@@ -157,7 +157,7 @@ foreach ($query1 as $row1) {
     $data_arr[$location_id1][] = $row1['consumption_1_0_11'];
     $data_arr[$location_id1][] = $row1['consumptionPercentage_1_0_11'];
 }
-$query2 = $this->reports()->pentaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 145, 3, 0, 11);
+$query2 = $this->reports()->pentaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 3, 0, 11);
 
 
 foreach ($query2 as $row2) {
@@ -173,7 +173,7 @@ foreach ($query2 as $row2) {
     $data_arr[$location_id2][] = $row2['consumptionPercentage_1_0_11'];
 }
 
-$query3 = $this->reports()->pentaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 146, 1, 12, 23);
+$query3 = $this->reports()->pentaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 1, 12, 23);
 
 foreach ($query3 as $row3) {
     $location_id3 = $row3['location_id'];
@@ -188,7 +188,7 @@ foreach ($query3 as $row3) {
     $data_arr[$location_id3][] = $row3['consumptionPercentage_2'];
 }
 
-$query4 = $this->reports()->pentaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 146, 2, 12, 23);
+$query4 = $this->reports()->pentaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 2, 12, 23);
 
 
 foreach ($query4 as $row4) {
@@ -205,7 +205,7 @@ foreach ($query4 as $row4) {
     $data_arr[$location_id4][] = $row4['consumptionPercentage_2'];
 }
 
-$query5 = $this->reports()->pentaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 146, 3, 12, 23);
+$query5 = $this->reports()->pentaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 3, 12, 23);
 
 
 foreach ($query5 as $row5) {

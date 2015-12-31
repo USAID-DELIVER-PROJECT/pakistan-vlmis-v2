@@ -63,7 +63,7 @@ $xml_store .= "<rows>";
 
 $sum_arr = array();
 
-$query = $this->reports()->measlesCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 146, 1);
+$query = $this->reports()->measlesCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 1);
 $j = 1;
 
 
@@ -88,7 +88,7 @@ foreach ($query as $row) {
 
     $j++;
 }
-$query1 = $this->reports()->measlesCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 146, 2);
+$query1 = $this->reports()->measlesCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 2);
 
 
 

@@ -301,8 +301,8 @@ function drawGrid(){
     dataDownload.length = 0;
     jsonData.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>Province</th><th>District</th><th>Consumption</th><th>Population</th><th>Vaccine Coverage(%)</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>Province</th><th>District</th><th>Consumption</th><th>Population</th><th class='center' colspan='2'>Vaccine Coverage(%)</th></thead>";
     for (var i = 0; i < features.length; i++) {
         table += "<tr><td>" + features[i].attributes.province + "</td><td>" + features[i].attributes.district + "</td><td align='right'>" + features[i].attributes.consumption + "</td><td align='right'>" + features[i].attributes.population + "</td><td align='right'>" + features[i].attributes.coverage + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
         jsonData.push({
@@ -341,7 +341,7 @@ function districtRanking(records,title) {
         type: 'column2D',
         renderAt: 'chart-container',
         width: width,
-        height: '100%',
+        height: '98%',
         dataFormat: 'json',
         dataSource: {
             "chart": {
@@ -373,8 +373,8 @@ function gridFilter(color){
     $("#attributeGrid").html("");
     dataDownload.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>Province</th><th>District</th><th>Consumption</th><th>Population</th><th>Vaccine Coverage(%)</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>Province</th><th>District</th><th>Consumption</th><th>Population</th><th class='center' colspan='2'>Vaccine Coverage(%)</th></thead>";
     for (var i = 0; i < features.length; i++) {
         if (features[i].attributes.color == color) {
            table += "<tr><td>" + features[i].attributes.province + "</td><td>" + features[i].attributes.district + "</td><td align='right'>" + features[i].attributes.consumption + "</td><td align='right'>" + features[i].attributes.population + "</td><td align='right'>" + features[i].attributes.coverage + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";

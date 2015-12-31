@@ -258,6 +258,18 @@ class UsersProxy extends \Users implements \Doctrine\ORM\Proxy\Proxy
         return parent::getCountry();
     }
 
+    public function setCreatedDate($createdDate)
+    {
+        $this->__load();
+        return parent::setCreatedDate($createdDate);
+    }
+
+    public function getCreatedDate()
+    {
+        $this->__load();
+        return parent::getCreatedDate();
+    }
+
     public function setModifiedDate($modifiedDate)
     {
         $this->__load();
@@ -268,18 +280,6 @@ class UsersProxy extends \Users implements \Doctrine\ORM\Proxy\Proxy
     {
         $this->__load();
         return parent::getModifiedDate();
-    }
-
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->__load();
-        return parent::setModifiedBy($modifiedBy);
-    }
-
-    public function getModifiedBy()
-    {
-        $this->__load();
-        return parent::getModifiedBy();
     }
 
     public function setRole(\Roles $role)
@@ -330,10 +330,22 @@ class UsersProxy extends \Users implements \Doctrine\ORM\Proxy\Proxy
         return parent::getCreatedBy();
     }
 
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->__load();
+        return parent::setModifiedBy($modifiedBy);
+    }
+
+    public function getModifiedBy()
+    {
+        $this->__load();
+        return parent::getModifiedBy();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'userName', 'password', 'email', 'cellNumber', 'recordId', 'loginId', 'designation', 'department', 'photo', 'address', 'phoneNumber', 'status', 'loggedAt', 'failedAt', 'failedQuantity', 'auth', 'organization', 'country', 'modifiedDate', 'modifiedBy', 'role', 'stakeholder', 'location', 'createdBy');
+        return array('__isInitialized__', 'pkId', 'userName', 'password', 'email', 'cellNumber', 'recordId', 'loginId', 'designation', 'department', 'photo', 'address', 'phoneNumber', 'status', 'loggedAt', 'failedAt', 'failedQuantity', 'auth', 'organization', 'country', 'createdDate', 'modifiedDate', 'role', 'stakeholder', 'location', 'createdBy', 'modifiedBy');
     }
 
     public function __clone()

@@ -50,14 +50,14 @@ class EpiAmc
     private $modifiedDate;
 
     /**
-     * @var ItemPackSizes
-     */
-    private $item;
-
-    /**
      * @var Warehouses
      */
     private $warehouse;
+
+    /**
+     * @var ItemPackSizes
+     */
+    private $item;
 
 
     /**
@@ -211,26 +211,6 @@ class EpiAmc
     }
 
     /**
-     * Set item
-     *
-     * @param ItemPackSizes $item
-     */
-    public function setItem(\ItemPackSizes $item)
-    {
-        $this->item = $item;
-    }
-
-    /**
-     * Get item
-     *
-     * @return ItemPackSizes 
-     */
-    public function getItem()
-    {
-        return $this->item;
-    }
-
-    /**
      * Set warehouse
      *
      * @param Warehouses $warehouse
@@ -248,5 +228,25 @@ class EpiAmc
     public function getWarehouse()
     {
         return $this->warehouse;
+    }
+
+    /**
+     * Set item
+     *
+     * @param ItemPackSizes $item
+     */
+    public function setItem(\ItemPackSizes $item)
+    {
+        $this->item = $item;
+    }
+
+    /**
+     * Get item
+     *
+     * @return ItemPackSizes 
+     */
+    public function getItem()
+    {
+        return $this->item;
     }
 }

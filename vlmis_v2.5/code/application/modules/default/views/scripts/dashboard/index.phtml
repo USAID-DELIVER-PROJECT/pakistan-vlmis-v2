@@ -2,12 +2,12 @@
     <div class="page-content">
         <!-- BEGIN PAGE HEADER-->
         <?php if ($this->user_role == 4 || $this->user_role == 5 || $this->user_role == 6 || $this->user_role == 7 ) { ?>
-        <?php if(!empty($this->pending_receive)) { ?>
+        <?php if(!empty($this->pending_receive1)) { ?>
             <div class="row">
                 <div class="col-md-12">
                     <small style="font-weight: bold;color:red;"><?php
                         echo "Pending Vouchers for " . $this->warehouse_name . " : ";                        
-                            foreach ($this->pending_receive as $pending_receive) {
+                            foreach ($this->pending_receive1 as $pending_receive) {
                             ?> 
                             <a style="color:red" href="<?php echo $this->baseUrl(); ?>/stock/receive-warehouse?issue_no=<?php echo $pending_receive['transaction_number']; ?>&search=true"><?php echo $pending_receive['transaction_number'] ?></a>,
                         <?php } ?>                        

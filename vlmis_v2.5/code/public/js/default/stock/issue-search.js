@@ -144,7 +144,8 @@ $('#print_vaccine_issue').click(
             product = $('#product').val();
             date_from = $('#date_from').val();
             date_to = $('#date_to').val();
-            all_arguments = "searchby=" + searchby + "&number=" + number + "&warehouses=" + warehouses + "&product=" + product + "&date_from=" + date_from + "&date_to=" + date_to;
+            activity_id = $('#activity_id').val();
+            all_arguments = "searchby=" + searchby + "&number=" + number + "&warehouses=" + warehouses + "&product=" + product + "&date_from=" + date_from + "&date_to=" + date_to + "&activity_id=" + activity_id;
 
             var val = $('input[name="groupBy"]:checked').val();
             window.open('vaccine-placement-issue?grpBy=' + val + '&' + all_arguments, '_blank', 'scrollbars=1,width=860,height=595');
@@ -160,7 +161,8 @@ $('#print_vaccine_summary').click(
             product = $('#product').val();
             date_from = $('#date_from').val();
             date_to = $('#date_to').val();
-            all_arguments = "searchby=" + searchby + "&number=" + number + "&warehouses=" + warehouses + "&product=" + product + "&date_from=" + date_from + "&date_to=" + date_to;
+            activity_id = $('#activity_id').val();
+            all_arguments = "searchby=" + searchby + "&number=" + number + "&warehouses=" + warehouses + "&product=" + product + "&date_from=" + date_from + "&date_to=" + date_to + "&activity_id=" + activity_id;
 
 
             var val = $('input[name="summary"]:checked').val();
@@ -384,3 +386,56 @@ $('#quantity').priceFormat({
     centsLimit: 0,
     limit: 10
 });
+
+$(".delete-issue").click(function () {
+    $('#modal-body-contents').html("<div style='text-align: center; '><img src='" + appName + "/images/loader.gif' style='margin:30px;'  /></div>");
+    $.ajax({
+        type: "POST",
+        url: appName + "/stock/ajax-get-placement-locations",
+        data: {p: 'stock', id: $(this).attr('id')},
+        dataType: 'html',
+        success: function (data) {
+            $('#modal-body-contents').html(data);
+            //validation
+            $("#form_delete_issue").validate({
+                rules: {
+                    'loc-id': {
+                        required: true
+                    }
+                },
+                messages: {
+                    'loc-id': {
+                        required: "Please select location"
+                    }
+                }
+            });
+
+        }
+    });
+});
+
+$("#delete-issue").click(function (e) {
+
+    Metronic.startPageLoading('Please wait...');
+    e.preventDefault();
+    var flag = true;
+
+    $('#loc-id').val();
+
+    if ($('#loc-id').val() == "") {
+        alert("Please select location.");
+        $(this).focus();
+        flag = false;
+        return false;
+    }
+    else{
+        flag = true;
+    }
+    if (flag == true) {
+        $("#form_delete_issue").submit();
+    } else {
+        Metronic.stopPageLoading();
+    }
+
+});
+

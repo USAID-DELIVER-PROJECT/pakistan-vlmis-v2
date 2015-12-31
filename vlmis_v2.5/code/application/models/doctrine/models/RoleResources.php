@@ -25,14 +25,14 @@ class RoleResources
     private $isDefault;
 
     /**
-     * @var Roles
-     */
-    private $role;
-
-    /**
      * @var Resources
      */
     private $resource;
+
+    /**
+     * @var Roles
+     */
+    private $role;
 
 
     /**
@@ -86,26 +86,6 @@ class RoleResources
     }
 
     /**
-     * Set role
-     *
-     * @param Roles $role
-     */
-    public function setRole(\Roles $role)
-    {
-        $this->role = $role;
-    }
-
-    /**
-     * Get role
-     *
-     * @return Roles 
-     */
-    public function getRole()
-    {
-        return $this->role;
-    }
-
-    /**
      * Set resource
      *
      * @param Resources $resource
@@ -123,5 +103,25 @@ class RoleResources
     public function getResource()
     {
         return $this->resource;
+    }
+
+    /**
+     * Set role
+     *
+     * @param Roles $role
+     */
+    public function setRole(\Roles $role)
+    {
+        $this->role = $role;
+    }
+
+    /**
+     * Get role
+     *
+     * @return Roles 
+     */
+    public function getRole()
+    {
+        return $this->role;
     }
 }

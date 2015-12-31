@@ -34,6 +34,15 @@ GeoMaps:
       nullable: false
       column: modified_date
   oneToOne:
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
     resource:
       targetEntity: Resources
       cascade: {  }
@@ -50,15 +59,6 @@ GeoMaps:
       inversedBy: null
       joinColumns:
         created_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    modifiedBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        modified_by:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

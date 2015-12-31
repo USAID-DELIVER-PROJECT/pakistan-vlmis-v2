@@ -35,19 +35,14 @@ class Placements
     private $modifiedDate;
 
     /**
+     * @var StockBatchWarehouses
+     */
+    private $stockBatchWarehouse;
+
+    /**
      * @var StockDetail
      */
     private $stockDetail;
-
-    /**
-     * @var VvmStages
-     */
-    private $vvmStage;
-
-    /**
-     * @var StockBatch
-     */
-    private $stockBatch;
 
     /**
      * @var ListDetail
@@ -68,6 +63,11 @@ class Placements
      * @var PlacementLocations
      */
     private $placementLocation;
+
+    /**
+     * @var VvmStages
+     */
+    private $vvmStage;
 
 
     /**
@@ -161,6 +161,26 @@ class Placements
     }
 
     /**
+     * Set stockBatchWarehouse
+     *
+     * @param StockBatchWarehouses $stockBatchWarehouse
+     */
+    public function setStockBatchWarehouse(\StockBatchWarehouses $stockBatchWarehouse)
+    {
+        $this->stockBatchWarehouse = $stockBatchWarehouse;
+    }
+
+    /**
+     * Get stockBatchWarehouse
+     *
+     * @return StockBatchWarehouses 
+     */
+    public function getStockBatchWarehouse()
+    {
+        return $this->stockBatchWarehouse;
+    }
+
+    /**
      * Set stockDetail
      *
      * @param StockDetail $stockDetail
@@ -178,46 +198,6 @@ class Placements
     public function getStockDetail()
     {
         return $this->stockDetail;
-    }
-
-    /**
-     * Set vvmStage
-     *
-     * @param VvmStages $vvmStage
-     */
-    public function setVvmStage(\VvmStages $vvmStage)
-    {
-        $this->vvmStage = $vvmStage;
-    }
-
-    /**
-     * Get vvmStage
-     *
-     * @return VvmStages 
-     */
-    public function getVvmStage()
-    {
-        return $this->vvmStage;
-    }
-
-    /**
-     * Set stockBatch
-     *
-     * @param StockBatch $stockBatch
-     */
-    public function setStockBatch(\StockBatch $stockBatch)
-    {
-        $this->stockBatch = $stockBatch;
-    }
-
-    /**
-     * Get stockBatch
-     *
-     * @return StockBatch 
-     */
-    public function getStockBatch()
-    {
-        return $this->stockBatch;
     }
 
     /**
@@ -298,5 +278,25 @@ class Placements
     public function getPlacementLocation()
     {
         return $this->placementLocation;
+    }
+
+    /**
+     * Set vvmStage
+     *
+     * @param VvmStages $vvmStage
+     */
+    public function setVvmStage(\VvmStages $vvmStage)
+    {
+        $this->vvmStage = $vvmStage;
+    }
+
+    /**
+     * Get vvmStage
+     *
+     * @return VvmStages 
+     */
+    public function getVvmStage()
+    {
+        return $this->vvmStage;
     }
 }

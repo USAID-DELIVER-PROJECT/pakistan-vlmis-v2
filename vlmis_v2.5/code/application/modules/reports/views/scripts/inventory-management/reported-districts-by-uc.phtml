@@ -96,7 +96,7 @@ $xml_store .= "<rows>";
 
 $sum_arr = array();
 foreach ($data_arr as $dis_id => $sub_arr) {
-    $count_k +=2;
+    //$count_k +=2;
     $xml_store .= "<row>";
 
     $param1 = base64_encode($wh_type . '|' . $sub_arr[0] . '|' . $s_date . '|' . $e_date . '|' . $dis_id . '|' . $sub_arr[1] . '|' . '1');

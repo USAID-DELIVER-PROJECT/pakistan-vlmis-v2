@@ -16,37 +16,48 @@ $sel_dist = $this->in_dist;
 $in_stk = $this->in_stk;
 if (!empty($sel_uc) && $sel_uc > 0) {
     $col_caption = "EPI Center";
-    $in_type = 'WP';
+    $in_type = 'WU';
     $sel_loc_id = $sel_uc;
-} else {
+} else if (!empty($sel_teh) && $sel_teh > 0) {
     $col_caption = "Union Council";
-    $in_type = 'UP';
+    $in_type = 'UT';
+    $sel_loc_id = $sel_teh;
+}else {
+    $col_caption = "Union Council";
+    $in_type = 'UD';
     $sel_loc_id = $sel_dist;
 }
 
 
 $rpt_date = $sel_year . '-' . str_pad($sel_month, 2, "0", STR_PAD_LEFT) . '-01';
-$query_consumption = $this->reports()->reportConsumption($in_type, $rpt_date, $sel_loc_id, $sel_item, $in_stk);
-$query_amc = $this->reports()->reportAmc($in_type, $rpt_date, $sel_loc_id, $sel_item, $in_stk);
-$query_cb = $this->reports()->reportCb($in_type, $rpt_date, $sel_loc_id, $sel_item, $in_stk);
-$data_arr = array();
-foreach ($query_consumption as $consumption) {
-    $data_arr[$consumption['tehsil_id']][$consumption['pk_id']]['location'] = $consumption['location_name'];
-    $data_arr[$consumption['tehsil_id']][$consumption['pk_id']]['cons'] = $consumption['consumption'];
-}
-foreach ($query_amc as $amc) {
-    $data_arr[$amc['tehsil_id']][$amc['pk_id']]['amc'] = $amc['AMC'];
-}
-foreach ($query_cb as $cb) {
-    $data_arr[$cb['tehsil_id']][$cb['pk_id']]['cb'] = $cb['CB'];
-}
-//App_Controller_Functions::pr($data_arr[191]);
+//$query_consumption = $this->reports()->reportConsumption($in_type, $rpt_date, $sel_loc_id, $sel_item, $in_stk);
+//$query_amc = $this->reports()->reportAmc($in_type, $rpt_date, $sel_loc_id, $sel_item, $in_stk);
+//$query_cb = $this->reports()->reportCb($in_type, $rpt_date, $sel_loc_id, $sel_item, $in_stk);
+//$data_arr = array();
+//foreach ($query_consumption as $consumption) {
+//    $data_arr[$consumption['tehsil_id']][$consumption['pk_id']]['location'] = $consumption['location_name'];
+//    $data_arr[$consumption['tehsil_id']][$consumption['pk_id']]['cons'] = $consumption['consumption'];
+//}
+//foreach ($query_amc as $amc) {
+//    $data_arr[$amc['tehsil_id']][$amc['pk_id']]['amc'] = $amc['AMC'];
+//}
+//foreach ($query_cb as $cb) {
+//    $data_arr[$cb['tehsil_id']][$cb['pk_id']]['cb'] = $cb['CB'];
+//}
 
-if ($sel_teh == '')
+if ($sel_uc == '' || $sel_uc == 0)
 {
+    $result = $this->reports()->getReportData($in_type, $rpt_date, $sel_loc_id, $sel_item, $in_stk);
+    foreach ($result as $row) {
+        $data_arr[$row['tehsil_id']][$row['uc_id']]['location'] = $row['uc_name'];
+        $data_arr[$row['tehsil_id']][$row['uc_id']]['cons'] = $row['Vaccinated'];
+        $data_arr[$row['tehsil_id']][$row['uc_id']]['amc'] = $row['AMC'];
+        $data_arr[$row['tehsil_id']][$row['uc_id']]['cb'] = $row['SOH'];
+        $data_arr[$row['tehsil_id']][$row['uc_id']]['mos'] = $row['MOS'];
+    }
     foreach ($data_arr as $tehsil_id => $sub_arr) {
         foreach ($sub_arr as $item_id => $items) {
-           echo $item_name = $items['location'];
+            $item_name = $items['location'];
             $xml_store .="<row>";
             $month_num = "\"$sel_month\"";
             $year_num = "\"$sel_year\"";
@@ -56,7 +67,7 @@ if ($sel_teh == '')
             $tmp[] = $sub_arr[$item_id]['cons'];
             $tmp[] = $sub_arr[$item_id]['amc'];
             $tmp[] = $sub_arr[$item_id]['cb'];
-            $tmp[] = (!empty($sub_arr[$item_id]['cb'])) ? round($sub_arr[$item_id]['cb'] / $sub_arr[$item_id]['amc'], 1) : '0';
+            $tmp[] = $sub_arr[$item_id]['mos'];
 
             $sel_stk = 1;
             $sel_lvl = 4;
@@ -77,7 +88,16 @@ if ($sel_teh == '')
 }
 else
 {
-    foreach ($data_arr[$sel_teh] as $item_id => $items) {
+    $result = $this->reports()->getReportData($in_type, $rpt_date, $sel_loc_id, $sel_item, $in_stk);
+    foreach ($result as $row) {
+        $data_arr[$row['pk_id']]['location'] = $row['warehouse_name'];
+        $data_arr[$row['pk_id']]['cons'] = $row['Vaccinated'];
+        $data_arr[$row['pk_id']]['amc'] = $row['AMC'];
+        $data_arr[$row['pk_id']]['cb'] = $row['SOH'];
+        $data_arr[$row['pk_id']]['mos'] = $row['MOS'];
+    }
+    
+    foreach ($data_arr as $item_id => $items) {
         $item_name = $items['location'];
         $xml_store .="<row>";
         $month_num = "\"$sel_month\"";
@@ -85,10 +105,10 @@ else
         $product_name = "\"$item_id\"";
 
         $tmp = array();
-        $tmp[] = $data_arr[$sel_teh][$item_id]['cons'];
-        $tmp[] = $data_arr[$sel_teh][$item_id]['amc'];
-        $tmp[] = $data_arr[$sel_teh][$item_id]['cb'];
-        $tmp[] = (!empty($data_arr[$sel_teh][$item_id]['cb'])) ? round($data_arr[$sel_teh][$item_id]['cb'] / $data_arr[$sel_teh][$item_id]['amc'], 1) : '0';
+        $tmp[] = $data_arr[$item_id]['cons'];
+        $tmp[] = $data_arr[$item_id]['amc'];
+        $tmp[] = $data_arr[$item_id]['cb'];
+        $tmp[] = $data_arr[$item_id]['mos'];
 
         $sel_stk = 1;
         $sel_lvl = 4;
@@ -166,7 +186,7 @@ if (!empty($sel_month)) {
         mygrid.selMultiRows = true;
         mygrid.setImagePath("<?php echo $this->baseUrl(); ?>/common/reports/dhtmlxGrid/dhtmlxGrid/codebase/imgs/");
         mygrid.setHeader("<div style='text-align:center; font-size:14px; font-weight:bold; font-family:Helvetica'><?php echo "Union Council Report For Province/Region = '$this->province_name'  District = '$this->district_name' Tehsil = '$this->tehsil_name'  Product = '$this->item_name'  (" . date('F', mktime(0, 0, 0, $sel_month)) . ' ' . $sel_year . ")"; ?></div>,#cspan,#cspan,#cspan,#cspan,#cspan");
-        mygrid.attachHeader("<span title='<?php echo $col_caption; ?>'><?php echo $col_caption; ?></span>,<span title='Product Consumption'>Consumption (Doses)</span>,<span title='Average Monthly Consumption'>AMC (Doses)</span>,<span title='Product On Hand'>Product On Hand (Doses)</span>,<span title='Months of Scale'>Months of Scale (MOS)</span>,#cspan");
+        mygrid.attachHeader("<span title='<?php echo $col_caption; ?>'><?php echo $col_caption; ?></span>,<span title='Product Consumption'>Consumption (Doses)</span>,<span title='Average Monthly Consumption'>AMC (Doses)</span>,<span title='Product On Hand'>Product On Hand (Doses)</span>,<span title='Months of Scale'>Months of Stock (MOS)</span>,#cspan");
         mygrid.setInitWidths("150,*,*,*,40,100");
         mygrid.setColAlign("left,right,right,right,center,center");
         //mygrid.setColSorting("str,int");

@@ -95,11 +95,6 @@ class CcmModels
     private $catalogueId;
 
     /**
-     * @var integer $ccmMakeId
-     */
-    private $ccmMakeId;
-
-    /**
      * @var datetime $createdDate
      */
     private $createdDate;
@@ -160,9 +155,9 @@ class CcmModels
     private $isPqs;
 
     /**
-     * @var Users
+     * @var CcmMakes
      */
-    private $modifiedBy;
+    private $ccmMake;
 
     /**
      * @var CcmAssetTypes
@@ -173,6 +168,11 @@ class CcmModels
      * @var Users
      */
     private $createdBy;
+
+    /**
+     * @var Users
+     */
+    private $modifiedBy;
 
 
     /**
@@ -506,26 +506,6 @@ class CcmModels
     }
 
     /**
-     * Set ccmMakeId
-     *
-     * @param integer $ccmMakeId
-     */
-    public function setCcmMakeId($ccmMakeId)
-    {
-        $this->ccmMakeId = $ccmMakeId;
-    }
-
-    /**
-     * Get ccmMakeId
-     *
-     * @return integer 
-     */
-    public function getCcmMakeId()
-    {
-        return $this->ccmMakeId;
-    }
-
-    /**
      * Set createdDate
      *
      * @param datetime $createdDate
@@ -766,23 +746,23 @@ class CcmModels
     }
 
     /**
-     * Set modifiedBy
+     * Set ccmMake
      *
-     * @param Users $modifiedBy
+     * @param CcmMakes $ccmMake
      */
-    public function setModifiedBy(\Users $modifiedBy)
+    public function setCcmMake(\CcmMakes $ccmMake)
     {
-        $this->modifiedBy = $modifiedBy;
+        $this->ccmMake = $ccmMake;
     }
 
     /**
-     * Get modifiedBy
+     * Get ccmMake
      *
-     * @return Users 
+     * @return CcmMakes 
      */
-    public function getModifiedBy()
+    public function getCcmMake()
     {
-        return $this->modifiedBy;
+        return $this->ccmMake;
     }
 
     /**
@@ -823,5 +803,25 @@ class CcmModels
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
     }
 }

@@ -19,9 +19,7 @@ class Model_CcmTransferHistory extends Model_Base {
         $this->_table = $this->_em->getRepository('CcmTransferHistory');
     }
     
-    public function addTransferHistory() {
-        
-    }
+  
 
     
 }

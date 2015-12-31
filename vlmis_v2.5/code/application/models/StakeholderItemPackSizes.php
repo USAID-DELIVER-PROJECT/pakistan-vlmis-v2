@@ -138,11 +138,12 @@ class Model_StakeholderItemPackSizes extends Model_Base {
 
     public function getStakeholderItemPackSizes() {
         $str_sql = $this->_em->createQueryBuilder()
-                ->select('si.pkId,si.quantityPerPack,si.itemGtin,ip.itemName,s.stakeholderName,ld.listValue,si.volumPerVial')
-                ->from("StakeholderItemPackSizes", "si")
+                ->select('si.pkId,pi.quantityPerPack,pi.itemGtin,ip.itemName,s.stakeholderName,ld.listValue,pi.volumPerVial')
+                 ->from("PackInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "si")
                 ->join('si.itemPackSize', 'ip')
                 ->join('si.stakeholder', 's')
-                ->join('si.packagingLevel', 'ld')
+                ->join('pi.packagingLevel', 'ld')
                 ->where("s.stakeholderType = 3")
                 ->orderBy("s.stakeholderName");
         $result = $str_sql->getQuery()->getResult();
@@ -233,10 +234,10 @@ class Model_StakeholderItemPackSizes extends Model_Base {
 
         $str_sql = $this->_em->createQueryBuilder()
                 ->select('DISTINCT ips.itemName as item_name, ips.pkId as item_pack_size_id')
-                ->from("StakeholderItemPackSizes", 'sips')
-                ->join("sips.itemPackSize", "ips")
-                ->join("sips.stakeholder", "s")
-                ->where("s.stakeholderActivity = '" . $this->form_values['stakeholder_id'] . "' ")
+                ->from("ItemActivities", "ia")
+                ->join("ia.itemPackSize", "ips")
+                ->where("ia.stakeholderActivity IN (" . $this->form_values['stakeholder_id'] . "," . parent::MERGEDPRODUCTS . ")")
+                ->andWhere("ips.itemCategory <> 4")
                 ->orderBy("ips.listRank", 'ASC');
         //echo $str_sql->getQuery()->getSql();
         $result = $str_sql->getQuery()->getResult();
@@ -266,18 +267,23 @@ class Model_StakeholderItemPackSizes extends Model_Base {
 
     public function getAllIssueProductsByStakeholder() {
         $tran_date = $this->form_values['trans_date'];
-        if(empty($tran_date)){
+        if (empty($tran_date)) {
             $tran_date = date("d/m/Y h:i:s A");
         }
         $arr_data = array();
         $str_sql = $this->_em->createQueryBuilder()
                 ->select('DISTINCT ips.pkId')
-                ->from('StockBatch', 'sb')
-                ->join("sb.itemPackSize", "ips")
-                ->where("sb.warehouse = " . $this->_identity->getWarehouseId())
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "ips")
+                ->where("sbw.warehouse = " . $this->_identity->getWarehouseId())
                 ->andWhere("DATE_FORMAT(sb.expiryDate,'%Y-%m-%d') > '" . App_Controller_Functions::dateToDbFormat($tran_date) . "'")
-                ->andWhere("sb.quantity > 0")
+                ->andWhere("sbw.quantity > 0")
                 ->orderBy("ips.listRank", "ASC");
+
+        //echo $str_sql->getQuery()->getSql();
 
         $rows = $str_sql->getQuery()->getResult();
         if (!empty($rows) && count($rows) > 0) {
@@ -287,12 +293,13 @@ class Model_StakeholderItemPackSizes extends Model_Base {
 
             $str_sql = $this->_em->createQueryBuilder()
                     ->select('DISTINCT ips.itemName as item_name, ips.pkId as item_pack_size_id')
-                    ->from("ItemPackSizes", 'ips')
-                    ->where("ips.pkId IN (" . implode(",", $item_ids) . ") ")
-                    ->andWhere("ips.stakeholderActivity IN( '" . $this->form_values['stakeholder_id'] . "',5)")
+                    ->from("ItemActivities", "ia")
+                    ->join("ia.itemPackSize", "ips")
+                    ->where("ips.itemCategory !=4") // Inactive Vaccines
+                    ->andWhere("ia.stakeholderActivity = '" . $this->form_values['stakeholder_id'] . "'")
                     ->orderBy("ips.listRank", 'ASC');
             $rows = $str_sql->getQuery()->getResult();
-
+            //echo $str_sql->getQuery()->getSql();
             return $rows;
         } else {
             return false;
@@ -341,12 +348,12 @@ class Model_StakeholderItemPackSizes extends Model_Base {
 
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("DISTINCT ips.itemName, ips.pkId")
-                ->from('StakeholderItemPackSizes', 'sip')
-                ->join('sip.itemPackSize', 'ips')
-                ->join('sip.stakeholder', 's')
+                ->from('ItemActivities', 'ia')
+                ->join('ia.itemPackSize', 'ips')
                 ->where("ips.item = '" . $form_values['item_id'] . "'")
                 ->andWhere("ips.itemCategory = 1")
-                ->andWhere("s.stakeholderActivity = '" . $form_values['purpose'] . "' ");
+                ->andWhere("ia.stakeholderActivity = '" . $form_values['purpose'] . "' ");
+
         $rows = $str_sql->getQuery()->getResult();
         return $rows;
     }

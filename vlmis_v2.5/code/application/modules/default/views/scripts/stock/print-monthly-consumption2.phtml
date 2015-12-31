@@ -18,9 +18,13 @@
 <div id="content_print">
 
     <style>
+        .rotated-text {
+            transform: rotate(45deg);
+
+        }
         #content_print {
-            margin-left: 50px;
-            width: 624px;
+            margin-left: 30px;
+            width: 940px;
         }
         table#mytable {
             border: 1px solid #e5e5e5;
@@ -77,158 +81,187 @@
     </style>
     <div style="clear:both"></div>
 
+    <div style="width: 80%; margin: auto;">
+        <div style="width: 54%;  float: left; margin-top: 24px; padding-bottom: 10px;">
+            <table style="width:100%; height: 80px;">
+                <thead>
+                    <tr>
+                        <th class="center">Month</th>
+                        <td><?php echo date('F', mktime(0, 0, 0, $this->mm, 1)); ?></td>
+                        <th class="center">Year</th>
+                        <td><?php echo $this->year ?></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="center">District</th>
+                        <td colspan="1"><?php echo $this->district_name; ?></td>
 
-    <div style="width: 54%;  float: left; margin-top: 24px; padding-bottom: 10px;">
+                        <th class="center">Taluka</th>
+                        <td colspan="1"><?php echo $this->tehsil_name; ?></td>
+                    </tr>
+                    <tr>
+                        <th class="center">UC</th>
+                        <td colspan="1"><?php echo $this->uc_name; ?></td>
 
-        <table style="width:100%;">
-            <thead>
-                <tr>
-                    <th class="center">Month</th>
-                    <td><?php echo date('F', mktime(0, 0, 0, $this->mm, 1)); ?></td>
-                    <th class="center">Year</th>
-                    <td><?php echo $this->year ?></td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th class="center">District</th>
-                    <td colspan="3"><?php echo $this->district_name; ?></td>
-                </tr>
-                <tr>
-                    <th class="center">Taluka</th>
-                    <td colspan="3"><?php echo $this->tehsil_name; ?></td>
-                </tr>
-                <tr>
-                    <th class="center">UC</th>
-                    <td colspan="3"><?php echo $this->uc_name; ?></td>
-                </tr>
-                <tr>
-                    <th class="center">EPI Center</th>
-                    <td colspan="3"><?php echo $this->warehouse_name; ?></td>
-                </tr>
-            </tbody>
-        </table>
+                        <th class="center">EPI Center</th>
+                        <td colspan="1"><?php echo $this->warehouse_name; ?></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="center" >Fixed Vaccinations Sessions</th>
+
+                        <th colspan="2" class="center" style="height: 21px">Outreach Vaccination Session</th>
+                    </tr>
+                    <tr style="height: 21px">
+                        <th colspan="1" class="center" >Planned</th>
+
+                        <th colspan="1" class="center">Actually Held</th>
+
+                        <th colspan="1" class="center" >Planned</th>
+
+                        <th colspan="1" class="center">Actually Held</th>
+                    </tr>
+                    <?php $row_hf = $this->monthlyConsumtion2()->monthlyConsumtion2HfSessions($this->wh_id, $this->rpt_date); ?>
+                    <tr>
+                        <td class="center"><?php echo (!empty($row_hf['fixed_planned_sessions'])) ? $row_hf['fixed_planned_sessions'] : '0'; ?></td>
+                        <td class="center"><?php echo (!empty($row_hf['fixed_actually_held_sessions'])) ? $row_hf['fixed_actually_held_sessions'] : '0'; ?></td>
+                        <td class="center"><?php echo (!empty($row_hf['outreach_planned_sessions'])) ? $row_hf['outreach_planned_sessions'] : '0'; ?></td>
+                        <td class="center"><?php echo (!empty($row_hf['outreach_actually_held_sessions'])) ? $row_hf['outreach_actually_held_sessions'] : '0'; ?></td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="width: 44%; float: right; padding-bottom: 10px;">
+            <table style="width:100%; height: 80px;">
+                <caption><h4>MONTHLY TARGETS</h4></caption>
+
+                <?php
+                $row0 = $this->monthlyConsumtion2()->monthlyConsumtion2Targets($this->wh_id, $this->rpt_date);
+
+
+
+                if ($this->is_new_report == 1 && count($row0) < 0) {
+                    ?>
+                    <thead>
+                        <tr>
+                            <td class="center">Children Live Birth</td>
+                            <td><input type="text" name="children_live_birth" id="children_live_birth" class="form-control col-md-1"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="center">Surviving Children (0-11 M)</td>
+                            <td><input type="text" name="surviving_children_0_11_M" id="surviving_children_0_11_M" class="form-control col-md-1"></td>
+                        </tr>
+                        <tr>
+                            <td class="center">Children Aged (12-23 M)</td>
+                            <td><input type="text" name="children_aged_12_23_M" id="children_aged_12_23_M" class="form-control col-md-1"></td>
+                        </tr>
+                        <tr>
+                            <td class="center">2 year and Above</td>
+                            <td><input type="text" name="2_year_and_above" id="2_year_and_above" class="form-control col-md-1"></td>
+                        </tr>
+                        <tr>
+                            <td class="center">Pregnant Women</td>
+                            <td><input type="text" name="pregnant_women1" id="pregnant_women1" class="form-control col-md-1"></td>
+                        </tr>
+                        <tr>
+                            <td class="center">CBAs</td>
+                            <td><input type="text" name="cba" id="cba" class="form-control col-md-1"></td>
+                        </tr>
+                    </tbody>
+                <?php } else if ($this->is_new_report == 1 && count($row0) > 0) {
+                    ?>
+                    <thead>
+                        <tr>
+                            <td class="center">Children Live Birth</td>
+                            <td><input type="text" name="children_live_birth" id="children_live_birth" class="form-control col-md-1" readonly="readonly" value="<?php echo (!empty($row0['children_live_birth'])) ? $row0['children_live_birth'] : '0'; ?>"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="center">Surviving Children (0-11 M)</td>
+                            <td><input type="text" name="surviving_children_0_11_M" id="surviving_children_0_11_M" class="form-control col-md-1" readonly="readonly" value="<?php echo (!empty($row0['surviving_children_0_11'])) ? $row0['surviving_children_0_11'] : '0'; ?>"></td>
+                        </tr>
+                        <tr>
+                            <td class="center">Children Aged (12-23 M)</td>
+                            <td><input type="text" name="children_aged_12_23_M" id="children_aged_12_23_M" class="form-control col-md-1" readonly="readonly" value="<?php echo (!empty($row0['children_aged_12_23'])) ? $row0['children_aged_12_23'] : '0'; ?>"></td>
+                        </tr>
+                        <tr>
+                            <td class="center">Pregnant Women</td>
+                            <td><input type="text" name="pregnant_women1" id="pregnant_women1" class="form-control col-md-1" readonly="readonly" value="<?php echo (!empty($row0['pregnant_women'])) ? $row0['pregnant_women'] : '0'; ?>"></td>
+                        </tr>
+                        <tr>
+                            <td class="center">CBAs</td>
+                            <td><input type="text" name="cba" id="cba" class="form-control col-md-1" readonly="readonly" value="<?php echo (!empty($row0['cbas'])) ? $row0['cbas'] : '0'; ?>"></td>
+                        </tr>
+                    </tbody>
+                <?php } else if ($this->is_new_report == 2 && count($row0) > 0) {
+                    ?>
+                    <thead>
+                        <tr>
+                            <td class="center">Children Live Birth</td>
+                            <td><?php echo (!empty($row0['children_live_birth'])) ? $row0['children_live_birth'] : '0'; ?></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="center">Surviving Children (0-11 M)</td>
+                            <td><?php echo (!empty($row0['surviving_children_0_11'])) ? $row0['surviving_children_0_11'] : '0'; ?></td>
+                        </tr>
+                        <tr>
+                            <td class="center">Children Aged (12-23 M)</td>
+                            <td><?php echo (!empty($row0['children_aged_12_23'])) ? $row0['children_aged_12_23'] : '0'; ?></td>
+                        </tr>
+                        <tr>
+                            <td class="center">2 year and Above</td>
+                            <td><?php echo (!empty($row0['above_2_year'])) ? $row0['above_2_year'] : '0'; ?></td>
+                        </tr>
+                        <tr>
+                            <td class="center">Pregnant Women</td>
+                            <td><?php echo (!empty($row0['pregnant_women'])) ? $row0['pregnant_women'] : '0'; ?></td>
+                        </tr>
+                        <tr>
+                            <td class="center">CBAs</td>
+                            <td><?php echo (!empty($row0['cbas'])) ? $row0['cbas'] : '0'; ?></td>
+                        </tr>
+                    </tbody>
+                <?php } else { ?>
+                    <thead>
+                        <tr>
+                            <td class="center">Children Live Birth</td>
+                            <td><input type="text" name="children_live_birth" id="children_live_birth" class="form-control col-md-1"  value="<?php echo (!empty($row0['children_live_birth'])) ? $row0['children_live_birth'] : '0'; ?>"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="center">Surviving Children (0-11 M)</td>
+                            <td><input type="text" name="surviving_children_0_11_M" id="surviving_children_0_11_M" class="form-control col-md-1" value="<?php echo (!empty($row0['surviving_children_0_11'])) ? $row0['surviving_children_0_11'] : '0'; ?>"></td>
+                        </tr>
+                        <tr>
+                            <td class="center">Children Aged (12-23 M)</td>
+                            <td><input type="text" name="children_aged_12_23_M" id="children_aged_12_23_M" class="form-control col-md-1" value="<?php echo (!empty($row0['children_aged_12_23'])) ? $row0['children_aged_12_23'] : '0'; ?>"></td>
+                        </tr>
+                        <tr>
+                            <td class="center">2 year and Above</td>
+                            <td><input type="text" name="2_year_and_above" id="2_year_and_above" class="form-control col-md-1" value="<?php echo (!empty($row0['above_2_year'])) ? $row0['above_2_year'] : '0'; ?>"></td>
+                        </tr>
+                        <tr>
+                            <td class="center">Pregnant Women</td>
+                            <td><input type="text" name="pregnant_women1" id="pregnant_women1" class="form-control col-md-1" value="<?php echo (!empty($row0['pregnant_women'])) ? $row0['pregnant_women'] : '0'; ?>"></td>
+                        </tr>
+                        <tr>
+                            <td class="center">CBAs</td>
+                            <td><input type="text" name="cba" id="cba" class="form-control col-md-1" value="<?php echo (!empty($row0['cbas'])) ? $row0['cbas'] : '0'; ?>"></td>
+                        </tr>
+                    </tbody>
+                <?php } ?>
+            </table>
+        </div>
+        <div style="clear:both;">  Filled By ________________________Date________________________ Sign.________________________     </div>
     </div>
-    <div style="width: 44%; float: right; padding-bottom: 10px;">
-        <table style="width:100%">
-            <caption><h4>MONTHLY TARGETS</h4></caption>
-
-            <?php
-            $row0 = $this->monthlyConsumtion2()->monthlyConsumtion2Targets($this->wh_id, $this->rpt_date);
-
-
-
-            if ($this->is_new_report == 1 && count($row0) < 0) {
-                ?>
-                <thead>
-                    <tr>
-                        <td class="center">Children Live Birth</td>
-                        <td><input type="text" name="children_live_birth" id="children_live_birth" class="form-control col-md-1"></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="center">Surviving Children (0-11 M)</td>
-                        <td><input type="text" name="surviving_children_0_11_M" id="surviving_children_0_11_M" class="form-control col-md-1"></td>
-                    </tr>
-                    <tr>
-                        <td class="center">Children Aged (12-23 M)</td>
-                        <td><input type="text" name="children_aged_12_23_M" id="children_aged_12_23_M" class="form-control col-md-1"></td>
-                    </tr>
-                    <tr>
-                        <td class="center">Pregnant Women</td>
-                        <td><input type="text" name="pregnant_women1" id="pregnant_women1" class="form-control col-md-1"></td>
-                    </tr>
-                    <tr>
-                        <td class="center">CBAs</td>
-                        <td><input type="text" name="cba" id="cba" class="form-control col-md-1"></td>
-                    </tr>
-                </tbody>
-            <?php } else if ($this->is_new_report == 1 && count($row0) > 0) {
-                ?>
-                <thead>
-                    <tr>
-                        <td class="center">Children Live Birth</td>
-                        <td><input type="text" name="children_live_birth" id="children_live_birth" class="form-control col-md-1" readonly="readonly" value="<?php echo (!empty($row0['children_live_birth'])) ? $row0['children_live_birth'] : '0'; ?>"></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="center">Surviving Children (0-11 M)</td>
-                        <td><input type="text" name="surviving_children_0_11_M" id="surviving_children_0_11_M" class="form-control col-md-1" readonly="readonly" value="<?php echo (!empty($row0['surviving_children_0_11'])) ? $row0['surviving_children_0_11'] : '0'; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td class="center">Children Aged (12-23 M)</td>
-                        <td><input type="text" name="children_aged_12_23_M" id="children_aged_12_23_M" class="form-control col-md-1" readonly="readonly" value="<?php echo (!empty($row0['children_aged_12_23'])) ? $row0['children_aged_12_23'] : '0'; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td class="center">Pregnant Women</td>
-                        <td><input type="text" name="pregnant_women1" id="pregnant_women1" class="form-control col-md-1" readonly="readonly" value="<?php echo (!empty($row0['pregnant_women'])) ? $row0['pregnant_women'] : '0'; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td class="center">CBAs</td>
-                        <td><input type="text" name="cba" id="cba" class="form-control col-md-1" readonly="readonly" value="<?php echo (!empty($row0['cbas'])) ? $row0['cbas'] : '0'; ?>"></td>
-                    </tr>
-                </tbody>
-            <?php } else if ($this->is_new_report == 2 && count($row0) > 0) {
-                ?>
-                <thead>
-                    <tr>
-                        <td class="center">Children Live Birth</td>
-                        <td><?php echo (!empty($row0['children_live_birth'])) ? $row0['children_live_birth'] : '0'; ?></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="center">Surviving Children (0-11 M)</td>
-                        <td><?php echo (!empty($row0['surviving_children_0_11'])) ? $row0['surviving_children_0_11'] : '0'; ?></td>
-                    </tr>
-                    <tr>
-                        <td class="center">Children Aged (12-23 M)</td>
-                        <td><?php echo (!empty($row0['children_aged_12_23'])) ? $row0['children_aged_12_23'] : '0'; ?></td>
-                    </tr>
-                    <tr>
-                        <td class="center">Pregnant Women</td>
-                        <td><?php echo (!empty($row0['pregnant_women'])) ? $row0['pregnant_women'] : '0'; ?></td>
-                    </tr>
-                    <tr>
-                        <td class="center">CBAs</td>
-                        <td><?php echo (!empty($row0['cbas'])) ? $row0['cbas'] : '0'; ?></td>
-                    </tr>
-                </tbody>
-            <?php } else { ?>
-                <thead>
-                    <tr>
-                        <td class="center">Children Live Birth</td>
-                        <td><input type="text" name="children_live_birth" id="children_live_birth" class="form-control col-md-1"  value="<?php echo (!empty($row0['children_live_birth'])) ? $row0['children_live_birth'] : '0'; ?>"></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="center">Surviving Children (0-11 M)</td>
-                        <td><input type="text" name="surviving_children_0_11_M" id="surviving_children_0_11_M" class="form-control col-md-1" value="<?php echo (!empty($row0['surviving_children_0_11'])) ? $row0['surviving_children_0_11'] : '0'; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td class="center">Children Aged (12-23 M)</td>
-                        <td><input type="text" name="children_aged_12_23_M" id="children_aged_12_23_M" class="form-control col-md-1" value="<?php echo (!empty($row0['children_aged_12_23'])) ? $row0['children_aged_12_23'] : '0'; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td class="center">Pregnant Women</td>
-                        <td><input type="text" name="pregnant_women1" id="pregnant_women1" class="form-control col-md-1" value="<?php echo (!empty($row0['pregnant_women'])) ? $row0['pregnant_women'] : '0'; ?>"></td>
-                    </tr>
-                   <tr>
-                        <td class="center">CBAs</td>
-                        <td><input type="text" name="cba" id="cba" class="form-control col-md-1" value="<?php echo (!empty($row0['cbas'])) ? $row0['cbas'] : '0'; ?>"></td>
-                    </tr>
-                </tbody>
-            <?php } ?>
-        </table>
-
-
-
-
-    </div>
-    <div style="clear:both;">  Filled By ___________________________Date___________________ Sign._________________     </div>
+    
     </br>
     <table width="100%" cellpadding="3" id="mytable">
         <thead>
@@ -236,19 +269,24 @@
                 <th rowspan="4">Product</th>
                 <th rowspan="4">Opening Balance (Doses)</th>
                 <th rowspan="4">Received (Doses)</th>
-                <th colspan="9">Number of Children Vaccinated (0-11 Months)</th>
-                <th colspan="8">Number of Children Vaccinated (12-23 Months)</th>
+                <th rowspan="4">#</th>
+                <th colspan="10">Number of Children Vaccinated (0-11 Months)</th>
+                <th colspan="10">Number of Children Vaccinated (12-23 Months)</th>
+                <th colspan="10" >2 Years and Above</th>
                 <th rowspan="4">Closing Balance (Doses)</th>
                 <th rowspan="4">Unusable (Doses)</th>
             </tr>
             <tr>
-                <th rowspan="2">#</th>
+
                 <th colspan="4">Fixed</th>
                 <th colspan="2" rowspan="2" style="background-color: #FFCC99;" >Referral from Outside UCs*</th>
-                <th colspan="2" rowspan="2">Out</br>reach</th>
+                <th colspan="4" >Out</br>reach</th>
                 <th colspan="4">Fixed</th>
                 <th colspan="2" rowspan="2" style="background-color: #FFCC99;"> Referral from Outside UCs*</th>
-                <th colspan="2" rowspan="2">Out</br>reach</th>
+                <th colspan="4" >Out</br>reach</th>
+                <th colspan="4" >Fixed</th>
+                <th colspan="2" rowspan="2" style="background-color: #FFCC99;"> Referral from Outside UCs*</th>
+                <th colspan="4"   >Out</br>reach</th>
             </tr>
             <tr>
                 <th colspan="2">Inside UC</th>
@@ -256,10 +294,18 @@
 
                 <th colspan="2">Inside UC</th>
                 <th colspan="2">Outside UC</th>
+                <th colspan="2">Inside UC</th>
+                <th colspan="2">Outside UC</th>
+                <th colspan="2">Inside UC</th>
+                <th colspan="2">Outside UC</th>
+                <th colspan="2">Inside UC</th>
+                <th colspan="2">Outside UC</th>
+                <th colspan="2">Inside UC</th>
+                <th colspan="2">Outside UC</th>
 
             </tr>
             <tr>
-                <th></th>
+
                 <th>M</th>
                 <th>F</th>
                 <th>M</th>
@@ -270,10 +316,26 @@
                 <th>F</th>
                 <th>M</th>
                 <th>F</th>
+
+                <th>M</th>
+                <th>F</th>
                 <th>M</th>
                 <th>F</th>
                 <th style="background-color: #FFCC99;">M</th>
                 <th style="background-color: #FFCC99;">F</th>
+                <th>M</th>
+                <th>F</th>
+                <th>M</th>
+                <th>F</th>
+
+                <th>M</th>
+                <th>F</th>
+                <th>M</th>
+                <th>F</th>
+                <th style="background-color: #FFCC99;">M</th>
+                <th style="background-color: #FFCC99;">F</th>
+                <th>M</th>
+                <th>F</th>
                 <th>M</th>
                 <th>F</th>
             </tr>
@@ -286,13 +348,14 @@
                 <?php
                 //  App_Controller_Functions::pr($row);
                 if ($this->is_new_report == 1) {
-                    $row2 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($this->wh_id, $this->prev_month_date, $result['pk_id'], '145');
+                    $row2 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($this->wh_id, $this->prev_month_date, $result['pk_id'], 'Model_ListDetail::AGE_0_11');
                     //$row_reff = $this->monthlyConsumtion2()->monthlyConsumtionRefferal($this->wh_id, $this->prev_month_date, $result['pk_id']);
                 } else {
-                    $row2 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($this->wh_id, $this->rpt_date, $result['pk_id'], '145');
-                    $row3 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($this->wh_id, $this->rpt_date, $result['pk_id'], '146');
-                      $row_reff_male = $this->monthlyConsumtion2()->monthlyConsumtionRefferal($this->wh_id, $this->rpt_date, $result['pk_id'], 'Male');
-                      $row_reff_female = $this->monthlyConsumtion2()->monthlyConsumtionRefferal($this->wh_id, $this->rpt_date, $result['pk_id'], 'Female');
+                    $row2 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($this->wh_id, $this->rpt_date, $result['pk_id'], 'Model_ListDetail::AGE_0_11');
+                    $row3 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($this->wh_id, $this->rpt_date, $result['pk_id'], 'Model_ListDetail::AGE_12_23');
+                    $row_reff_male = $this->monthlyConsumtion2()->monthlyConsumtionRefferal($this->wh_id, $this->rpt_date, $result['pk_id'], 'Male');
+                    $row_reff_female = $this->monthlyConsumtion2()->monthlyConsumtionRefferal($this->wh_id, $this->rpt_date, $result['pk_id'], 'Female');
+                    $row4 = $this->monthlyConsumtion2()->monthlyConsumtion2Vaccines($this->wh_id, $this->rpt_date, $result['pk_id'], Model_ListDetail::AGE_24);
                 }
 
                 $counter = 1;
@@ -310,7 +373,7 @@
                         ?>
                         <tr>
                             <?php if ($counter == 1) { ?>
-                                <td rowspan="<?php echo $nod ?>"><?php echo $result['item_name'] ?></td>
+                                <td rowspan="<?php echo $nod ?>" class=""><?php echo $result['item_name'] ?></td>
                         <input type="hidden" name="flitm_id[]" value="<?php echo $result['pk_id']; ?>" />
                         <input type="hidden" name="doses_per_unit[]" id="<?php echo $result['pk_id']; ?>-doses" value="<?php echo $result['description']; ?>" />
                         <input type="hidden" name="start_no[]" id="<?php echo $result['pk_id']; ?>-start_no" value="<?php echo $result['start_no']; ?>" />
@@ -336,6 +399,9 @@
                     <td> <?php echo (!empty($row_reff_female['total'])) ? $row_reff_female['total'] : '0'; ?>  </td>
                     <td> <?php echo (!empty($row2[$j]['outreach_male']) ) ? $row2[$j]['outreach_male'] : '0'; ?>  </td>
                     <td> <?php echo (!empty($row2[$j]['outreach_female']) ) ? $row2[$j]['outreach_female'] : '0'; ?>  </td>
+                    <td> <?php echo (!empty($row2[$j]['outreach_outside_male']) ) ? $row2[$j]['outreach_outside_male'] : '0'; ?>  </td>
+                    <td> <?php echo (!empty($row2[$j]['outreach_outside_female']) ) ? $row2[$j]['outreach_outside_female'] : '0'; ?>  </td>
+
                     <td> <?php echo (!empty($row3[$j]['fixed_inside_uc_male'])) ? $row3[$j]['fixed_inside_uc_male'] : '0'; ?></td>
                     <td> <?php echo (!empty($row3[$j]['fixed_inside_uc_female']) ) ? $row3[$j]['fixed_inside_uc_female'] : '0'; ?> </td>
                     <td> <?php echo (!empty($row3[$j]['fixed_outside_uc_male']) ) ? $row3[$j]['fixed_outside_uc_male'] : '0'; ?> </td>
@@ -344,6 +410,21 @@
                     <td> <?php echo (!empty($row3[$j]['referal_female']) ) ? $row3[$j]['referal_female'] : '0'; ?>  </td>
                     <td> <?php echo (!empty($row3[$j]['outreach_male']) ) ? $row3[$j]['outreach_male'] : '0'; ?>  </td>
                     <td> <?php echo (!empty($row3[$j]['outreach_female'])) ? $row3[$j]['outreach_female'] : '0'; ?>  </td>
+                    <td> <?php echo (!empty($row3[$j]['outreach_outside_male']) ) ? $row3[$j]['outreach_outside_male'] : '0'; ?>  </td>
+                    <td> <?php echo (!empty($row3[$j]['outreach_outside_female'])) ? $row3[$j]['outreach_outside_female'] : '0'; ?>  </td>
+
+                    <td > <?php echo (!empty($row4[$j]['fixed_inside_uc_male'])) ? number_format($row4[$j]['fixed_inside_uc_male']) : '0'; ?></td>
+                    <td > <?php echo (!empty($row4[$j]['fixed_inside_uc_female']) ) ? number_format($row4[$j]['fixed_inside_uc_female']) : '0'; ?> </td>
+                    <td > <?php echo (!empty($row4[$j]['fixed_outside_uc_male']) ) ? number_format($row4[$j]['fixed_outside_uc_male']) : '0'; ?> </td>
+                    <td > <?php echo (!empty($row4[$j]['fixed_outside_uc_female'])) ? number_format($row4[$j]['fixed_outside_uc_female']) : '0'; ?>  </td>
+                    <td > <?php echo (!empty($row4[$j]['outreach_male']) ) ? number_format($row4[$j]['outreach_male']) : '0'; ?>  </td>
+                    <td > <?php echo (!empty($row4[$j]['outreach_female'])) ? number_format($row4[$j]['outreach_female']) : '0'; ?>  </td>
+                    <td> <?php echo (!empty($row3[$j]['referal_male']) ) ? $row3[$j]['referal_male'] : '0'; ?>  </td>
+                    <td> <?php echo (!empty($row3[$j]['referal_female']) ) ? $row3[$j]['referal_female'] : '0'; ?>  </td>
+                    <td > <?php echo (!empty($row4[$j]['outreach_outside_male']) ) ? number_format($row4[$j]['outreach_outside_male']) : '0'; ?>  </td>
+                    <td > <?php echo (!empty($row4[$j]['outreach_outside_female'])) ? number_format($row4[$j]['outreach_outside_female']) : '0'; ?>  </td>
+
+
                     <?php if ($counter == 1) { ?>
                         <td>
                             <?php echo (!empty($row2[0]['closingBalance'])) ? $row2[0]['closingBalance'] : '0'; ?>

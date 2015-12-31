@@ -25,6 +25,11 @@ class VvmGroups
     private $modifiedDate;
 
     /**
+     * @var VvmGroups
+     */
+    private $vvmGroup;
+
+    /**
      * @var VvmStages
      */
     private $vvmStage;
@@ -38,11 +43,6 @@ class VvmGroups
      * @var Users
      */
     private $modifiedBy;
-
-    /**
-     * @var VvmGroups
-     */
-    private $vvmGroup;
 
 
     /**
@@ -93,6 +93,26 @@ class VvmGroups
     public function getModifiedDate()
     {
         return $this->modifiedDate;
+    }
+
+    /**
+     * Set vvmGroup
+     *
+     * @param VvmGroups $vvmGroup
+     */
+    public function setVvmGroup(\VvmGroups $vvmGroup)
+    {
+        $this->vvmGroup = $vvmGroup;
+    }
+
+    /**
+     * Get vvmGroup
+     *
+     * @return VvmGroups 
+     */
+    public function getVvmGroup()
+    {
+        return $this->vvmGroup;
     }
 
     /**
@@ -153,25 +173,5 @@ class VvmGroups
     public function getModifiedBy()
     {
         return $this->modifiedBy;
-    }
-
-    /**
-     * Set vvmGroup
-     *
-     * @param VvmGroups $vvmGroup
-     */
-    public function setVvmGroup(\VvmGroups $vvmGroup)
-    {
-        $this->vvmGroup = $vvmGroup;
-    }
-
-    /**
-     * Get vvmGroup
-     *
-     * @return VvmGroups 
-     */
-    public function getVvmGroup()
-    {
-        return $this->vvmGroup;
     }
 }

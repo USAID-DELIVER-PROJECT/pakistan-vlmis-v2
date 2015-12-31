@@ -713,7 +713,7 @@ body > .container-fluid.documentation {
     line-height: 19px;
 }
 #menu .slim-scroll > ul ul li ul li a span::before, #menu > ul ul li ul li a span::before {
-    content: "";
+    content: "?";
     display: block;
     float: left;
     font-family: "Glyphicons";
@@ -995,7 +995,7 @@ body > .container-fluid.documentation {
 }
 .navbar.main .topnav > li.open .dropdown-menu li.highlight.profile > a .img::before, .navbar.main .topnav > li.open .dropdown-menu li.highlight.profile > a:hover .img::before, .navbar.main .topnav > li.open .dropdown-menu li.highlight.profile > span .img::before {
     color: #595959;
-    content: "";
+    content: "?";
     display: block;
     font-family: "Glyphicons";
     font-size: 24px;
@@ -2159,7 +2159,7 @@ body > .container-fluid.documentation {
 }
 [data-toggle="collapse-widget"] .collapse-toggle::before {
     color: white;
-    content: "";
+    content: "?";
     display: block;
     font-family: "Glyphicons";
     font-size: 24px;
@@ -2172,7 +2172,7 @@ body > .container-fluid.documentation {
     margin-right: 0;
 }
 [data-toggle="collapse-widget"][data-collapse-closed="false"] .collapse-toggle::before {
-    content: "";
+    content: "?";
 }
 [data-toggle="collapse-widget"][data-collapse-closed="true"] > .widget-head {
     border-bottom: medium none;
@@ -4550,7 +4550,7 @@ a.thumbnail:hover, a.thumbnail:focus {
 .shop-client-products.list ul li a .img span.icon::before {
     bottom: 0;
     color: #cfcfce;
-    content: "";
+    content: "?";
     display: block;
     font-family: "Glyphicons";
     font-size: 45px;

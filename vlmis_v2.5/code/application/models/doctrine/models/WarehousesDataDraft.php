@@ -60,34 +60,24 @@ class WarehousesDataDraft
     private $nearestExpiry;
 
     /**
-     * @var datetime $modifiedDate
+     * @var integer $itemPackSizeId
      */
-    private $modifiedDate;
+    private $itemPackSizeId;
 
     /**
-     * @var datetime $createdDate
+     * @var integer $warehouseId
      */
-    private $createdDate;
+    private $warehouseId;
 
     /**
-     * @var Warehouses
-     */
-    private $warehouse;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
-
-    /**
-     * @var Users
+     * @var integer $createdBy
      */
     private $createdBy;
 
     /**
-     * @var ItemPackSizes
+     * @var datetime $modifiedDate
      */
-    private $itemPackSize;
+    private $modifiedDate;
 
 
     /**
@@ -281,6 +271,66 @@ class WarehousesDataDraft
     }
 
     /**
+     * Set itemPackSizeId
+     *
+     * @param integer $itemPackSizeId
+     */
+    public function setItemPackSizeId($itemPackSizeId)
+    {
+        $this->itemPackSizeId = $itemPackSizeId;
+    }
+
+    /**
+     * Get itemPackSizeId
+     *
+     * @return integer 
+     */
+    public function getItemPackSizeId()
+    {
+        return $this->itemPackSizeId;
+    }
+
+    /**
+     * Set warehouseId
+     *
+     * @param integer $warehouseId
+     */
+    public function setWarehouseId($warehouseId)
+    {
+        $this->warehouseId = $warehouseId;
+    }
+
+    /**
+     * Get warehouseId
+     *
+     * @return integer 
+     */
+    public function getWarehouseId()
+    {
+        return $this->warehouseId;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param integer $createdBy
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return integer 
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
      * Set modifiedDate
      *
      * @param datetime $modifiedDate
@@ -298,105 +348,5 @@ class WarehousesDataDraft
     public function getModifiedDate()
     {
         return $this->modifiedDate;
-    }
-
-    /**
-     * Set createdDate
-     *
-     * @param datetime $createdDate
-     */
-    public function setCreatedDate($createdDate)
-    {
-        $this->createdDate = $createdDate;
-    }
-
-    /**
-     * Get createdDate
-     *
-     * @return datetime 
-     */
-    public function getCreatedDate()
-    {
-        return $this->createdDate;
-    }
-
-    /**
-     * Set warehouse
-     *
-     * @param Warehouses $warehouse
-     */
-    public function setWarehouse(\Warehouses $warehouse)
-    {
-        $this->warehouse = $warehouse;
-    }
-
-    /**
-     * Get warehouse
-     *
-     * @return Warehouses 
-     */
-    public function getWarehouse()
-    {
-        return $this->warehouse;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
-     * Set createdBy
-     *
-     * @param Users $createdBy
-     */
-    public function setCreatedBy(\Users $createdBy)
-    {
-        $this->createdBy = $createdBy;
-    }
-
-    /**
-     * Get createdBy
-     *
-     * @return Users 
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * Set itemPackSize
-     *
-     * @param ItemPackSizes $itemPackSize
-     */
-    public function setItemPackSize(\ItemPackSizes $itemPackSize)
-    {
-        $this->itemPackSize = $itemPackSize;
-    }
-
-    /**
-     * Get itemPackSize
-     *
-     * @return ItemPackSizes 
-     */
-    public function getItemPackSize()
-    {
-        return $this->itemPackSize;
     }
 }

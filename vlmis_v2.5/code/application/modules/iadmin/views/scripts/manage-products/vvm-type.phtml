@@ -97,10 +97,11 @@
                                         <!-- Table heading -->
                                         <?php
                                         $fields = array(
-                                            'vvm_type_name' => 'VVM Type Name',
-                                            'item_pack_size_id' => 'Item',
+                                            'vvm_type_name' => 'VVM Type Name',                                            
                                             'created_by' => 'Created By'
                                         );
+                                        
+                                        //'item_pack_size_id' => 'Item',
                                         $this->tableHeading($this->order, $this->sort, $fields);
                                         ?>
                                         <!-- // Table heading END -->
@@ -117,7 +118,7 @@
                                                     ?>
                                                     <tr class="<?php if ($i % 2 == 0) { ?>gradeX even<?php } else { ?> gradeA odd<?php } ?>">
                                                         <td><?php echo $row['vvmTypeName']; ?></td>
-                                                        <td><?php echo $row['itemName']; ?></td>
+<!--                                                        <td><?php echo $row['itemName']; ?></td>-->
                                                         <td><?php echo $row['userName']; ?></td>
                                                         <td>
                                                             <a itemid="<?php echo $row['pkId']; ?>" class="btn update-vvm-type btn-link btn-success btn-mini" data-toggle="modal" href="#modal-update-vvm-type"><?php echo $this->translate("Edit") ?></a>

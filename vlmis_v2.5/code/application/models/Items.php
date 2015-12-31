@@ -114,9 +114,21 @@ class Model_Items extends Model_Base {
      * @return type
      */
     public function getStakeholderItemPackSizes() {
-        $str_sql = $this->_em->getConnection()->prepare("SELECT
-        * FROM
-        stakeholder_item_pack_sizes");
+            $str_sql = $this->_em->getConnection()->prepare("SELECT                
+                                                    stakeholder_item_pack_sizes.stakeholder_id,
+                                                    stakeholder_item_pack_sizes.item_pack_size_id,
+                                                    pack_info.pk_id,
+                                                    pack_info.length,
+                                                    pack_info.width,
+                                                    pack_info.height,
+                                                    pack_info.quantity_per_pack,
+                                                    pack_info.volum_per_vial,
+                                                    pack_info.item_gtin,
+                                                    pack_info.packaging_level,
+                                                    pack_info.pack_size_description
+                                                    FROM
+                                                    stakeholder_item_pack_sizes
+                                                    INNER JOIN pack_info ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id;");
         $str_sql->execute();
         return $str_sql->fetchAll();
     }

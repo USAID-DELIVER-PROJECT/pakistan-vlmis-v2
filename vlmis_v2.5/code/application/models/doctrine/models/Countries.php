@@ -20,24 +20,24 @@ class Countries
     private $countryname;
 
     /**
+     * @var integer $createdBy
+     */
+    private $createdBy;
+
+    /**
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
-     * @var datetime $modifiedDate
-     */
-    private $modifiedDate;
-
-    /**
-     * @var Users
+     * @var integer $modifiedBy
      */
     private $modifiedBy;
 
     /**
-     * @var Users
+     * @var datetime $modifiedDate
      */
-    private $createdBy;
+    private $modifiedDate;
 
 
     /**
@@ -71,6 +71,26 @@ class Countries
     }
 
     /**
+     * Set createdBy
+     *
+     * @param integer $createdBy
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return integer 
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
      * Set createdDate
      *
      * @param datetime $createdDate
@@ -91,6 +111,26 @@ class Countries
     }
 
     /**
+     * Set modifiedBy
+     *
+     * @param integer $modifiedBy
+     */
+    public function setModifiedBy($modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return integer 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+
+    /**
      * Set modifiedDate
      *
      * @param datetime $modifiedDate
@@ -108,45 +148,5 @@ class Countries
     public function getModifiedDate()
     {
         return $this->modifiedDate;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
-     * Set createdBy
-     *
-     * @param Users $createdBy
-     */
-    public function setCreatedBy(\Users $createdBy)
-    {
-        $this->createdBy = $createdBy;
-    }
-
-    /**
-     * Get createdBy
-     *
-     * @return Users 
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
     }
 }

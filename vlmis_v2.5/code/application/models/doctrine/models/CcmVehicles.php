@@ -30,39 +30,39 @@ class CcmVehicles
     private $comments;
 
     /**
-     * @var integer $ccmId
-     */
-    private $ccmId;
-
-    /**
-     * @var integer $ccmAssetSubTypeId
-     */
-    private $ccmAssetSubTypeId;
-
-    /**
-     * @var integer $fuelTypeId
-     */
-    private $fuelTypeId;
-
-    /**
-     * @var integer $createdBy
-     */
-    private $createdBy;
-
-    /**
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
-     * @var integer $modifiedBy
+     * @var datetime $modifiedDate
+     */
+    private $modifiedDate;
+
+    /**
+     * @var ListDetail
+     */
+    private $fuelType;
+
+    /**
+     * @var Users
      */
     private $modifiedBy;
 
     /**
-     * @var datetime $modifiedDate
+     * @var Users
      */
-    private $modifiedDate;
+    private $createdBy;
+
+    /**
+     * @var CcmAssetTypes
+     */
+    private $ccmAssetSubType;
+
+    /**
+     * @var ColdChain
+     */
+    private $ccm;
 
 
     /**
@@ -136,86 +136,6 @@ class CcmVehicles
     }
 
     /**
-     * Set ccmId
-     *
-     * @param integer $ccmId
-     */
-    public function setCcmId($ccmId)
-    {
-        $this->ccmId = $ccmId;
-    }
-
-    /**
-     * Get ccmId
-     *
-     * @return integer 
-     */
-    public function getCcmId()
-    {
-        return $this->ccmId;
-    }
-
-    /**
-     * Set ccmAssetSubTypeId
-     *
-     * @param integer $ccmAssetSubTypeId
-     */
-    public function setCcmAssetSubTypeId($ccmAssetSubTypeId)
-    {
-        $this->ccmAssetSubTypeId = $ccmAssetSubTypeId;
-    }
-
-    /**
-     * Get ccmAssetSubTypeId
-     *
-     * @return integer 
-     */
-    public function getCcmAssetSubTypeId()
-    {
-        return $this->ccmAssetSubTypeId;
-    }
-
-    /**
-     * Set fuelTypeId
-     *
-     * @param integer $fuelTypeId
-     */
-    public function setFuelTypeId($fuelTypeId)
-    {
-        $this->fuelTypeId = $fuelTypeId;
-    }
-
-    /**
-     * Get fuelTypeId
-     *
-     * @return integer 
-     */
-    public function getFuelTypeId()
-    {
-        return $this->fuelTypeId;
-    }
-
-    /**
-     * Set createdBy
-     *
-     * @param integer $createdBy
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-    }
-
-    /**
-     * Get createdBy
-     *
-     * @return integer 
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
      * Set createdDate
      *
      * @param datetime $createdDate
@@ -236,26 +156,6 @@ class CcmVehicles
     }
 
     /**
-     * Set modifiedBy
-     *
-     * @param integer $modifiedBy
-     */
-    public function setModifiedBy($modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return integer 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
      * Set modifiedDate
      *
      * @param datetime $modifiedDate
@@ -273,5 +173,105 @@ class CcmVehicles
     public function getModifiedDate()
     {
         return $this->modifiedDate;
+    }
+
+    /**
+     * Set fuelType
+     *
+     * @param ListDetail $fuelType
+     */
+    public function setFuelType(\ListDetail $fuelType)
+    {
+        $this->fuelType = $fuelType;
+    }
+
+    /**
+     * Get fuelType
+     *
+     * @return ListDetail 
+     */
+    public function getFuelType()
+    {
+        return $this->fuelType;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param Users $createdBy
+     */
+    public function setCreatedBy(\Users $createdBy)
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return Users 
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set ccmAssetSubType
+     *
+     * @param CcmAssetTypes $ccmAssetSubType
+     */
+    public function setCcmAssetSubType(\CcmAssetTypes $ccmAssetSubType)
+    {
+        $this->ccmAssetSubType = $ccmAssetSubType;
+    }
+
+    /**
+     * Get ccmAssetSubType
+     *
+     * @return CcmAssetTypes 
+     */
+    public function getCcmAssetSubType()
+    {
+        return $this->ccmAssetSubType;
+    }
+
+    /**
+     * Set ccm
+     *
+     * @param ColdChain $ccm
+     */
+    public function setCcm(\ColdChain $ccm)
+    {
+        $this->ccm = $ccm;
+    }
+
+    /**
+     * Get ccm
+     *
+     * @return ColdChain 
+     */
+    public function getCcm()
+    {
+        return $this->ccm;
     }
 }

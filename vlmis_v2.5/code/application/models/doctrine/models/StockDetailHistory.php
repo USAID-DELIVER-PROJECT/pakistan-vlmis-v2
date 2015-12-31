@@ -30,11 +30,6 @@ class StockDetailHistory
     private $temporary;
 
     /**
-     * @var integer $vvmStage
-     */
-    private $vvmStage;
-
-    /**
      * @var integer $isReceived
      */
     private $isReceived;
@@ -43,16 +38,6 @@ class StockDetailHistory
      * @var boolean $adjustmentType
      */
     private $adjustmentType;
-
-    /**
-     * @var integer $stockMasterId
-     */
-    private $stockMasterId;
-
-    /**
-     * @var integer $stockBatchId
-     */
-    private $stockBatchId;
 
     /**
      * @var integer $itemUnitId
@@ -65,24 +50,39 @@ class StockDetailHistory
     private $actionType;
 
     /**
-     * @var integer $createdBy
-     */
-    private $createdBy;
-
-    /**
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
-     * @var integer $modifiedBy
+     * @var datetime $modifiedDate
+     */
+    private $modifiedDate;
+
+    /**
+     * @var StockMasterHistory
+     */
+    private $stockMaster;
+
+    /**
+     * @var StockBatchWarehouses
+     */
+    private $stockBatchWarehouse;
+
+    /**
+     * @var Users
+     */
+    private $createdBy;
+
+    /**
+     * @var Users
      */
     private $modifiedBy;
 
     /**
-     * @var datetime $modifiedDate
+     * @var VvmStages
      */
-    private $modifiedDate;
+    private $vvmStage;
 
 
     /**
@@ -156,26 +156,6 @@ class StockDetailHistory
     }
 
     /**
-     * Set vvmStage
-     *
-     * @param integer $vvmStage
-     */
-    public function setVvmStage($vvmStage)
-    {
-        $this->vvmStage = $vvmStage;
-    }
-
-    /**
-     * Get vvmStage
-     *
-     * @return integer 
-     */
-    public function getVvmStage()
-    {
-        return $this->vvmStage;
-    }
-
-    /**
      * Set isReceived
      *
      * @param integer $isReceived
@@ -213,46 +193,6 @@ class StockDetailHistory
     public function getAdjustmentType()
     {
         return $this->adjustmentType;
-    }
-
-    /**
-     * Set stockMasterId
-     *
-     * @param integer $stockMasterId
-     */
-    public function setStockMasterId($stockMasterId)
-    {
-        $this->stockMasterId = $stockMasterId;
-    }
-
-    /**
-     * Get stockMasterId
-     *
-     * @return integer 
-     */
-    public function getStockMasterId()
-    {
-        return $this->stockMasterId;
-    }
-
-    /**
-     * Set stockBatchId
-     *
-     * @param integer $stockBatchId
-     */
-    public function setStockBatchId($stockBatchId)
-    {
-        $this->stockBatchId = $stockBatchId;
-    }
-
-    /**
-     * Get stockBatchId
-     *
-     * @return integer 
-     */
-    public function getStockBatchId()
-    {
-        return $this->stockBatchId;
     }
 
     /**
@@ -296,26 +236,6 @@ class StockDetailHistory
     }
 
     /**
-     * Set createdBy
-     *
-     * @param integer $createdBy
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-    }
-
-    /**
-     * Get createdBy
-     *
-     * @return integer 
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
      * Set createdDate
      *
      * @param datetime $createdDate
@@ -336,26 +256,6 @@ class StockDetailHistory
     }
 
     /**
-     * Set modifiedBy
-     *
-     * @param integer $modifiedBy
-     */
-    public function setModifiedBy($modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return integer 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
      * Set modifiedDate
      *
      * @param datetime $modifiedDate
@@ -373,5 +273,105 @@ class StockDetailHistory
     public function getModifiedDate()
     {
         return $this->modifiedDate;
+    }
+
+    /**
+     * Set stockMaster
+     *
+     * @param StockMasterHistory $stockMaster
+     */
+    public function setStockMaster(\StockMasterHistory $stockMaster)
+    {
+        $this->stockMaster = $stockMaster;
+    }
+
+    /**
+     * Get stockMaster
+     *
+     * @return StockMasterHistory 
+     */
+    public function getStockMaster()
+    {
+        return $this->stockMaster;
+    }
+
+    /**
+     * Set stockBatchWarehouse
+     *
+     * @param StockBatchWarehouses $stockBatchWarehouse
+     */
+    public function setStockBatchWarehouse(\StockBatchWarehouses $stockBatchWarehouse)
+    {
+        $this->stockBatchWarehouse = $stockBatchWarehouse;
+    }
+
+    /**
+     * Get stockBatchWarehouse
+     *
+     * @return StockBatchWarehouses 
+     */
+    public function getStockBatchWarehouse()
+    {
+        return $this->stockBatchWarehouse;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param Users $createdBy
+     */
+    public function setCreatedBy(\Users $createdBy)
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return Users 
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+
+    /**
+     * Set vvmStage
+     *
+     * @param VvmStages $vvmStage
+     */
+    public function setVvmStage(\VvmStages $vvmStage)
+    {
+        $this->vvmStage = $vvmStage;
+    }
+
+    /**
+     * Get vvmStage
+     *
+     * @return VvmStages 
+     */
+    public function getVvmStage()
+    {
+        return $this->vvmStage;
     }
 }

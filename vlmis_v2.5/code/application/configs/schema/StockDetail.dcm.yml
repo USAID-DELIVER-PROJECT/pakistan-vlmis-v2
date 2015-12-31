@@ -35,6 +35,15 @@ StockDetail:
       nullable: false
       column: modified_date
   oneToOne:
+    modifiedBy:
+      targetEntity: Users
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
     vvmStage:
       targetEntity: VvmStages
       cascade: {  }
@@ -53,13 +62,13 @@ StockDetail:
         stock_master_id:
           referencedColumnName: pk_id
       orphanRemoval: false
-    stockBatch:
-      targetEntity: StockBatch
+    stockBatchWarehouse:
+      targetEntity: StockBatchWarehouses
       cascade: {  }
       mappedBy: null
       inversedBy: null
       joinColumns:
-        stock_batch_id:
+        stock_batch_warehouse_id:
           referencedColumnName: pk_id
       orphanRemoval: false
     itemUnit:
@@ -78,15 +87,6 @@ StockDetail:
       inversedBy: null
       joinColumns:
         created_by:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    modifiedBy:
-      targetEntity: Users
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        modified_by:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

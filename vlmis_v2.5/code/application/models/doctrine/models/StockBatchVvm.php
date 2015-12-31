@@ -15,9 +15,9 @@ class StockBatchVvm
     private $pkId;
 
     /**
-     * @var integer $stockBatchId
+     * @var integer $stockBatchWarehouseId
      */
-    private $stockBatchId;
+    private $stockBatchWarehouseId;
 
     /**
      * @var integer $vvmStage
@@ -61,23 +61,23 @@ class StockBatchVvm
     }
 
     /**
-     * Set stockBatchId
+     * Set stockBatchWarehouseId
      *
-     * @param integer $stockBatchId
+     * @param integer $stockBatchWarehouseId
      */
-    public function setStockBatchId($stockBatchId)
+    public function setStockBatchWarehouseId($stockBatchWarehouseId)
     {
-        $this->stockBatchId = $stockBatchId;
+        $this->stockBatchWarehouseId = $stockBatchWarehouseId;
     }
 
     /**
-     * Get stockBatchId
+     * Get stockBatchWarehouseId
      *
      * @return integer 
      */
-    public function getStockBatchId()
+    public function getStockBatchWarehouseId()
     {
-        return $this->stockBatchId;
+        return $this->stockBatchWarehouseId;
     }
 
     /**

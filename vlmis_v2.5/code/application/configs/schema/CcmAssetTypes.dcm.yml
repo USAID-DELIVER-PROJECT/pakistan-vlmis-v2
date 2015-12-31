@@ -19,11 +19,6 @@ CcmAssetTypes:
     status:
       type: boolean
       nullable: true
-    parentId:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: parent_id
     ccmEquipmentTypeId:
       type: integer
       unsigned: false
@@ -38,6 +33,15 @@ CcmAssetTypes:
       nullable: true
       column: modified_date
   oneToOne:
+    parent:
+      targetEntity: CcmAssetTypes
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        parent_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
     modifiedBy:
       targetEntity: Users
       cascade: {  }

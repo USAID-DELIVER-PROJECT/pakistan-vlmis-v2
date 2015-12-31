@@ -30,14 +30,14 @@ class GeoLocations
     private $modifiedDate;
 
     /**
-     * @var Locations
-     */
-    private $location;
-
-    /**
      * @var Users
      */
     private $modifiedBy;
+
+    /**
+     * @var Locations
+     */
+    private $location;
 
     /**
      * @var GeoMaps
@@ -131,26 +131,6 @@ class GeoLocations
     }
 
     /**
-     * Set location
-     *
-     * @param Locations $location
-     */
-    public function setLocation(\Locations $location)
-    {
-        $this->location = $location;
-    }
-
-    /**
-     * Get location
-     *
-     * @return Locations 
-     */
-    public function getLocation()
-    {
-        return $this->location;
-    }
-
-    /**
      * Set modifiedBy
      *
      * @param Users $modifiedBy
@@ -168,6 +148,26 @@ class GeoLocations
     public function getModifiedBy()
     {
         return $this->modifiedBy;
+    }
+
+    /**
+     * Set location
+     *
+     * @param Locations $location
+     */
+    public function setLocation(\Locations $location)
+    {
+        $this->location = $location;
+    }
+
+    /**
+     * Get location
+     *
+     * @return Locations 
+     */
+    public function getLocation()
+    {
+        return $this->location;
     }
 
     /**

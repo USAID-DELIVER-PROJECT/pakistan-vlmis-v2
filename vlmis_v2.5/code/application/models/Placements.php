@@ -27,7 +27,8 @@ class Model_Placements extends Model_Base {
                         . "c.pkId, c.assetId,"
                         . "s.number,a.assetTypeName")
                 ->from("Placements", "p")
-                ->leftJoin("p.stockBatch", "s")
+                ->leftJoin("p.stockBatchWarehouse", "sbw")
+                ->leftJoin("sbw.stockBatch", "s")
                 ->leftJoin("p.ccm", "c")
                 ->leftJoin("c.ccmAssetType", "a")
                 ->where("p.isPlaced = 1")
@@ -51,9 +52,10 @@ class Model_Placements extends Model_Base {
 
         $placement_loc_id = $this->_em->getRepository("PlacementLocations")->find($data['placement_loc_id']);
         $placement->setPlacementLocation($placement_loc_id);
-        $batch_id = $this->_em->getRepository("StockBatch")->find($data['batch_id']);
-        $placement->setStockBatch($batch_id);
-        if ($data['detail_id'] != 0) {
+        $batch_id = $this->_em->getRepository("StockBatchWarehouses")->find($data['batch_id']);
+        $placement->setStockBatchWarehouse($batch_id);
+//        if ($data['detail_id'] != 0) {
+        if (!empty($data['detail_id'])) {
             $detail_id = $this->_em->getRepository("StockDetail")->find($data['detail_id']);
             $placement->setStockDetail($detail_id);
         }
@@ -64,7 +66,7 @@ class Model_Placements extends Model_Base {
         $placement->setCreatedDate(new \DateTime($data['created_date']));
         $placement->setModifiedBy($created_by);
         $placement->setModifiedDate(App_Tools_Time::now());
-        
+
         $vvms = $this->_em->getRepository("VvmStages")->find($data['vvmstage']);
         $placement->setVvmStage($vvms);
         $placement->setIsPlaced($data['is_placed']);
@@ -91,8 +93,8 @@ class Model_Placements extends Model_Base {
 
         if (!empty($form_values['batchId'])) {
             // echo "here";exit;
-            $stock_batch_id = $this->_em->find("StockBatch", $form_values['batchId']);
-            $placement->setStockBatch($stock_batch_id);
+            $stock_batch_id = $this->_em->find("StockBatchWarehouses", $form_values['batchId']);
+            $placement->setStockBatchWarehouse($stock_batch_id);
             $qty = str_replace(",", "", $form_values['quantity']);
             //$qty_per_pack = $stock_batch_id->getStakeholderItemPackSize()->getQuantityPerPack();
             //$quantity = $qty * $qty_per_pack;
@@ -118,7 +120,7 @@ class Model_Placements extends Model_Base {
         $placement->setIsPlaced($form_values['is_placed']);
 
         $user_id = $this->_em->find("Users", $this->_user_id);
-        
+
         $placement->setCreatedBy($user_id);
         $placement->setCreatedDate(new DateTime(date("Y-m-d h:i:s")));
         $placement->setModifiedBy($user_id);
@@ -135,14 +137,14 @@ class Model_Placements extends Model_Base {
         $placement_location_id = $this->_em->getRepository("PlacementLocations")->findOneBy(array("locationId" => $form_values['non_ccm_location_id'], "locationType" => Model_PlacementLocations::LOCATIONTYPE_NONCCM));
         $placement_id = $form_values['id'];
         $plac = $this->_em->find("PlacementSummary", $placement_id);
-        $stock_batch = $plac->getStockBatch();
+        $stock_batch = $plac->getStockBatchWarehouse();
         $plc_transaction_type = $this->_em->find("ListDetail", Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_T);
         $user_id = $this->_em->find("Users", $this->_user_id);
 
         $placement = new Placements();
         $placement->setPlacementLocation($placement_location_id);
         $placement->setQuantity($form_values['quantity']);
-        $placement->setStockBatch($stock_batch);
+        $placement->setStockBatchWarehouse($stock_batch);
         $placement->setPlacementTransactionType($plc_transaction_type);
         $placement->setCreatedBy($user_id);
         $placement->setCreatedDate(new \DateTime());
@@ -155,18 +157,18 @@ class Model_Placements extends Model_Base {
         $placement2 = new Placements();
         $placement2->setQuantity("-" . $form_values['quantity']);
         $placement2->setPlacementLocation($plac->getPlacementLocation());
-        $placement2->setStockBatch($plac->getStockBatch());
+        $placement2->setStockBatchWarehouse($plac->getStockBatchWarehouse());
         $placement2->setPlacementTransactionType($plc_transaction_type);
         $placement2->setCreatedBy($user_id);
         $placement2->setCreatedDate(new \DateTime());
         $vvms = $this->_em->getRepository("VvmStages")->find(0);
         $placement2->setVvmStage($vvms);
-        
+
         $placement2->setCreatedBy($user_id);
         $placement2->setCreatedDate(App_Tools_Time::now());
         $placement2->setModifiedBy($user_id);
         $placement2->setModifiedDate(App_Tools_Time::now());
-        
+
         $this->_em->persist($placement2);
 
         $this->_em->flush();
@@ -190,16 +192,16 @@ class Model_Placements extends Model_Base {
         $placement = new Placements();
         $placement->setPlacementLocation($placement_location_id);
         $placement->setQuantity($form_values['quantity']);
-        $placement->setStockBatch($plac->getStockBatch());
-        //if ($plac->getStockDetail() != null) {
-        //$placement->setStockDetail($plac->getStockDetail());
-        //}
+        $placement->setStockBatchWarehouse($plac->getStockBatchWarehouse());
+//        if ($plac->getStockDetail() != null) {
+//            $placement->setStockDetail($plac->getStockDetail());
+//        }
         $placement->setPlacementTransactionType($plc_transaction_type);
         $placement->setCreatedBy($user_id);
         $placement->setCreatedDate(new \DateTime(date("Y-m-d")));
         $placement->setModifiedBy($user_id);
         $placement->setModifiedDate(App_Tools_Time::now());
-        
+
         $placement->setVvmStage($plac->getVvmStage());
         $placement->setIsPlaced(1);
         $this->_em->persist($placement);
@@ -207,10 +209,10 @@ class Model_Placements extends Model_Base {
         $placement2 = new Placements();
         $placement2->setQuantity("-" . $form_values['quantity']);
         $placement2->setPlacementLocation($plac->getPlacementLocation());
-        $placement2->setStockBatch($plac->getStockBatch());
-        //if ($placement2->getStockDetail() != null) {
-        //$placement2->setStockDetail($plac->getStockDetail());
-        //}
+        $placement2->setStockBatchWarehouse($plac->getStockBatchWarehouse());
+        if ($placement2->getStockDetail() != null) {
+            $placement2->setStockDetail($plac->getStockDetail());
+        }
         $placement2->setPlacementTransactionType($plc_transaction_type);
         $placement2->setCreatedBy($user_id);
         $placement2->setCreatedDate(new \DateTime(date("Y-m-d")));
@@ -232,12 +234,17 @@ class Model_Placements extends Model_Base {
                     stock_batch.number,
                     item_pack_sizes.item_name,
                     placement_locations.pk_id,
-                    item_pack_sizes.quantity_per_pack
+                    pack_info.quantity_per_pack
                 FROM
                     placements
-                INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
+               
+                INNER JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id    
                 INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
-                INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                
                 WHERE
                     placements.stock_detail_id =" . $id . " AND
                     placements.placement_location_id =" . $plc_id);
@@ -255,25 +262,28 @@ class Model_Placements extends Model_Base {
 
         $str_sql = "SELECT
                             placement_summary.batch_number AS BatchNo,
-                            placement_summary.stock_batch_id AS BatchID,
+                            placement_summary.stock_batch_warehouse_id AS BatchID,
                             non_ccm_locations.location_name AS LocationName,
                             non_ccm_locations.pk_id AS LocationID,
                             placement_summary.pk_id AS PlacementID,
                             Sum(placement_summary.quantity) AS Qty,
                             placement_summary.item_name,
                             stakeholder_item_pack_sizes.pk_id,
-                            stakeholder_item_pack_sizes.quantity_per_pack as quantity_per_pack
+                            pack_info.quantity_per_pack as quantity_per_pack
                     FROM
                             placement_summary
                     INNER JOIN placement_locations ON placement_summary.placement_location_id = placement_locations.pk_id
                     INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
-                    INNER JOIN stock_batch ON placement_summary.stock_batch_id = stock_batch.pk_id
-                    INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN stock_batch_warehouses ON placement_summary.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id                       
                     WHERE
                             non_ccm_locations.warehouse_id = " . $wh_id . "
                     AND placement_summary.placement_location_id = " . $this->form_values['id'] . "
                     GROUP BY
-                            placement_summary.stock_batch_id";
+                            placement_summary.stock_batch_warehouse_id";
 
         if ($order == 'product') {
             $str_sql .= " ORDER BY placement_summary.item_name $sort";
@@ -303,9 +313,9 @@ class Model_Placements extends Model_Base {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("ps")
                 ->from("PlacementSummary", "ps")
-                ->join('ps.stockBatch', 'sb')
+                ->join('ps.stockBatchWarehouse', 'sbw')
                 ->where("ps.placementLocation = $id")
-                ->andWhere("sb.warehouse =" . $warehouse_id);
+                ->andWhere("sbw.warehouse =" . $warehouse_id);
 
         switch ($order) {
             case 'product':
@@ -318,7 +328,7 @@ class Model_Placements extends Model_Base {
                 $str_sql->orderBy("ps.quantity", $sort);
                 break;
             case 'expiry':
-                $str_sql->orderBy("sb.expiryDate", $sort);
+                $str_sql->orderBy("sbw.expiryDate", $sort);
                 break;
             case 'vvm_stage':
                 $str_sql->orderBy("ps.vvmStage", $sort);
@@ -329,8 +339,8 @@ class Model_Placements extends Model_Base {
         }
 
         $str_sql->having("ps.quantity > 0");
-        //echo $str_sql->getQuery()->getSql();
-        //exit;
+        //  echo $str_sql->getQuery()->getSql();
+        //  exit;
         return $str_sql->getQuery()->getResult();
     }
 
@@ -338,9 +348,13 @@ class Model_Placements extends Model_Base {
         $str_sql = $this->_em->createQueryBuilder()
                 ->select('ips.quantityPerPack')
                 ->from("Placements", "p")
-                ->join('p.stockBatch', 'sb')
+                ->join('p.stockBatchWarehouse', 'sbw')
+                ->join("sbw.stockBatch", "sb")
+                ->join("sb.packInfo", "pi")
+                ->join("pi.stakeholderItemPackSize", "sip")
+                ->join("sip.itemPackSize", "ips")
                 ->join('sb.itemPackSize', 'ips')
-                ->where("p.stockBatch =" . $sb);
+                ->where("p.stockBatchWarehouse =" . $sb);
 
         $result = $str_sql->getQuery()->getResult();
         if (!empty($result) && count($result) > 0) {
@@ -359,12 +373,12 @@ class Model_Placements extends Model_Base {
 //                item_pack_sizes.quantity_per_pack
 //                FROM
 //                placements
-//                INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
+//                INNER JOIN stock_batch ON placements.stock_batch_warehouse_id = stock_batch.pk_id
 //                INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 //                INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
 //                INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
 //                WHERE
-//                placements.stock_batch_id = 1";exit;
+//                placements.stock_batch_warehouse_id = 1";exit;
 
 
         $em = Zend_Registry::get('doctrine');
@@ -372,15 +386,19 @@ class Model_Placements extends Model_Base {
                 placements.quantity,
                 placements.placement_location_id,
                 non_ccm_locations.location_name,
-                item_pack_sizes.quantity_per_pack
+                pack_info.quantity_per_pack
                 FROM
                 placements
-                INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
+                INNER JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id   
                 INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
                 INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
-                INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+              
                 WHERE
-                placements.stock_batch_id =" . $sb);
+                placements.stock_batch_warehouse_id =" . $sb);
 
         // echo $str_sql->getQuery()->getSql();exit;
 
@@ -410,23 +428,25 @@ class Model_Placements extends Model_Base {
             item_pack_sizes.item_name AS ItemName,
             item_pack_sizes.item_category_id,
             ROUND(
-                            abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
+                            abs(Sum(placements.quantity)) / pack_info.quantity_per_pack
                     ) AS pack_quantity,
             abs(Sum(placements.quantity)) AS Qty,
-            stock_batch.pk_id AS BatchID,
+            stock_batch_warehouses.pk_id AS BatchID,
             stock_batch.number AS BatchNo,
-            stakeholder_item_pack_sizes.quantity_per_pack AS quantity_per_pack,
+            pack_info.quantity_per_pack AS quantity_per_pack,
             placement_locations.pk_id as PlacementID
             FROM
                     placement_locations
             LEFT JOIN placements ON placement_locations.pk_id = placements.placement_location_id
             INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
-            LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-            LEFT JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+            LEFT JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+            LEFT JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+            LEFT JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+            LEFT JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
             LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
             WHERE
                     non_ccm_locations.warehouse_id = " . $this->form_values['wh_id'] . "
-            AND stock_batch.pk_id =" . $this->form_values['batch_id'] . "
+            AND stock_batch_warehouses.pk_id =" . $this->form_values['batch_id'] . "
             GROUP BY
                     non_ccm_locations.pk_id  HAVING Qty > 0
             ";
@@ -446,14 +466,14 @@ class Model_Placements extends Model_Base {
 //            stakeholder_item_pack_sizes.quantity_per_pack
 //            FROM
 //             placements
-//            INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
+//            INNER JOIN stock_batch ON placements.stock_batch_warehouse_id = stock_batch.pk_id
 //            INNER JOIN stakeholder_item_pack_sizes ON  stock_batch.stakeholder_item_pack_size_id =stakeholder_item_pack_sizes.pk_id
 //            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id  = item_pack_sizes.pk_id
 //            INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
 //            INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 //            INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
-//            WHERE placements.stock_batch_id = "' . $this->form_values['batch_id'] . '" AND non_ccm_locations.warehouse_id = "' . $this->form_values['wh_id'] . '"'
-//                    . 'GROUP BY placements.stock_batch_id,placements.placement_location_id ';
+//            WHERE placements.stock_batch_warehouse_id = "' . $this->form_values['batch_id'] . '" AND non_ccm_locations.warehouse_id = "' . $this->form_values['wh_id'] . '"'
+//                    . 'GROUP BY placements.stock_batch_warehouse_id,placements.placement_location_id ';
 //            //HAVING Qty > 0
             $result = $em->getConnection()->prepare($str_sql);
         } else {
@@ -466,25 +486,27 @@ class Model_Placements extends Model_Base {
                 item_pack_sizes.item_name AS ItemName,
                 item_pack_sizes.item_category_id,
                 ROUND(
-                        abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
+                        abs(Sum(placements.quantity)) / pack_info.quantity_per_pack
                 ) AS pack_quantity,
                 abs(Sum(placements.quantity)) AS Qty,
                 placements.vvm_stage AS VVMStage,
-                stock_batch.pk_id AS BatchID,
+                stock_batch_warehouses.pk_id AS BatchID,
                 stock_batch.number AS BatchNo,
-                stakeholder_item_pack_sizes.quantity_per_pack AS quantity_per_pack,
+                pack_info.quantity_per_pack AS quantity_per_pack,
                 placement_locations.pk_id AS PlacementID,
-                 placements.pk_id as placements_id
+                placements.pk_id as placements_id
         FROM
                 placement_locations
         LEFT JOIN placements ON placement_locations.pk_id = placements.placement_location_id
         INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
-        LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-        LEFT JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        LEFT JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        LEFT JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        LEFT JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        LEFT JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
         LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
         WHERE
                 cold_chain.warehouse_id = " . $this->form_values['wh_id'] . "
-        AND stock_batch.pk_id = " . $this->form_values['batch_id'] . "
+        AND stock_batch_warehouses.pk_id = " . $this->form_values['batch_id'] . "
         GROUP BY
                 cold_chain.pk_id";
 
@@ -505,14 +527,14 @@ class Model_Placements extends Model_Base {
 //             stakeholder_item_pack_sizes.quantity_per_pack
 //             FROM
 //                    placements
-//            INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
+//            INNER JOIN stock_batch ON placements.stock_batch_warehouse_id = stock_batch.pk_id
 //            INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 //            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
 //            INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
 //            INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 //            INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
-//            WHERE placements.stock_batch_id = "' . $this->form_values['batch_id'] . '" AND cold_chain.warehouse_id = "' . $this->form_values['wh_id'] . '"'
-//                    . 'GROUP BY placements.stock_batch_id, placements.placement_location_id';
+//            WHERE placements.stock_batch_warehouse_id = "' . $this->form_values['batch_id'] . '" AND cold_chain.warehouse_id = "' . $this->form_values['wh_id'] . '"'
+//                    . 'GROUP BY placements.stock_batch_warehouse_id, placements.placement_location_id';
 //            //HAVING Qty > 0
             $result = $em->getConnection()->prepare($str_sql);
         }
@@ -539,11 +561,11 @@ class Model_Placements extends Model_Base {
             item_pack_sizes.pk_id AS ItemID,
             item_pack_sizes.item_name AS ItemName,
             ROUND(
-                            abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
+                            abs(Sum(placements.quantity)) / pack_info.quantity_per_pack
                     ) AS pack_quantity,
             abs(Sum(placements.quantity)) AS Qty,
-            stock_batch.pk_id AS BatchID,
-            stakeholder_item_pack_sizes.quantity_per_pack AS quantity_per_pack,
+            stock_batch_warehouses.pk_id AS BatchID,
+            pack_info.quantity_per_pack AS quantity_per_pack,
             placement_locations.pk_id AS placement_locationsid,
             item_pack_sizes.item_category_id,
             stock_batch.expiry_date AS Expiry,
@@ -554,14 +576,17 @@ class Model_Placements extends Model_Base {
                     placement_locations
             LEFT JOIN placements ON placement_locations.pk_id = placements.placement_location_id
             INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
-            LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-            LEFT JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+            LEFT JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+            LEFT JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+            LEFT JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+            LEFT JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
             LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
             WHERE
                     non_ccm_locations.warehouse_id =" . $this->form_values['wh_id'] . " and placement_locations.pk_id = " . $this->form_values['p_loc_id'] . "
             GROUP BY
                     non_ccm_locations.pk_id,
-            stock_batch.pk_id HAVING Qty > 0
+            stock_batch_warehouses.pk_id 
+            HAVING Qty > 0
             ";
 //            $str_sql = 'SELECT stock_batch.expiry_date AS Expiry,
 //	stock_batch.number AS BatchNo,
@@ -579,14 +604,14 @@ class Model_Placements extends Model_Base {
 //        stakeholder_item_pack_sizes.quantity_per_pack
 //        FROM
 //        placements
-//        INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
+//        INNER JOIN stock_batch ON placements.stock_batch_warehouse_id = stock_batch.pk_id
 //        INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 //        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
 //        INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
 //        INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 //        INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
 //        WHERE placements.placement_location_id = "' . $this->form_values['p_loc_id'] . '" AND non_ccm_locations.warehouse_id = "' . $this->form_values['wh_id'] . '"'
-//                    . 'GROUP BY placements.stock_batch_id ';
+//                    . 'GROUP BY placements.stock_batch_warehouse_id ';
             //HAVING Qty > 0
             $result = $em->getConnection()->prepare($str_sql);
         } else {
@@ -598,11 +623,11 @@ class Model_Placements extends Model_Base {
             item_pack_sizes.pk_id AS ItemID,
             item_pack_sizes.item_name AS ItemName,
             ROUND(
-                            abs(Sum(placements.quantity)) / stakeholder_item_pack_sizes.quantity_per_pack
+                            abs(Sum(placements.quantity)) / pack_info.quantity_per_pack
                     ) AS pack_quantity,
             abs(Sum(placements.quantity)) AS Qty,
-            stock_batch.pk_id AS BatchID,
-            stakeholder_item_pack_sizes.quantity_per_pack AS quantity_per_pack,
+            stock_batch_warehouses.pk_id AS BatchID,
+            pack_info.quantity_per_pack AS quantity_per_pack,
             placement_locations.pk_id AS placement_locationsid,
             item_pack_sizes.item_category_id,
             stock_batch.expiry_date AS Expiry,
@@ -613,14 +638,16 @@ class Model_Placements extends Model_Base {
                     placement_locations
             LEFT JOIN placements ON placement_locations.pk_id = placements.placement_location_id
             INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
-            LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-            LEFT JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+            LEFT JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+            LEFT JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+            LEFT JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+            LEFT JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
             LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
             WHERE
                     cold_chain.warehouse_id =" . $this->form_values['wh_id'] . " and placement_locations.pk_id = " . $this->form_values['p_loc_id'] . "
             GROUP BY
                     cold_chain.pk_id,
-            stock_batch.pk_id";
+            stock_batch_warehouses.pk_id";
 //            $str_sql = 'SELECT
 //            stock_batch.expiry_date AS Expiry,
 //            stock_batch.number AS BatchNo,
@@ -639,14 +666,14 @@ class Model_Placements extends Model_Base {
 //            stakeholder_item_pack_sizes.quantity_per_pack
 //            FROM
 //            placements
-//            INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
+//            INNER JOIN stock_batch ON placements.stock_batch_warehouse_id = stock_batch.pk_id
 //            INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
 //            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
 //            INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
 //            INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 //            INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
 //            WHERE placements.placement_location_id = "' . $this->form_values['p_loc_id'] . '" AND cold_chain.warehouse_id = "' . $this->form_values['wh_id'] . '"'
-//                    . 'GROUP BY placements.stock_batch_id';
+//                    . 'GROUP BY placements.stock_batch_warehouse_id';
             //HAVING Qty > 0
             $result = $em->getConnection()->prepare($str_sql);
         }
@@ -669,8 +696,8 @@ class Model_Placements extends Model_Base {
                 $placement = new Placements();
                 list($stcdetail, $stcbatch) = explode('_', $key);
                 $placement->setQuantity($value * $form_values['quantity_per_pack']);
-                $stock_batch = $this->_em->find("StockBatch", $stcbatch);
-                $placement->setStockBatch($stock_batch);
+                $stock_batch = $this->_em->find("StockBatchWarehouses", $stcbatch);
+                $placement->setStockBatchWarehouse($stock_batch);
                 $stock_detail = $this->_em->find("StockDetail", $stcdetail);
                 $placement->setStockDetail($stock_detail);
                 $placement_location = $this->_em->find("PlacementLocations", $form_values['placement_loc_id']);
@@ -699,8 +726,8 @@ class Model_Placements extends Model_Base {
                 $placement = new Placements();
                 list($stcdetail, $stcbatch) = explode('_', $key);
                 $placement->setQuantity($value);
-                $stock_batch = $this->_em->find("StockBatch", $stcbatch);
-                $placement->setStockBatch($stock_batch);
+                $stock_batch_warehouse = $this->_em->find("StockBatchWarehouses", $stcbatch);
+                $placement->setStockBatchWarehouse($stock_batch_warehouse);
                 $stock_detail = $this->_em->find("StockDetail", $stcdetail);
                 $placement->setStockDetail($stock_detail);
                 $placement_location = $this->_em->find("PlacementLocations", $form_values['placement_loc_id']);
@@ -711,6 +738,7 @@ class Model_Placements extends Model_Base {
                 $placement->setPlacementTransactionType($plc_transaction_type);
                 $user_id = $this->_em->find("Users", $this->_user_id);
                 $placement->setCreatedBy($user_id);
+                $placement->setModifiedBy($user_id);
                 $placement->setCreatedDate(new \DateTime());
                 $this->_em->persist($placement);
             }
@@ -729,14 +757,14 @@ class Model_Placements extends Model_Base {
         $qty = $this->form_values['qty'];
         $old_vvm_stage = $this->form_values['old_vvm_stage'];
 
-        $placements = $this->_em->getRepository("Placements")->findOneBy(array("vvmStage" => $vvm_stage, "stockBatch" => $batch_id, "placementLocation" => $placement_id));
+        $placements = $this->_em->getRepository("Placements")->findOneBy(array("vvmStage" => $vvm_stage, "stockBatchWarehouse" => $batch_id, "placementLocation" => $placement_id));
         if (count($placements) > 0) {
             $placements->setQuantity($placements->getQuantity() + $qty);
             $this->_em->persist($placements);
             $this->_em->flush();
         }
 
-        $placements2 = $this->_em->getRepository("Placements")->findOneBy(array("vvmStage" => $old_vvm_stage, "stockBatch" => $batch_id, "placementLocation" => $placement_id));
+        $placements2 = $this->_em->getRepository("Placements")->findOneBy(array("vvmStage" => $old_vvm_stage, "stockBatchWarehouse" => $batch_id, "placementLocation" => $placement_id));
         if (count($placements2) > 0) {
             $result = $placements2->getQuantity() - $qty;
             if ($result > 0) {
@@ -757,7 +785,7 @@ class Model_Placements extends Model_Base {
 	stock_batch.expiry_date AS Expiry,
 	stock_batch.number AS BatchNo,
 	items.pk_id AS ItemID,
-	stock_batch.pk_id AS BatchID,
+	stock_batch_warehouses.pk_id AS BatchID,
 	items.description AS ItemName,
 	placements.stock_detail_id AS DetailID,
         cold_chain.asset_id as LocationName,
@@ -765,21 +793,23 @@ class Model_Placements extends Model_Base {
 	placements.pk_id AS PlacementID,
 	placements.vvm_stage AS VVMStage,
 	Sum(placements.quantity) AS Qty,
-	stakeholder_item_pack_sizes.quantity_per_pack,
+	pack_info.quantity_per_pack,
 	placements.placement_location_id AS plc_loc_id
         FROM
                 placements
-        INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-        INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
-        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+        INNER JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id   
         INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
         INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
         INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
         WHERE
-                placements.stock_batch_id = " . $stcbat . "
+                placements.stock_batch_warehouse_id = " . $stcbat . "
         AND cold_chain.warehouse_id = " . $wh_id . "
         GROUP BY
-                placements.stock_batch_id,
+                placements.stock_batch_warehouse_id,
                 cold_chain.asset_id";
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
@@ -805,11 +835,11 @@ class Model_Placements extends Model_Base {
 //placements
 //INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
 //INNER JOIN non_ccm_locations ON non_ccm_locations.pk_id = placement_locations.location_id
-//INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
+//INNER JOIN stock_batch ON placements.stock_batch_warehouse_id = stock_batch.pk_id
 //INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
-//WHERE placements.stock_batch_id = " . $stcbat . " AND
+//WHERE placements.stock_batch_warehouse_id = " . $stcbat . " AND
 //        placement_locations.location_type =" . Model_PlacementLocations::LOCATIONTYPE_NONCCM." GROUP BY
-//	placements.stock_batch_id" ;
+//	placements.stock_batch_warehouse_id" ;
 //
 
 
@@ -817,7 +847,7 @@ class Model_Placements extends Model_Base {
 	stock_batch.expiry_date AS Expiry,
 	stock_batch.number AS BatchNo,
 	item_pack_sizes.pk_id AS ItemID,
-	stock_batch.pk_id AS BatchID,
+	stock_batch_warehouses.pk_id AS BatchID,
 	item_pack_sizes.item_name AS ItemName,
 	placements.stock_detail_id AS DetailID,
 	non_ccm_locations.location_name AS LocationName,
@@ -825,20 +855,22 @@ class Model_Placements extends Model_Base {
 	placements.pk_id AS PlacementID,
 	placements.vvm_stage AS VVMStage,
 	Sum(placements.quantity) AS Qty,
-	stakeholder_item_pack_sizes.quantity_per_pack,
+	pack_info.quantity_per_pack,
 	placements.placement_location_id AS plc_loc_id
         FROM
                 placements
-        INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-        INNER JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
-        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+        INNER JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id   
         INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
         INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
         WHERE
-                placements.stock_batch_id = " . $stcbat . "
+                placements.stock_batch_warehouse_id = " . $stcbat . "
         AND non_ccm_locations.warehouse_id = " . $wh_id . "
         GROUP BY
-                placements.stock_batch_id,
+                placements.stock_batch_warehouse_id,
         non_ccm_locations.location_name";
 
         /* $str_sql = "SELECT
@@ -850,10 +882,10 @@ class Model_Placements extends Model_Base {
           INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
           INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
           WHERE
-          placements.stock_batch_id = $stcbat AND
+          placements.stock_batch_warehouse_id = $stcbat AND
           placement_locations.location_type = 100
           GROUP BY
-          placements.stock_batch_id"; */
+          placements.stock_batch_warehouse_id"; */
 
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
@@ -876,8 +908,8 @@ class Model_Placements extends Model_Base {
                 $placement->setQuantity("-" . $value);
                 $placement_loc_id = $this->_em->find("PlacementLocations", $loc_id[$key]);
                 $placement->setPlacementLocation($placement_loc_id);
-                $batch_id = $this->_em->find("StockBatch", $data['BatchID']);
-                $placement->setStockBatch($batch_id);
+                $batch_id = $this->_em->find("StockBatchWarehouse", $data['BatchID']);
+                $placement->setStockBatchWarehouse($batch_id);
                 $detail_id = $this->_em->find("StockDetail", $data['DetailID']);
                 $placement->setStockDetail($detail_id);
                 $placement->setVvmStage($detail_id->getVvmStage());
@@ -906,7 +938,7 @@ class Model_Placements extends Model_Base {
         INNER JOIN placement_locations ON placement_summary.placement_location_id = placement_locations.pk_id
         INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
         WHERE
-        placement_summary.stock_batch_id = $id";
+        placement_summary.stock_batch_warehouse_id = $id";
 
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
@@ -929,7 +961,7 @@ class Model_Placements extends Model_Base {
                 placement_summary
         INNER JOIN placement_locations ON placement_summary.placement_location_id = placement_locations.pk_id
         INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
-        WHERE placement_summary.stock_batch_id = $id";
+        WHERE placement_summary.stock_batch_warehouse_id = $id";
 
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
@@ -955,12 +987,15 @@ class Model_Placements extends Model_Base {
                             placement_summary
                     INNER JOIN placement_locations ON placement_summary.placement_location_id = placement_locations.pk_id
                     INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
-                    INNER JOIN stock_batch ON placement_summary.stock_batch_id = stock_batch.pk_id
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                    INNER JOIN stock_batch_warehouses ON placement_summary.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id   
                     INNER JOIN vvm_stages ON placement_summary.vvm_stage = vvm_stages.pk_id
                     WHERE
-                            stock_batch.item_pack_size_id = $id AND
-                    stock_batch.warehouse_id = $wh_id ORDER BY cold_chain.asset_id,placement_summary.batch_number";
+                            stakeholder_item_pack_sizes.item_pack_size_id = $id AND
+                    stock_batch_warehouses.warehouse_id = $wh_id ORDER BY cold_chain.asset_id,placement_summary.batch_number";
         //echo $str_sql;
         $rec = $this->_em->getConnection()->prepare($str_sql);
 
@@ -984,13 +1019,16 @@ class Model_Placements extends Model_Base {
                     FROM
                             placement_summary
                     INNER JOIN placement_locations ON placement_summary.placement_location_id = placement_locations.pk_id
-                    INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
-                    INNER JOIN stock_batch ON placement_summary.stock_batch_id = stock_batch.pk_id
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                    INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id    
+                    INNER JOIN stock_batch_warehouses ON placement_summary.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id  
                     INNER JOIN vvm_stages ON placement_summary.vvm_stage = vvm_stages.pk_id
                     WHERE
-                            stock_batch.item_pack_size_id = $id AND
-                    stock_batch.warehouse_id = $wh_id "
+                            stakeholder_item_pack_sizes.item_pack_size_id = $id AND
+                    stock_batch_warehouses.warehouse_id = $wh_id "
                 . "GROUP BY cold_chain.asset_id,placement_summary.vvm_stage"
                 . "  ORDER BY cold_chain.asset_id";
 //echo $str_sql;
@@ -1020,7 +1058,7 @@ class Model_Placements extends Model_Base {
 		 (
 			SUM(
 				(
-					placements.quantity * stakeholder_item_pack_sizes.volum_per_vial
+					placements.quantity * pack_info.volum_per_vial
 				) / 1000
 			)
 		) / (
@@ -1034,8 +1072,11 @@ class Model_Placements extends Model_Base {
                 LEFT JOIN placement_locations ON cold_chain.pk_id = placement_locations.location_id
                 INNER JOIN ccm_models ON ccm_models.pk_id = cold_chain.ccm_model_id
                 LEFT JOIN placements ON placements.placement_location_id = placement_locations.pk_id
-                LEFT JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-                LEFT JOIN stakeholder_item_pack_sizes ON stock_batch.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                LEFT JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                LEFT JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                LEFT JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                LEFT JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                LEFT JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id   
                 WHERE
                         cold_chain.warehouse_id = $warehouse_id
                 AND (
@@ -1138,7 +1179,7 @@ class Model_Placements extends Model_Base {
                             AND DATE_FORMAT(
                                     stock_batch.expiry_date,
                                     '%Y-%m-%d'
-                            ) > '$afteryear'";
+                            ) >= '$afteryear'";
                     break;
             }
         }
@@ -1155,16 +1196,20 @@ class Model_Placements extends Model_Base {
                     INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
                     INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
                     INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
-                    INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                    INNER JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                    
                     WHERE
-                            placements.stock_batch_id = $batch_id
+                    placements.stock_batch_warehouse_id = $batch_id
                     AND placement_locations.location_type = 99
                     $where
                     GROUP BY
-                            vvm_stages.pk_id,
-                            placements.stock_batch_id,
-                            placements.placement_location_id HAVING qty > 0";
+                    vvm_stages.pk_id,
+                    placements.stock_batch_warehouse_id,
+                    placements.placement_location_id HAVING qty > 0";
         } else {
             $str_sql = "SELECT DISTINCT
                             Sum(placements.quantity) AS qty,
@@ -1175,10 +1220,10 @@ class Model_Placements extends Model_Base {
                     INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
                     INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
                     WHERE
-                            placements.stock_batch_id = $batch_id
+                            placements.stock_batch_warehouse_id = $batch_id
                     AND placement_locations.location_type = 100
                     GROUP BY
-                            placements.stock_batch_id,
+                            placements.stock_batch_warehouse_id,
                             placements.placement_location_id HAVING qty > 0";
         }
 
@@ -1203,8 +1248,8 @@ class Model_Placements extends Model_Base {
 
         $placement_loc_id = $this->_em->getRepository("PlacementLocations")->find($data['placement_loc_id']);
         $placement->setPlacementLocation($placement_loc_id);
-        $batch_id = $this->_em->getRepository("StockBatch")->find($data['batch_id']);
-        $placement->setStockBatch($batch_id);
+        $batch_id = $this->_em->getRepository("StockBatchWarehouses")->find($data['batch_id']);
+        $placement->setStockBatchWarehouse($batch_id);
         if ($data['detail_id'] != 0) {
             $detail_id = $this->_em->getRepository("StockDetail")->find($data['detail_id']);
             $placement->setStockDetail($detail_id);
@@ -1217,6 +1262,10 @@ class Model_Placements extends Model_Base {
         $vvms = $this->_em->getRepository("VvmStages")->find($data['vvmstage']);
         $placement->setVvmStage($vvms);
         $placement->setIsPlaced($data['is_placed']);
+
+        $placement->setModifiedBy($created_by);
+        $placement->setModifiedDate(App_Tools_Time::now());
+
 
         $this->_em->persist($placement);
         $this->_em->flush();
@@ -1231,8 +1280,8 @@ class Model_Placements extends Model_Base {
         $priority = $this->form_values['priority'];
 
 
-        $batch = $this->_em->getRepository("StockBatch")->find($batch_id);
-        $item_cat = $batch->getItemPackSize()->getItemCategory()->getPkId();
+        $batch = $this->_em->getRepository("StockBatchWarehouses")->find($batch_id);
+        $item_cat = $batch->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemCategory()->getPkId();
 
 
 
@@ -1293,15 +1342,19 @@ class Model_Placements extends Model_Base {
                     INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
                     INNER JOIN cold_chain ON placement_locations.location_id = cold_chain.pk_id
                     INNER JOIN vvm_stages ON placements.vvm_stage = vvm_stages.pk_id
-                    INNER JOIN stock_batch ON placements.stock_batch_id = stock_batch.pk_id
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                    INNER JOIN stock_batch_warehouses ON placements.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id   
+                    
                     WHERE
-                            placements.stock_batch_id = $batch_id
+                            placements.stock_batch_warehouse_id = $batch_id
                     AND placement_locations.location_type = 99
                     $where
                     GROUP BY
                             vvm_stages.pk_id,
-                            placements.stock_batch_id,
+                            placements.stock_batch_warehouse_id,
                             placements.placement_location_id HAVING qty > 0";
         } else {
             $str_sql = "SELECT DISTINCT
@@ -1313,10 +1366,10 @@ class Model_Placements extends Model_Base {
                     INNER JOIN placement_locations ON placements.placement_location_id = placement_locations.pk_id
                     INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
                     WHERE
-                            placements.stock_batch_id = $batch_id
+                            placements.stock_batch_warehouse_id = $batch_id
                     AND placement_locations.location_type = 100
                     GROUP BY
-                            placements.stock_batch_id,
+                            placements.stock_batch_warehouse_id,
                             placements.placement_location_id HAVING qty > 0";
         }
 
@@ -1329,6 +1382,107 @@ class Model_Placements extends Model_Base {
         } else {
             return false;
         }
+    }
+
+    public function deleteStockPlacement($data) {
+        // batch_id|placement_loc_id|vvm_stage_id|qty, batch_id|placement_loc_id|vvm_stage_id|qty,batch_id|placement_loc_id|vvm_stage_id|qty
+        $placement_info = explode(",", $data);
+
+        // Get each placement batch, location,vvm stage and qty.
+        foreach ($placement_info as $info) {
+            $ids = explode("|", $info); // batch_id|placement_loc_id|vvm_stage_id|qty
+            // get stock batch
+            $stock_batch = $this->_em->getRepository("StockBatchWarehouses")->find($ids['0']);
+
+            // get placement location
+            $placement_location = $this->_em->getRepository("PlacementLocations")->find($ids['1']);
+
+
+
+            // Get transaction type i.e stock picking.
+            $plc_transaction_type = $this->_em->find("ListDetail", Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_PICK);
+
+            // Get user id.
+            $user_id = $this->_em->find("Users", $this->_user_id);
+
+            $placement = new Placements();
+            $placement->setPlacementLocation($placement_location);
+            $placement->setStockBatchWarehouse($stock_batch);
+            $placement->setPlacementTransactionType($plc_transaction_type);
+            $placement->setCreatedBy($user_id);
+            $placement->setCreatedDate(App_Tools_Time::now());
+            $placement->setModifiedBy($user_id);
+            $placement->setModifiedDate(App_Tools_Time::now());
+            $vvms = $this->_em->getRepository("VvmStages")->find($ids['2']);
+            $placement->setVvmStage($vvms);
+            // get qty
+            $qty = (-1) * $ids['3'];
+            $placement->setQuantity($qty);
+            $this->_em->persist($placement);
+        }
+        $this->_em->flush();
+        return true;
+    }
+
+    public function updateStockPlacement($data, $placement_type) {
+        // batch_id|placement_loc_id|vvm_stage_id|qty, batch_id|placement_loc_id|vvm_stage_id|qty,batch_id|placement_loc_id|vvm_stage_id|qty
+        $placement_info = explode(",", $data);
+        App_Controller_Functions::pr($data);
+        // Get each placement batch, location,vvm stage and qty.
+        foreach ($placement_info as $info) {
+            $ids = explode("|", $info); // batch_id|placement_loc_id|vvm_stage_id|qty
+            // get stock batch
+            $stock_batch = $this->_em->getRepository("StockBatchWarehouses")->find($ids['0']);
+
+            // get placement location
+            $placement_location = $this->_em->getRepository("PlacementLocations")->find($ids['1']);
+
+            // Get transaction type i.e stock picking.
+            $plc_transaction_type = $this->_em->find("ListDetail", $placement_type);
+
+            // Get user id.
+            $user_id = $this->_em->find("Users", $this->_user_id);
+
+            $placement = new Placements();
+            $placement->setPlacementLocation($placement_location);
+            $placement->setStockBatchWarehouse($stock_batch);
+            $placement->setPlacementTransactionType($plc_transaction_type);
+            $placement->setCreatedBy($user_id);
+            $placement->setCreatedDate(App_Tools_Time::now());
+            $placement->setModifiedBy($user_id);
+            $placement->setModifiedDate(App_Tools_Time::now());
+            $vvms = $this->_em->getRepository("VvmStages")->find($ids['2']);
+            $placement->setVvmStage($vvms);
+            // get qty
+            if ($placement_type == Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_P) {
+                $qty = $ids['3'];
+            } elseif ($placement_type == Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_PICK) {
+                $qty = (-1) * $ids['3'];
+            }
+            $placement->setQuantity($qty);
+            $this->_em->persist($placement);
+        }
+        $this->_em->flush();
+
+        return true;
+    }
+
+    public function getStockBinName($plac_loc_id) {
+        $em = Zend_Registry::get('doctrine');
+
+        $str_sql = "SELECT
+                non_ccm_locations.location_name
+                FROM
+                        placement_locations
+                INNER JOIN non_ccm_locations ON placement_locations.location_id = non_ccm_locations.pk_id
+                WHERE
+                        placement_locations.pk_id = " . $plac_loc_id;
+
+        $res = $em->getConnection()->prepare($str_sql);
+
+        $res->execute();
+        $result = $res->fetchAll();
+        return $result;
     }
 
 }

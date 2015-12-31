@@ -35,6 +35,11 @@ class CcmStatusHistory
     private $statusDate;
 
     /**
+     * @var integer $warehouseId
+     */
+    private $warehouseId;
+
+    /**
      * @var datetime $createdDate
      */
     private $createdDate;
@@ -45,24 +50,9 @@ class CcmStatusHistory
     private $modifiedDate;
 
     /**
-     * @var CcmStatusList
-     */
-    private $utilization;
-
-    /**
      * @var ColdChain
      */
     private $ccm;
-
-    /**
-     * @var CcmStatusList
-     */
-    private $reason;
-
-    /**
-     * @var Warehouses
-     */
-    private $warehouse;
 
     /**
      * @var Users
@@ -80,9 +70,19 @@ class CcmStatusHistory
     private $ccmStatusList;
 
     /**
+     * @var CcmStatusList
+     */
+    private $reason;
+
+    /**
      * @var CcmAssetTypes
      */
     private $ccmAssetType;
+
+    /**
+     * @var CcmStatusList
+     */
+    private $utilization;
 
 
     /**
@@ -176,6 +176,26 @@ class CcmStatusHistory
     }
 
     /**
+     * Set warehouseId
+     *
+     * @param integer $warehouseId
+     */
+    public function setWarehouseId($warehouseId)
+    {
+        $this->warehouseId = $warehouseId;
+    }
+
+    /**
+     * Get warehouseId
+     *
+     * @return integer 
+     */
+    public function getWarehouseId()
+    {
+        return $this->warehouseId;
+    }
+
+    /**
      * Set createdDate
      *
      * @param datetime $createdDate
@@ -216,26 +236,6 @@ class CcmStatusHistory
     }
 
     /**
-     * Set utilization
-     *
-     * @param CcmStatusList $utilization
-     */
-    public function setUtilization(\CcmStatusList $utilization)
-    {
-        $this->utilization = $utilization;
-    }
-
-    /**
-     * Get utilization
-     *
-     * @return CcmStatusList 
-     */
-    public function getUtilization()
-    {
-        return $this->utilization;
-    }
-
-    /**
      * Set ccm
      *
      * @param ColdChain $ccm
@@ -253,46 +253,6 @@ class CcmStatusHistory
     public function getCcm()
     {
         return $this->ccm;
-    }
-
-    /**
-     * Set reason
-     *
-     * @param CcmStatusList $reason
-     */
-    public function setReason(\CcmStatusList $reason)
-    {
-        $this->reason = $reason;
-    }
-
-    /**
-     * Get reason
-     *
-     * @return CcmStatusList 
-     */
-    public function getReason()
-    {
-        return $this->reason;
-    }
-
-    /**
-     * Set warehouse
-     *
-     * @param Warehouses $warehouse
-     */
-    public function setWarehouse(\Warehouses $warehouse)
-    {
-        $this->warehouse = $warehouse;
-    }
-
-    /**
-     * Get warehouse
-     *
-     * @return Warehouses 
-     */
-    public function getWarehouse()
-    {
-        return $this->warehouse;
     }
 
     /**
@@ -356,6 +316,26 @@ class CcmStatusHistory
     }
 
     /**
+     * Set reason
+     *
+     * @param CcmStatusList $reason
+     */
+    public function setReason(\CcmStatusList $reason)
+    {
+        $this->reason = $reason;
+    }
+
+    /**
+     * Get reason
+     *
+     * @return CcmStatusList 
+     */
+    public function getReason()
+    {
+        return $this->reason;
+    }
+
+    /**
      * Set ccmAssetType
      *
      * @param CcmAssetTypes $ccmAssetType
@@ -373,5 +353,25 @@ class CcmStatusHistory
     public function getCcmAssetType()
     {
         return $this->ccmAssetType;
+    }
+
+    /**
+     * Set utilization
+     *
+     * @param CcmStatusList $utilization
+     */
+    public function setUtilization(\CcmStatusList $utilization)
+    {
+        $this->utilization = $utilization;
+    }
+
+    /**
+     * Get utilization
+     *
+     * @return CcmStatusList 
+     */
+    public function getUtilization()
+    {
+        return $this->utilization;
     }
 }

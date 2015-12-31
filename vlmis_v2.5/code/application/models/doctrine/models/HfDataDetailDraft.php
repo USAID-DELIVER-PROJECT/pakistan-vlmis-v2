@@ -80,9 +80,19 @@ class HfDataDetailDraft
     private $modifiedDate;
 
     /**
-     * @var Users
+     * @var decimal $outreachOutsideMale
      */
-    private $createdBy;
+    private $outreachOutsideMale;
+
+    /**
+     * @var decimal $outreachOutsideFemale
+     */
+    private $outreachOutsideFemale;
+
+    /**
+     * @var HfDataMasterDraft
+     */
+    private $hfDataMaster;
 
     /**
      * @var Users
@@ -95,9 +105,9 @@ class HfDataDetailDraft
     private $ageGroup;
 
     /**
-     * @var HfDataMasterDraft
+     * @var Users
      */
-    private $hfDataMaster;
+    private $createdBy;
 
 
     /**
@@ -371,23 +381,63 @@ class HfDataDetailDraft
     }
 
     /**
-     * Set createdBy
+     * Set outreachOutsideMale
      *
-     * @param Users $createdBy
+     * @param decimal $outreachOutsideMale
      */
-    public function setCreatedBy(\Users $createdBy)
+    public function setOutreachOutsideMale($outreachOutsideMale)
     {
-        $this->createdBy = $createdBy;
+        $this->outreachOutsideMale = $outreachOutsideMale;
     }
 
     /**
-     * Get createdBy
+     * Get outreachOutsideMale
      *
-     * @return Users 
+     * @return decimal 
      */
-    public function getCreatedBy()
+    public function getOutreachOutsideMale()
     {
-        return $this->createdBy;
+        return $this->outreachOutsideMale;
+    }
+
+    /**
+     * Set outreachOutsideFemale
+     *
+     * @param decimal $outreachOutsideFemale
+     */
+    public function setOutreachOutsideFemale($outreachOutsideFemale)
+    {
+        $this->outreachOutsideFemale = $outreachOutsideFemale;
+    }
+
+    /**
+     * Get outreachOutsideFemale
+     *
+     * @return decimal 
+     */
+    public function getOutreachOutsideFemale()
+    {
+        return $this->outreachOutsideFemale;
+    }
+
+    /**
+     * Set hfDataMaster
+     *
+     * @param HfDataMasterDraft $hfDataMaster
+     */
+    public function setHfDataMaster(\HfDataMasterDraft $hfDataMaster)
+    {
+        $this->hfDataMaster = $hfDataMaster;
+    }
+
+    /**
+     * Get hfDataMaster
+     *
+     * @return HfDataMasterDraft 
+     */
+    public function getHfDataMaster()
+    {
+        return $this->hfDataMaster;
     }
 
     /**
@@ -431,22 +481,22 @@ class HfDataDetailDraft
     }
 
     /**
-     * Set hfDataMaster
+     * Set createdBy
      *
-     * @param HfDataMasterDraft $hfDataMaster
+     * @param Users $createdBy
      */
-    public function setHfDataMaster(\HfDataMasterDraft $hfDataMaster)
+    public function setCreatedBy(\Users $createdBy)
     {
-        $this->hfDataMaster = $hfDataMaster;
+        $this->createdBy = $createdBy;
     }
 
     /**
-     * Get hfDataMaster
+     * Get createdBy
      *
-     * @return HfDataMasterDraft 
+     * @return Users 
      */
-    public function getHfDataMaster()
+    public function getCreatedBy()
     {
-        return $this->hfDataMaster;
+        return $this->createdBy;
     }
 }

@@ -23,15 +23,6 @@ CcmHistory:
       nullable: false
       column: modified_date
   oneToOne:
-    action:
-      targetEntity: ListDetail
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        action:
-          referencedColumnName: pk_id
-      orphanRemoval: false
     ccm:
       targetEntity: ColdChain
       cascade: {  }
@@ -66,6 +57,15 @@ CcmHistory:
       inversedBy: null
       joinColumns:
         modified_by:
+          referencedColumnName: pk_id
+      orphanRemoval: false
+    action:
+      targetEntity: ListDetail
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        action:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

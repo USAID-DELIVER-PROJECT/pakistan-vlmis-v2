@@ -39,6 +39,14 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
         return $row->fetchAll();
     }
 
+    public function getReportData($in_type, $in_reporting_date, $in_location, $in_item, $in_stk) {
+        //echo "CALL REPgetData('$in_type', '$in_reporting_date', '$in_location', '$in_item', '$in_stk')";
+        $this->_em = Zend_Registry::get('doctrine');
+        $row = $this->_em->getConnection()->prepare("CALL REPgetData('$in_type', '$in_reporting_date', '$in_location', '$in_item', '$in_stk')");
+        $row->execute();
+        return $row->fetchAll();
+    }
+
     public function reportsMos($v_mos, $sel_item, $id, $sel_lvl) {
 
         //echo "SELECT getMosColor('" . $v_mos . "'," . $sel_item . ",1," . $sel_lvl . ") as col from Dual; <br>";
@@ -158,8 +166,12 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                         FROM
                                 stock_detail
                         INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-                        INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-                        INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+                        INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                        INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
                         INNER JOIN locations ON warehouses.location_id = locations.pk_id
                         WHERE
                                 stock_master.transaction_type_id = 2
@@ -167,7 +179,7 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                                 stock_master.transaction_date,
                                 '%Y-%m'
                         ) = '$str_date'
-                        AND stock_batch.item_pack_size_id = $sel_prod AND
+                        AND stakeholder_item_pack_sizes.item_pack_size_id = $sel_prod AND
                         locations.pk_id <> 10 AND locations.geo_level_id = 2
                         GROUP BY
                                 warehouses.province_id";
@@ -179,8 +191,12 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                             FROM
                                     stock_detail
                             INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-                            INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-                            INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+                            INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                            INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                            INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                            INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                            INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
                             INNER JOIN locations ON warehouses.location_id = locations.pk_id
                             WHERE
                             stock_master.transaction_type_id = 2 AND
@@ -188,7 +204,7 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                                     stock_master.transaction_date,
                                     '%Y-%m'
                             ) = '$str_date' AND
-                            stock_batch.item_pack_size_id = $sel_prod AND
+                            stakeholder_item_pack_sizes.item_pack_size_id = $sel_prod AND
                             locations.province_id = $sel_loc AND
                             locations.pk_id <> 10 AND locations.geo_level_id = 4
                             GROUP BY
@@ -201,8 +217,12 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                             FROM
                                     stock_detail
                             INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-                            INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-                            INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+                            INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                            INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                            INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                            INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                            INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
                             INNER JOIN locations ON warehouses.location_id = locations.pk_id
                             WHERE
                             stock_master.transaction_type_id = 2 AND
@@ -210,7 +230,7 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                                     stock_master.transaction_date,
                                     '%Y-%m'
                             ) = '$str_date' AND
-                            stock_batch.item_pack_size_id = $sel_prod AND
+                            stakeholder_item_pack_sizes.item_pack_size_id = $sel_prod AND
                             locations.district_id = $sel_loc AND
                             locations.pk_id <> 10 AND locations.geo_level_id = 5
                             GROUP BY
@@ -223,8 +243,12 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                             FROM
                                     stock_detail
                             INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-                            INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-                            INNER JOIN warehouses ON stock_batch.warehouse_id = warehouses.pk_id
+                            INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                            INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                            INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                            INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                            INNER JOIN warehouses ON stock_batch_warehouses.warehouse_id = warehouses.pk_id
                             INNER JOIN locations ON warehouses.location_id = locations.pk_id
                             WHERE
                             stock_master.transaction_type_id = 2 AND
@@ -232,7 +256,7 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                                     stock_master.transaction_date,
                                     '%Y-%m'
                             ) = '$str_date' AND
-                            stock_batch.item_pack_size_id = $sel_prod AND
+                            stakeholder_item_pack_sizes.item_pack_size_id = $sel_prod AND
                             locations.parent_id = $sel_loc AND
                             locations.pk_id <> 10 AND locations.geo_level_id = 6
                             GROUP BY
@@ -259,8 +283,11 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                         INNER JOIN warehouses ON stock_master.to_warehouse_id = warehouses.pk_id
                         INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
                         INNER JOIN locations ON warehouses.location_id = locations.pk_id
-                        INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
-                        INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                        INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                         INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
                         INNER JOIN location_populations ON locations.pk_id = location_populations.location_id
                         WHERE
@@ -272,7 +299,7 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
                                 stock_master.transaction_date,
                                 '%Y-%m'
                         ) = '$str_date'
-                        AND stock_batch.item_pack_size_id = $sel_prod
+                        AND stakeholder_item_pack_sizes.item_pack_size_id = $sel_prod
                         GROUP BY
                                 warehouses.district_id";
                 break;
@@ -1151,10 +1178,8 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
     public function getReportedDistrictsByFacility1($wh_type, $sel_prov, $sel_dist, $str_date) {
 
         if ($wh_type == 2) {
-
-
             $str_qry = "
-                SELECT
+                SELECT 
                         locations.location_name AS districtName,
                         COUNT(
                                 DISTINCT hf_data_master.warehouse_id
@@ -1492,7 +1517,7 @@ class Zend_View_Helper_Reports extends Zend_View_Helper_Abstract {
 
                     INNER JOIN locations AS UC ON warehouses.location_id = UC.pk_id
                     INNER JOIN locations AS teh ON UC.parent_id  = teh.pk_id
-                    LEFT JOIN users ON warehouse_users.user_id = users.pk_id
+                    INNER JOIN users ON warehouse_users.user_id = users.pk_id
                     INNER JOIN locations AS District ON UC.district_id = District.pk_id
                     INNER JOIN locations AS Province ON District.province_id = Province.pk_id
                     WHERE
@@ -2525,14 +2550,18 @@ $distFilter
                             )) AS total
                     FROM
                             stock_detail
-                    INNER JOIN stock_batch ON stock_detail.stock_batch_id = stock_batch.pk_id
+                    INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                    INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                    INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                    INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                    INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
                     INNER JOIN stock_master ON stock_detail.stock_master_id = stock_master.pk_id
-                    INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+                   
                     WHERE
                     $where AND
                     item_pack_sizes.item_category_id <> 3
                     GROUP BY
-                            stock_batch.item_pack_size_id
+                            stakeholder_item_pack_sizes.item_pack_size_id
                     ORDER BY
                             item_pack_sizes.list_rank ASC";
 
@@ -3437,16 +3466,18 @@ $distFilter
                         item_pack_sizes.pk_id,
                         item_pack_sizes.item_name,
                         item_pack_sizes.description,
-                        Sum(stock_batch.quantity) * item_pack_sizes.number_of_doses AS quantity
+                        Sum(stock_batch_warehouses.quantity) * item_pack_sizes.number_of_doses AS quantity
                 FROM
-                        stock_batch
-                INNER JOIN item_pack_sizes ON item_pack_sizes.pk_id = stock_batch.item_pack_size_id
+                 stock_batch_warehouses 
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id              
                 WHERE
                 item_pack_sizes.item_category_id = 1 AND
-                stock_batch.warehouse_id = $wh_id
+                stock_batch_warehouses.warehouse_id = $wh_id
                 GROUP BY
                         item_name";
-
 
         $this->_em = Zend_Registry::get('doctrine');
         $row = $row = $this->_em->getConnection()->prepare($str_qry);
@@ -3462,19 +3493,22 @@ $distFilter
         $str_qry = "SELECT
         ROUND(SUM(A.total) / SUM(A.Qty)) AS val
         FROM (SELECT
-                stock_batch.quantity * item_pack_sizes.number_of_doses AS Qty,
+                stock_batch_warehouses.quantity * item_pack_sizes.number_of_doses AS Qty,
                 TIMESTAMPDIFF(MONTH, stock_master.transaction_date, stock_batch.expiry_date)*
-                (stock_batch.quantity * item_pack_sizes.number_of_doses) AS total
+                (stock_batch_warehouses.quantity * item_pack_sizes.number_of_doses) AS total
         FROM
                 stock_master
         INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-        INNER JOIN stock_batch ON stock_batch.pk_id = stock_detail.stock_batch_id
-        INNER JOIN item_pack_sizes ON item_pack_sizes.pk_id = stock_batch.item_pack_size_id
+        INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON item_pack_sizes.pk_id = stakeholder_item_pack_sizes.item_pack_size_id
         WHERE
                 item_pack_sizes.pk_id = $item_id and
-                stock_batch.warehouse_id = $wh_id
+                stock_batch_warehouses.warehouse_id = $wh_id
         GROUP BY
-                stock_batch.pk_id
+                stock_batch_warehouses.pk_id
          ) A";
 
 
@@ -3506,25 +3540,28 @@ $distFilter
 					A.min12Month,
 					A.max12Month
          FROM (SELECT
-          stock_batch.item_pack_size_id,
+          stakeholder_item_pack_sizes.item_pack_size_id,
           item_pack_sizes.item_name,
-          SUM(stock_batch.quantity) AS totalQty,
+          SUM(stock_batch_warehouses.quantity) AS totalQty,
 					item_pack_sizes.number_of_doses,
 					(stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH)),
 					MIN(stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 6 MONTH)) AS min6Month,
 					MAX(stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 6 MONTH)) AS max6Month,
 					MIN((stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH))) AS min12Month,
 					MAX((stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH))) AS max12Month,
-          SUM(IF (stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 6 MONTH), stock_batch.quantity, 0)) AS Expire6Months,
-          SUM(IF (stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH), stock_batch.quantity, 0)) AS Expire12Months
+          SUM(IF (stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 6 MONTH), stock_batch_warehouses.quantity, 0)) AS Expire6Months,
+          SUM(IF (stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH), stock_batch_warehouses.quantity, 0)) AS Expire12Months
          FROM
-          stock_batch
-         INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+        stock_batch_warehouses 
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id       
          WHERE
-         stock_batch.item_pack_size_id IS NOT NULL
-         AND stock_batch.quantity > 0
-         AND stock_batch.item_pack_size_id = $item_id
-         AND stock_batch.warehouse_id = $wh_id
+         stakeholder_item_pack_sizes.item_pack_size_id IS NOT NULL
+         AND stock_batch_warehouses.quantity > 0
+         AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id
+         AND stock_batch_warehouses.warehouse_id = $wh_id
          ) A";
 
 
@@ -3542,19 +3579,23 @@ $distFilter
             $wh_id = '159';
         }
         $str_qry = "SELECT
-                        sum(stock_batch.quantity * item_pack_sizes.number_of_doses) AS Qty,
+                        sum(stock_batch_warehouses.quantity * item_pack_sizes.number_of_doses) AS Qty,
                         Max(TIMESTAMPDIFF(MONTH, '$time_period', stock_batch.expiry_date)) as Max6months,
                         Min(TIMESTAMPDIFF(MONTH, '$time_period', stock_batch.expiry_date)) as Min6months,
                         Min(DATE_FORMAT(stock_batch.expiry_date, '%Y-%m-%d')) as minExpiryDate
                 FROM
                         stock_master
                 INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-                INNER JOIN stock_batch ON stock_batch.pk_id = stock_detail.stock_batch_id
-                INNER JOIN item_pack_sizes ON item_pack_sizes.pk_id = stock_batch.item_pack_size_id
+                INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+                INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+                INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+                INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+                INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
+                
                 WHERE
 
                 item_pack_sizes.pk_id = $item_id and
-                stock_batch.warehouse_id = $wh_id
+                stock_batch_warehouses.warehouse_id = $wh_id
                     AND stock_batch.expiry_date > CURDATE()
                 and TIMESTAMPDIFF(MONTH,  '$time_period', stock_batch.expiry_date) <= 6 ";
 
@@ -3584,25 +3625,28 @@ $distFilter
 					A.min12Month,
 					A.max12Month
          FROM (SELECT
-          stock_batch.item_pack_size_id,
+          stakeholder_item_pack_sizes.item_pack_size_id,
           item_pack_sizes.item_name,
-          SUM(stock_batch.quantity) AS totalQty,
+          SUM(stock_batch_warehouses.quantity) AS totalQty,
 					item_pack_sizes.number_of_doses,
 					(stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH)),
 					MIN(stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 6 MONTH)) AS min6Month,
 					MAX(stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 6 MONTH)) AS max6Month,
 					MIN((stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH))) AS min12Month,
 					MAX((stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH))) AS max12Month,
-          SUM(IF (stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 6 MONTH), stock_batch.quantity, 0)) AS Expire6Months,
-          SUM(IF (stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH), stock_batch.quantity, 0)) AS Expire12Months
-         FROM
-          stock_batch
-         INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+          SUM(IF (stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 6 MONTH), stock_batch_warehouses.quantity, 0)) AS Expire6Months,
+          SUM(IF (stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH), stock_batch_warehouses.quantity, 0)) AS Expire12Months
+          FROM
+         stock_batch_warehouses 
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id       
          WHERE
-         stock_batch.item_pack_size_id IS NOT NULL
-         AND stock_batch.quantity > 0
-         AND stock_batch.item_pack_size_id = $item_id
-         AND stock_batch.warehouse_id = $wh_id
+         stakeholder_item_pack_sizes.item_pack_size_id IS NOT NULL
+         AND stock_batch_warehouses.quantity > 0
+         AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id
+         AND stock_batch_warehouses.warehouse_id = $wh_id
          ) A";
 
 
@@ -3633,27 +3677,30 @@ $distFilter
 					A.min12Month,
 					A.max12Month
          FROM (SELECT
-          stock_batch.item_pack_size_id,
+          stakeholder_item_pack_sizes.item_pack_size_id,
           item_pack_sizes.item_name,
-          SUM(stock_batch.quantity) AS totalQty,
+          SUM(stock_batch_warehouses.quantity) AS totalQty,
 					item_pack_sizes.number_of_doses,
 					(stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH)),
 					MIN(stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 6 MONTH)) AS min6Month,
 					MAX(stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 6 MONTH)) AS max6Month,
 					MIN((stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH))) AS min12Month,
 					MAX((stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH))) AS max12Month,
-                                        SUM(IF (stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 6 MONTH), stock_batch.quantity, 0)) AS Expire6Months,
-                                        SUM(IF (stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH), stock_batch.quantity, 0)) AS Expire12Months,
-                                        SUM(IF (stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 12 MONTH) , stock_batch.quantity, 0)) AS Expire24Months
+                                        SUM(IF (stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 6 MONTH), stock_batch_warehouses.quantity, 0)) AS Expire6Months,
+                                        SUM(IF (stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 6 MONTH) AND stock_batch.expiry_date <= ADDDATE('$time_period', INTERVAL 12 MONTH), stock_batch_warehouses.quantity, 0)) AS Expire12Months,
+                                        SUM(IF (stock_batch.expiry_date > ADDDATE('$time_period', INTERVAL 12 MONTH) , stock_batch_warehouses.quantity, 0)) AS Expire24Months
 
          FROM
-         stock_batch
-         INNER JOIN item_pack_sizes ON stock_batch.item_pack_size_id = item_pack_sizes.pk_id
+        stock_batch_warehouses
+        INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+        INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+        INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+        INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id         
          WHERE
-         stock_batch.item_pack_size_id IS NOT NULL
-         AND stock_batch.quantity > 0
-         AND stock_batch.item_pack_size_id = $item_id
-         AND stock_batch.warehouse_id = $wh_id
+         stakeholder_item_pack_sizes.item_pack_size_id IS NOT NULL
+         AND stock_batch_warehouses.quantity > 0
+         AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id
+         AND stock_batch_warehouses.warehouse_id = $wh_id
          ) A";
 
 
@@ -3672,18 +3719,21 @@ $distFilter
             $wh_id = '159';
         }
         $str_qry = "SELECT
-              sum(stock_batch.quantity * item_pack_sizes.number_of_doses) AS Qty,
+              sum(stock_batch_warehouses.quantity * item_pack_sizes.number_of_doses) AS Qty,
               Max(TIMESTAMPDIFF(MONTH, '$time_period', stock_batch.expiry_date)) as Max12months,
               Min(TIMESTAMPDIFF(MONTH, '$time_period', stock_batch.expiry_date)) as Min12months
 
                 FROM
                     stock_master
             INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-            INNER JOIN stock_batch ON stock_batch.pk_id = stock_detail.stock_batch_id
-            INNER JOIN item_pack_sizes ON item_pack_sizes.pk_id = stock_batch.item_pack_size_id
+            INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+            INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+            INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+            INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+            INNER JOIN item_pack_sizes ON stakeholder_item_pack_sizes.item_pack_size_id = item_pack_sizes.pk_id
             WHERE
                     item_pack_sizes.pk_id = $item_id and
-            stock_batch.warehouse_id = $wh_id
+            stock_batch_warehouses.warehouse_id = $wh_id
                 AND stock_batch.expiry_date > CURDATE()
             and TIMESTAMPDIFF(MONTH, '$time_period', stock_batch.expiry_date) > 6
             and TIMESTAMPDIFF(MONTH, '$time_period', stock_batch.expiry_date) <= 12";
@@ -3704,18 +3754,21 @@ $distFilter
             $wh_id = '159';
         }
         $str_qry = "SELECT
-              sum(stock_batch.quantity * item_pack_sizes.number_of_doses) AS Qty,
+              sum(stock_batch_warehouses.quantity * item_pack_sizes.number_of_doses) AS Qty,
               Max(TIMESTAMPDIFF(MONTH, '$time_period', stock_batch.expiry_date)) as Max24months,
               Min(TIMESTAMPDIFF(MONTH, '$time_period', stock_batch.expiry_date)) as Min24months
 
                 FROM
                     stock_master
             INNER JOIN stock_detail ON stock_master.pk_id = stock_detail.stock_master_id
-            INNER JOIN stock_batch ON stock_batch.pk_id = stock_detail.stock_batch_id
-            INNER JOIN item_pack_sizes ON item_pack_sizes.pk_id = stock_batch.item_pack_size_id
+            INNER JOIN stock_batch_warehouses ON stock_detail.stock_batch_warehouse_id = stock_batch_warehouses.pk_id
+            INNER JOIN stock_batch ON stock_batch.pk_id = stock_batch_warehouses.stock_batch_id
+            INNER JOIN pack_info ON stock_batch.pack_info_id = pack_info.pk_id
+            INNER JOIN stakeholder_item_pack_sizes ON pack_info.stakeholder_item_pack_size_id = stakeholder_item_pack_sizes.pk_id
+            INNER JOIN item_pack_sizes ON item_pack_sizes.pk_id = stakeholder_item_pack_sizes.item_pack_size_id
             WHERE
                     item_pack_sizes.pk_id = $item_id and
-            stock_batch.warehouse_id = $wh_id
+            stock_batch_warehouses.warehouse_id = $wh_id
                 AND stock_batch.expiry_date > CURDATE()
             and TIMESTAMPDIFF(MONTH, '$time_period', stock_batch.expiry_date) > 12
             ";
@@ -4033,9 +4086,6 @@ $distFilter
     }
 
     public function vaccineCoverage1($sel_prov, $district, $date_in, $sel_month, $sel_year) {
-
-
-
         $this->_em = Zend_Registry::get('doctrine');
 
         $querypro = "SELECT
@@ -4092,21 +4142,20 @@ $distFilter
 	) A,
 	(
 		SELECT
-                        item_pack_sizes.pk_id,
-			item_pack_sizes.item_name,
-			items.population_percent_increase_per_year,
-			items.child_surviving_percent_per_year,
-			items.doses_per_year
-                    FROM
-                    item_pack_sizes
-                    INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
-                    INNER JOIN stakeholder_item_pack_sizes ON item_pack_sizes.pk_id = stakeholder_item_pack_sizes.item_pack_size_id
-                    WHERE
-                    items.item_category_id = 1 AND
-                    stakeholder_item_pack_sizes.stakeholder_id = 1
-                    and item_pack_sizes.pk_id NOT IN  (28,31)
-                    ORDER BY
-                    item_pack_sizes.item_name
+                item_pack_sizes.pk_id,
+                item_pack_sizes.item_name,
+                items.population_percent_increase_per_year,
+                items.child_surviving_percent_per_year,
+                items.doses_per_year
+                FROM
+                        item_activities               
+                INNER JOIN item_pack_sizes ON item_activities.item_pack_size_id=item_pack_sizes.pk_id
+                 INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
+                WHERE
+                        items.item_category_id = 1
+                AND item_activities.stakeholder_activity_id = 1
+                ORDER BY
+                        item_pack_sizes.list_rank
 
 	) B
 	) A
@@ -4801,6 +4850,8 @@ FROM
                     hf_data_master.reporting_start_date,
                     '%Y-%m'
             ) BETWEEN '$from_report_date' AND '$report_date'
+                AND hf_data_master.issue_balance IS NOT NULL
+                                    AND hf_data_master.issue_balance != 0
                 AND hf_data_master.item_pack_size_id = '$item'
                     GROUP BY locations.pk_id
                  ORDER BY teh,location_name";
@@ -4826,16 +4877,16 @@ FROM
                 hf_data_master
                 INNER JOIN warehouses ON warehouses.pk_id = hf_data_master.warehouse_id
                 INNER JOIN locations ON locations.pk_id = warehouses.location_id
-                INNER JOIN locations uc ON locations.parent_id = uc.pk_id
-               
+                INNER JOIN locations uc ON locations.parent_id = uc.pk_id               
                  WHERE
-
                 uc.pk_id = '$sel_tehsil' AND
                 locations.geo_level_id =6 AND
                  DATE_FORMAT(
                     hf_data_master.reporting_start_date,
                     '%Y-%m'
             ) BETWEEN '$from_report_date' AND '$report_date'
+                AND hf_data_master.issue_balance IS NOT NULL
+                                    AND hf_data_master.issue_balance != 0
                 AND hf_data_master.item_pack_size_id = '$item'
                     GROUP BY locations.pk_id
               ORDER BY teh,location_name";
@@ -4868,7 +4919,7 @@ FROM
         } else {
             $qry_where = "AND hf_data_detail.vaccine_schedule_id = '$dose_no'";
             $qry_where1 = "AND log_book_item_doses.doses = '$dose_no'";
-            $qry_where2 = "AND hf_data_detail.age_group_id = '145'";
+            $qry_where2 = "AND hf_data_detail.age_group_id = '". Model_ListDetail::AGE_0_11."' ";
             $qry_where3 = "AND log_book.age < '12'";
         }
 
@@ -5963,7 +6014,7 @@ FROM
         WHERE
                 hf_data_master.item_pack_size_id = 8
         AND hf_data_detail.vaccine_schedule_id = '$vac_id'
-        AND hf_data_detail.age_group_id = 145
+        AND hf_data_detail.age_group_id = '". Model_ListDetail::AGE_0_11."'
         AND DATE_FORMAT(
                 hf_data_master.reporting_start_date,
                 '%Y-%m'
@@ -6544,6 +6595,48 @@ GROUP BY
 			
 			ORDER BY
 				locations.location_name ASC";
+        $this->_em = Zend_Registry::get('doctrine');
+        $row = $this->_em->getConnection()->prepare($querypro);
+
+        $row->execute();
+        return $row->fetchAll();
+    }
+     public function getReportedUc1($district_id, $month, $year, $wh_type) {
+        $qry = "";
+        if ($wh_type == 2) {
+            $qry = " warehouses.district_id = $district_id";
+            $sub_qry = "SELECT locations.province_id from locations where locations.district_id = '$district_id' ";
+        } else {
+            $qry = " UC.parent_id = $district_id";
+            $sub_qry = "SELECT locations.province_id from locations where locations.parent_id = '$district_id' ";
+        }
+        $this->_em = Zend_Registry::get('doctrine');
+        $row_1 = $this->_em->getConnection()->prepare($sub_qry);
+
+        $row_1->execute();
+        $rs_1 = $row_1->fetchAll();
+     
+            $querypro = "
+                    SELECT
+                         UC.pk_id as PkLocID,
+                         DATE_FORMAT(hf_data_master.created_date,'%d/%m/%Y') as reported_date
+                    FROM
+                        locations AS District
+                        INNER JOIN locations AS UC ON District.pk_id = UC.district_id
+                        INNER JOIN warehouses ON UC.pk_id = warehouses.location_id
+                        INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
+                        INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
+                    WHERE
+                        $qry
+                        AND warehouses.status = 1
+                        AND DATE_FORMAT(hf_data_master.reporting_start_date, '%m-%Y') = '" . $month . "-" . $year . "  '
+                        AND hf_data_master.issue_balance IS NOT NULL AND hf_data_master.issue_balance != 0
+                        AND stakeholders.geo_level_id = 6
+                        AND warehouses.stakeholder_id = 1
+                    GROUP BY
+                        UC.pk_id";
+        
+
         $this->_em = Zend_Registry::get('doctrine');
         $row = $this->_em->getConnection()->prepare($querypro);
 

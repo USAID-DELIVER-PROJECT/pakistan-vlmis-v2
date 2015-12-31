@@ -30,11 +30,6 @@ class CcmHistory
     private $modifiedDate;
 
     /**
-     * @var ListDetail
-     */
-    private $action;
-
-    /**
      * @var ColdChain
      */
     private $ccm;
@@ -53,6 +48,11 @@ class CcmHistory
      * @var Users
      */
     private $modifiedBy;
+
+    /**
+     * @var ListDetail
+     */
+    private $action;
 
 
     /**
@@ -123,26 +123,6 @@ class CcmHistory
     public function getModifiedDate()
     {
         return $this->modifiedDate;
-    }
-
-    /**
-     * Set action
-     *
-     * @param ListDetail $action
-     */
-    public function setAction(\ListDetail $action)
-    {
-        $this->action = $action;
-    }
-
-    /**
-     * Get action
-     *
-     * @return ListDetail 
-     */
-    public function getAction()
-    {
-        return $this->action;
     }
 
     /**
@@ -223,5 +203,25 @@ class CcmHistory
     public function getModifiedBy()
     {
         return $this->modifiedBy;
+    }
+
+    /**
+     * Set action
+     *
+     * @param ListDetail $action
+     */
+    public function setAction(\ListDetail $action)
+    {
+        $this->action = $action;
+    }
+
+    /**
+     * Get action
+     *
+     * @return ListDetail 
+     */
+    public function getAction()
+    {
+        return $this->action;
     }
 }

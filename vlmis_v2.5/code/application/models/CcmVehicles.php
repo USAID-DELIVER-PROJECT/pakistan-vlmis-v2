@@ -270,8 +270,6 @@ class Model_CcmVehicles extends Model_Base {
         }
     }
 
-    public function assetDetailById() {
-        
-    }
+ 
 
 }

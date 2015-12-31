@@ -80,9 +80,19 @@ class FutureArrivals
     private $modifiedDate;
 
     /**
+     * @var Users
+     */
+    private $modifiedBy;
+
+    /**
      * @var StakeholderActivities
      */
     private $stakeholderActivity;
+
+    /**
+     * @var ItemPackSizes
+     */
+    private $itemPackSize;
 
     /**
      * @var Stakeholders
@@ -108,16 +118,6 @@ class FutureArrivals
      * @var Users
      */
     private $createdBy;
-
-    /**
-     * @var Users
-     */
-    private $modifiedBy;
-
-    /**
-     * @var ItemPackSizes
-     */
-    private $itemPackSize;
 
 
     /**
@@ -391,6 +391,26 @@ class FutureArrivals
     }
 
     /**
+     * Set modifiedBy
+     *
+     * @param Users $modifiedBy
+     */
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return Users 
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+
+    /**
      * Set stakeholderActivity
      *
      * @param StakeholderActivities $stakeholderActivity
@@ -408,6 +428,26 @@ class FutureArrivals
     public function getStakeholderActivity()
     {
         return $this->stakeholderActivity;
+    }
+
+    /**
+     * Set itemPackSize
+     *
+     * @param ItemPackSizes $itemPackSize
+     */
+    public function setItemPackSize(\ItemPackSizes $itemPackSize)
+    {
+        $this->itemPackSize = $itemPackSize;
+    }
+
+    /**
+     * Get itemPackSize
+     *
+     * @return ItemPackSizes 
+     */
+    public function getItemPackSize()
+    {
+        return $this->itemPackSize;
     }
 
     /**
@@ -508,45 +548,5 @@ class FutureArrivals
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set modifiedBy
-     *
-     * @param Users $modifiedBy
-     */
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->modifiedBy = $modifiedBy;
-    }
-
-    /**
-     * Get modifiedBy
-     *
-     * @return Users 
-     */
-    public function getModifiedBy()
-    {
-        return $this->modifiedBy;
-    }
-
-    /**
-     * Set itemPackSize
-     *
-     * @param ItemPackSizes $itemPackSize
-     */
-    public function setItemPackSize(\ItemPackSizes $itemPackSize)
-    {
-        $this->itemPackSize = $itemPackSize;
-    }
-
-    /**
-     * Get itemPackSize
-     *
-     * @return ItemPackSizes 
-     */
-    public function getItemPackSize()
-    {
-        return $this->itemPackSize;
     }
 }

@@ -7,11 +7,10 @@ class Form_MultipleAdjustment extends Zend_Form {
         "transaction_date" => "Transaction Date",
         "transaction_number" => "Transaction Number",
         "transaction_reference" => "Transaction Reference",
-        
         "vvm_stage" => "VVM Stage",
         "adjustment_type" => "Adjustment type",
         "quantity" => "Quantity",
-         "batch_no" => "batch_no",
+        "batch_no" => "batch_no",
         "expiry_date" => "Expiry Date",
         "product" => "Product",
         "warehouse_name" => "Warehouse Name",
@@ -54,7 +53,7 @@ class Form_MultipleAdjustment extends Zend_Form {
         'campaign_id' => array('' => 'Select'),
         'issue_period' => array(),
         'adjustment_type' => array(),
-         'location_id' => array()
+        'location_id' => array()
     );
 
     public function init() {
@@ -209,10 +208,21 @@ class Form_MultipleAdjustment extends Zend_Form {
         $auth = new App_Auth();
         $wh_id = $auth->getWarehouseId();
         $em = Zend_Registry::get("doctrine");
-        $items = $em->getRepository("StockBatch")->findBy(array("itemPackSize" => $item_id, "status" => "Running", "warehouse" => $wh_id));
+       // $items = $em->getRepository("StockBatch")->findBy(array("itemPackSize" => $item_id, "status" => "Running", "warehouse" => $wh_id));
+        $str_sql = $this->_em->createQueryBuilder()
+                ->select("sbw.pkId,sb.number")
+                ->from('StockBatchWarehouses', 'sbw')
+                ->join('sbw.stockBatch', 'sb')
+                ->join('sb.packInfo', 'pi')
+                ->join('pi.stakeholderItemPackSize', 'sip')
+                ->where("sip.itemPackSize = '" . $item_id . "' ")
+                ->andWhere("sbw.warehouse = '$wh_id' ")
+                ->andWhere("sbw.status = 'Running' ");
+
+        $items = $str_sql->getQuery()->getResult();
         $list_item[''] = "Select";
         foreach ($items as $item) {
-            $list_item[$item->getPkId()] = $item->getNumber();
+            $list_item[$item['pkId']] =$item['number'];
         }
 
         $this->getElement('number')->setMultiOptions($list_item);

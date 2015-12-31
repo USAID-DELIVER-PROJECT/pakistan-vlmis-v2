@@ -15,6 +15,15 @@ PlacementQuantity:
       unsigned: false
       nullable: true
   oneToOne:
+    stockBatchWarehouse:
+      targetEntity: StockBatchWarehouses
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        stock_batch_warehouse_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
     ccm:
       targetEntity: ColdChain
       cascade: {  }
@@ -22,15 +31,6 @@ PlacementQuantity:
       inversedBy: null
       joinColumns:
         ccm_id:
-          referencedColumnName: pk_id
-      orphanRemoval: false
-    stockBatch:
-      targetEntity: StockBatch
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        stock_batch_id:
           referencedColumnName: pk_id
       orphanRemoval: false
   lifecycleCallbacks: {  }

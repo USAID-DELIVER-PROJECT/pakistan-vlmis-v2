@@ -1,8 +1,9 @@
 
 /* The file is used for the District Map creation of month of stock */
 $(window).load(function() {
-
-/* Initializing the map object */
+    $('#level').val(4);
+    //$('#province').val(2);
+    /* Initializing the map object */
     map = new OpenLayers.Map('map', {
         projection: new OpenLayers.Projection("EPSG:900913"),
         displayProjection: new OpenLayers.Projection("EPSG:4326"),
@@ -27,96 +28,101 @@ $(window).load(function() {
         ]
     });
 
-/* Initializing Province Layer */
+    /* Initializing Province Layer */
     province = new OpenLayers.Layer.Vector(
-        "Province", {
-            protocol: new OpenLayers.Protocol.HTTP({
-                url: appName + "/js/province.geojson",
-                format: new OpenLayers.Format.GeoJSON({
-                    internalProjection: new OpenLayers.Projection("EPSG:3857"),
-                    externalProjection: new OpenLayers.Projection("EPSG:3857")
-                })
-            }),
-            strategies: [new OpenLayers.Strategy.Fixed()],
-            styleMap: province_style_label,
-            isBaseLayer: true
-        });
+            "Province", {
+                protocol: new OpenLayers.Protocol.HTTP({
+                    url: appName + "/js/province.geojson",
+                    format: new OpenLayers.Format.GeoJSON({
+                        internalProjection: new OpenLayers.Projection("EPSG:3857"),
+                        externalProjection: new OpenLayers.Projection("EPSG:3857")
+                    })
+                }),
+                strategies: [new OpenLayers.Strategy.Fixed()],
+                styleMap: province_style_label,
+                isBaseLayer: true
+            });
 
-/* Initializing District Layer */
+    /* Initializing District Layer */
     district = new OpenLayers.Layer.Vector(
-        "District", {
-            protocol: new OpenLayers.Protocol.HTTP({
-                url: appName + "/js/district.geojson",
-                format: new OpenLayers.Format.GeoJSON({
-                    internalProjection: new OpenLayers.Projection("EPSG:3857"),
-                    externalProjection: new OpenLayers.Projection("EPSG:3857")
-                })
-            }),
-            strategies: [new OpenLayers.Strategy.Fixed()],
-            styleMap: district_style
-        });
-        
-/* Initializing vLMIS Layer */
+            "District", {
+                protocol: new OpenLayers.Protocol.HTTP({
+                    url: appName + "/js/district.geojson",
+                    format: new OpenLayers.Format.GeoJSON({
+                        internalProjection: new OpenLayers.Projection("EPSG:3857"),
+                        externalProjection: new OpenLayers.Projection("EPSG:3857")
+                    })
+                }),
+                strategies: [new OpenLayers.Strategy.Fixed()],
+                styleMap: district_style
+            });
+
+    /* Initializing vLMIS Layer */
     vLMIS = new OpenLayers.Layer.Vector("Months of Stock", {
         styleMap: vlMIS_style
     });
-    
-/* Adding All layers and setting Index for priority */
+
+    /* Adding All layers and setting Index for priority */
     map.addLayers([province, district, vLMIS]);
     district.setZIndex(900);
     province.setZIndex(1001);
 
-/* Select Feature Control */
+    /* Select Feature Control */
     selectfeature = new OpenLayers.Control.SelectFeature([vLMIS]);
     map.addControl(selectfeature);
     selectfeature.activate();
     selectfeature.handlers.feature.stopDown = false;
 
-/* Event for Feature Control */
+    /* Event for Feature Control */
     vLMIS.events.on({
         "featureselected": onFeatureSelect,
         "featureunselected": onFeatureUnselect
     });
-    
- /* Zoom to Extent */
+
+    /* Zoom to Extent */
     map.zoomToExtent(bounds);
-    
- /* Funtion for getting Legend data */
-    getLegend('1', 'Months of Stock');   
-    
- /* Function for getting map data
-  *  inititally Selected Value */
+
+    /* Funtion for getting Legend data */
+    getLegend('1', 'Months of Stock');
+
+    /* Function for getting map data
+     *  inititally Selected Value */
     handler = setInterval(readData, 2000);
 });
 /* End of Function */
 
 /* Execute funtion on page load after the count of features is completed */
-function readData(){
-    if (province.features.length == "9" && district.features.length == "147") {getData();clearInterval(handler);}
+function readData() {
+    if (province.features.length == "9" && district.features.length == "147") {
+        getData();
+        clearInterval(handler);
+    }
 }
 /* End of Function */
 
 /* Execute function on button click */
-$("#submit").click(function() {getData();});
+$("#submit").click(function() {
+    getData();
+});
 /* End of Function */
 
 /* Execute funtion for filter data */
-function getData(){
+function getData() {
     /* Execute funtion for clear all the table,graphs data  */
     clearData();
-    
+
     /* Get Selected Drop down Data */
-    year     = $("#year").val();
-    month    = $('#month').val();
-    region   = $("#province").val();
-    product  = $("#product").val();
-    level    = $("#level").val();
+    year = $("#year").val();
+    month = $('#month').val();
+    region = $("#province").val();
+    product = $("#product").val();
+    level = $("#level").val();
     product_name = $("#product option:selected").text();
     provinceName = $("#province option:selected").text();
     /* Execute funtion for map title ceation */
     mapTitle();
-   
-   /* Ajax call for filter data */
+
+    /* Ajax call for filter data */
     $.ajax({
         url: appName + "/api/geo/get-mos-map-data",
         type: "GET",
@@ -126,7 +132,7 @@ function getData(){
             province: region,
             product: product,
             level: level,
-            type : '4'
+            type: '4'
         },
         dataType: "json",
         success: callback,
@@ -138,7 +144,7 @@ function getData(){
         }
     });
 
-     /* Success function of ajax call */
+    /* Success function of ajax call */
     function callback(response) {
         data = response;
         drawFeature();
@@ -146,7 +152,7 @@ function getData(){
 }
 /* End of Function */
 
- /* Function for Draw Feature */
+/* Function for Draw Feature */
 function drawFeature() {
     if (vLMIS.features.length > 0) {
         vLMIS.removeAllFeatures();
@@ -154,16 +160,30 @@ function drawFeature() {
     /* Fetch the feature shape according to filter */
     FilterData();
     if (data.length <= 0) {
-            alert("No Data Available");
-            $("#loader").css("display", "none");
-            $("#submit").attr("disabled", false);
+        alert("No Data Available");
+        $("#loader").css("display", "none");
+        $("#submit").attr("disabled", false);
     }
-     /* Sort data Ascending */
-    data.sort(SortByID);
+    /* Sort data Ascending */
+    //data.sort(SortByID);
+//    for (var i = 0; i < data.length; i++) {
+//        chkeArray(data[i].district_id, Number(data[i].MOS));
+//    }
+    
+    var mos = 0;
+    var level = $("#level").val();
     for (var i = 0; i < data.length; i++) {
-        chkeArray(data[i].district_id, Number(data[i].mos));
+        if(level == 'all'){
+            mos = Number(data[i].total_MOS);
+        }else if(level == 4){
+             mos = Number(data[i].district_store_MOS);
+        }else if(level == 6){
+             mos = Number(data[i].field_store_MOS);
+        }
+        chkeArray(data[i].district_id, mos);
     }
-     /* Attribute table creation */
+    
+    /* Attribute table creation */
     drawGrid();
     /* Percentage covered with selected province of classes */
     districtCountGraph();
@@ -171,11 +191,11 @@ function drawFeature() {
 }
 /* End of Function */
 
- /* Function for connecting database result calls from ajax with district layer */
+/* Function for connecting database result calls from ajax with district layer */
 function chkeArray(district_id, mos) {
     for (var i = 0; i < district.features.length; i++) {
         if (district_id == district.features[i].attributes.district_id) {
-            vLMISdistrictLayer(district.features[i].geometry, district.features[i].attributes.province_id,district.features[i].attributes.province_name, product_name, district_id, district.features[i].attributes.district_name, mos);
+            vLMISdistrictLayer(district.features[i].geometry, district.features[i].attributes.province_id, district.features[i].attributes.province_name, product_name, district_id, district.features[i].attributes.district_name, mos);
             break;
         }
     }
@@ -218,7 +238,7 @@ function vLMISdistrictLayer(wkt, province_id, province, product, district_id, di
         district: district_name,
         province: province,
         product: product,
-        status : status,
+        status: status,
         value: value,
         color: color
     };
@@ -249,7 +269,7 @@ function onFeatureUnselect(e) {
 /* End of Function */
 
 /* Execute funtion for clear all the table,graphs data  */
-function clearData(){
+function clearData() {
     $("#loader").show();
     $('.radio-button').prop('checked', false);
     $("#submit").attr("disabled", true);
@@ -269,13 +289,15 @@ function clearData(){
 /* Execute funtion for map title ceation */
 function mapTitle() {
     prov_name = $("#province option:selected").text();
-    if(prov_name == "Select"){prov_name = "Pakistan"};
+    if (prov_name == "Select") {
+        prov_name = "Pakistan"
+    }
     year_name = $("#year option:selected").text();
     month_value = ($("#month").val()) - 1;
     var month_name = monthNames[month_value];
     month_year = month_name + " " + year_name;
     level_name = $("#level option:selected").text();
-    download = product_name+"->"+month_year;
+    download = product_name + "->" + month_year;
     $("#mapTitle").html("<font color='green' size='4'><b>Months of Stock   (" + month_year + ")</b></font> <br/> " + product_name + " at " + level_name + " level");
 
     var date = new Date();
@@ -291,7 +313,7 @@ function mapTitle() {
 }
 /* End of Function */
 
- /* Funtion for getting Legend data */
+/* Funtion for getting Legend data */
 function getLegend(value, title) {
     $.ajax({
         url: appName + "/api/geo/get-color-classes",
@@ -304,24 +326,24 @@ function getLegend(value, title) {
     function callback(response) {
         classesArray = response;
 
-       var classes = parseInt(classesArray.length) - 1;
-       $('#legendDiv').append( '<table id="legend">' );
-       
-       $('#legendDiv').append("<tr><td colspan='3'><font size='2' color='green'><b>" + title + "</b></font></td></tr>");
-       for (var i = 1 ; i <= classes; i++) {
-          $('#legendDiv').append("<tr><td align='right' valign='middle' class='hide_td'><input name='color' class='radio-button' type='radio' onclick='getColorName(\"" + classesArray[i].color_code + "\",\""+classesArray[i].description +"\")'/></td><td align='right' valign='middle' style='width:35px'><div style='cursor:pointer;width:30px;height:18px;background-color:" + classesArray[i].color_code + "'></div></td><td align='left' valign='middle' style='padding-left:3px'>"+classesArray[i].description+"</td></tr>"); 
-       }
-       $('#legendDiv').append("<br/>");
-       
-       for (var i = 0 ; i < 1; i++) {
-          $('#legendDiv').append("<tr><td align='right' valign='middle' class='hide_td'><input name='color' class='radio-button' type='radio' onclick='getColorName(\"" + classesArray[i].color_code + "\",\""+classesArray[i].description +"\")'/></td><td align='right' valign='middle' style='width:35px'><div style='cursor:pointer;width:30px;height:18px;background-color:" + classesArray[i].color_code + "'></div></td><td align='left' valign='middle' style='padding-left:3px'>"+classesArray[i].description+"</td></tr>"); 
-       }
-       $('#legendDiv').append("<tr><td colspan='3' align='right'><a class='undo' onclick='getFullColor()'>Reset</a><td></tr>");
-       $('#legendDiv').append( '</table>' );
+        var classes = parseInt(classesArray.length) - 1;
+        $('#legendDiv').append('<table id="legend">');
 
-       $("#legendDiv").css("display", "block");
+        $('#legendDiv').append("<tr><td colspan='3'><font size='2' color='green'><b>" + title + "</b></font></td></tr>");
+        for (var i = 1; i <= classes; i++) {
+            $('#legendDiv').append("<tr><td align='right' valign='middle' class='hide_td'><input name='color' class='radio-button' type='radio' onclick='getColorName(\"" + classesArray[i].color_code + "\",\"" + classesArray[i].description + "\")'/></td><td align='right' valign='middle' style='width:35px'><div style='cursor:pointer;width:30px;height:18px;background-color:" + classesArray[i].color_code + "'></div></td><td align='left' valign='middle' style='padding-left:3px'>" + classesArray[i].description + "</td></tr>");
+        }
+        $('#legendDiv').append("<br/>");
 
-       /* Create table for MOS Scale */
+        for (var i = 0; i < 1; i++) {
+            $('#legendDiv').append("<tr><td align='right' valign='middle' class='hide_td'><input name='color' class='radio-button' type='radio' onclick='getColorName(\"" + classesArray[i].color_code + "\",\"" + classesArray[i].description + "\")'/></td><td align='right' valign='middle' style='width:35px'><div style='cursor:pointer;width:30px;height:18px;background-color:" + classesArray[i].color_code + "'></div></td><td align='left' valign='middle' style='padding-left:3px'>" + classesArray[i].description + "</td></tr>");
+        }
+        $('#legendDiv').append("<tr><td colspan='3' align='right'><a class='undo' onclick='getFullColor()'>Reset</a><td></tr>");
+        $('#legendDiv').append('</table>');
+
+        $("#legendDiv").css("display", "block");
+
+        /* Create table for MOS Scale */
         var defination = document.getElementById('mosRanges');
         for (var i = classes; i >= 1; i--) {
 
@@ -331,31 +353,33 @@ function getLegend(value, title) {
             var cell2 = row.insertCell(2);
             cell0.width = "15%";
             cell0.align = "center";
-            cell1.align = "left";    
+            cell1.align = "left";
             cell2.align = "center";
             cell0.innerHTML = "<div style='cursor:pointer;width:45px;height:18px;background-color:" + classesArray[i].color_code + "'></div>";
             cell1.innerHTML = classesArray[i].description;
             cell2.innerHTML = classesArray[i].interval;
 
-        }   
+        }
         $("#mosDefination").css("display", "block");
     }
 }
 /* End of Function */
 
- /* Sorting JSON result in ascending order */
-function SortByID(x, y) {return x.mos - y.mos;}
+/* Sorting JSON result in ascending order */
+function SortByID(x, y) {
+    return x.MOS - y.MOS;
+}
 /* End of Function */
 
- /* Funtion for Attribute table creation */
+/* Funtion for Attribute table creation */
 function drawGrid() {
     $("#attributeGrid").html("");
     $("#districtRanking").html("");
     dataDownload.length = 0;
     jsonData.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>Province</th><th>District</th><th>Product</th><th>MOS</th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>Province</th><th>District</th><th>Product</th><th class='center' colspan='2'>MOS</th></thead>";
     for (var i = 0; i < features.length; i++) {
         table += "<tr><td>" + features[i].attributes.province + "</td><td>" + features[i].attributes.district + "</td><td>" + features[i].attributes.product + "</td><td align='right'>" + features[i].attributes.value + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
         jsonData.push({
@@ -367,7 +391,7 @@ function drawGrid() {
             province: features[i].attributes.province,
             district_name: features[i].attributes.district,
             product: features[i].attributes.product,
-            Status:features[i].attributes.status,
+            Status: features[i].attributes.status,
             MOS: features[i].attributes.value
         });
     }
@@ -377,7 +401,7 @@ function drawGrid() {
     var pageTitle = $(".page-title").html();
     var title = pageTitle.split("Map");
     /* Function for District wise ranking for Month of stock */
-    districtRanking(jsonData,"- "+title[0]);
+    districtRanking(jsonData, "- " + title[0]);
 }
 /* End of Function */
 
@@ -420,20 +444,20 @@ function districtCountGraph() {
         type: 'column3D',
         renderAt: 'chart-container',
         width: '100%',
-        height: '340px',
+        height: '290px',
         dataFormat: 'json',
         dataSource: {
             "chart": {
-                "caption": prov_name+" - MOS Status",
-                "subcaption":download,
+                "caption": prov_name + " - MOS Status",
+                "subcaption": download,
                 "showLabels": '1',
-                "showlegend":'1',
+                "showlegend": '1',
                 "slantLabels": '1',
                 "showValues": '1',
-                "labelDisplay":'Rotate',
+                "labelDisplay": 'Rotate',
                 "numberSuffix": '%',
                 "exportEnabled": '1',
-                "theme": 'fint'            
+                "theme": 'fint'
             },
             "data": pieArray
         }
@@ -443,13 +467,13 @@ function districtCountGraph() {
 /* End of Function */
 
 /* Function for District wise ranking for Month of stock */
-function districtRanking(records,title) {
+function districtRanking(records, title) {
 
     records.sort(SortByRankingID);
-    
+
     if (records.length > 52) {
         width = '280%';
-    } 
+    }
     else {
         width = '150%';
     }
@@ -457,38 +481,38 @@ function districtRanking(records,title) {
         type: 'column2d',
         renderAt: 'chart-container',
         width: width,
-        height: '100%',
+        height: '98%',
         dataFormat: 'json',
         dataSource: {
             "chart": {
-                "caption": prov_name+" - District wise Stock Ranking "+ title,
-                "subcaption":download,
-                "slantLabels": '1',            
+                "caption": prov_name + " - District wise Stock Ranking " + title,
+                "subcaption": download,
+                "slantLabels": '1',
                 "showValues": '1',
                 "rotateValues": '1',
                 "placeValuesInside": '0',
-                "adjustDiv":'0',
-                "numDivLines":'3',
+                "adjustDiv": '0',
+                "numDivLines": '3',
                 "xAxisName": "",
                 "yAxisName": "No.of Months",
                 "exportEnabled": "1",
                 "theme": "fint"
             },
-            "styles":{
-                "definition":[{
-                    "name":"myValuesFont",
-                    "type":"font",
-                    "size":"10",
-                    "color":"666666",
-                    "bold":"1"
-                  }
+            "styles": {
+                "definition": [{
+                        "name": "myValuesFont",
+                        "type": "font",
+                        "size": "10",
+                        "color": "666666",
+                        "bold": "1"
+                    }
                 ],
-                "application":[{
-                    "toobject":"DataValues",
-                    "styles":"myValuesFont"
-                  }
+                "application": [{
+                        "toobject": "DataValues",
+                        "styles": "myValuesFont"
+                    }
                 ]
-              },
+            },
             "data": records
         }
     });
@@ -501,18 +525,18 @@ function gridFilter(color) {
     $("#attributeGrid").html("");
     dataDownload.length = 0;
     var features = vLMIS.features;
-    table = "<table class='table table-condensed table-hover'>";
-    table += "<thead><th>Province</th><th>District</th><th>Product</th><th>MOS</th><th></th></thead>";
+    table = "<table class='table table-condensed table-bordered table-hover'>";
+    table += "<thead><th>Province</th><th>District</th><th>Product</th><th class='center' colspan='2'>MOS</th></thead>";
     for (var i = 0; i < features.length; i++) {
         if (features[i].attributes.color == color) {
             table += "<tr><td>" + features[i].attributes.province + "</td><td>" + features[i].attributes.district + "</td><td>" + features[i].attributes.product + "</td><td align='right'>" + features[i].attributes.value + "</td><td><div style='width:30px;height:18px;background-color:" + features[i].attributes.color + "'></div></td></tr>";
             dataDownload.push({
-            province: features[i].attributes.province,
-            district_name: features[i].attributes.district,
-            product: features[i].attributes.product,
-            Status:features[i].attributes.status,
-            MOS: features[i].attributes.value
-        });
+                province: features[i].attributes.province,
+                district_name: features[i].attributes.district,
+                product: features[i].attributes.product,
+                Status: features[i].attributes.status,
+                MOS: features[i].attributes.value
+            });
         }
     }
     table += "</table>";
