@@ -1,0 +1,15 @@
+<?php
+if (isset($this->data)) {
+    ?>
+    <?php
+    foreach ($this->data as $row) {
+        ?>
+        <option value="<?php echo $row['pkId']; ?>" ><?php echo $row['transactionNumber'];?></option>
+                <?php
+            }
+        } else {
+            ?>
+    <option value=""><?php echo $this->translate("Select"); ?></option>
+    <?php
+}
+?>

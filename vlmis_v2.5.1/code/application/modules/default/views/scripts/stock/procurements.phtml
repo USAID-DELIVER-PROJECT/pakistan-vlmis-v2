@@ -1,0 +1,144 @@
+<!-- Content -->
+<div class="page-content-wrapper">
+    <div class="page-content">
+        
+        
+        <h3 class="page-title">
+
+            <?php echo $this->translate('Procurements'); ?>
+        </h3>
+        <!-- <p class="red"><b>Important!</b> Please use Ctrl + R before using this form.</p> -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="portlet box green">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <?php echo $this->translate("Fill Form"); ?>
+                        </div>
+                        <div class="tools">
+                            <a href="javascript:;" class="collapse">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <?php
+                                echo App_Controller_Functions::getPageNarrative(Zend_Registry::get('resource'));
+                                ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <?php if (!empty($this->msg)) { ?>
+                                    <div id="info" class="alert alert-info">
+                                        <button data-dismiss="alert" class="close" type="button">
+                                            ×
+                                        </button>
+                                        <?php echo $this->msg; ?>
+                                      
+                                    </div>
+                                <?php } ?>
+                                <form method="POST" name="new_receive" id="new_receive" action="" >
+                                    <!-- Row -->
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="control-group">
+                                                <label class="control-label" for="receive_date">
+                                                    <?php echo $this->translate("Shipment Date"); ?>
+                                                </label>
+                                                <div class="controls">
+                                                    <?php echo $this->form->hdn_transaction_date; ?>
+                                                    <?php echo $this->form->shipment_date; ?>
+                                                    <input id="defaultdate" value="<?php echo date("d/m/Y h:i A"); ?>" type="hidden" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- // Group END Receive No-->
+
+                                        <div class="col-md-3">
+                                            <div class="control-group">
+                                                <label class="control-label" for="receive_ref">
+                                                    <?php echo $this->translate("Reference No"); ?> <span class="red">*</span>
+                                                </label>
+                                                <div class="controls">
+                                                    <i id="reference_tooltip" data-container="body" data-original-title="Refernece number already exists. Click on 'Add Stock Receive' button if you want to continue" class="fa fa-warning tooltips" style="display: none;"></i>
+                                                    <?php echo $this->form->transaction_reference; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="control-label" for="receive_from">
+                                                <?php echo $this->translate("Funding Source"); ?><span class="red">*</span>
+                                            </label>
+                                            <div class="controls">
+                                                <?php echo $this->form->from_warehouse_id; ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="control-label" for="purpose">
+                                                <?php echo $this->translate("Purpose"); ?> <span class="red">*</span>
+                                            </label>
+                                            <div class="controls">
+                                                <?php echo $this->form->activity_id; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-md-3">
+                                            <label class="control-label" for="product">
+                                                <?php echo $this->translate("Product"); ?> <span class="red">*</span>
+                                            </label>
+                                            <div class="controls">
+                                                <?php echo $this->form->item_id; ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="control-label" for="qty">
+                                                <?php echo $this->translate("Quantity"); ?> <span class="red">*</span>
+                                            </label>
+                                            <div class="controls">
+                                                <?php echo $this->form->quantity; ?>
+                                                <span id="product-unit">
+                                                    Vials<input type="hidden" name="item_unit_id" id="item_unit_id" value="2" />
+                                                </span>
+                                                <span id="product-doses"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="control-label" for="status">
+                                                <?php echo $this->translate("Status"); ?> <span class="red">*</span>
+                                            </label>
+                                            <div class="controls">
+                                                <?php echo $this->form->status; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group pull-right form-btn-margin-top">
+                                                <button data-loading-text="Please Wait ..." class="btn btn-primary" id="btn-loading" type="submit">
+                                                    <?php echo $this->translate("Add Procurements"); ?>
+                                                </button>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+

@@ -1,0 +1,8 @@
+<?php if ($this->result != false) { ?>
+    <option value=""><?php echo $this->translate("Select"); ?></option>
+    <?php foreach ($this->result as $row) {
+        ?>
+        <option value="<?php echo $row['pk_id']; ?>" <?php if (!empty($this->district_id) && $row['pk_id'] == $this->district_id) echo 'selected'; ?>>
+            <?php echo $row['location_name']; ?></option>
+    <?php }
+} ?>

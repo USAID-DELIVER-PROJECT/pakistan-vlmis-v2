@@ -1,0 +1,9 @@
+<option value="">Select</option>
+<?php
+if (count($this->result) > 0) {
+    foreach ($this->result as $row) { ?>
+        <option value="<?php echo $row['pkId']; ?>"><?php echo $row['warehouseName']; ?></option>
+        <?php
+    }
+}
+?>
