@@ -1,17 +1,43 @@
 <?php
 
-class Form_PlannedIssue extends Zend_Form {
+/**
+ * Form_PlannedIssue
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Planned Issue
+ */
+class Form_PlannedIssue extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "transaction_date" => "Issue Date",
         "reference_number" => "Reference No.",
         "stakeholder_activity_id" => "Purpose",
         "description" => "Description"
     );
-    
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'stakeholder_activity_id' => array()
     );
+
+    /**
+     * $_childlist
+     * @var type 
+     */
     private $_childlist = array(
         'item_id' => array(),
         'vvm_stage' => array(
@@ -24,6 +50,9 @@ class Form_PlannedIssue extends Zend_Form {
         'number' => array("Select")
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         //Generate Item Combo
@@ -31,17 +60,15 @@ class Form_PlannedIssue extends Zend_Form {
         $result = $item_pack_size->getItemsAll();
         $this->_childlist["item_id"][''] = "Select";
         if ($result) {
-            $item_id = $result[0]->getPkId();
             foreach ($result as $row) {
                 $this->_childlist["item_id"][$row->getPkId()] = $row->getItemName();
             }
         }
-        
+
         //Generate Purpose(activity_id) combo 
         $stk_activities = new Model_StakeholderActivities();
         $result4 = $stk_activities->getAllStakeholderActivitiesIssues();
         if ($result4) {
-            $stakeholder_id = $result4[0]['pkId'];
             foreach ($result4 as $stk_activity) {
                 $this->_list["stakeholder_activity_id"][$stk_activity['pkId']] = $stk_activity['activity'];
             }
@@ -51,70 +78,26 @@ class Form_PlannedIssue extends Zend_Form {
             switch ($col) {
                 case "reference_number":
                 case "description":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 case "transaction_date":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
     /**
@@ -203,6 +186,12 @@ class Form_PlannedIssue extends Zend_Form {
         }
     }
 
+    /**
+     * Populate Batches
+     * 
+     * @param type $item_id
+     * @param type $rows
+     */
     public function populateBatches($item_id, $rows) {
 
         $manufacturer = array();

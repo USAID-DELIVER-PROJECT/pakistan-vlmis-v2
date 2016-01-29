@@ -1,4 +1,9 @@
 <?php
+/**
+ *  phtml for Measles Coverage Detail
+ */
+?>
+<?php
 $from_sel_month = $this->from_month_sel;
 $from_sel_year = $this->from_year_sel;
 $year = $this->year_sel;
@@ -57,6 +62,12 @@ $header1 .= ',<span>Measles-2</span>';
 $header1 .= ',<span>Measles-2</span>';
 $ro .= ',ro,ro,ro,ro,ro,ro,ro,ro';
 
+$header .= ',Total,Total %';
+$header0 .= ',#rspan,#rspan';
+$header1 .= ',#rspan,#rspan';
+$cspan .= ',#cspan,#cspan';
+$width .= ',60,60';
+$ro .= ',ro,ro';
 
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 $xml_store .= "<rows>";
@@ -83,7 +94,7 @@ foreach ($query as $row) {
     $data_arr[$location_id][] = $row['outreach_female_1'];
     $data_arr[$location_id][] = $row['consumption_1'];
     $data_arr[$location_id][] = $row['consumptionPercentage_1'];
-
+    $total_consumpiton[$location_id][] = $row['consumption_1'];
 
 
     $j++;
@@ -106,6 +117,17 @@ foreach ($query1 as $row) {
     $data_arr[$location_id][] = $row['outreach_female_1'];
     $data_arr[$location_id][] = $row['consumption_1'];
     $data_arr[$location_id][] = $row['consumptionPercentage_2'];
+    $total_consumpiton[$location_id][] = $row['consumption_1'];
+}
+$query2 = $this->reports()->measlesCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 2);
+
+foreach ($query2 as $row2) {
+
+
+    $location_id2 = $row2['location_id'];
+    $target_avg = $row2['lbt'] + $row2['measles_target'];
+    $data_arr[$location_id2][] = array_sum($total_consumpiton[$location_id2]);
+    $data_arr[$location_id2][] = @Round((array_sum($total_consumpiton[$location_id2]) / $target_avg) * 100);
 }
 
 foreach ($data_arr as $dis_id => $sub_arr) {
@@ -120,7 +142,6 @@ foreach ($data_arr as $dis_id => $sub_arr) {
             $sum_arr[$key] = 0;
         }
         $sum_arr[$key] += $value;
-        //$accpLimit = '0';
         if ($key > 2) {
 
             $xml_store .= "<cell style=\"text-align:right;\">$value </cell>";
@@ -155,6 +176,11 @@ foreach ($sum_arr as $key => $value) {
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
     } else if ($key == 19) {
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val2 / $total_wh) * 100) . " %</cell>";
+    } else if ($key == 20) {
+        $total_val3 = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 21) {
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val3 / $total_wh) * 100) . " %</cell>";
     }
 }
 
@@ -163,11 +189,6 @@ $xml_store .="</row>";
 
 
 $xml_store .="</rows>";
-
-/* $in_type = 'N';
-  $in_stk = 1;
-  $in_year = $sel_year;
- */
 ?>
 <?php
 $report_title = $this->report_title;
@@ -180,7 +201,7 @@ if (!empty($sel_month)) {
 
 <div class="page-content-wrapper">
     <div class="page-content">
-        <h3 class="page-title"><?php echo $report_title . ' ' . $report_month . ' ' . $sel_year; ?></h3>
+        <h3 class="page-title"><?php echo $report_title; ?></h3>
         <h5 style="color: red">
             Note: This report is under user testing.Please check and provide feedback at support@lmis.gov.pk
         </h5>

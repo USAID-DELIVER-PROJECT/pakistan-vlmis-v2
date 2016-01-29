@@ -1,80 +1,96 @@
 <?php
 
-
+/**
+*  Model for MOS Scale
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MosScale
+ *  MosScale
  */
 class MosScale
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $shortTerm
      * @var string $shortTerm
      */
     private $shortTerm;
 
     /**
+     * $longTerm
      * @var string $longTerm
      */
     private $longTerm;
 
     /**
+     * $scaleStart
      * @var float $scaleStart
      */
     private $scaleStart;
 
     /**
+     * $scaleEnd
      * @var float $scaleEnd
      */
     private $scaleEnd;
 
     /**
+     * $extra
      * @var string $extra
      */
     private $extra;
 
     /**
+     * $colorCode
      * @var string $colorCode
      */
     private $colorCode;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $item
      * @var ItemPackSizes
      */
     private $item;
 
     /**
+     * $stakeholder
      * @var Stakeholders
      */
     private $stakeholder;
 
     /**
+     * $geoLevel
      * @var GeoLevels
      */
     private $geoLevel;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

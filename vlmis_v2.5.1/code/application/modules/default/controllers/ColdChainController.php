@@ -1,28 +1,38 @@
 <?php
 
+/**
+ * ColdChainController
+ *
+ * 
+ *
+ * @subpackage Default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ * Controller for Cold Chain
+ */
 class ColdChainController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Add Refrigerator
+     */
     public function addRefrigeratorAction() {
         $form = new Form_AddRefrigerator();
         $main_form = new Form_AddMain();
         $action = 'add-refrigerator';
         $action_main = 'add';
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost()) && $main_form->isValid($this->_request->getPost())) {
-                $cold_chain = new Model_ColdChain();
-                $form_values = $form->getValues();
-                $main_form_values = $main_form->getValues();
-                $form_values = array_merge($form_values, $main_form_values);
-                $cold_chain->form_values = $form_values;
-                $cold_chain->form_values['warehouse'] = $this->_request->warehouse;
-                $cold_chain->addRefrigerator();
-                $this->redirect("/cold-chain/add-refrigerator?success=1");
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost()) && $main_form->isValid($this->_request->getPost())) {
+            $cold_chain = new Model_ColdChain();
+            $form_values = $form->getValues();
+            $main_form_values = $main_form->getValues();
+            $form_values = array_merge($form_values, $main_form_values);
+            $cold_chain->form_values = $form_values;
+            $cold_chain->form_values['warehouse'] = $this->_request->warehouse;
+            $cold_chain->addRefrigerator();
+            $this->redirect("/cold-chain/add-refrigerator?success=1");
         }
 
         $id = $this->_request->getParam('id', '');
@@ -34,7 +44,7 @@ class ColdChainController extends App_Controller_Base {
             $cold_chain = $this->_em->getRepository("ColdChain")->find($id);
 
             $form->ccm_id->setValue($id);
-            $form->working_since->setValue($cold_chain->getWorkingSince()->format('Y-m-d ')); //}
+            $form->working_since->setValue($cold_chain->getWorkingSince()->format('Y-m-d '));
             $form->serial_number->setValue($cold_chain->getSerialNumber());
             $main_form->asset_id->setValue($cold_chain->getAssetId());
             $main_form->source_id->setValue($cold_chain->getSource()->getPkId());
@@ -58,36 +68,38 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/default/cold-chain/add-main.js');
     }
 
+    /**
+     * Update Refrigerator
+     */
     public function updateRefrigeratorAction() {
         $form = new Form_AddRefrigerator();
         $main_form = new Form_AddMain();
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost()) && $main_form->isValid($this->_request->getPost())) {
-                $cold_chain = new Model_ColdChain();
-                $form_values = $form->getValues();
-                $main_form_values = $main_form->getValues();
-                $form_values = array_merge($form_values, $main_form_values);
-                $cold_chain->form_values = $form_values;
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost()) && $main_form->isValid($this->_request->getPost())) {
+            $cold_chain = new Model_ColdChain();
+            $form_values = $form->getValues();
+            $main_form_values = $main_form->getValues();
+            $form_values = array_merge($form_values, $main_form_values);
+            $cold_chain->form_values = $form_values;
 
-                $cold_chain->updateRefrigerator();
-                $this->redirect("/cold-chain/search-refrigerator?success=1");
-            }
+            $cold_chain->updateRefrigerator();
+            $this->redirect("/cold-chain/search-refrigerator?success=1");
         }
     }
 
+    /**
+     * Add Voltage Regulator
+     */
     public function addVoltageRegulatorAction() {
         $form = new Form_AddVoltageRegulator();
         $ccm_model = new Model_CcmModels();
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $cold_chain = new Model_ColdChain();
-                $cold_chain->form_values = $this->_request->getPost();
-                $data = $form->getValues();
-                $ccm_model->form_values = $data;
-                $ccm_model->form_values['warehouse'] = $this->_request->warehouse;
-                $cold_chain->addVoltageRegulator();
-                $this->redirect("/cold-chain/add-voltage-regulator?success=1");
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $cold_chain = new Model_ColdChain();
+            $cold_chain->form_values = $this->_request->getPost();
+            $data = $form->getValues();
+            $ccm_model->form_values = $data;
+            $ccm_model->form_values['warehouse'] = $this->_request->warehouse;
+            $cold_chain->addVoltageRegulator();
+            $this->redirect("/cold-chain/add-voltage-regulator?success=1");
         }
         $this->view->form = $form;
         $result = $ccm_model->getVoltageRegulators();
@@ -96,28 +108,28 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Add Transport
+     */
     public function addTransportAction() {
         $main_form = new Form_AddMain();
         $form = new Form_AddTransport();
         $ccm_vehicle = new Model_CcmVehicles();
         $action = 'add-transport';
         $action_main = 'add';
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost()) && $main_form->isValid($this->_request->getPost())) {
-                $form_values = $form->getValues();
-                $main_form_values = $main_form->getValues();
-                $form_values = array_merge($form_values, $main_form_values);
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost()) && $main_form->isValid($this->_request->getPost())) {
+            $form_values = $form->getValues();
+            $main_form_values = $main_form->getValues();
+            $form_values = array_merge($form_values, $main_form_values);
 
-                $ccm_vehicle->form_values = $form_values;
-                $ccm_vehicle->form_values['warehouse'] = $this->_request->warehouse;
-                $ccm_vehicle->addTransport();
-                $this->redirect("/cold-chain/add-transport?success=1");
-            }
+            $ccm_vehicle->form_values = $form_values;
+            $ccm_vehicle->form_values['warehouse'] = $this->_request->warehouse;
+            $ccm_vehicle->addTransport();
+            $this->redirect("/cold-chain/add-transport?success=1");
         }
         $id = $this->_request->getParam('id', '');
         if (!empty($id)) {
             $arr = explode('|', App_Controller_Functions::decrypt($id));
-            $action_edit = $arr[0];
             $id = $arr[1];
 
             $cold_chain = $this->_em->getRepository("ColdChain")->find($id);
@@ -155,54 +167,54 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/default/cold-chain/add-main.js');
     }
 
+    /**
+     * Update Transport
+     */
     public function updateTransportAction() {
         $main_form = new Form_AddMain();
         $form = new Form_AddTransport();
         $ccm_vehicle = new Model_CcmVehicles();
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost()) && $main_form->isValid($this->_request->getPost())) {
-                $form_values = $form->getValues();
-                $main_form_values = $main_form->getValues();
-                $form_values = array_merge($form_values, $main_form_values);
-                $ccm_vehicle->form_values = $form_values;
-                $ccm_vehicle->updateTransport();
-                $this->redirect("/cold-chain/search-transport?success=1");
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost()) && $main_form->isValid($this->_request->getPost())) {
+            $form_values = $form->getValues();
+            $main_form_values = $main_form->getValues();
+            $form_values = array_merge($form_values, $main_form_values);
+            $ccm_vehicle->form_values = $form_values;
+            $ccm_vehicle->updateTransport();
+            $this->redirect("/cold-chain/search-transport?success=1");
         }
     }
 
+    /**
+     * Add Generator
+     */
     public function addGeneratorAction() {
         $form_values = array();
         $main_form_values = array();
-        $temp = array();
         $arr_data = array('success' => $this->_request->success);
         $ccm_generator = new Model_CcmGenerators();
         $main_form = new Form_AddMain();
         $form = new Form_AddGenerator();
         $action = 'add-generator';
         $action_main = 'add';
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost()) && $main_form->isValid($this->_request->getPost())) {
-                try {
-                    $form_values = $form->getValues();
-                    $main_form_values = $main_form->getValues();
-                    $form_values = array_merge($form_values, $main_form_values);
-                    $ccm_generator->form_values = $form_values;
-                    $ccm_generator->form_values['warehouse'] = $this->_request->warehouse;
-                    $ccm_generator->form_values['reasons'] = $this->_request->reason;
-                    $ccm_generator->form_values['utilizations'] = $this->_request->utilization;
-                    $ccm_generator->addGenerator();
-                } catch (Exception $e) {
-                    App_FileLogger::info($e);
-                }
-                $this->redirect("/cold-chain/add-generator/success/1");
-                exit;
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost()) && $main_form->isValid($this->_request->getPost())) {
+            try {
+                $form_values = $form->getValues();
+                $main_form_values = $main_form->getValues();
+                $form_values = array_merge($form_values, $main_form_values);
+                $ccm_generator->form_values = $form_values;
+                $ccm_generator->form_values['warehouse'] = $this->_request->warehouse;
+                $ccm_generator->form_values['reasons'] = $this->_request->reason;
+                $ccm_generator->form_values['utilizations'] = $this->_request->utilization;
+                $ccm_generator->addGenerator();
+            } catch (Exception $e) {
+                App_FileLogger::info($e);
             }
+            $this->redirect("/cold-chain/add-generator/success/1");
+            exit;
         }
         $id = $this->_request->getParam('id', '');
         if (!empty($id)) {
             $arr = explode('|', App_Controller_Functions::decrypt($id));
-            $action_edit = $arr[0];
             $id = $arr[1];
             $cold_chain = $this->_em->getRepository("ColdChain")->find($id);
             $form->ccm_id->setValue($id);
@@ -237,32 +249,34 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/default/cold-chain/add-main.js');
     }
 
+    /**
+     * Update Generator
+     */
     public function updateGeneratorAction() {
         $ccm_generator = new Model_CcmGenerators();
         $main_form = new Form_AddMain();
         $form = new Form_AddGenerator();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost()) && $main_form->isValid($this->_request->getPost())) {
-                try {
-                    $form_values = $form->getValues();
-                    $main_form_values = $main_form->getValues();
-                    $form_values = array_merge($form_values, $main_form_values);
-                    $ccm_generator->form_values = $form_values;
-                    $ccm_generator->updateGenerator();
-                } catch (Exception $e) {
-                    App_FileLogger::info($e);
-                }
-                $this->redirect("/cold-chain/search-generator/success/1");
-                exit;
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost()) && $main_form->isValid($this->_request->getPost())) {
+            try {
+                $form_values = $form->getValues();
+                $main_form_values = $main_form->getValues();
+                $form_values = array_merge($form_values, $main_form_values);
+                $ccm_generator->form_values = $form_values;
+                $ccm_generator->updateGenerator();
+            } catch (Exception $e) {
+                App_FileLogger::info($e);
             }
+            $this->redirect("/cold-chain/search-generator/success/1");
+            exit;
         }
     }
 
+    /**
+     * Add Cold Room 
+     */
     public function addColdRoomAction() {
         $form_values = array();
-        $main_form_values = array();
-        $temp = array();
         $arr_data = array('success' => $this->_request->success);
         $main_form = new Form_AddMain();
         $form = new Form_AddColdRoom();
@@ -343,6 +357,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/default/cold-chain/add-main.js');
     }
 
+    /**
+     * Update Cold Room
+     */
     public function updateColdRoomAction() {
         $cold_room = new Model_CcmColdRooms();
         if ($this->_request->isPost()) {
@@ -359,9 +376,10 @@ class ColdChainController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Transfer Asset
+     */
     public function transferAssetAction() {
-        $form_values = array();
-        $temp = array();
         $arr_data = array('success' => $this->_request->success,
             'tempassets' => '');
         $arr_coldchain_ids = $this->_request->hdn_coldchain_id;
@@ -383,8 +401,6 @@ class ColdChainController extends App_Controller_Base {
             } catch (Exception $e) {
                 App_FileLogger::info($e);
             }
-        } else {
-            
         }
         $this->view->user_level = $this->_identity->getUserLevel($this->_userid);
         $this->view->arr_data = $arr_data;
@@ -393,19 +409,20 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos2.js');
     }
 
+    /**
+     * Add Vaccine Carrier
+     */
     public function addVaccineCarrierAction() {
         $form = new Form_AddVaccineCarrier();
         $this->view->form = $form;
         $ccm_model = new Model_CcmModels();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $data = $form->getValues();
-                $ccm_model->form_values = $data;
-                $ccm_model->form_values['warehouse'] = $this->_request->warehouse;
-                $ccm_model->addVaccineCarrier();
-                $this->redirect("/cold-chain/add-vaccine-carrier?success=1");
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $data = $form->getValues();
+            $ccm_model->form_values = $data;
+            $ccm_model->form_values['warehouse'] = $this->_request->warehouse;
+            $ccm_model->addVaccineCarrier();
+            $this->redirect("/cold-chain/add-vaccine-carrier?success=1");
         }
         $result = $ccm_model->getVaccineCarriers();
         $this->view->result = $result;
@@ -413,6 +430,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Add Ice Pack
+     */
     public function addIcePackAction() {
         $form = new Form_AddIcePacks();
         $this->view->form = $form;
@@ -429,6 +449,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Status Working Update
+     */
     public function statusWorkingUpdateAction() {
         $form = new Form_StatusWorkingUpdate();
         $this->view->form = $form;
@@ -437,6 +460,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->warehosue_name = $warehouse_name_asset;
     }
 
+    /**
+     * ajaxGetModels
+     */
     public function ajaxGetModelsAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->make) && !empty($this->_request->make)) {
@@ -448,6 +474,9 @@ class ColdChainController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetMake
+     */
     public function ajaxGetMakeAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->make) && !empty($this->_request->make)) {
@@ -458,6 +487,9 @@ class ColdChainController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxIcePacks
+     */
     public function ajaxIcePacksAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->wh_id) && !empty($this->_request->wh_id)) {
@@ -469,6 +501,9 @@ class ColdChainController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxIcePacksUnallocated
+     */
     public function ajaxIcePacksUnallocatedAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->unallocated) && !empty($this->_request->unallocated)) {
@@ -479,6 +514,9 @@ class ColdChainController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxTransferAsset
+     */
     public function ajaxTransferAssetAction() {
         $this->_helper->layout->setLayout("ajax");
         $data = array();
@@ -490,6 +528,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->arr_data1 = $data1;
     }
 
+    /**
+     * ajaxGetReasons
+     */
     public function ajaxGetReasonsAction() {
         $this->_helper->layout->disableLayout();
         $ccm_status_list = new Model_CcmStatusList();
@@ -498,6 +539,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->arr_data = $data;
     }
 
+    /**
+     * ajaxGetUtilizations
+     */
     public function ajaxGetUtilizationsAction() {
         $this->_helper->layout->disableLayout();
         $ccm_status_list = new Model_CcmStatusList();
@@ -506,6 +550,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->arr_data = $data;
     }
 
+    /**
+     * ajaxGetDataByCatalogueId
+     */
     public function ajaxGetDataByCatalogueIdAction() {
         $this->_helper->layout->disableLayout();
         $ccm_models = new Model_CcmModels();
@@ -514,6 +561,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->arr_data = $arr_data;
     }
 
+    /**
+     * Add New Make Model
+     */
     public function addNewMakeModelAction() {
         $this->_helper->layout->setLayout("ajax");
         $models = new Model_CcmModels();
@@ -524,8 +574,10 @@ class ColdChainController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Search Ice Pack
+     */
     public function searchIcePackAction() {
-        $ice_pack_search = array();
         $identity = App_Auth::getInstance();
         $form = new Form_SearchIcePack();
         $this->view->form = $form;
@@ -575,6 +627,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/default/cold-chain/add-main.js');
     }
 
+    /**
+     * Search Vaccine Carrier
+     */
     public function searchVaccineCarrierAction() {
         $result = array();
         $identity = App_Auth::getInstance();
@@ -609,6 +664,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/default/cold-chain/add-main.js');
     }
 
+    /**
+     * Search Cold Room
+     */
     public function searchColdRoomAction() {
         $result = array();
         $identity = App_Auth::getInstance();
@@ -643,6 +701,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/default/cold-chain/add-main.js');
     }
 
+    /**
+     * Search Generator
+     */
     public function searchGeneratorAction() {
         $arr_data = array();
         $identity = App_Auth::getInstance();
@@ -678,6 +739,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Search Voltage Regulator
+     */
     public function searchVoltageRegulatorAction() {
         $arr_data = array();
         $identity = App_Auth::getInstance();
@@ -712,6 +776,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Search Transport
+     */
     public function searchTransportAction() {
         $arr_data = array();
         $identity = App_Auth::getInstance();
@@ -746,6 +813,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Search Refrigerator
+     */
     public function searchRefrigeratorAction() {
         $arr_data = array();
         $form = new Form_SearchRefrigerator();
@@ -781,6 +851,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Update Working Status
+     */
     public function updateWorkingStatusAction() {
         $warehouse_id = $this->_request->getParam('id', '');
         $status_list = new Model_CcmStatusList();
@@ -806,6 +879,9 @@ class ColdChainController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Print Refrigerator
+     */
     public function printRefrigeratorAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Print Refrigerator");
@@ -814,6 +890,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->warehousename = $this->_identity->getWarehouseName();
     }
 
+    /**
+     * Print Vaccine Carrier
+     */
     public function printVaccineCarrierAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Print Vaccine Carrier");
@@ -822,6 +901,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->warehousename = $this->_identity->getWarehouseName();
     }
 
+    /**
+     * 
+     */
     public function printIcePackAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Print Ice Pack");
@@ -830,6 +912,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->warehousename = $this->_identity->getWarehouseName();
     }
 
+    /**
+     * Print Ice Pack
+     */
     public function printColdRoomAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Print Cold Room");
@@ -838,6 +923,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->warehousename = $this->_identity->getWarehouseName();
     }
 
+    /**
+     * Print Voltage Regulator
+     */
     public function printVoltageRegulatorAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Print Voltage Regulator");
@@ -846,6 +934,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->warehousename = $this->_identity->getWarehouseName();
     }
 
+    /**
+     * Print Generator
+     */
     public function printGeneratorAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Print Generator");
@@ -854,6 +945,9 @@ class ColdChainController extends App_Controller_Base {
         $this->view->warehousename = $this->_identity->getWarehouseName();
     }
 
+    /**
+     * Print Transport
+     */
     public function printTransportAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Print Transport");

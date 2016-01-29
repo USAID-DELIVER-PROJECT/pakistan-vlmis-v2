@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Ajax Different Missed Types
+*/
+?>
+<?php
 
 FC_SetRenderer('javascript');
 echo renderChart($this->baseUrl() . "/FusionCharts/Charts/MSColumn3D.swf", "", $this->xmlstore, 'MissedTypes', '100%', 350, false, false);

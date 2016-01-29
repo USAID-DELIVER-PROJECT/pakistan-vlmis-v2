@@ -1,21 +1,32 @@
 <?php
 
+/**
+ * Cadmin_ManageModelsController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Cadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ * @package Controller for Cadmin Manage Models
+ */
 class Cadmin_ManageModelsController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Cadmin_ManageModelsController index
+     */
     public function indexAction() {
         $form = new Form_Cadmin_ModelsSearch();
         $form_add = new Form_Cadmin_ModelsAdd();
 
         $models = new Model_CcmModels();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $models->form_values = $form->getValues();
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $models->form_values = $form->getValues();
         }
 
         $sort = $this->_getParam("sort", "desc");
@@ -41,42 +52,44 @@ class Cadmin_ManageModelsController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/records_per_page.js');
     }
 
+    /**
+     * add
+     */
     public function addAction() {
-        $form = new Form_Cadmin_ModelsAdd();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $form_values = $this->_request->getPost();
+            $model = new CcmModels();
+            $asset_type_id = $this->_em->find('CcmAssetTypes', $form_values['ccm_asset_sub_type']);
+            $model->setCcmAssetType($asset_type_id);
+            $ccm_make = $this->_em->find('CcmMakes', $form_values['ccm_make_id']);
+            $model->setCcmMake($ccm_make);
+            $model->setCcmModelName($form_values['ccm_model_name']);
+            $model->setCatalogueId($form_values['catalogue_id']);
+            $model->setGrossCapacity20($form_values['gross_capacity_20']);
+            $model->setGrossCapacity4($form_values['gross_capacity_4']);
+            $model->setNetCapacity20($form_values['net_capacity_20']);
+            $model->setNetCapacity4($form_values['net_capacity_4']);
+            $model->setAssetDimensionLength($form_values['asset_dimension_length']);
+            $model->setAssetDimensionWidth($form_values['asset_dimension_width']);
+            $model->setAssetDimensionHeight($form_values['asset_dimension_height']);
+            $model->setCfcFree($form_values['cfc_free']);
+            $user_id = $this->_em->find('Users', $this->_userid);
+            $model->setCreatedBy($user_id);
+            $model->setCreatedDate(App_Tools_Time::now());
+            $model->setModifiedBy($user_id);
+            $model->setModifiedDate(App_Tools_Time::now());
 
-                $model = new CcmModels();
-                $asset_type_id = $this->_em->find('CcmAssetTypes', $form_values['ccm_asset_sub_type']);
-                $model->setCcmAssetType($asset_type_id);
-                $ccm_make = $this->_em->find('CcmMakes', $form_values['ccm_make_id']);
-                $model->setCcmMake($ccm_make);
-                $model->setCcmModelName($form_values['ccm_model_name']);
-                $model->setCatalogueId($form_values['catalogue_id']);
-                $model->setGrossCapacity20($form_values['gross_capacity_20']);
-                $model->setGrossCapacity4($form_values['gross_capacity_4']);
-                $model->setNetCapacity20($form_values['net_capacity_20']);
-                $model->setNetCapacity4($form_values['net_capacity_4']);
-                $model->setAssetDimensionLength($form_values['asset_dimension_length']);
-                $model->setAssetDimensionWidth($form_values['asset_dimension_width']);
-                $model->setAssetDimensionHeight($form_values['asset_dimension_height']);
-                $model->setCfcFree($form_values['cfc_free']);
-                $user_id = $this->_em->find('Users', $this->_userid);
-                $model->setCreatedBy($user_id);
-                $model->setCreatedDate(App_Tools_Time::now());
-                $model->setModifiedBy($user_id);
-                $model->setModifiedDate(App_Tools_Time::now());
-
-                $this->_em->persist($model);
-                $this->_em->flush();
-            }
+            $this->_em->persist($model);
+            $this->_em->flush();
         }
         $this->_redirect("/cadmin/manage-models");
     }
 
+    /**
+     * ajaxGetAllMakesByAssetType
+     */
     public function ajaxGetAllMakesByAssetTypeAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->type_id) && !empty($this->_request->type_id)) {
@@ -88,6 +101,9 @@ class Cadmin_ManageModelsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetAssetSubtypesByAssetType
+     */
     public function ajaxGetAssetSubtypesByAssetTypeAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->type_id) && !empty($this->_request->type_id)) {
@@ -98,6 +114,9 @@ class Cadmin_ManageModelsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetReasons
+     */
     public function ajaxGetReasonsAction() {
         $this->_helper->layout->disableLayout();
         $ccm_status_list = new Model_CcmStatusList();
@@ -106,6 +125,9 @@ class Cadmin_ManageModelsController extends App_Controller_Base {
         $this->view->arr_data = $data;
     }
 
+    /**
+     * ajaxGetUtilizations
+     */
     public function ajaxGetUtilizationsAction() {
         $this->_helper->layout->disableLayout();
         $ccm_status_list = new Model_CcmStatusList();
@@ -114,6 +136,9 @@ class Cadmin_ManageModelsController extends App_Controller_Base {
         $this->view->arr_data = $data;
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->setLayout('ajax');
         $model_id = $this->_request->getParam('model_id', '');
@@ -125,9 +150,15 @@ class Cadmin_ManageModelsController extends App_Controller_Base {
         $form->ccm_make_id->setValue($ccm_model->getCcmMake()->getPkId());
         $form->ccm_model_name->setValue($ccm_model->getCcmModelName());
         $form->catalogue_id->setValue($ccm_model->getCatalogueId());
-        $form->asset_dimension_length->setValue($ccm_model->getAssetDimensionLength());
-        $form->asset_dimension_width->setValue($ccm_model->getAssetDimensionWidth());
-        $form->asset_dimension_height->setValue($ccm_model->getAssetDimensionHeight());
+        if ($ccm_model->getAssetDimensionLength() != "") {
+            $form->asset_dimension_length->setValue($ccm_model->getAssetDimensionLength());
+        }
+        if ($ccm_model->getAssetDimensionWidth() != "") {
+            $form->asset_dimension_width->setValue($ccm_model->getAssetDimensionWidth());
+        }
+        if ($ccm_model->getAssetDimensionHeight() != "") {
+            $form->asset_dimension_height->setValue($ccm_model->getAssetDimensionHeight());
+        }
         $form->gross_capacity_20->setValue($ccm_model->getNetCapacity20());
         $form->gross_capacity_4->setValue($ccm_model->getNetCapacity4());
         $form->net_capacity_20->setValue($ccm_model->getNetCapacity20());
@@ -138,39 +169,43 @@ class Cadmin_ManageModelsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * update
+     */
     public function updateAction() {
         $form = new Form_Cadmin_ModelsAdd();
         $form->addHidden();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $model_id = $form->id->getValue();
-                $model = $this->_em->getRepository("CcmModels")->find($model_id);
-                $asset_type_id = $this->_em->find('CcmAssetTypes', $form->ccm_asset_sub_type_update->getValue());
-                $model->setCcmAssetType($asset_type_id);
-                $ccm_make = $this->_em->find('CcmMakes', $form->ccm_make_id->getValue());
-                $model->setCcmMake($ccm_make);
-                $model->setCcmModelName($form->ccm_model_name->getValue());
-                $model->setCatalogueId($form->catalogue_id->getValue());
-                $model->setGrossCapacity20($form->gross_capacity_20->getValue());
-                $model->setGrossCapacity4($form->gross_capacity_4->getValue());
-                $model->setNetCapacity20($form->net_capacity_20->getValue());
-                $model->setNetCapacity4($form->net_capacity_4->getValue());
-                $model->setAssetDimensionLength($form->asset_dimension_length->getValue());
-                $model->setAssetDimensionWidth($form->asset_dimension_width->getValue());
-                $model->setAssetDimensionHeight($form->asset_dimension_height->getValue());
-                $model->setCfcFree($form->cfc_free->getValue());
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $model_id = $form->id->getValue();
+            $model = $this->_em->getRepository("CcmModels")->find($model_id);
+            $asset_type_id = $this->_em->find('CcmAssetTypes', $form->ccm_asset_sub_type_update->getValue());
+            $model->setCcmAssetType($asset_type_id);
+            $ccm_make = $this->_em->find('CcmMakes', $form->ccm_make_id->getValue());
+            $model->setCcmMake($ccm_make);
+            $model->setCcmModelName($form->ccm_model_name->getValue());
+            $model->setCatalogueId($form->catalogue_id->getValue());
+            $model->setGrossCapacity20($form->gross_capacity_20->getValue());
+            $model->setGrossCapacity4($form->gross_capacity_4->getValue());
+            $model->setNetCapacity20($form->net_capacity_20->getValue());
+            $model->setNetCapacity4($form->net_capacity_4->getValue());
+            $model->setAssetDimensionLength($form->asset_dimension_length->getValue());
+            $model->setAssetDimensionWidth($form->asset_dimension_width->getValue());
+            $model->setAssetDimensionHeight($form->asset_dimension_height->getValue());
+            $model->setCfcFree($form->cfc_free->getValue());
 
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $model->setModifiedBy($created_by);
-                $model->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($model);
-                $this->_em->flush();
-            }
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $model->setModifiedBy($created_by);
+            $model->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($model);
+            $this->_em->flush();
         }
         $this->_redirect("/cadmin/manage-models");
     }
 
+    /**
+     * ajaxDetail
+     */
     public function ajaxDetailAction() {
         $form = new Form_Cadmin_ModelsAdd();
         $this->_helper->layout->disableLayout();
@@ -178,6 +213,9 @@ class Cadmin_ManageModelsController extends App_Controller_Base {
         $this->view->data = $ccm_model;
     }
 
+    /**
+     * ajaxChangeStatus
+     */
     public function ajaxChangeStatusAction() {
         $this->_helper->layout->disableLayout();
         $row = $this->_em->getRepository("CcmModels")->find($this->_request->getParam('id'));
@@ -188,7 +226,7 @@ class Cadmin_ManageModelsController extends App_Controller_Base {
             $row->setStatus('0');
         }
 
-        $created_by = $this->_em->find('Users', $this->_user_id);
+        $created_by = $this->_em->find('Users', $this->_userid);
         $row->setModifiedBy($created_by);
         $row->setModifiedDate(App_Tools_Time::now());
 

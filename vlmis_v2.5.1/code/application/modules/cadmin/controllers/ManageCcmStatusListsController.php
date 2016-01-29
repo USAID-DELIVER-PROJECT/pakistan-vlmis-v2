@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Cadmin_ManageCcmStatusListsController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Cadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Cadmin Manage CCM Status Lists
+ */
 class Cadmin_ManageCcmStatusListsController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Cadmin_ManageCcmStatusListsController index
+     */
     public function indexAction() {
         $form = new Form_Cadmin_StatusListSearch();
         $form_add = new Form_Cadmin_StatusListAdd();
@@ -51,31 +64,35 @@ class Cadmin_ManageCcmStatusListsController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * add
+     */
     public function addAction() {
         $form = new Form_Cadmin_StatusListAdd();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
 
-                $status_lists = new CcmStatusList();
-                $status_lists->setType($form->type->getValue());
-                $status_lists->setCcmStatusListName($form->ccm_status_list_name->getValue());
-                $status_lists->setType($form->type->getValue());
-                $status_lists->setStatus($form->status->getValue());
-                $created_by = $this->_em->find('Users', $this->_userid);
+            $status_lists = new CcmStatusList();
+            $status_lists->setType($form->type->getValue());
+            $status_lists->setCcmStatusListName($form->ccm_status_list_name->getValue());
+            $status_lists->setType($form->type->getValue());
+            $status_lists->setStatus($form->status->getValue());
+            $created_by = $this->_em->find('Users', $this->_userid);
 
-                $status_lists->setCreatedBy($created_by);
-                $status_lists->setCreatedDate(App_Tools_Time::now());
-                $status_lists->setModifiedBy($created_by);
-                $status_lists->setModifiedDate(App_Tools_Time::now());
+            $status_lists->setCreatedBy($created_by);
+            $status_lists->setCreatedDate(App_Tools_Time::now());
+            $status_lists->setModifiedBy($created_by);
+            $status_lists->setModifiedDate(App_Tools_Time::now());
 
-                $this->_em->persist($status_lists);
-                $this->_em->flush();
-            }
+            $this->_em->persist($status_lists);
+            $this->_em->flush();
         }
         $this->_redirect("/cadmin/manage-ccm-status-lists?success=1");
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->disableLayout();
         $status_list_id = $this->_request->getParam('status_list_id', '');
@@ -89,6 +106,9 @@ class Cadmin_ManageCcmStatusListsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * update
+     */
     public function updateAction() {
 
         if ($this->_request->getPost()) {
@@ -106,6 +126,9 @@ class Cadmin_ManageCcmStatusListsController extends App_Controller_Base {
         $this->_redirect("/cadmin/manage-ccm-status-lists?success=2");
     }
 
+    /**
+     * ajaxChangeStatus
+     */
     public function ajaxChangeStatusAction() {
         $this->_helper->layout->disableLayout();
         $row = $this->_em->getRepository("CcmStatusList")->find($this->_request->getParam('id'));
@@ -124,6 +147,9 @@ class Cadmin_ManageCcmStatusListsController extends App_Controller_Base {
         $this->view->ajaxaction = $this->_request->getParam('ajaxaction');
     }
 
+    /**
+     * checkUser
+     */
     public function checkUserAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);

@@ -1,15 +1,45 @@
 <?php
 
+/**
+ * Zend_View_Helper_ExplorerReport
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+/**
+ *  Zend View Helper Explorer Report
+ */
+
+
 class Zend_View_Helper_ExplorerReport extends Zend_View_Helper_Abstract {
 
+    /**
+     * Explorer Report
+     * @return \Zend_View_Helper_ExplorerReport
+     */
     public function explorerReport() {
         return $this;
     }
 
+    /**
+     * ajaxExplorerReport
+     * @param type $stkid
+     * @param type $wh_id
+     * @param type $yy
+     * @param type $mm
+     * @return boolean
+     */
     public function ajaxExplorerReport($stkid, $wh_id, $yy, $mm) {
-        $stakeholder_item_ids = "";
         $em = Zend_Registry::get('doctrine');
-        
+
         $str_sql = $em->createQueryBuilder()
                 ->select('DISTINCT ips.itemName as item_name, ips.pkId as pk_id, ips.numberOfDoses as description')
                 ->from("ItemPackSizes", "ips")
@@ -26,6 +56,14 @@ class Zend_View_Helper_ExplorerReport extends Zend_View_Helper_Abstract {
         }
     }
 
+    /**
+     * Get Monthly Receive Quantity Warehouse
+     * @param type $mm
+     * @param type $yy
+     * @param type $item_id
+     * @param type $wh_id
+     * @return type
+     */
     public function getMonthlyReceiveQuantityWarehouse($mm, $yy, $item_id, $wh_id) {
         $em = Zend_Registry::get('doctrine');
         $row = $em->getConnection()->prepare("SELECT getMonthlyRcvQtyWH($mm,$yy,$item_id,$wh_id) as rcv from DUAL");
@@ -33,13 +71,18 @@ class Zend_View_Helper_ExplorerReport extends Zend_View_Helper_Abstract {
         return $row->fetchAll();
     }
 
+    /**
+     * Get Warehouse Data By Item And WarehouseId
+     * @param type $wh_id
+     * @param type $item_id
+     * @param type $date_sel
+     * @return type
+     */
     public function getWarehouseDataByItemAndWarehouseId($wh_id, $item_id, $date_sel) {
-        $em = Zend_Registry::get('doctrine');
-
         $startDate = date('Y-m-01', strtotime($date_sel));
         $endDate = date('Y-m-t', strtotime($date_sel));
 
-         $str_qry = "SELECT
+        $str_qry = "SELECT
             SUM(IF (DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') < '$startDate', stock_detail.quantity, 0))*item_pack_sizes.number_of_doses AS opening_balance,
             SUM(IF (DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') >= '$startDate' AND DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= '$endDate' AND stock_master.transaction_type_id = 1, stock_detail.quantity, 0))*item_pack_sizes.number_of_doses AS received_balance,
             SUM(IF (DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') >= '$startDate' AND DATE_FORMAT(stock_master.transaction_date, '%Y-%m-%d') <= '$endDate' AND stock_master.transaction_type_id = 2, ABS(stock_detail.quantity), 0))*item_pack_sizes.number_of_doses AS issue_balance,
@@ -61,11 +104,11 @@ class Zend_View_Helper_ExplorerReport extends Zend_View_Helper_Abstract {
              '%Y-%m-%d'
             ) <= '$endDate' AND
               DATE_FORMAT(
-		stock_batch.expiry_date,
-		'%Y-%m-%d'
-	) >= '$endDate'  
+                stock_batch.expiry_date,
+                '%Y-%m-%d'
+        ) >= '$endDate'  
            AND stock_batch_warehouses.warehouse_id = $wh_id
-           AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id".
+           AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id" .
                 " ORDER BY item_pack_sizes.list_rank";
 
         $this->_em = Zend_Registry::get('doctrine');

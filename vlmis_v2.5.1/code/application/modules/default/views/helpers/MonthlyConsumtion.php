@@ -1,11 +1,38 @@
 <?php
 
+/**
+ * Zend_View_Helper_MonthlyConsumtion
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+/**
+ *  Zend View Helper Monthly Consumtion
+ */
+
 class Zend_View_Helper_MonthlyConsumtion extends Zend_View_Helper_Abstract {
 
+    /**
+     * Monthly Consumtion
+     * Used to get monthly consumption data
+     * with respect to warehouse/store id, previous month date
+     * and id.
+     * @param type $wh_id
+     * @param type $prev_month_date
+     * @param type $pk_id
+     * @return type
+     */
     public function monthlyConsumtion($wh_id, $prev_month_date, $pk_id) {
 
         $this->_em = Zend_Registry::get('doctrine');
         $rows = $this->_em->getRepository('HfDataMasterDraft')->findBy(array('warehouse' => $wh_id, 'reportingStartDate' => $prev_month_date));
+        // Check result set.
         if (count($rows) > 0) {
             $querypro = " SELECT w0_.opening_balance AS openingBalance,
                         w0_.received_balance AS receivedBalance,
@@ -44,20 +71,12 @@ class Zend_View_Helper_MonthlyConsumtion extends Zend_View_Helper_Abstract {
            AND w0_.item_pack_size_id = $pk_id";
         }
 
-        // exit;
+        // Prepare query and get result.
         $row = $this->_em->getConnection()->prepare($querypro);
-
-        $rs = $row->execute();
         $result = $row->fetchAll();
-//        
+
+        // Return result.
         return $result[0];
-//        if (!empty($row->fetchAll()) && count($row->fetchAll()) > 0) {
-//         return $result[0];
-//      } else {
-//          return '0';
-        //  }
     }
-
 }
-
 ?>

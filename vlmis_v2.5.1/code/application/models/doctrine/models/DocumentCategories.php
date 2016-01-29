@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for Document Categories
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * DocumentCategories
+ *  DocumentCategories
  */
 class DocumentCategories
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $parentId
      * @var integer $parentId
      */
     private $parentId;
 
     /**
+     * $categoryTitle
      * @var string $categoryTitle
      */
     private $categoryTitle;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

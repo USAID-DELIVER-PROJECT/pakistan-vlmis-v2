@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for Geo Levels
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GeoLevels
+ *  GeoLevels
  */
 class GeoLevels
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $geoLevelName
      * @var string $geoLevelName
      */
     private $geoLevelName;
 
     /**
+     * $description
      * @var text $description
      */
     private $description;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

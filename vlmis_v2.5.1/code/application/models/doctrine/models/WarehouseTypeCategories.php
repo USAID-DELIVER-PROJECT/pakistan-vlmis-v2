@@ -1,40 +1,48 @@
 <?php
 
-
+/**
+*  Model for Warehouse Type Categories
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * WarehouseTypeCategories
+ *  WarehouseTypeCategories
  */
 class WarehouseTypeCategories
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $categoryName
      * @var string $categoryName
      */
     private $categoryName;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

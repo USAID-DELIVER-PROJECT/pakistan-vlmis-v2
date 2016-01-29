@@ -1,7 +1,31 @@
 <?php
 
+/**
+ * Zend_View_Helper_TableHeading
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage reports
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+/**
+ *  Zend View Helper Monthly Consumtion
+ */
+
 class Zend_View_Helper_MonthlyConsumtion extends Zend_View_Helper_Abstract {
 
+    /**
+     * Monthly Consumtion
+     * @param type $wh_id
+     * @param type $prev_month_date
+     * @param type $pk_id
+     * @return string
+     */
     public function monthlyConsumtion($wh_id, $prev_month_date, $pk_id) {
         $em = Zend_Registry::get('doctrine');
         $str_sql = $em->createQueryBuilder()

@@ -1,7 +1,45 @@
 <?php
 
-class Form_Campaigns_LqasDataEntry extends Zend_Form {
+/**
+ * Form_Campaigns_LqasDataEntry
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Campaigns
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Campaigns LQAS Data Entry
+ */
+class Form_Campaigns_LqasDataEntry extends Form_Base {
+
+    /**
+     * Fields 
+     * for Form_Campaigns_LqasDataEntry
+     * 
+     * 
+     * campaign_id
+     * campaign_search_id
+     * campaign_edit_id
+     * province_id
+     * district_id
+     * province_edit_id
+     * district_edit_id
+     * uc_edit_id
+     * item_id
+     * uc_id
+     * surveyor
+     * checked
+     * unvaccinted
+     * remarks
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "campaign_id" => "Campaigns",
         "campaign_search_id" => "Campaigns",
@@ -18,12 +56,49 @@ class Form_Campaigns_LqasDataEntry extends Zend_Form {
         "unvaccinted" => "unvaccinted",
         "remarks" => "remarks"
     );
+
+    /**
+     * Hidden Fields 
+     * for Form_Campaigns_LqasDataEntry
+     * 
+     * 
+     * province_id_hidden
+     * district_id_hidden
+     * uc_id_hidden
+     * lqas_id
+     * 
+     * 
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "province_id_hidden" => "",
         "district_id_hidden" => "",
         "uc_id_hidden" => "",
         "lqas_id" => ""
     );
+
+    /**
+     * Combo boxes
+     * for Form_Campaigns_LqasDataEntry
+     * 
+     * 
+     * campaign_id
+     * campaign_search_id
+     * campaign_edit_id
+     * province_id
+     * district_id
+     * uc_id
+     * province_edit_id
+     * district_edit_id
+     * uc_edit_id
+     * item_id
+     * day
+     * 
+     * 
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'campaign_id' => array(),
         'campaign_search_id' => array(),
@@ -39,7 +114,7 @@ class Form_Campaigns_LqasDataEntry extends Zend_Form {
     );
 
     /**
-     * 
+     * Initializes Form Fields
      */
     public function init() {
         $auth = App_Auth::getInstance();
@@ -66,38 +141,14 @@ class Form_Campaigns_LqasDataEntry extends Zend_Form {
                 case "checked":
                 case "unvaccinted" :
                 case "remarks" :
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
-
-
-                case "num_tally_sheets":
-                case "num_finger_markers":
                 default:
                     break;
             }
 
-            if ($col == "campaign_id") {
-                $attribute_class = "form-control";
-            } else {
-                $attribute_class = "form-control";
-            }
-
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => $attribute_class),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
         foreach ($this->_hidden as $col => $name) {
@@ -107,9 +158,7 @@ class Form_Campaigns_LqasDataEntry extends Zend_Form {
                 case "district_id_hidden":
                 case "uc_id_hidden":
                 case "lqas_id":
-
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -118,28 +167,10 @@ class Form_Campaigns_LqasDataEntry extends Zend_Form {
     }
 
     /**
-     * 
+     * Add Hidden Fields
      */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

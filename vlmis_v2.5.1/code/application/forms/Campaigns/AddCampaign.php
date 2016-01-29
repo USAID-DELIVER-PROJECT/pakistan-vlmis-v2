@@ -1,7 +1,46 @@
 <?php
 
-class Form_Campaigns_AddCampaign extends Zend_Form {
+/**
+ * Form_Campaigns_AddCampaign
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Campaigns
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Campaigns Add Campaign
+ */
+class Form_Campaigns_AddCampaign extends Form_Base {
+
+    /**
+     * Fields 
+     * Form_Campaigns_AddCampaign
+     * 
+     * 
+     * campaign_name
+     * date_from
+     * date_to
+     * campaign_type_id
+     * item_id
+     * catch_up_days
+     * 
+     * 
+     * $_fields
+     * 
+     * Form Fields
+     * @campaign_name: Campaign Name
+     * @date_from: Date From
+     * @date_to: Date To
+     * @campaign_type_id: Campaign Type
+     * @item_id: Product
+     * @catch_up_days: Catch up days
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "campaign_name" => "Campaign Name",
         "date_from" => "Date From",
@@ -10,16 +49,52 @@ class Form_Campaigns_AddCampaign extends Zend_Form {
         "item_id" => "Product",
         "catch_up_days" => "Catch up days"
     );
+
+    /**
+     * Hidden Fields
+     * Form_Campaigns_AddCampaign
+     * 
+     * 
+     * id
+     * campaign_id
+     * campaign_update_id
+     * 
+     * 
+     * $_hidden
+     * 
+     * Hidden
+     * @id: Pk Id
+     * @campaign_id: Pk Id
+     * @campaign_update_id: Pk Id
+     * 
+     * @var type 
+     */
     private $_hidden = array(
         "id" => "pkId",
         "campaign_id" => "pkId",
         "campaign_update_id" => "pkId"
     );
+
+    /**
+     * Combo boxes
+     * Form_Campaigns_AddCampaign
+     * 
+     * 
+     * campaign_type_id
+     * item_id
+     * 
+     * 
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         "campaign_type_id" => array(),
         "item_id" => array()
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         $campaign_types = new Model_CampaignTypes();
         $result1 = $campaign_types->getAllCampaignTypes();
@@ -38,65 +113,30 @@ class Form_Campaigns_AddCampaign extends Zend_Form {
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
                 case "campaign_name":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => true,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
                 case "date_from":
                 case "date_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
                 case "catch_up_days":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
             }
 
-            if ($col == "item_id") {
-                // "multiselect";
-                $list_type = "multiselect";
-            } else {
-                $list_type = "select";
-            }
-
-
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement($list_type, $col, array(
-                    "attribs" => array("class" => "form-control",),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                if ($col == "item_id") {
+                    parent::createMultiSelect($col, $this->_list[$col]);
+                } else {
+                    parent::createSelect($col, $this->_list[$col]);
+                }
             }
         }
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
                 case "campaign_id":
                 case "campaign_update_id":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -104,15 +144,11 @@ class Form_Campaigns_AddCampaign extends Zend_Form {
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => true,
-            "required" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array()
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHidden("id");
     }
 
 }

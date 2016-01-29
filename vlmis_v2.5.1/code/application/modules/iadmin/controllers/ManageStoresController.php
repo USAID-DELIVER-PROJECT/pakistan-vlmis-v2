@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Iadmin_ManageStoresController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Iadmin Manage Stores
+ */
 class Iadmin_ManageStoresController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Routine
+     */
     public function routineAction() {
 
         $form = new Form_Iadmin_Stores();
@@ -42,7 +55,7 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
             $warehouses->form_values['stakeholder'] = '6';
             $result = $warehouses->getAllWarehouses($order, $sort);
             $this->view->result = $result;
-            
+
             $this->view->combos_1 = 'routine';
             $this->view->form = $form;
             $this->view->sort = $sort;
@@ -83,6 +96,9 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->headLink()->appendStylesheet($base_url . '/common/theme/scripts/plugins/tables/DataTables/media/css/DT_bootstrap.css');
     }
 
+    /**
+     * Campaigns
+     */
     public function campaignsAction() {
 
         $form = new Form_Iadmin_Stores();
@@ -92,7 +108,6 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
 
             $form_values = $this->_request->getPost();
             $this->view->combos = $this->_request->getPost();
-            // App_Controller_Functions::pr($this->_request->getPost());
             $form->province_id->setValue($form_values['combo1']);
             $form->district_id->setValue($form_values['combo2']);
             $form->tehsil_id->setValue($form_values['combo3']);
@@ -138,7 +153,6 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
             $warehouses->form_values = $this->_request->getParams();
             $params = $this->_request->getParams();
             $this->view->combos = $this->_request->getParams();
-            // App_Controller_Functions::pr($this->_request->getPost());
             $form->province_id->setValue($this->_getParam('combo1'));
             $form->district_id->setValue($this->_getParam('combo2'));
             $form->tehsil_id->setValue($this->_getParam('combo3'));
@@ -168,6 +182,9 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->headLink()->appendStylesheet($base_url . '/common/theme/scripts/plugins/tables/DataTables/media/css/DT_bootstrap.css');
     }
 
+    /**
+     * Inventory
+     */
     public function inventoryAction() {
 
         $form = new Form_Iadmin_Stores();
@@ -178,7 +195,6 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
             $form_values = $this->_request->getPost();
             $this->view->combos = $this->_request->getPost();
             $this->view->combos_1 = 'inventory';
-            // App_Controller_Functions::pr($this->_request->getPost());
             $form->province_id->setValue($form_values['combo1']);
             $form->district_id->setValue($form_values['combo2']);
             $form->tehsil_id->setValue($form_values['combo3']);
@@ -200,7 +216,6 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
             $warehouses->form_values = $this->_request->getParams();
             $params = $this->_request->getParams();
             $this->view->combos = $this->_request->getParams();
-            // App_Controller_Functions::pr($this->_request->getPost());
             if (!empty($form_values['office_type'])) {
                 $params['office_type'] = $form_values['office_type'];
             }
@@ -231,7 +246,6 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
             $warehouses->form_values = $this->_request->getParams();
             $params = $this->_request->getParams();
             $this->view->combos = $this->_request->getParams();
-            // App_Controller_Functions::pr($this->_request->getPost());
             $form->province_id->setValue($this->_getParam('combo1'));
             $form->district_id->setValue($this->_getParam('combo2'));
             $form->tehsil_id->setValue($this->_getParam('combo3'));
@@ -258,6 +272,9 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->headLink()->appendStylesheet($base_url . '/common/theme/scripts/plugins/tables/DataTables/media/css/DT_bootstrap.css');
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->setLayout("ajax");
         $wh_id = $this->_request->getParam('wh_id', '');
@@ -288,6 +305,9 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/locations_edit_combos.js');
     }
 
+    /**
+     * ajaxRoutineEdit
+     */
     public function ajaxRoutineEditAction() {
         $this->_helper->layout->setLayout("ajax");
         $wh_id = $this->_request->getParam('wh_id', '');
@@ -309,6 +329,9 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/routine_edit_combos.js');
     }
 
+    /**
+     * ajaxCampaignsEdit
+     */
     public function ajaxCampaignsEditAction() {
         $this->_helper->layout->setLayout("ajax");
         $wh_id = $this->_request->getParam('wh_id', '');
@@ -329,281 +352,291 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/routine_edit_combos.js');
     }
 
+    /**
+     * Add Inventory
+     */
     public function addInventoryAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $warehouses = new Warehouses();
-                if ($form_values['office_type_add'] == 2) {
+            $warehouses = new Warehouses();
+            if ($form_values['office_type_add'] == 2) {
 
-                    $parentId = $form_values['combo1_add'];
-                    $dist_id = $form_values['combo1_add'];
-                }
-
-                if ($form_values['office_type_add'] == 3) {
-
-                    $parentId = $form_values['combo1_add'];
-                    $dist_id = $form_values['combo1_add'];
-                }
-
-                if ($form_values['office_type_add'] == 4) {
-
-                    $parentId = $form_values['combo2_add'];
-                    $dist_id = $form_values['combo2_add'];
-                }
-                if ($form_values['office_type_add'] == 5) {
-
-                    $parentId = $form_values['combo3_add'];
-                    $dist_id = $form_values['combo2_add'];
-                }
-                if ($form_values['office_type_add'] == 6) {
-
-                    $parentId = $form_values['combo4_add'];
-                    $dist_id = $form_values['combo2_add'];
-                }
-
-
-                $warehouses->setWarehouseName($form_values['store_name_add']);
-                $province_id = $this->_em->find('Locations', $form_values['combo1_add']);
-                $warehouses->setProvince($province_id);
-                $district_id = $this->_em->find('Locations', $dist_id);
-                $warehouses->setDistrict($district_id);
-                $stakeholder = $this->_em->find('Stakeholders', 1);
-                $warehouses->setStakeholder($stakeholder);
-                $stakeholder_office = $this->_em->find('Stakeholders', $form_values['office_type_add']);
-                $warehouses->setStakeholderOffice($stakeholder_office);
-                $location_id = $this->_em->find('Locations', $parentId);
-                $warehouses->setLocation($location_id);
-                $warehouse_type = $this->_em->find('WarehouseTypes', $form_values['warehouse_type']);
-                $warehouses->setWarehouseType($warehouse_type);
-                $warehouses->setCcemId($form_values['ccm_warehouse_id']);
-                $warehouses->setStatus('1');
-
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $warehouses->setCreatedBy($created_by);
-                $warehouses->setCreatedDate(App_Tools_Time::now());
-                $warehouses->setModifiedBy($created_by);
-                $warehouses->setModifiedDate(App_Tools_Time::now());
-
-                $this->_em->persist($warehouses);
-                $this->_em->flush();
+                $parentId = $form_values['combo1_add'];
+                $dist_id = $form_values['combo1_add'];
             }
+
+            if ($form_values['office_type_add'] == 3) {
+
+                $parentId = $form_values['combo1_add'];
+                $dist_id = $form_values['combo1_add'];
+            }
+
+            if ($form_values['office_type_add'] == 4) {
+
+                $parentId = $form_values['combo2_add'];
+                $dist_id = $form_values['combo2_add'];
+            }
+            if ($form_values['office_type_add'] == 5) {
+
+                $parentId = $form_values['combo3_add'];
+                $dist_id = $form_values['combo2_add'];
+            }
+            if ($form_values['office_type_add'] == 6) {
+
+                $parentId = $form_values['combo4_add'];
+                $dist_id = $form_values['combo2_add'];
+            }
+
+
+            $warehouses->setWarehouseName($form_values['store_name_add']);
+            $province_id = $this->_em->find('Locations', $form_values['combo1_add']);
+            $warehouses->setProvince($province_id);
+            $district_id = $this->_em->find('Locations', $dist_id);
+            $warehouses->setDistrict($district_id);
+            $stakeholder = $this->_em->find('Stakeholders', 1);
+            $warehouses->setStakeholder($stakeholder);
+            $stakeholder_office = $this->_em->find('Stakeholders', $form_values['office_type_add']);
+            $warehouses->setStakeholderOffice($stakeholder_office);
+            $location_id = $this->_em->find('Locations', $parentId);
+            $warehouses->setLocation($location_id);
+            $warehouse_type = $this->_em->find('WarehouseTypes', $form_values['warehouse_type']);
+            $warehouses->setWarehouseType($warehouse_type);
+            $warehouses->setCcemId($form_values['ccm_warehouse_id']);
+            $warehouses->setStatus('1');
+
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $warehouses->setCreatedBy($created_by);
+            $warehouses->setCreatedDate(App_Tools_Time::now());
+            $warehouses->setModifiedBy($created_by);
+            $warehouses->setModifiedDate(App_Tools_Time::now());
+
+            $this->_em->persist($warehouses);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-stores/inventory");
     }
 
+    /**
+     * Add Routine
+     */
     public function addRoutineAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $warehouses = new Warehouses();
-                $parentId = $form_values['combo4_add'];
-                $dist_id = $form_values['combo2_add'];
+            $warehouses = new Warehouses();
+            $parentId = $form_values['combo4_add'];
+            $dist_id = $form_values['combo2_add'];
 
-                $warehouses->setWarehouseName($form_values['store_name_add']);
-                $province_id = $this->_em->find('Locations', $form_values['combo1_add']);
-                $warehouses->setProvince($province_id);
-                $district_id = $this->_em->find('Locations', $dist_id);
-                $warehouses->setDistrict($district_id);
-                $stakeholder = $this->_em->find('Stakeholders', 1);
-                $warehouses->setStakeholder($stakeholder);
-                $stakeholder_office = $this->_em->find('Stakeholders', 6);
-                $warehouses->setStakeholderOffice($stakeholder_office);
-                $location_id = $this->_em->find('Locations', $parentId);
-                $warehouses->setLocation($location_id);
-                $warehouse_type = $this->_em->find('WarehouseTypes', $form_values['warehouse_type']);
-                $warehouses->setWarehouseType($warehouse_type);
-                $warehouses->setCcemId($form_values['ccm_warehouse_id']);
-                $warehouses->setStatus(1);
+            $warehouses->setWarehouseName($form_values['store_name_add']);
+            $province_id = $this->_em->find('Locations', $form_values['combo1_add']);
+            $warehouses->setProvince($province_id);
+            $district_id = $this->_em->find('Locations', $dist_id);
+            $warehouses->setDistrict($district_id);
+            $stakeholder = $this->_em->find('Stakeholders', 1);
+            $warehouses->setStakeholder($stakeholder);
+            $stakeholder_office = $this->_em->find('Stakeholders', 6);
+            $warehouses->setStakeholderOffice($stakeholder_office);
+            $location_id = $this->_em->find('Locations', $parentId);
+            $warehouses->setLocation($location_id);
+            $warehouse_type = $this->_em->find('WarehouseTypes', $form_values['warehouse_type']);
+            $warehouses->setWarehouseType($warehouse_type);
+            $warehouses->setCcemId($form_values['ccm_warehouse_id']);
+            $warehouses->setStatus(1);
 
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $warehouses->setCreatedBy($created_by);
-                $warehouses->setCreatedDate(App_Tools_Time::now());
-                $warehouses->setModifiedBy($created_by);
-                $warehouses->setModifiedDate(App_Tools_Time::now());
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $warehouses->setCreatedBy($created_by);
+            $warehouses->setCreatedDate(App_Tools_Time::now());
+            $warehouses->setModifiedBy($created_by);
+            $warehouses->setModifiedDate(App_Tools_Time::now());
 
-                $this->_em->persist($warehouses);
-                $this->_em->flush();
-            }
+            $this->_em->persist($warehouses);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-stores/routine");
     }
 
+    /**
+     * Add Campaigns
+     */
     public function addCampaignsAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $warehouses = new Warehouses();
-                $parentId = $form_values['combo4_add'];
-                $dist_id = $form_values['combo2_add'];
-
+            $warehouses = new Warehouses();
+            $parentId = $form_values['combo4_add'];
+            $dist_id = $form_values['combo2_add'];
 
 
-                $warehouses->setWarehouseName($form_values['store_name_add']);
-                $province_id = $this->_em->find('Locations', $form_values['combo1_add']);
-                $warehouses->setProvince($province_id);
-                $district_id = $this->_em->find('Locations', $dist_id);
-                $warehouses->setDistrict($district_id);
-                $stakeholder = $this->_em->find('Stakeholders', 10);
-                $warehouses->setStakeholder($stakeholder);
-                $stakeholder_office = $this->_em->find('Stakeholders', 10);
-                $warehouses->setStakeholderOffice($stakeholder_office);
-                $location_id = $this->_em->find('Locations', $parentId);
-                $warehouses->setLocation($location_id);
 
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $warehouses->setCreatedBy($created_by);
-                $warehouses->setCreatedDate(App_Tools_Time::now());
-                $warehouses->setModifiedBy($created_by);
-                $warehouses->setModifiedDate(App_Tools_Time::now());
+            $warehouses->setWarehouseName($form_values['store_name_add']);
+            $province_id = $this->_em->find('Locations', $form_values['combo1_add']);
+            $warehouses->setProvince($province_id);
+            $district_id = $this->_em->find('Locations', $dist_id);
+            $warehouses->setDistrict($district_id);
+            $stakeholder = $this->_em->find('Stakeholders', 10);
+            $warehouses->setStakeholder($stakeholder);
+            $stakeholder_office = $this->_em->find('Stakeholders', 10);
+            $warehouses->setStakeholderOffice($stakeholder_office);
+            $location_id = $this->_em->find('Locations', $parentId);
+            $warehouses->setLocation($location_id);
 
-                $this->_em->persist($warehouses);
-                $this->_em->flush();
-            }
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $warehouses->setCreatedBy($created_by);
+            $warehouses->setCreatedDate(App_Tools_Time::now());
+            $warehouses->setModifiedBy($created_by);
+            $warehouses->setModifiedDate(App_Tools_Time::now());
+
+            $this->_em->persist($warehouses);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-stores/campaigns");
     }
 
+    /**
+     * Update Inventory
+     */
     public function updateInventoryAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $warehouses = $this->_em->find('Warehouses', $form_values['wh_id']);
-                if ($form_values['office_type_edit'] == 2) {
+            $warehouses = $this->_em->find('Warehouses', $form_values['wh_id']);
+            if ($form_values['office_type_edit'] == 2) {
 
-                    $parentId = $form_values['combo1_edit'];
-                    $dist_id = $form_values['combo1_edit'];
-                }
-
-                if ($form_values['office_type_edit'] == 3) {
-
-                    $parentId = $form_values['combo1_edit'];
-                    $dist_id = $form_values['combo1_edit'];
-                }
-
-                if ($form_values['office_type_edot'] == 4) {
-
-                    $parentId = $form_values['combo2_edit'];
-                    $dist_id = $form_values['combo2_edit'];
-                }
-                if ($form_values['office_type_edit'] == 5) {
-
-                    $parentId = $form_values['combo3_edit'];
-                    $dist_id = $form_values['combo2_edit'];
-                }
-                if ($form_values['office_type_edit'] == 6) {
-
-                    $parentId = $form_values['combo4_edit'];
-                    $dist_id = $form_values['combo2_edit'];
-                }
-                $warehouses->setWarehouseName($form_values['store_name_update']);
-                $province_id = $this->_em->find('Locations', $form_values['combo1_edit']);
-                $warehouses->setProvince($province_id);
-                $district_id = $this->_em->find('Locations', $dist_id);
-                $warehouses->setDistrict($district_id);
-                $stakeholder = $this->_em->find('Stakeholders', 1);
-                $warehouses->setStakeholder($stakeholder);
-                $stakeholder_office = $this->_em->find('Stakeholders', $form_values['office_type_edit']);
-                $warehouses->setStakeholderOffice($stakeholder_office);
-                $location_id = $this->_em->find('Locations', $parentId);
-                $warehouses->setLocation($location_id);
-
-                $warehouse_type = $this->_em->find('WarehouseTypes', $form_values['warehouse_type_update']);
-                $warehouses->setWarehouseType($warehouse_type);
-                $warehouses->setCcemId($form_values['ccm_warehouse_id_update']);
-
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $warehouses->setModifiedBy($created_by);
-                $warehouses->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($warehouses);
-                $this->_em->flush();
+                $parentId = $form_values['combo1_edit'];
+                $dist_id = $form_values['combo1_edit'];
             }
+
+            if ($form_values['office_type_edit'] == 3) {
+
+                $parentId = $form_values['combo1_edit'];
+                $dist_id = $form_values['combo1_edit'];
+            }
+
+            if ($form_values['office_type_edot'] == 4) {
+
+                $parentId = $form_values['combo2_edit'];
+                $dist_id = $form_values['combo2_edit'];
+            }
+            if ($form_values['office_type_edit'] == 5) {
+
+                $parentId = $form_values['combo3_edit'];
+                $dist_id = $form_values['combo2_edit'];
+            }
+            if ($form_values['office_type_edit'] == 6) {
+
+                $parentId = $form_values['combo4_edit'];
+                $dist_id = $form_values['combo2_edit'];
+            }
+            $warehouses->setWarehouseName($form_values['store_name_update']);
+            $province_id = $this->_em->find('Locations', $form_values['combo1_edit']);
+            $warehouses->setProvince($province_id);
+            $district_id = $this->_em->find('Locations', $dist_id);
+            $warehouses->setDistrict($district_id);
+            $stakeholder = $this->_em->find('Stakeholders', 1);
+            $warehouses->setStakeholder($stakeholder);
+            $stakeholder_office = $this->_em->find('Stakeholders', $form_values['office_type_edit']);
+            $warehouses->setStakeholderOffice($stakeholder_office);
+            $location_id = $this->_em->find('Locations', $parentId);
+            $warehouses->setLocation($location_id);
+
+            $warehouse_type = $this->_em->find('WarehouseTypes', $form_values['warehouse_type_update']);
+            $warehouses->setWarehouseType($warehouse_type);
+            $warehouses->setCcemId($form_values['ccm_warehouse_id_update']);
+
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $warehouses->setModifiedBy($created_by);
+            $warehouses->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($warehouses);
+            $this->_em->flush();
         }
+
         $this->_redirect("/iadmin/manage-stores/inventory");
     }
 
+    /**
+     * Update Routine
+     */
     public function updateRoutineAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $warehouses = $this->_em->find('Warehouses', $form_values['wh_id']);
+            $warehouses = $this->_em->find('Warehouses', $form_values['wh_id']);
 
-                $parentId = $form_values['combo4_edit'];
-                $dist_id = $form_values['combo2_edit'];
+            $parentId = $form_values['combo4_edit'];
+            $dist_id = $form_values['combo2_edit'];
 
-                $warehouses->setWarehouseName($form_values['store_name_update']);
-                $province_id = $this->_em->find('Locations', $form_values['combo1_edit']);
-                $warehouses->setProvince($province_id);
-                $district_id = $this->_em->find('Locations', $dist_id);
-                $warehouses->setDistrict($district_id);
-                $stakeholder = $this->_em->find('Stakeholders', 1);
-                $warehouses->setStakeholder($stakeholder);
-                $stakeholder_office = $this->_em->find('Stakeholders', 6);
-                $warehouses->setStakeholderOffice($stakeholder_office);
-                $location_id = $this->_em->find('Locations', $parentId);
-                $warehouses->setLocation($location_id);
+            $warehouses->setWarehouseName($form_values['store_name_update']);
+            $province_id = $this->_em->find('Locations', $form_values['combo1_edit']);
+            $warehouses->setProvince($province_id);
+            $district_id = $this->_em->find('Locations', $dist_id);
+            $warehouses->setDistrict($district_id);
+            $stakeholder = $this->_em->find('Stakeholders', 1);
+            $warehouses->setStakeholder($stakeholder);
+            $stakeholder_office = $this->_em->find('Stakeholders', 6);
+            $warehouses->setStakeholderOffice($stakeholder_office);
+            $location_id = $this->_em->find('Locations', $parentId);
+            $warehouses->setLocation($location_id);
 
-                $warehouse_type = $this->_em->find('WarehouseTypes', $form_values['warehouse_type_update']);
-                $warehouses->setWarehouseType($warehouse_type);
-                $warehouses->setCcemId($form_values['ccm_warehouse_id_update']);
+            $warehouse_type = $this->_em->find('WarehouseTypes', $form_values['warehouse_type_update']);
+            $warehouses->setWarehouseType($warehouse_type);
+            $warehouses->setCcemId($form_values['ccm_warehouse_id_update']);
 
 
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $warehouses->setModifiedBy($created_by);
-                $warehouses->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($warehouses);
-                $this->_em->flush();
-            }
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $warehouses->setModifiedBy($created_by);
+            $warehouses->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($warehouses);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-stores/routine");
     }
 
+    /**
+     * Update Campaigns
+     */
     public function updateCampaignsAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $warehouses = $this->_em->find('Warehouses', $form_values['wh_id']);
+            $warehouses = $this->_em->find('Warehouses', $form_values['wh_id']);
 
-                $parentId = $form_values['combo4_edit'];
-                $dist_id = $form_values['combo2_edit'];
+            $parentId = $form_values['combo4_edit'];
+            $dist_id = $form_values['combo2_edit'];
 
-                $warehouses->setWarehouseName($form_values['store_name_update']);
-                $province_id = $this->_em->find('Locations', $form_values['combo1_edit']);
-                $warehouses->setProvince($province_id);
-                $district_id = $this->_em->find('Locations', $dist_id);
-                $warehouses->setDistrict($district_id);
-                $stakeholder = $this->_em->find('Stakeholders', 1);
-                $warehouses->setStakeholder($stakeholder);
-                $stakeholder_office = $this->_em->find('Stakeholders', 10);
-                $warehouses->setStakeholderOffice($stakeholder_office);
-                $location_id = $this->_em->find('Locations', $parentId);
-                $warehouses->setLocation($location_id);
+            $warehouses->setWarehouseName($form_values['store_name_update']);
+            $province_id = $this->_em->find('Locations', $form_values['combo1_edit']);
+            $warehouses->setProvince($province_id);
+            $district_id = $this->_em->find('Locations', $dist_id);
+            $warehouses->setDistrict($district_id);
+            $stakeholder = $this->_em->find('Stakeholders', 1);
+            $warehouses->setStakeholder($stakeholder);
+            $stakeholder_office = $this->_em->find('Stakeholders', 10);
+            $warehouses->setStakeholderOffice($stakeholder_office);
+            $location_id = $this->_em->find('Locations', $parentId);
+            $warehouses->setLocation($location_id);
 
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $warehouses->setModifiedBy($created_by);
-                $warehouses->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($warehouses);
-                $this->_em->flush();
-            }
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $warehouses->setModifiedBy($created_by);
+            $warehouses->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($warehouses);
+            $this->_em->flush();
         }
+
         $this->_redirect("/iadmin/manage-stores/campaigns");
     }
 
+    /**
+     * Check Stores
+     */
     public function checkStoresAction() {
         $this->_helper->layout->disableLayout();
-        //$this->_helper->viewRenderer->setNoRender(TRUE);
         $form_values = $this->_request->getPost();
 
         $warehouses = new Model_Warehouses();
@@ -612,9 +645,11 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Check Stores Inventory
+     */
     public function checkStoresInventoryAction() {
         $this->_helper->layout->disableLayout();
-        //$this->_helper->viewRenderer->setNoRender(TRUE);
         $form_values = $this->_request->getPost();
 
         $warehouses = new Model_Warehouses();
@@ -623,9 +658,11 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Check Stores Update
+     */
     public function checkStoresUpdateAction() {
         $this->_helper->layout->disableLayout();
-        //$this->_helper->viewRenderer->setNoRender(TRUE);
         $form_values = $this->_request->getPost();
 
         $warehouses = new Model_Warehouses();
@@ -634,9 +671,11 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Check Stores Update Inventory
+     */
     public function checkStoresUpdateInventoryAction() {
         $this->_helper->layout->disableLayout();
-        //$this->_helper->viewRenderer->setNoRender(TRUE);
         $form_values = $this->_request->getPost();
 
         $warehouses = new Model_Warehouses();
@@ -645,6 +684,9 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Get Warehouse Types
+     */
     public function getWarehouseTypesAction() {
         $this->_helper->layout->disableLayout();
 
@@ -655,6 +697,9 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->data = $result;
     }
 
+    /**
+     * Check Ccm Warehouse
+     */
     public function checkCcmWarehouseAction() {
         $this->_helper->layout->disableLayout();
 
@@ -666,6 +711,9 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Check Ccm Warehouse Update
+     */
     public function checkCcmWarehouseUpdateAction() {
         $this->_helper->layout->disableLayout();
 
@@ -676,17 +724,17 @@ class Iadmin_ManageStoresController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * delete
+     */
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
 
         $warehouse_id = $this->_request->getParam("warehouse_id");
         $warehouse_status = $this->_request->getParam("status");
-
-
         $warehouses = $this->_em->getRepository("Warehouses")->find($warehouse_id);
 
-        //$this->_em->remove($warehouses
         $msg = "";
         if ($warehouse_status == 1) {
             $warehouses->setStatus(0);

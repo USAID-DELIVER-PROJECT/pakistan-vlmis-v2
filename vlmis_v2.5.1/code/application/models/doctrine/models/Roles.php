@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for Roles
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Roles
+ *  Roles
  */
 class Roles
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $roleName
      * @var string $roleName
      */
     private $roleName;
 
     /**
+     * $description
      * @var text $description
      */
     private $description;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $category
      * @var ListDetail
      */
     private $category;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

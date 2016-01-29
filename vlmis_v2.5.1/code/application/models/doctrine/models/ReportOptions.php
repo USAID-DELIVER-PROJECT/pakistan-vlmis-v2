@@ -1,70 +1,84 @@
 <?php
 
-
+/**
+*  Model for Report Options
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ReportOptions
+ *  ReportOptions
  */
 class ReportOptions
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $reportId
      * @var string $reportId
      */
     private $reportId;
 
     /**
+     * $reportTitleSql
      * @var string $reportTitleSql
      */
     private $reportTitleSql;
 
     /**
+     * $reportDataSql
      * @var string $reportDataSql
      */
     private $reportDataSql;
 
     /**
+     * $reportStakeholder
      * @var integer $reportStakeholder
      */
     private $reportStakeholder;
 
     /**
+     * $reportComparision
      * @var integer $reportComparision
      */
     private $reportComparision;
 
     /**
+     * $reportDataPosition
      * @var integer $reportDataPosition
      */
     private $reportDataPosition;
 
     /**
+     * $reportComparisionFlag
      * @var integer $reportComparisionFlag
      */
     private $reportComparisionFlag;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

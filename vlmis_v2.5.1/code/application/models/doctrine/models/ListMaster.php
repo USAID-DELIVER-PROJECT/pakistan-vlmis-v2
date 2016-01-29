@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for List Master
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ListMaster
+ *  ListMaster
  */
 class ListMaster
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $listMasterName
      * @var string $listMasterName
      */
     private $listMasterName;
 
     /**
+     * $description
      * @var text $description
      */
     private $description;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $category
      * @var string $category
      */
     private $category;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

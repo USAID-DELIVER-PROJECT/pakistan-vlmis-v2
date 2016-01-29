@@ -1,4 +1,13 @@
 <?php
+/**
+*  phtml for District Report
+*/
+
+/**
+* District Report
+*/
+?>
+<?php
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 $xml_store .="<rows>";
 
@@ -23,7 +32,6 @@ foreach ($result as $row) {
     $data_arr[$row['district_id']]['mos'] = $row['total_MOS'];
 }
 
-//App_Controller_Functions::pr($data_arr);
 foreach ($data_arr as $item_id => $items) {
     $item_name = $items['location'];
     $xml_store .="<row>";

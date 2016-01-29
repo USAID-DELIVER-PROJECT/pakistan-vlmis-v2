@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for VVM Transfer History
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * VvmTransferHistory
+ *  VvmTransferHistory
  */
 class VvmTransferHistory
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $quantity
      * @var integer $quantity
      */
     private $quantity;
 
     /**
+     * $createdDate
      * @var date $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $stockBatchWarehouse
      * @var StockBatchWarehouses
      */
     private $stockBatchWarehouse;
 
     /**
+     * $fromVvmStage
      * @var VvmStages
      */
     private $fromVvmStage;
 
     /**
+     * $toVvmStage
      * @var VvmStages
      */
     private $toVvmStage;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

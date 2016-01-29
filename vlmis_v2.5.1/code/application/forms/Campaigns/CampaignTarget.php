@@ -1,7 +1,36 @@
 <?php
 
-class Form_Campaigns_CampaignTarget extends Zend_Form {
+/**
+ * Form_Campaigns_CampaignTarget
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Campaigns
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Campaigns Campaign Target
+ */
+class Form_Campaigns_CampaignTarget extends Form_Base {
+
+    /**
+     * Fields for Form_Campaigns_CampaignTarget
+     * 
+     * 
+     * campaign_id
+     * campaign_import_id
+     * province_id
+     * district_id
+     * item_id
+     * day
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "campaign_id" => "Campaigns",
         "campaign_import_id" => "Campaigns",
@@ -10,6 +39,23 @@ class Form_Campaigns_CampaignTarget extends Zend_Form {
         "item_id" => "Product",
         "day" => "day"
     );
+
+    /**
+     * Hidden fields for Form_Campaigns_CampaignTarget
+     * 
+     * 
+     * province_id_hidden
+     * district_id_hidden
+     * item_id_hidden
+     * province_import_hidden
+     * campaign_import_hidden
+     * district_import_hidden
+     * item_import_hidden
+     * 
+     * 
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "province_id_hidden" => "",
         "district_id_hidden" => "",
@@ -19,6 +65,22 @@ class Form_Campaigns_CampaignTarget extends Zend_Form {
         "district_import_hidden" => "",
         "item_import_hidden" => ""
     );
+
+    /**
+     * Combo boxes for Form_Campaigns_CampaignTarget
+     * 
+     * 
+     * campaign_id
+     * campaign_import_id
+     * province_id
+     * district_id
+     * item_id
+     * day
+     * 
+     * 
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'campaign_id' => array(),
         'campaign_import_id' => array(),
@@ -29,7 +91,8 @@ class Form_Campaigns_CampaignTarget extends Zend_Form {
     );
 
     /**
-     * 
+     * Initializes Form Fields
+     * for Form_Campaigns_CampaignTarget
      */
     public function init() {
         $auth = App_Auth::getInstance();
@@ -38,6 +101,9 @@ class Form_Campaigns_CampaignTarget extends Zend_Form {
         } else {
             $warehouse_id = "";
         }
+
+        // Generate combo boxes
+        // for Form_Campaigns_CampaignTarget
         $this->_list["campaign_import_id"][''] = 'Select';
         $campaign = new Model_Campaigns();
         $result1 = $campaign->allCampaigns();
@@ -47,30 +113,17 @@ class Form_Campaigns_CampaignTarget extends Zend_Form {
             $this->_list["campaign_id"][$row['pkId']] = $row['campaignName'];
         }
 
+        //Generate fields for 
+        // for Form_Campaigns_CampaignTarget
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                default:
-                    break;
-            }
-
-            if ($col == "campaign_id") {
-                $attribute_class = "form-control";
-            } else {
-                $attribute_class = "form-control";
-            }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => $attribute_class),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
+
+        //Generate hidden fields for 
+        // for Form_Campaigns_CampaignTarget
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
 
@@ -81,8 +134,7 @@ class Form_Campaigns_CampaignTarget extends Zend_Form {
                 case "district_import_hidden":
                 case "campaign_import_hidden":
                 case "item_import_hidden";
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -91,28 +143,11 @@ class Form_Campaigns_CampaignTarget extends Zend_Form {
     }
 
     /**
-     * 
+     * Add Hidden Fields
+     * for Form_Campaigns_CampaignTarget
      */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

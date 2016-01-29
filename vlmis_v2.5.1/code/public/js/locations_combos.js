@@ -1,7 +1,7 @@
-$(function() {
-    $('#location_level').change(function() {
+$(function () {
+    $('#location_level').change(function () {
 
-      //  $('#loader').show();
+        //  $('#loader').show();
         $('#combo1').empty();
         $('#combo2').empty();
         $('#warehouse').empty();
@@ -14,7 +14,7 @@ $(function() {
             url: appName + "/index/locations-combos-one",
             data: {office: $(this).val()},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 $('#loader').hide();
                 var val1 = $('#location_level').val();
                 switch (val1) {
@@ -44,7 +44,7 @@ $(function() {
         });
     });
 
-    $('#combo1').change(function() {
+    $('#combo1').change(function () {
         $('#loader').show();
         $('#combo2').empty();
 
@@ -58,7 +58,7 @@ $(function() {
             url: appName + "/index/locations-combos-two",
             data: {combo1: $(this).val(), office: $('#location_level').val()},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 $('#loader').hide();
 
                 var val = $('#location_level').val();
@@ -78,14 +78,14 @@ $(function() {
         });
     });
 
-    $('#combo2').change(function() {
-      //  $('#loader').show();
+    $('#combo2').change(function () {
+        //  $('#loader').show();
         $.ajax({
             type: "POST",
             url: appName + "/index/locations-combos-three",
             data: {combo2: $(this).val(), office: $('#location_level').val()},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 $('#loader').hide();
                 var val = $('#location_level').val();
                 switch (val)
@@ -99,23 +99,23 @@ $(function() {
             }
         });
     });
-    
-if ($('#location_level').val()!="" ) {
 
-      //  $('#loader').show();
+    if ($('#location_level').val() != "") {
+
+        //  $('#loader').show();
         $('#combo1').empty();
         $('#combo2').empty();
         $('#warehouse').empty();
         $('#div_combo1').hide();
         $('#div_combo2').hide();
         $('#div_combo3').hide();
-      
+
         $.ajax({
             type: "POST",
             url: appName + "/index/locations-combos-one",
-            data: {office: $('#location_level').val(),province_id: $('#province_id').val()},
+            data: {office: $('#location_level').val(), province_id: $('#province_id').val()},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 $('#loader').hide();
                 var val1 = $('#location_level').val();
                 switch (val1) {
@@ -145,8 +145,8 @@ if ($('#location_level').val()!="" ) {
         });
     }
 
-   if ($('#combo1').val()!="" ) {
-      //  $('#loader').show();
+    if ($('#combo1').val() != "") {
+        //  $('#loader').show();
         $('#combo2').empty();
 
         $('#warehouse').empty();
@@ -157,9 +157,9 @@ if ($('#location_level').val()!="" ) {
         $.ajax({
             type: "POST",
             url: appName + "/index/locations-combos-two",
-            data: {combo1: $('#province_id').val(), office: $('#location_level').val(),district_id: $('#district_id').val()},
+            data: {combo1: $('#province_id').val(), office: $('#location_level').val(), district_id: $('#district_id').val()},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 $('#loader').hide();
 
                 var val = $('#location_level').val();
@@ -177,16 +177,17 @@ if ($('#location_level').val()!="" ) {
                 }
             }
         });
-    };
+    }
+    ;
 
-    if ($('#combo2').val()!="" ) {
-      //  $('#loader').show();
+    if ($('#combo2').val() != "") {
+        //  $('#loader').show();
         $.ajax({
             type: "POST",
             url: appName + "/index/locations-combos-three",
-            data: {combo2: $('#district_id').val(), office: $('#location_level').val(),tehsil_id:$('#parent_id').val() },
+            data: {combo2: $('#district_id').val(), office: $('#location_level').val(), tehsil_id: $('#parent_id').val()},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 $('#loader').hide();
                 var val = $('#location_level').val();
                 switch (val)
@@ -199,14 +200,14 @@ if ($('#location_level').val()!="" ) {
                 }
             }
         });
-    }    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    }
+
+
+
+
+
+
+
+
+
 });

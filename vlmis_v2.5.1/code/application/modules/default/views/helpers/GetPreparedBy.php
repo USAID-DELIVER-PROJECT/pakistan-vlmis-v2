@@ -1,7 +1,30 @@
 <?php
 
+/**
+ * Zend_View_Helper_GetPreparedBy
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+
+/**
+ *  Zend View Helper Get Prepared By
+ */
 class Zend_View_Helper_GetPreparedBy extends Zend_View_Helper_Abstract {
 
+    /**
+     * Get Prepared By
+     * @param type $stock_id
+     * @return boolean
+     */
     public function getPreparedBy($stock_id) {
 
         $em = Zend_Registry::get("doctrine");

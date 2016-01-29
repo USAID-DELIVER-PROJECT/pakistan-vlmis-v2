@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for Location Populations
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * LocationPopulations
+ *  LocationPopulations
  */
 class LocationPopulations
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $population
      * @var integer $population
      */
     private $population;
 
     /**
+     * $estimationDate
      * @var datetime $estimationDate
      */
     private $estimationDate;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $location
      * @var Locations
      */
     private $location;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

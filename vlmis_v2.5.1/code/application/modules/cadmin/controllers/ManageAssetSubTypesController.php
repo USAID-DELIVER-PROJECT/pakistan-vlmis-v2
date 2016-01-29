@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Cadmin_ManageAssetSubTypesController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Cadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Cadmin Manage Asset Sub Types
+ */
 class Cadmin_ManageAssetSubTypesController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Cadmin_ManageAssetSubTypesController index
+     */
     public function indexAction() {
         $form = new Form_Cadmin_MakeSearch();
         $form_add = new Form_Cadmin_AssetSubTypeAdd();
@@ -45,30 +58,34 @@ class Cadmin_ManageAssetSubTypesController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * add
+     */
     public function addAction() {
         $form = new Form_Cadmin_AssetSubTypeAdd();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
 
-                $asset_type = new CcmAssetTypes();
-                $asset_type->setAssetTypeName($form->asset_sub_type->getValue());
-                $asset_type->setStatus('1');
-                $parent_id = $this->_em->getRepository('CcmAssetTypes')->find($form->asset_type->getValue());
-                $asset_type->setParent($parent_id);
-                $created_by = $this->_em->find('Users', $this->_userid);
-                $asset_type->setCreatedBy($created_by);
-                $asset_type->setCreatedDate(App_Tools_Time::now());
-                $asset_type->setModifiedBy($created_by);
-                $asset_type->setModifiedDate(App_Tools_Time::now());
+            $asset_type = new CcmAssetTypes();
+            $asset_type->setAssetTypeName($form->asset_sub_type->getValue());
+            $asset_type->setStatus('1');
+            $parent_id = $this->_em->getRepository('CcmAssetTypes')->find($form->asset_type->getValue());
+            $asset_type->setParent($parent_id);
+            $created_by = $this->_em->find('Users', $this->_userid);
+            $asset_type->setCreatedBy($created_by);
+            $asset_type->setCreatedDate(App_Tools_Time::now());
+            $asset_type->setModifiedBy($created_by);
+            $asset_type->setModifiedDate(App_Tools_Time::now());
 
-                $this->_em->persist($asset_type);
-                $this->_em->flush();
-            }
+            $this->_em->persist($asset_type);
+            $this->_em->flush();
         }
         $this->_redirect("/cadmin/manage-asset-sub-types");
     }
 
+    /**
+     * ajax Edit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->disableLayout();
         $asset = $this->_em->find('CcmAssetTypes', $this->_request->getParam('asset_id'));
@@ -79,6 +96,9 @@ class Cadmin_ManageAssetSubTypesController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * ajax Change Status
+     */
     public function ajaxChangeStatusAction() {
         $this->_helper->layout->disableLayout();
         $row = $this->_em->getRepository("CcmAssetTypes")->find($this->_request->getParam('id'));
@@ -87,7 +107,7 @@ class Cadmin_ManageAssetSubTypesController extends App_Controller_Base {
         } else if ($this->_request->getParam('ajaxaction') == 'deactive') {
             $row->setStatus('0');
         }
-        
+
         $created_by = $this->_em->find('Users', $this->_user_id);
         $row->setModifiedBy($created_by);
         $row->setModifiedDate(App_Tools_Time::now());
@@ -96,6 +116,9 @@ class Cadmin_ManageAssetSubTypesController extends App_Controller_Base {
         $this->view->ajaxaction = $this->_request->getParam('ajaxaction');
     }
 
+    /**
+     * update
+     */
     public function updateAction() {
         if ($this->_request->getPost()) {
             $form_values = $this->_request->getPost();

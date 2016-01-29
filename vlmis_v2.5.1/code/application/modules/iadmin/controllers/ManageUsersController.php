@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Iadmin_ManageUsersController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Iadmin Manage Users
+ */
 class Iadmin_ManageUsersController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Routine Users
+     */
     public function routineUsersAction() {
 
         $form = new Form_Iadmin_Users();
@@ -91,6 +104,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->headLink()->appendStylesheet($base_url . '/common/theme/scripts/plugins/tables/DataTables/media/css/DT_bootstrap.css');
     }
 
+    /**
+     * Update Cluster
+     */
     public function updateClusterAction() {
 
         $form = new Form_Iadmin_UpdateCluster;
@@ -128,6 +144,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * Campaigns Users
+     */
     public function campaignsUsersAction() {
 
         $form = new Form_Iadmin_Users();
@@ -219,6 +238,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->headLink()->appendStylesheet($base_url . '/common/theme/scripts/plugins/tables/DataTables/media/css/DT_bootstrap.css');
     }
 
+    /**
+     * Im Users
+     */
     public function imUsersAction() {
 
         $form = new Form_Iadmin_Users();
@@ -285,6 +307,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->headLink()->appendStylesheet($base_url . '/common/theme/scripts/plugins/tables/DataTables/media/css/DT_bootstrap.css');
     }
 
+    /**
+     * Policy Users
+     */
     public function policyUsersAction() {
 
         $form = new Form_Iadmin_Users();
@@ -346,6 +371,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->headLink()->appendStylesheet($base_url . '/common/theme/scripts/plugins/tables/DataTables/media/css/DT_bootstrap.css');
     }
 
+    /**
+     * ajaxEditRoutine
+     */
     public function ajaxEditRoutineAction() {
         $this->_helper->layout->setLayout("ajax");
         $wh_id = $this->_request->getParam('wh_id', '');
@@ -387,6 +415,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/locations_edit_combos.js');
     }
 
+    /**
+     * ajaxEditCampaigns
+     */
     public function ajaxEditCampaignsAction() {
         $this->_helper->layout->setLayout("ajax");
         $wh_id = $this->_request->getParam('wh_id', '');
@@ -421,6 +452,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/locations_edit_combos.js');
     }
 
+    /**
+     * ajaxEditIm
+     */
     public function ajaxEditImAction() {
         $this->_helper->layout->setLayout("ajax");
         $wh_id = $this->_request->getParam('wh_id', '');
@@ -461,16 +495,12 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/locations_edit_combos.js');
     }
 
+    /**
+     * ajaxEditImRole
+     */
     public function ajaxEditImRoleAction() {
         $this->_helper->layout->setLayout("ajax");
         $wh_id = $this->_request->getParam('wh_id', '');
-
-        $warehouse = new Model_Warehouses();
-        $warehouse_users_id = $warehouse->getWharehouseUsersId($wh_id);
-
-        $wh_user_id = $this->_em->find('WarehouseUsers', $warehouse_users_id['0']['pkId']);
-        $warehouse_id = $wh_user_id->getWarehouse()->getPkId();
-        $whare_id = $this->_em->find('Warehouses', $warehouse_id);
 
         $users = $this->_em->find('Users', $wh_id);
 
@@ -486,6 +516,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/locations_edit_combos.js');
     }
 
+    /**
+     * ajaxEditPolicy
+     */
     public function ajaxEditPolicyAction() {
         $this->_helper->layout->setLayout("ajax");
         $wh_id = $this->_request->getParam('wh_id', '');
@@ -526,425 +559,436 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/locations_edit_combos.js');
     }
 
+    /**
+     * Add Routine
+     */
     public function addRoutineAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $users = new Users();
+            $users = new Users();
 
-                $users->setUserName($form_values['user_name_add']);
-                $users->setEmail($form_values['email']);
-                $users->setCellNumber($form_values['phone']);
-                $users->setLoginId($form_values['user_name_add']);
-                $users->setPassword(base64_encode($form_values['password']));
-                if ($form_values['office_type_add'] != '1') {
-                    $location_id = $this->_em->find('Locations', $form_values['combo4_add']);
-                    $users->setLocation($location_id);
-                }
-                $role = $this->_em->find('Roles', 8);
-                $users->setRole($role);
-                $stakeholder = $this->_em->find('Stakeholders', 1);
-                $users->setStakeholder($stakeholder);
-                $user = $this->_em->find('Users', $this->_userid);
-                $users->setCreatedBy($user);
-                $users->setCreatedDate(App_Tools_Time::now());
-                $users->setModifiedBy($user);
-                $users->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($users);
-                $this->_em->flush();
-
-                $user_id = $users->getPkId();
-
-                $warehouse_users = new WarehouseUsers();
-                $wh_id = $this->_em->find('Warehouses', $form_values['default_warehouse']);
-                $warehouse_users->setWarehouse($wh_id);
-                $user_id_i = $this->_em->find('Users', $user_id);
-                $warehouse_users->setUser($user_id_i);
-                $warehouse_users->setIsDefault('1');
-                $warehouse_users->setCreatedBy($user);
-                $warehouse_users->setCreatedDate(App_Tools_Time::now());
-                $warehouse_users->setModifiedBy($user);
-                $warehouse_users->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($warehouse_users);
-                $this->_em->flush();
+            $users->setUserName($form_values['user_name_add']);
+            $users->setEmail($form_values['email']);
+            $users->setCellNumber($form_values['phone']);
+            $users->setLoginId($form_values['user_name_add']);
+            $users->setPassword(base64_encode($form_values['password']));
+            if ($form_values['office_type_add'] != '1') {
+                $location_id = $this->_em->find('Locations', $form_values['combo4_add']);
+                $users->setLocation($location_id);
             }
+            $role = $this->_em->find('Roles', 8);
+            $users->setRole($role);
+            $stakeholder = $this->_em->find('Stakeholders', 1);
+            $users->setStakeholder($stakeholder);
+            $user = $this->_em->find('Users', $this->_userid);
+            $users->setCreatedBy($user);
+            $users->setCreatedDate(App_Tools_Time::now());
+            $users->setModifiedBy($user);
+            $users->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($users);
+            $this->_em->flush();
+
+            $user_id = $users->getPkId();
+
+            $warehouse_users = new WarehouseUsers();
+            $wh_id = $this->_em->find('Warehouses', $form_values['default_warehouse']);
+            $warehouse_users->setWarehouse($wh_id);
+            $user_id_i = $this->_em->find('Users', $user_id);
+            $warehouse_users->setUser($user_id_i);
+            $warehouse_users->setIsDefault('1');
+            $warehouse_users->setCreatedBy($user);
+            $warehouse_users->setCreatedDate(App_Tools_Time::now());
+            $warehouse_users->setModifiedBy($user);
+            $warehouse_users->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($warehouse_users);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-users/routine-users");
     }
 
+    /**
+     * Add Campaigns
+     */
     public function addCampaignsAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $users = new Users();
+            $users = new Users();
 
-                $users->setUserName($form_values['user_name_add']);
-                $users->setEmail($form_values['user_name_add']);
-                $users->setCellNumber('03423423423');
-                $users->setLoginId($form_values['user_name_add']);
-                $users->setPassword(base64_encode($form_values['password']));
-                if ($form_values['office_type_add'] == '1') {
-                    $location_id = '10';
-                    $role = $this->_em->find('Roles', 14);
-                    $stk_id = Model_Stakeholders::CAMPAIGN;
-                }
-                if ($form_values['office_type_add'] == '2') {
-                    $location_id = $form_values['combo1_add'];
-                    $role = $this->_em->find('Roles', 15);
-                    $stk_id = Model_Stakeholders::CAMPAIGN;
-                }
-                if ($form_values['office_type_add'] == '4') {
-                    $location_id = $form_values['combo2_add'];
-                    $role = $this->_em->find('Roles', 16);
-                    $stk_id = 45;
-                }
+            $users->setUserName($form_values['user_name_add']);
+            $users->setEmail($form_values['user_name_add']);
+            $users->setCellNumber('03423423423');
+            $users->setLoginId($form_values['user_name_add']);
+            $users->setPassword(base64_encode($form_values['password']));
+            if ($form_values['office_type_add'] == '1') {
+                $location_id = '10';
+                $role = $this->_em->find('Roles', 14);
+                $stk_id = Model_Stakeholders::CAMPAIGN;
+            }
+            if ($form_values['office_type_add'] == '2') {
+                $location_id = $form_values['combo1_add'];
+                $role = $this->_em->find('Roles', 15);
+                $stk_id = Model_Stakeholders::CAMPAIGN;
+            }
+            if ($form_values['office_type_add'] == '4') {
+                $location_id = $form_values['combo2_add'];
+                $role = $this->_em->find('Roles', 16);
+                $stk_id = 45;
+            }
 
-                $loc_id = $this->_em->find('Locations', $location_id);
-                $users->setLocation($loc_id);
-                $users->setRole($role);
-                $stakeholder = $this->_em->find('Stakeholders', $stk_id);
-                $users->setStakeholder($stakeholder);
-                $user = $this->_em->find('Users', $this->_userid);
-                $users->setCreatedBy($user);
-                $users->setCreatedDate(App_Tools_Time::now());
-                $users->setModifiedBy($user);
-                $users->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($users);
-                $this->_em->flush();
-                $user_id = $users->getPkId();
-                if ($form_values['office_type_add'] == '4') {
-                    $warehouses = new Model_Warehouses();
-                    $warehouses->form_values = $form_values;
-                    $warehouses->form_values['page'] = "campaigns";
-                    $warehouse_id = $warehouses->getWarehouseIdByUcId();
+            $loc_id = $this->_em->find('Locations', $location_id);
+            $users->setLocation($loc_id);
+            $users->setRole($role);
+            $stakeholder = $this->_em->find('Stakeholders', $stk_id);
+            $users->setStakeholder($stakeholder);
+            $user = $this->_em->find('Users', $this->_userid);
+            $users->setCreatedBy($user);
+            $users->setCreatedDate(App_Tools_Time::now());
+            $users->setModifiedBy($user);
+            $users->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($users);
+            $this->_em->flush();
+            $user_id = $users->getPkId();
+            if ($form_values['office_type_add'] == '4') {
+                $warehouses = new Model_Warehouses();
+                $warehouses->form_values = $form_values;
+                $warehouses->form_values['page'] = "campaigns";
+                $warehouse_id = $warehouses->getWarehouseIdByUcId();
 
-                    $count = 1;
-                    foreach ($warehouse_id as $wh_id_w) {
-                        if ($count == 1) {
-                            $default = 1;
-                        } else {
-                            $default = 0;
-                        }
-                        $warehouse_users = new WarehouseUsers();
-                        $wh_id = $this->_em->find('Warehouses', $wh_id_w);
-                        $warehouse_users->setWarehouse($wh_id);
-                        $user_id_i = $this->_em->find('Users', $user_id);
-                        $warehouse_users->setUser($user_id_i);
-                        $warehouse_users->setIsDefault($default);
-                        $warehouse_users->setCreatedBy($user);
-                        $warehouse_users->setCreatedDate(App_Tools_Time::now());
-                        $warehouse_users->setModifiedBy($user);
-                        $warehouse_users->setModifiedDate(App_Tools_Time::now());
-                        $this->_em->persist($warehouse_users);
-                        $this->_em->flush();
-                        $count++;
+                $count = 1;
+                foreach ($warehouse_id as $wh_id_w) {
+                    if ($count == 1) {
+                        $default = 1;
+                    } else {
+                        $default = 0;
                     }
+                    $warehouse_users = new WarehouseUsers();
+                    $wh_id = $this->_em->find('Warehouses', $wh_id_w);
+                    $warehouse_users->setWarehouse($wh_id);
+                    $user_id_i = $this->_em->find('Users', $user_id);
+                    $warehouse_users->setUser($user_id_i);
+                    $warehouse_users->setIsDefault($default);
+                    $warehouse_users->setCreatedBy($user);
+                    $warehouse_users->setCreatedDate(App_Tools_Time::now());
+                    $warehouse_users->setModifiedBy($user);
+                    $warehouse_users->setModifiedDate(App_Tools_Time::now());
+                    $this->_em->persist($warehouse_users);
+                    $this->_em->flush();
+                    $count++;
                 }
             }
         }
         $this->_redirect("/iadmin/manage-users/campaigns-users");
     }
 
+    /**
+     * Add Inventory
+     */
     public function addInventoryAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $users = new Users();
+            $users = new Users();
 
-                $users->setUserName($form_values['user_name_add']);
-                $users->setEmail($form_values['email']);
-                $users->setCellNumber($form_values['phone']);
-                $users->setLoginId($form_values['user_name_add']);
-                $users->setPassword(base64_encode($form_values['password']));
-                if ($form_values['office_type_add'] == '1') {
-                    $location_id = '10';
-                    $role_id = '3';
-                }
-                if ($form_values['office_type_add'] == '2') {
-                    $location_id = $form_values['combo1_add'];
-                    $role_id = '4';
-                }
-                if ($form_values['office_type_add'] == '3') {
-                    $location_id = $form_values['combo1_add'];
-                    $role_id = '5';
-                }
-                if ($form_values['office_type_add'] == '4') {
-                    $location_id = $form_values['combo2_add'];
-                    $role_id = '6';
-                }
-                if ($form_values['office_type_add'] == '5') {
-                    $location_id = $form_values['combo3_add'];
-                    $role_id = '7';
-                }
-                $province_id = $this->_em->find('Locations', $location_id);
-                $users->setLocation($province_id);
-                $role = $this->_em->find('Roles', $role_id);
-                $users->setRole($role);
-                $stakeholder = $this->_em->find('Stakeholders', 1);
-                $users->setStakeholder($stakeholder);
-                $user = $this->_em->find('Users', $this->_userid);
-                $users->setCreatedBy($user);
-                $users->setCreatedDate(App_Tools_Time::now());
-                $users->setModifiedBy($user);
-                $users->setModifiedDate(App_Tools_Time::now());
-
-                $this->_em->persist($users);
-                $this->_em->flush();
-                $user_id = $users->getPkId();
-
-                $warehouse_users = new WarehouseUsers();
-                $wh_id = $this->_em->find('Warehouses', $form_values['default_warehouse']);
-                $warehouse_users->setWarehouse($wh_id);
-                $warehouse_users->setIsDefault('1');
-                $user_id_i = $this->_em->find('Users', $user_id);
-                $warehouse_users->setUser($user_id_i);
-
-                $warehouse_users->setCreatedBy($user);
-                $warehouse_users->setCreatedDate(App_Tools_Time::now());
-                $warehouse_users->setModifiedBy($user);
-                $warehouse_users->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($warehouse_users);
-                $this->_em->flush();
+            $users->setUserName($form_values['user_name_add']);
+            $users->setEmail($form_values['email']);
+            $users->setCellNumber($form_values['phone']);
+            $users->setLoginId($form_values['user_name_add']);
+            $users->setPassword(base64_encode($form_values['password']));
+            if ($form_values['office_type_add'] == '1') {
+                $location_id = '10';
+                $role_id = '3';
             }
+            if ($form_values['office_type_add'] == '2') {
+                $location_id = $form_values['combo1_add'];
+                $role_id = '4';
+            }
+            if ($form_values['office_type_add'] == '3') {
+                $location_id = $form_values['combo1_add'];
+                $role_id = '5';
+            }
+            if ($form_values['office_type_add'] == '4') {
+                $location_id = $form_values['combo2_add'];
+                $role_id = '6';
+            }
+            if ($form_values['office_type_add'] == '5') {
+                $location_id = $form_values['combo3_add'];
+                $role_id = '7';
+            }
+            $province_id = $this->_em->find('Locations', $location_id);
+            $users->setLocation($province_id);
+            $role = $this->_em->find('Roles', $role_id);
+            $users->setRole($role);
+            $stakeholder = $this->_em->find('Stakeholders', 1);
+            $users->setStakeholder($stakeholder);
+            $user = $this->_em->find('Users', $this->_userid);
+            $users->setCreatedBy($user);
+            $users->setCreatedDate(App_Tools_Time::now());
+            $users->setModifiedBy($user);
+            $users->setModifiedDate(App_Tools_Time::now());
+
+            $this->_em->persist($users);
+            $this->_em->flush();
+            $user_id = $users->getPkId();
+
+            $warehouse_users = new WarehouseUsers();
+            $wh_id = $this->_em->find('Warehouses', $form_values['default_warehouse']);
+            $warehouse_users->setWarehouse($wh_id);
+            $warehouse_users->setIsDefault('1');
+            $user_id_i = $this->_em->find('Users', $user_id);
+            $warehouse_users->setUser($user_id_i);
+
+            $warehouse_users->setCreatedBy($user);
+            $warehouse_users->setCreatedDate(App_Tools_Time::now());
+            $warehouse_users->setModifiedBy($user);
+            $warehouse_users->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($warehouse_users);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-users/im-users");
     }
 
+    /**
+     * Add Policy
+     */
     public function addPolicyAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $users = new Users();
+            $users = new Users();
 
-                if ($form_values['office_type_add'] == '1') {
-                    $location_id = '10';
-                    $role_id = 17;
-                }
-                if ($form_values['office_type_add'] == '2' || $form_values['office_type_add'] == '3') {
-                    $location_id = $form_values['combo1_add'];
-                    $role_id = 19;
-                }
-                if ($form_values['office_type_add'] == '4') {
-                    $location_id = $form_values['combo2_add'];
-                    $role_id = 20;
-                }
-                $province_id = $this->_em->find('Locations', $location_id);
-                $users->setLocation($province_id);
-
-                $users->setUserName($form_values['user_name_add']);
-                $users->setEmail($form_values['email']);
-                $users->setCellNumber($form_values['phone']);
-                $users->setLoginId($form_values['user_name_add']);
-                $users->setPassword(base64_encode($form_values['password']));
-                $role = $this->_em->find('Roles', $role_id);
-                $users->setRole($role);
-                $stakeholder = $this->_em->find('Stakeholders', 1);
-                $users->setStakeholder($stakeholder);
-                $user = $this->_em->find('Users', $this->_userid);
-                $users->setCreatedBy($user);
-                $users->setCreatedDate(App_Tools_Time::now());
-                $users->setModifiedBy($user);
-                $users->setModifiedDate(App_Tools_Time::now());
-
-                $this->_em->persist($users);
-                $this->_em->flush();
+            if ($form_values['office_type_add'] == '1') {
+                $location_id = '10';
+                $role_id = 17;
             }
+            if ($form_values['office_type_add'] == '2' || $form_values['office_type_add'] == '3') {
+                $location_id = $form_values['combo1_add'];
+                $role_id = 19;
+            }
+            if ($form_values['office_type_add'] == '4') {
+                $location_id = $form_values['combo2_add'];
+                $role_id = 20;
+            }
+            $province_id = $this->_em->find('Locations', $location_id);
+            $users->setLocation($province_id);
+
+            $users->setUserName($form_values['user_name_add']);
+            $users->setEmail($form_values['email']);
+            $users->setCellNumber($form_values['phone']);
+            $users->setLoginId($form_values['user_name_add']);
+            $users->setPassword(base64_encode($form_values['password']));
+            $role = $this->_em->find('Roles', $role_id);
+            $users->setRole($role);
+            $stakeholder = $this->_em->find('Stakeholders', 1);
+            $users->setStakeholder($stakeholder);
+            $user = $this->_em->find('Users', $this->_userid);
+            $users->setCreatedBy($user);
+            $users->setCreatedDate(App_Tools_Time::now());
+            $users->setModifiedBy($user);
+            $users->setModifiedDate(App_Tools_Time::now());
+
+            $this->_em->persist($users);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-users/policy-users");
     }
 
+    /**
+     * Update Routine
+     */
     public function updateRoutineAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $users = $this->_em->find('Users', $form_values['user_id']);
+            $users = $this->_em->find('Users', $form_values['user_id']);
 
-                $users->setUserName($form_values['user_name_update']);
-                $users->setEmail($form_values['user_name_update']);
-                $users->setLoginId($form_values['user_name_update']);
-                if ($form_values['office_type_edit'] != '1') {
-                    $province_id = $this->_em->find('Locations', $form_values['combo4_edit']);
-                    $users->setLocation($province_id);
-                }
-                $stakeholder = $this->_em->find('Stakeholders', 9);
-                $users->setStakeholder($stakeholder);
-                $user = $this->_em->find('Users', $this->_userid);
-                $users->setModifiedBy($user);
-                $users->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($users);
-                $this->_em->flush();
-
-                $warehouse_users = $this->_em->find('WarehouseUsers', $form_values['warehouse_users_id_edit']);
-                $wh_id = $this->_em->find('Warehouses', $form_values['default_warehouse_update']);
-                $warehouse_users->setWarehouse($wh_id);
-                $user_id_i = $this->_em->find('Users', $form_values['user_id']);
-                $warehouse_users->setUser($user_id_i);
-                $warehouse_users->setIsDefault('1');
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $warehouse_users->setModifiedBy($created_by);
-                $warehouse_users->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($warehouse_users);
-                $this->_em->flush();
+            $users->setUserName($form_values['user_name_update']);
+            $users->setEmail($form_values['user_name_update']);
+            $users->setLoginId($form_values['user_name_update']);
+            if ($form_values['office_type_edit'] != '1') {
+                $province_id = $this->_em->find('Locations', $form_values['combo4_edit']);
+                $users->setLocation($province_id);
             }
+            $stakeholder = $this->_em->find('Stakeholders', 9);
+            $users->setStakeholder($stakeholder);
+            $user = $this->_em->find('Users', $this->_userid);
+            $users->setModifiedBy($user);
+            $users->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($users);
+            $this->_em->flush();
+
+            $warehouse_users = $this->_em->find('WarehouseUsers', $form_values['warehouse_users_id_edit']);
+            $wh_id = $this->_em->find('Warehouses', $form_values['default_warehouse_update']);
+            $warehouse_users->setWarehouse($wh_id);
+            $user_id_i = $this->_em->find('Users', $form_values['user_id']);
+            $warehouse_users->setUser($user_id_i);
+            $warehouse_users->setIsDefault('1');
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $warehouse_users->setModifiedBy($created_by);
+            $warehouse_users->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($warehouse_users);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-users/routine-users");
     }
 
+    /**
+     * Update Campaigns
+     */
     public function updateCampaignsAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $users = $this->_em->find('Users', $form_values['user_id']);
+            $users = $this->_em->find('Users', $form_values['user_id']);
 
-                $users->setUserName($form_values['user_name_update']);
-                $users->setEmail($form_values['user_name_update']);
-                $users->setCellNumber('03423423423');
-                $users->setLoginId($form_values['user_name_update']);
+            $users->setUserName($form_values['user_name_update']);
+            $users->setEmail($form_values['user_name_update']);
+            $users->setCellNumber('03423423423');
+            $users->setLoginId($form_values['user_name_update']);
 
-                if ($form_values['office_type_edit'] == '1') {
-                    $role = $this->_em->find('Roles', 14);
-                    $location_id = '10';
+            if ($form_values['office_type_edit'] == '1') {
+                $role = $this->_em->find('Roles', 14);
+                $location_id = '10';
+            }
+            if ($form_values['office_type_edit'] == '2') {
+                $role = $this->_em->find('Roles', 15);
+                $location_id = $form_values['combo1_edit'];
+            }
+            if ($form_values['office_type_edit'] == '4') {
+                $role = $this->_em->find('Roles', 16);
+                $location_id = $form_values['combo2_edit'];
+            }
+
+            $loc_id = $this->_em->find('Locations', $location_id);
+            $users->setLocation($loc_id);
+            $users->setRole($role);
+            $stakeholder = $this->_em->find('Stakeholders', 10);
+            $users->setStakeholder($stakeholder);
+            $user = $this->_em->find('Users', $this->_userid);
+
+            $users->setModifiedBy($user);
+            $users->setModifiedDate(App_Tools_Time::now());
+
+            $this->_em->persist($users);
+            $this->_em->flush();
+            $user_id = $users->getPkId();
+            if ($form_values['office_type_edit'] == '4') {
+
+                $warehouse_users = $this->_em->getRepository("WarehouseUsers")->findBy(array('user' => $form_values['user_id']));
+
+                foreach ($warehouse_users as $warehouse_users_a) {
+                    $wh_id = $this->_em->find('WarehouseUsers', $warehouse_users_a->getPkId());
+                    $this->_em->remove($wh_id);
+                    $this->_em->flush();
                 }
-                if ($form_values['office_type_edit'] == '2') {
-                    $role = $this->_em->find('Roles', 15);
-                    $location_id = $form_values['combo1_edit'];
-                }
-                if ($form_values['office_type_edit'] == '4') {
-                    $role = $this->_em->find('Roles', 16);
-                    $location_id = $form_values['combo2_edit'];
-                }
 
-                $loc_id = $this->_em->find('Locations', $location_id);
-                $users->setLocation($loc_id);
-                $users->setRole($role);
-                $stakeholder = $this->_em->find('Stakeholders', 10);
-                $users->setStakeholder($stakeholder);
-                $user = $this->_em->find('Users', $this->_userid);
+                $warehouses = new Model_Warehouses();
+                $warehouses->form_values = $form_values;
+                $warehouses->form_values['page'] = "campaigns";
+                $warehouse_id = $warehouses->getWarehouseIdByUcIdUpdate();
 
-                $users->setModifiedBy($user);
-                $users->setModifiedDate(App_Tools_Time::now());
-
-                $this->_em->persist($users);
-                $this->_em->flush();
-                $user_id = $users->getPkId();
-                if ($form_values['office_type_edit'] == '4') {
-
-                    $warehouse_users = $this->_em->getRepository("WarehouseUsers")->findBy(array('user' => $form_values['user_id']));
-
-                    foreach ($warehouse_users as $warehouse_users_a) {
-                        $wh_id = $this->_em->find('WarehouseUsers', $warehouse_users_a->getPkId());
-                        $this->_em->remove($wh_id);
-                        $this->_em->flush();
-                    }
-
-                    $warehouses = new Model_Warehouses();
-                    $warehouses->form_values = $form_values;
-                    $warehouses->form_values['page'] = "campaigns";
-                    $warehouse_id = $warehouses->getWarehouseIdByUcIdUpdate();
-
-                    foreach ($warehouse_id as $wh_id_w) {
-                        $warehouse_users = new WarehouseUsers();
-                        $wh_id = $this->_em->find('Warehouses', $wh_id_w);
-                        $warehouse_users->setWarehouse($wh_id);
-                        $user_id_i = $this->_em->find('Users', $user_id);
-                        $warehouse_users->setUser($user_id_i);
-                        $warehouse_users->setModifiedBy($user);
-                        $warehouse_users->setModifiedDate(App_Tools_Time::now());
-                        $this->_em->persist($warehouse_users);
-                        $this->_em->flush();
-                    }
+                foreach ($warehouse_id as $wh_id_w) {
+                    $warehouse_users = new WarehouseUsers();
+                    $wh_id = $this->_em->find('Warehouses', $wh_id_w);
+                    $warehouse_users->setWarehouse($wh_id);
+                    $user_id_i = $this->_em->find('Users', $user_id);
+                    $warehouse_users->setUser($user_id_i);
+                    $warehouse_users->setModifiedBy($user);
+                    $warehouse_users->setModifiedDate(App_Tools_Time::now());
+                    $this->_em->persist($warehouse_users);
+                    $this->_em->flush();
                 }
             }
         }
         $this->_redirect("/iadmin/manage-users/campaigns-users");
     }
 
+    /**
+     * Update Inventory
+     */
     public function updateInventoryAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $users = $this->_em->find('Users', $form_values['user_id']);
+            $users = $this->_em->find('Users', $form_values['user_id']);
 
-                $users->setUserName($form_values['user_name_update']);
-                $users->setEmail($form_values['user_name_update']);
-                $users->setCellNumber('03423423423');
-                $users->setLoginId($form_values['user_name_update']);
-                if ($form_values['office_type_edit'] == '1') {
-                    $location_id = '10';
-                }
-                if ($form_values['office_type_edit'] == '2' || $form_values['office_type_edit'] == '3') {
-                    $location_id = $form_values['combo1_edit'];
-                }
-                if ($form_values['office_type_edit'] == '4') {
-                    $location_id = $form_values['combo2_edit'];
-                }
-                if ($form_values['office_type_edit'] == '5') {
-                    $location_id = $form_values['combo3_edit'];
-                }
-
-
-                $province_id = $this->_em->find('Locations', $location_id);
-                $users->setLocation($province_id);
-
-                $stakeholder = $this->_em->find('Stakeholders', 1);
-                $users->setStakeholder($stakeholder);
-                $user = $this->_em->find('Users', $this->_userid);
-                $users->setModifiedBy($user);
-                $users->setModifiedDate(App_Tools_Time::now());
-
-                $this->_em->persist($users);
-                $this->_em->flush();
-
-                $warehouse_users = $this->_em->find('WarehouseUsers', $form_values['warehouse_users_id_edit']);
-                $wh_id = $this->_em->find('Warehouses', $form_values['default_warehouse_update']);
-                $warehouse_users->setWarehouse($wh_id);
-                $user_id_i = $this->_em->find('Users', $form_values['user_id']);
-                $warehouse_users->setUser($user_id_i);
-                $warehouse_users->setIsDefault('1');
-                $warehouse_users->setModifiedBy($user);
-                $warehouse_users->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($warehouse_users);
-                $this->_em->flush();
+            $users->setUserName($form_values['user_name_update']);
+            $users->setEmail($form_values['user_name_update']);
+            $users->setCellNumber('03423423423');
+            $users->setLoginId($form_values['user_name_update']);
+            if ($form_values['office_type_edit'] == '1') {
+                $location_id = '10';
             }
+            if ($form_values['office_type_edit'] == '2' || $form_values['office_type_edit'] == '3') {
+                $location_id = $form_values['combo1_edit'];
+            }
+            if ($form_values['office_type_edit'] == '4') {
+                $location_id = $form_values['combo2_edit'];
+            }
+            if ($form_values['office_type_edit'] == '5') {
+                $location_id = $form_values['combo3_edit'];
+            }
+
+
+            $province_id = $this->_em->find('Locations', $location_id);
+            $users->setLocation($province_id);
+
+            $stakeholder = $this->_em->find('Stakeholders', 1);
+            $users->setStakeholder($stakeholder);
+            $user = $this->_em->find('Users', $this->_userid);
+            $users->setModifiedBy($user);
+            $users->setModifiedDate(App_Tools_Time::now());
+
+            $this->_em->persist($users);
+            $this->_em->flush();
+
+            $warehouse_users = $this->_em->find('WarehouseUsers', $form_values['warehouse_users_id_edit']);
+            $wh_id = $this->_em->find('Warehouses', $form_values['default_warehouse_update']);
+            $warehouse_users->setWarehouse($wh_id);
+            $user_id_i = $this->_em->find('Users', $form_values['user_id']);
+            $warehouse_users->setUser($user_id_i);
+            $warehouse_users->setIsDefault('1');
+            $warehouse_users->setModifiedBy($user);
+            $warehouse_users->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($warehouse_users);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-users/im-users");
     }
 
+    /**
+     * Update Inventory Role
+     */
     public function updateInventoryRoleAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $users = $this->_em->find('Users', $form_values['user_id']);
+            $users = $this->_em->find('Users', $form_values['user_id']);
 
-                $role = $this->_em->find('Roles', $form_values['role']);
-                $users->setRole($role);
+            $role = $this->_em->find('Roles', $form_values['role']);
+            $users->setRole($role);
 
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $users->setModifiedBy($created_by);
-                $users->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($users);
-                $this->_em->flush();
-            }
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $users->setModifiedBy($created_by);
+            $users->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($users);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-users/im-users");
     }
 
+    /**
+     * Update Policy
+     */
     public function updatePolicyAction() {
 
         if ($this->_request->isPost()) {
@@ -983,6 +1027,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->_redirect("/iadmin/manage-users/policy-users");
     }
 
+    /**
+     * ajaxGetDistrict
+     */
     public function ajaxGetDistrictAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->province_id) && !empty($this->_request->province_id)) {
@@ -993,6 +1040,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetUsers
+     */
     public function ajaxGetUsersAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->district_id) && !empty($this->_request->district_id)) {
@@ -1003,6 +1053,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetWarehouses
+     */
     public function ajaxGetWarehousesAction() {
         $this->_helper->layout->setLayout("ajax");
 
@@ -1029,6 +1082,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Check Users Update
+     */
     public function checkUsersUpdateAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
@@ -1038,6 +1094,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Check Users
+     */
     public function checkUsersAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
@@ -1047,6 +1106,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Check Users Policy
+     */
     public function checkUsersPolicyAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
@@ -1056,6 +1118,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Check Users Update Policy
+     */
     public function checkUsersUpdatePolicyAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
@@ -1065,6 +1130,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Get Default Warehouse
+     */
     public function getDefaultWarehouseAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
@@ -1074,6 +1142,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->data = $result;
     }
 
+    /**
+     * Get Default Warehouse By Level
+     */
     public function getDefaultWarehouseByLevelAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
@@ -1083,6 +1154,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         $this->view->data = $result;
     }
 
+    /**
+     * delete
+     */
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -1092,6 +1166,9 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         return $this->_em->flush();
     }
 
+    /**
+     * Check Old Password
+     */
     public function checkOldPasswordAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -1112,19 +1189,27 @@ class Iadmin_ManageUsersController extends App_Controller_Base {
         }
     }
 
+    /**
+     * User Feedback
+     */
     public function userFeedbackAction() {
         $users = new Model_Users();
         $user_feeadback = $users->getUserFeedback();
         $this->view->result = $user_feeadback;
     }
 
+    /**
+     * Edit User Profile
+     */
     public function editUserProfileAction() {
         $form = new Form_EditUserProfile();
         $this->view->form = $form;
     }
 
+    /**
+     * User Login Log
+     */
     public function userLoginLogAction() {
-        //$this->_helper->layout->setLayout('main');
         $users = new Model_Users();
         $doc_user_log = $users->getUserLoginLog();
         $this->view->result = $doc_user_log;

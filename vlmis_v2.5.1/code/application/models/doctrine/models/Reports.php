@@ -1,105 +1,126 @@
 <?php
 
-
+/**
+*  Model for Reports
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Reports
+ *  Reports
  */
 class Reports
 {
     /**
+     * $reportId
      * @var string $reportId
      */
     private $reportId;
 
     /**
+     * $reportGroup
      * @var string $reportGroup
      */
     private $reportGroup;
 
     /**
+     * $reportType
      * @var decimal $reportType
      */
     private $reportType;
 
     /**
+     * $reportTitle
      * @var string $reportTitle
      */
     private $reportTitle;
 
     /**
+     * $reportXaxis
      * @var string $reportXaxis
      */
     private $reportXaxis;
 
     /**
+     * $reportYaxis
      * @var string $reportYaxis
      */
     private $reportYaxis;
 
     /**
+     * $reportUnits
      * @var string $reportUnits
      */
     private $reportUnits;
 
     /**
+     * $reportFactor
      * @var decimal $reportFactor
      */
     private $reportFactor;
 
     /**
+     * $reportField
      * @var string $reportField
      */
     private $reportField;
 
     /**
+     * $reportDescription
      * @var text $reportDescription
      */
     private $reportDescription;
 
     /**
+     * $staticpage
      * @var string $staticpage
      */
     private $staticpage;
 
     /**
+     * $footerStaticpage
      * @var string $footerStaticpage
      */
     private $footerStaticpage;
 
     /**
+     * $reportOrder
      * @var smallint $reportOrder
      */
     private $reportOrder;
 
     /**
+     * $reportShowSimple
      * @var smallint $reportShowSimple
      */
     private $reportShowSimple;
 
     /**
+     * $reportShowComp
      * @var smallint $reportShowComp
      */
     private $reportShowComp;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

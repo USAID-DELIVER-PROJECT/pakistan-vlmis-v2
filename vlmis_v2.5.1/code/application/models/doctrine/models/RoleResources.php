@@ -1,35 +1,42 @@
 <?php
 
-
+/**
+*  Model for Role Resources
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * RoleResources
+ *  RoleResources
  */
 class RoleResources
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $permission
      * @var string $permission
      */
     private $permission;
 
     /**
+     * $isDefault
      * @var integer $isDefault
      */
     private $isDefault;
 
     /**
+     * $resource
      * @var Resources
      */
     private $resource;
 
     /**
+     * $role
      * @var Roles
      */
     private $role;

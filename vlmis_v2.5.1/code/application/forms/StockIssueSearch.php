@@ -1,8 +1,26 @@
 <?php
 
-class Form_StockIssueSearch extends Zend_Form
+/**
+ * Form_StockIssueSearch
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+*  Form for Stock Issue Search
+*/
+
+class Form_StockIssueSearch extends Form_Base
 {
 
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "searchby" => "Search By",
         "voucher_type" => "Voucher Type",
@@ -13,6 +31,11 @@ class Form_StockIssueSearch extends Zend_Form
         "date_from" => "Date From",
         "date_to" => "Date To",
     );
+    
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'searchby' => array(
             "0" => "Select",
@@ -28,6 +51,9 @@ class Form_StockIssueSearch extends Zend_Form
         'warehouses' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init()
     {
         //Generate Products(items) Combo
@@ -57,47 +83,21 @@ class Form_StockIssueSearch extends Zend_Form
             switch ($col)
             {
                 case "number":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 case "date_from":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "readonly" => "true", "style" => "position: relative; z-index: 100000;"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                        "value" => $date_from
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyTextWithValue($col, $date_from);
                     break;
                 case "date_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "readonly" => "true", "style" => "position: relative; z-index: 100000;"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                        "value" => $date_to
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyTextWithValue($col, $date_to);
+                    break;
+                default :
                     break;
             }
 
             if (in_array($col, array_keys($this->_list)))
             {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
             //Generate Purpose(activity_id) combo 
             $stk_activities = new Model_StakeholderActivities();

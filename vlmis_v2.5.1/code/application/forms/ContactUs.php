@@ -1,7 +1,39 @@
 <?php
 
-class Form_ContactUs extends Zend_Form {
+/**
+ * Form_ContactUs
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Contact Us
+ * This form is used for 
+ * userfeadback
+ * for anonymous users
+ */
+class Form_ContactUs extends Form_Base {
+
+    /**
+     * Fields for Form_ContactUs
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * name
+     * e_mail
+     * phone
+     * department
+     * message
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "name" => "name",
         "e_mail" => "e_mail",
@@ -9,12 +41,20 @@ class Form_ContactUs extends Zend_Form {
         "department" => "department",
         "message" => "message"
     );
-   
+
     /**
+     * Initializes Form Fields
+     * for Form_ContactUs
      * 
+     * Captcha Verification
+     * 
+     * Form Elements
+     * @captcha: Captcha
+     * @text: Text
      */
     public function init() {
 
+        //Generate captcha for verification
         $this->addElement('captcha', 'captcha', array(
             "attribs" => array("class" => "form-control", "autocomplete" => "off"),
             'required' => true,
@@ -38,39 +78,22 @@ class Form_ContactUs extends Zend_Form {
 
         $this->getElement('captcha')->removeDecorator("Label")->removeDecorator("HtmlTag");
 
+
+        //Generate fields for 
+        // Form_ContactUs
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
 
                 case "name":
                 case "phone":
                 case "department":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "autocomplete" => "off"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithAutocompleteOff($col);
                     break;
                 case "e_mail":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
-
-
                 case "message":
-                    $this->addElement("textarea", $col, array(
-                        "attribs" => array("class" => "form-control", "rows" => "5"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createMultiLineText($col, "5");
                     break;
                 default:
                     break;
@@ -79,28 +102,11 @@ class Form_ContactUs extends Zend_Form {
     }
 
     /**
-     * 
+     * Add Hidden Fields
+     * for Form_ContactUs
      */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

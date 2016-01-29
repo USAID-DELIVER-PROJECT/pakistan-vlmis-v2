@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Reported Districts by UC
+*/
+?>
+<?php
 $sel_month = $this->month_sel;
 $sel_year = $this->year_sel;
 $counter = 1;
@@ -63,7 +68,6 @@ foreach ($query as $row) {
         $count++;
     }
 }
-//App_Controller_Functions::pr($monthArr);
 $count = 1;
 $total_uc = array();
 
@@ -95,7 +99,6 @@ $xml_store .= "<rows>";
 
 $sum_arr = array();
 foreach ($data_arr as $dis_id => $sub_arr) {
-    //$count_k +=2;
     $xml_store .= "<row>";
 
     $param1 = base64_encode($wh_type . '|' . $sub_arr[0] . '|' . $s_date . '|' . $e_date . '|' . $dis_id . '|' . $sub_arr[1] . '|' . '1');
@@ -167,10 +170,6 @@ $xml_store .="</row>";
 
 $xml_store .="</rows>";
 
-/* $in_type = 'N';
-  $in_stk = 1;
-  $in_year = $sel_year;
- */
 ?>
 
 <?php

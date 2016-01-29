@@ -1,7 +1,32 @@
 <?php
 
-class Form_RegisterUser extends Zend_Form {
+/**
+ * Form_RegisterUser
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+*  Form for Register User
+*/
+
+class Form_RegisterUser extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Form Fields
+     * @e_mail: e_mail
+     * @organization: organization
+     * @country: country
+     * @address: address
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "e_mail" => "e_mail",
         "organization" => "organization",
@@ -9,10 +34,21 @@ class Form_RegisterUser extends Zend_Form {
         "address" => "address"
     );
     
+    /**
+     * $_list
+     * 
+     * List
+     * @country
+     * 
+     * @var type 
+     */
     private $_list = array(
         "country" => array()
     );
-   
+
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         $this->addElement('captcha', 'captcha', array(
@@ -53,60 +89,18 @@ class Form_RegisterUser extends Zend_Form {
 
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
-
                 case "organization":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
                 case "e_mail":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-
-
                 case "address":
-                    $this->addElement("textarea", $col, array(
-                        "attribs" => array("class" => "form-control", "rows" => "3"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-            }
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
+                }
         }
     }
 

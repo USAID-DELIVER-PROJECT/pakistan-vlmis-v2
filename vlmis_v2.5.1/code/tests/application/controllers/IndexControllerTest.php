@@ -1,14 +1,17 @@
 <?php
 
-class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
-{
+class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 
-    public function setUp()
-    {
+    public function setUp() {
         $this->bootstrap = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH . '/configs/application.ini');
         parent::setUp();
     }
 
+    /**
+     * indexAction index
+     */
+    public function testIndexAction() {
+        return 'Hello world!';
+    }
 
 }
-

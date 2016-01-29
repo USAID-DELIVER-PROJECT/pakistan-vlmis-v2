@@ -1,15 +1,66 @@
 <?php
 
-class Form_Iadmin_MessagesAdd extends Zend_Form {
+/**
+ * Form_Iadmin_MessagesAdd
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin Messages Add
+ */
+class Form_Iadmin_MessagesAdd extends Form_Base {
+
+    /**
+     * Fields for Form_Iadmin_MessagesAdd
+     * 
+     * 
+     * 
+     * page_name
+     * description
+     * status
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "page_name" => "Page Name",
         "description" => "Description",
         "status" => "status"
     );
+
+    /**
+     * Combo boxes for 
+     * Form_Iadmin_MessagesAdd
+     * 
+     * 
+     * 
+     * page_name
+     * 
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'page_name' => array(),
     );
+
+    /**
+     * Radio buttons 
+     * for Form_Iadmin_MessagesAdd
+     * 
+     * 
+     * status
+     * 
+     * 
+     * $_radio
+     * @var type 
+     */
     private $_radio = array(
         'status' => array(
             '0' => 'Disable',
@@ -17,6 +68,10 @@ class Form_Iadmin_MessagesAdd extends Zend_Form {
         )
     );
 
+    /**
+     * Initializes Form Fields
+     * for Form_Iadmin_MessagesAdd
+     */
     public function init() {
         $resources = new Model_Resources();
         $resources->form_values['only_childs'] = 1;
@@ -31,68 +86,34 @@ class Form_Iadmin_MessagesAdd extends Zend_Form {
             }
         }
 
+        //Generate fields 
+        // for Form_Iadmin_MessagesAdd
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "description":
-                    $this->addElement("textarea", $col, array(
-                        "attribs" => array("class" => "form-control", "rows" => "4"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "description") {
+                parent::createMultiLineText($col, "4");
             }
 
+            // Generate combo boxes 
+            // for Form_Iadmin_MessagesAdd
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array()
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
-            
+
+            // Generate Radio buttons
+            // for Form_Iadmin_MessagesAdd
             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
+                parent::createRadio($col, $this->_radio[$col]);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     * 
+     * for Form_Iadmin_MessagesAdd
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

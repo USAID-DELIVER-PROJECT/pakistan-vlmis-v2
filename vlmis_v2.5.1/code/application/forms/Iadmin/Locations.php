@@ -1,7 +1,35 @@
 <?php
 
-class Form_Iadmin_Locations extends Zend_Form {
+/**
+ * Form_Iadmin_Locations
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin Locations
+ */
+class Form_Iadmin_Locations extends Form_Base {
+
+    /**
+     * $_fields
+     *  
+     * Form Fields
+     * @location_name_add: Locaiton Name
+     * @location_name_update: Locaiton Name
+     * @ccm_location_id: CCEM Code
+     * @ccm_location_id_update: CCEM Code
+     * @location_type_id: Location Type Id
+     * @location_type_id_update: location_type_id
+     * @not_used: not_used
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "location_name_add" => "Locaiton Name",
         "location_name_update" => "Locaiton Name",
@@ -11,6 +39,23 @@ class Form_Iadmin_Locations extends Zend_Form {
         "location_type_id_update" => "location_type_id",
         "not_used" => "not_used"
     );
+
+    /**
+     * $_hidden
+     * 
+     * Hidden
+     * @location_id: Pk Id
+     * @location_type: Pk Id
+     * @province_id: Pk Id
+     * @district_id: Pk Id
+     * @parent_id: Pk Id
+     * @province_id_edit: Pk Id
+     * @district_id_edit: Pk Id
+     * @parent_id_edit: Pk Id
+     * @location_type_id_update_hidden: Pk Id
+     * 
+     * @var type 
+     */
     private $_hidden = array(
         "location_id" => "pkId",
         "location_type" => "pkId",
@@ -22,16 +67,29 @@ class Form_Iadmin_Locations extends Zend_Form {
         "parent_id_edit" => "pkId",
         "location_type_id_update_hidden" => "pkId"
     );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'location_type_id' => array(),
         'location_type_id_update' => array()
     );
+
+    /**
+     * $_checkbox
+     * @var type 
+     */
     private $_checkbox = array(
         'not_used' => array(
             "0" => "",
         )
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         foreach ($this->_fields as $col => $name) {
@@ -40,38 +98,16 @@ class Form_Iadmin_Locations extends Zend_Form {
                 case "location_name_update":
                 case "ccm_location_id":
                 case "ccm_location_id_update":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
             }
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
             if (in_array($col, array_keys($this->_checkbox))) {
-                $this->addElement("multiCheckbox", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_checkbox[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
+                parent::createMultiCheckbox($col, $this->_checkbox[$col]);
             }
         }
 
@@ -88,8 +124,7 @@ class Form_Iadmin_Locations extends Zend_Form {
                 case "district_id_edit":
                 case "parent_id_edit":
                 case "location_type_id_update_hidden":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -97,26 +132,11 @@ class Form_Iadmin_Locations extends Zend_Form {
         }
     }
 
+    /**
+     * addHidden
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

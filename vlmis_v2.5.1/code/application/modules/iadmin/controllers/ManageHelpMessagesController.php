@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Iadmin_ManageHelpMessagesController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Iadmin Manage Help Messages
+ */
 class Iadmin_ManageHelpMessagesController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Iadmin_ManageHelpMessagesController index
+     */
     public function indexAction() {
         $form = new Form_Iadmin_MessagesSearch();
         $form_add = new Form_Iadmin_MessagesAdd();
@@ -69,27 +82,31 @@ class Iadmin_ManageHelpMessagesController extends App_Controller_Base {
         $this->view->pagination_params = $params;
     }
 
+    /**
+     * add
+     */
     public function addAction() {
         $form = new Form_Iadmin_MessagesAdd();
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $hp = new HelpMessages();
-                $resource_id = $this->_em->find('Resources', $form->page_name->getValue());
-                $hp->setResource($resource_id);
-                $hp->setDescription($form->description->getValue());
-                $hp->setStatus($form->status->getValue());
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $hp->setCreatedBy($created_by);
-                $hp->setCreatedDate(App_Tools_Time::now());
-                $hp->setModifiedBy($created_by);
-                $hp->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($hp);
-                $this->_em->flush();
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $hp = new HelpMessages();
+            $resource_id = $this->_em->find('Resources', $form->page_name->getValue());
+            $hp->setResource($resource_id);
+            $hp->setDescription($form->description->getValue());
+            $hp->setStatus($form->status->getValue());
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $hp->setCreatedBy($created_by);
+            $hp->setCreatedDate(App_Tools_Time::now());
+            $hp->setModifiedBy($created_by);
+            $hp->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($hp);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-help-messages");
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->setLayout("ajax");
         $id = $this->_request->getParam('id', '');
@@ -106,28 +123,32 @@ class Iadmin_ManageHelpMessagesController extends App_Controller_Base {
         $this->view->form_add = $form;
     }
 
+    /**
+     * update
+     */
     public function updateAction() {
         $form = new Form_Iadmin_MessagesAdd();
         $form->addHidden();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $id = $form->id->getValue();
-                $hp = $this->_em->getRepository("HelpMessages")->find($id);
-                $resource_id = $this->_em->find('Resources', $form->page_name->getValue());
-                $hp->setResource($resource_id);
-                $hp->setDescription($form->description->getValue());
-                $hp->setStatus($form->status->getValue());
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $hp->setModifiedBy($created_by);
-                $hp->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($hp);
-                $this->_em->flush();
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $id = $form->id->getValue();
+            $hp = $this->_em->getRepository("HelpMessages")->find($id);
+            $resource_id = $this->_em->find('Resources', $form->page_name->getValue());
+            $hp->setResource($resource_id);
+            $hp->setDescription($form->description->getValue());
+            $hp->setStatus($form->status->getValue());
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $hp->setModifiedBy($created_by);
+            $hp->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($hp);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-help-messages");
     }
 
+    /**
+     * delete
+     */
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);

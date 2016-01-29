@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Reported Provinces
+*/
+?>
+<?php
 $sel_month = $this->month_sel;
 $sel_year = $this->year_sel;
 $counter = 1;
@@ -24,14 +29,12 @@ $header1 = '#rspan,#rspan';
 $cspan = '';
 $width = '*,250';
 $ro = 'ro,ro';
-//$count = 1;
 foreach ($period as $date) {
     $cspan .= ',#cspan,#cspan,#cspan';
     $header .= ',<span>' . $date->format("M-y") . '</span>,#cspan,#cspan';
     $monthArr[] = $date->format("m-Y");
     $width .= ',89,89,89';
     $ro .= ',ro,ro,ro,ro';
-    //$header1 .= '#cspan';
     $header1 .= ',<span>Total UCs</span>,<span>Reported UCs</span>,#cspan';
     $str_date = $startDate = $endDate = $date->format("Y-m");
 }
@@ -146,10 +149,6 @@ foreach ($sum_arr as $key => $value) {
 $xml_store .="</row>";
 $xml_store .="</rows>";
 
-/* $in_type = 'N';
-  $in_stk = 1;
-  $in_year = $sel_year;
- */
 ?>
 
 <?php

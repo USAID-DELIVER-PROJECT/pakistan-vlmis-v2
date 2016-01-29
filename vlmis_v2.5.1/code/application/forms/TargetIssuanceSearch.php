@@ -1,16 +1,54 @@
 <?php
 
 /**
+ * Form_TargetIssuanceSearch
+ *
  * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
  */
-class Form_TargetIssuanceSearch extends Zend_Form {
 
+/**
+*  Form for Target Issuance Search
+*/
+
+class Form_TargetIssuanceSearch extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * @month: Month
+     * @year: Year
+     * @province_region: Province / Region
+     * @product: Product
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "month" => "Month",
         "year" => "Year",
         "province_region" => "Province/Region",
         "product" => "Product"
     );
+    
+    /**
+     * $_list
+     * 
+     * Private Variable
+     * 
+     * List
+     * @month
+     * @year
+     * @province_region
+     * @product
+     * 
+     * @var type 
+     */
     private $_list = array(
         'month' => array(),
         'year' => array(),
@@ -19,7 +57,7 @@ class Form_TargetIssuanceSearch extends Zend_Form {
     );
 
     /**
-     * 
+     * Initializes Form Fields
      */
     public function init() {
 
@@ -69,24 +107,7 @@ class Form_TargetIssuanceSearch extends Zend_Form {
 
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
     }

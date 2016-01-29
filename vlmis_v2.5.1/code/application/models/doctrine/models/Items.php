@@ -1,90 +1,108 @@
 <?php
 
-
+/**
+*  Model for Items
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Items
+ *  Items
  */
 class Items
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $description
      * @var text $description
      */
     private $description;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $packVolume
      * @var float $packVolume
      */
     private $packVolume;
 
     /**
+     * $dosesPerYear
      * @var integer $dosesPerYear
      */
     private $dosesPerYear;
 
     /**
+     * $packDiluentVolume
      * @var float $packDiluentVolume
      */
     private $packDiluentVolume;
 
     /**
+     * $targetPopulationFactor
      * @var integer $targetPopulationFactor
      */
     private $targetPopulationFactor;
 
     /**
+     * $itemCategoryId
      * @var integer $itemCategoryId
      */
     private $itemCategoryId;
 
     /**
+     * $multiplier
      * @var integer $multiplier
      */
     private $multiplier;
 
     /**
+     * $wastageRateAllowed
      * @var float $wastageRateAllowed
      */
     private $wastageRateAllowed;
 
     /**
+     * $populationPercentIncreasePerYear
      * @var float $populationPercentIncreasePerYear
      */
     private $populationPercentIncreasePerYear;
 
     /**
+     * $childSurvivingPercentPerYear
      * @var float $childSurvivingPercentPerYear
      */
     private $childSurvivingPercentPerYear;
 
     /**
+     * $childSurvivingPercentTillSecondYear
      * @var float $childSurvivingPercentTillSecondYear
      */
     private $childSurvivingPercentTillSecondYear;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

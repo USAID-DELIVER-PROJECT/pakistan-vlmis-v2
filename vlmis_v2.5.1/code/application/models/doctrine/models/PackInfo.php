@@ -1,90 +1,109 @@
 <?php
 
-
+/**
+*  Model for Pack Info
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PackInfo
+ *  PackInfo
  */
 class PackInfo
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $packSizeDescription
      * @var text $packSizeDescription
      */
     private $packSizeDescription;
 
     /**
+     * $length
      * @var decimal $length
      */
     private $length;
 
     /**
+     * $width
      * @var decimal $width
      */
     private $width;
 
     /**
+     * 
+     * $height
      * @var decimal $height
      */
     private $height;
 
     /**
+     * $quantityPerPack
      * @var integer $quantityPerPack
      */
     private $quantityPerPack;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $listRank
      * @var integer $listRank
      */
     private $listRank;
 
     /**
+     * $volumPerVial
      * @var decimal $volumPerVial
      */
     private $volumPerVial;
 
     /**
+     * $itemGtin
      * @var string $itemGtin
      */
     private $itemGtin;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $stakeholderItemPackSize
      * @var StakeholderItemPackSizes
      */
     private $stakeholderItemPackSize;
 
     /**
+     * $packagingLevel
      * @var ListDetail
      */
     private $packagingLevel;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

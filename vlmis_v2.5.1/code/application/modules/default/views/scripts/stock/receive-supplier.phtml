@@ -1,3 +1,8 @@
+<?php
+/**
+*  phtml for Receive Supplier
+*/
+?>
 <!-- Content -->
 <div class="page-content-wrapper">
     <div class="page-content">
@@ -202,14 +207,14 @@
                                                     <?php echo $this->form->vvm_stage; ?>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3" id="cold_chain">
+                                            <div class="col-md-3" id="cold_chain_div">
                                                 <label class="control-label" for="cold_chain">
-                                                    <?php echo $this->translate("Cold Chain"); ?>
+                                                    <?php echo $this->translate("Placement Location"); ?>
                                                 </label> <span class="red">*</span>
                                                 <div class="controls">
                                                     <?php echo $this->form->cold_chain; ?>
-                                                </div>
-                                            </div>
+                                                </div>                                              
+                                            </div>                                           
                                         <?php } ?>
                                     </div>
                                     <div class="row">                                        
@@ -339,7 +344,7 @@
                                                         </td>
                                                         <td>
                                                             <span data-toggle="notyfy" id="<?php echo $currRow['stock_detail_id']; ?>" data-type="confirm" data-layout="top" class="fa fa-times cursor-hand"></span>
-                                                            <!-- <span class="fa fa-edit cursor-hand" id="<?php //echo $currRow['stock_detail_id'];             ?>-stockedit">
+                                                            <!-- <span class="fa fa-edit cursor-hand" id="<?php //echo $currRow['stock_detail_id'];               ?>-stockedit">
                                                             </span> -->
                                                         </td>
                                                     </tr>
@@ -396,16 +401,16 @@
                                         <div>&nbsp;</div>
                                         <div class="col-md-12">
                                             <label class="control-label" for="comments">
-        <?php echo $this->translate("Comments Max 300 Char"); ?>
+                                                <?php echo $this->translate("Comments Max 300 Char"); ?>
                                             </label>
                                             <div class="controls">
-        <?php echo $this->form->comments; ?>
+                                                <?php echo $this->form->comments; ?>
                                             </div>
                                         </div>
                                         <div>&nbsp;</div>
                                         <div class="col-md-12 right">
                                             <button id="print_vaccine_placement" type="submit" class="btn btn-primary">
-        <?php echo $this->translate("Save Print"); ?>
+                                                <?php echo $this->translate("Save Print"); ?>
                                             </button>
                                             <input type="hidden" name="stockid" id="stockid" value="<?php echo $this->arr_data['stock_id']; ?>" />
                                         </div>
@@ -415,10 +420,10 @@
                         </div>
                     </div>
                 </div>
-        <?php
-    }
-}
-?>
+                <?php
+            }
+        }
+        ?>
 
     </div>
 </div>
@@ -442,21 +447,21 @@
                         <div class="col-md-6">
                             <label class="control-label" for="catalogueid" ><?php echo $this->translate("Manufacturer Name (Max 50 Char) "); ?> <span class="red">*</span></label>
                             <div class="controls">
-<?php echo $this->form_manufacturer->manufacturer_name; ?>
+                                <?php echo $this->form_manufacturer->manufacturer_name; ?>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <label class="control-label" for="catalogueid" ><?php echo $this->translate("Quantity Per Pack"); ?> <span class="red">*</span></label>
                             <div class="controls">
-<?php echo $this->form_manufacturer->quantity_per_pack; ?>
+                                <?php echo $this->form_manufacturer->quantity_per_pack; ?>
                             </div>
                         </div>
 
                         <!--                 <div class="col-md-3">
                                         <label class="control-label" for="catalogueid" ><?php echo $this->translate("Quantity"); ?> <span class="red">*</span></label>
                                         <div class="controls">
-<?php echo $this->form_manufacturer->manufacturer_name; ?>
+                        <?php echo $this->form_manufacturer->manufacturer_name; ?>
                                         </div>
                                     </div>-->
                     </div>

@@ -1,7 +1,35 @@
 <?php
 
-class Form_StatusWorkingUpdate extends Zend_Form {
+/**
+ * Form_StatusWorkingUpdate
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+*  Form for Status Working Update
+*/
+
+class Form_StatusWorkingUpdate extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * @working_status: Working Status
+     * @reason_utilization: Reason Utilization
+     * @quantity: Quantity
+     * @comments: Comments
+     * @temperature: Temperature
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "working_status" => "Working Status",
         "reason_utilization" => "Reason Utilization",
@@ -9,10 +37,23 @@ class Form_StatusWorkingUpdate extends Zend_Form {
         "comments" => "Comments",
         "temperature" => "Temperature"
     );
+    
+    /**
+     * $_list
+     * 
+     * Private Variable 
+     * 
+     * List
+     * 
+     * @var type 
+     */
     private $_list = array(
         'working_status' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         $status_list = new Model_CcmStatusList();
@@ -37,31 +78,14 @@ class Form_StatusWorkingUpdate extends Zend_Form {
                 case "quantity":
                 case "comments":
                 case "temperature":
-
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
-
-
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => ""),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
             $i++;
         }

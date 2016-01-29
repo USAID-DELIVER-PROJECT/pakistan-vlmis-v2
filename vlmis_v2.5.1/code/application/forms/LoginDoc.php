@@ -1,51 +1,55 @@
 <?php
 
-class Form_LoginDoc extends Zend_Form {
+/**
+ * Form_LoginDoc
+ *
+ * 
+ *
+ *     Logistics Management 
+ * Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Login Doc
+ * 
+ * Inherits: Form_Base
+ */
+class Form_LoginDoc extends Form_Base {
+
+    /**
+     * For fields 
+     * for Form_LoginDoc
+     * 
+     * login_id
+     * password
+     * @var type 
+     */
+    private $_fields = array(
+        "login_id" => "Login Id",
+        "password" => "Password"
+    );
+
+    /**
+     * Initializes Form Fields
+     * for Form_LoginDoc
+     * 
+     */
     public function init() {
-        $this->addElement("text", "login_id", array(
-            "attribs" => array("class" => "text form-control", "placeholder" => "Email..."),
-            "allowEmpty" => false,
-            'filters' => array(
-                array('filter' => 'StringTrim'),
-                array('filter' => 'StripTags'),
-                array(
-                    'filter' => 'PregReplace',
-                    'options' => array('match' => '#[^0-9\w,.!@$&()\[\]\-_;:\\\/\s]#', 'replace' => '')
-                )
-            ),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "Username cannot be blank"))
-                )
-            )
-        ));
-        $this->getElement("login_id")->removeDecorator("Label")->removeDecorator("HtmlTag");
 
-        $this->addElement("password", "password", array(
-            "attribs" => array("class" => "password form-control", "placeholder" => "Password..."),
-            "allowEmpty" => false,
-            'filters' => array(
-                array('filter' => 'StringTrim'),
-                array('filter' => 'StripTags'),
-                array(
-                    'filter' => 'PregReplace',
-                    'options' => array('match' => '#[^0-9\w,.!@$&()\[\]\-_;:\\\/\s]#', 'replace' => '')
-                )
-            ),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "Password cannot be blank"))
-                )
-            )
-        ));
-        $this->getElement("password")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        foreach ($this->_fields as $col => $name) {
+            switch ($col) {
+                case "login_id":
+                    parent::createText($col);
+                    break;
+                case "password":
+                    parent::createPassword($col);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
-
 }
 
-?>

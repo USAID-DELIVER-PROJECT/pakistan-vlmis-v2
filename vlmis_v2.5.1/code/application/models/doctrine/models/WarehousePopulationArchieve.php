@@ -1,65 +1,78 @@
 <?php
 
-
+/**
+*  Model for Warehouse Population Archive
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * WarehousePopulationArchieve
+ *  WarehousePopulationArchieve
  */
 class WarehousePopulationArchieve
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $facilityTotalPouplation
      * @var integer $facilityTotalPouplation
      */
     private $facilityTotalPouplation;
 
     /**
+     * $liveBirthsPerYear
      * @var integer $liveBirthsPerYear
      */
     private $liveBirthsPerYear;
 
     /**
+     * $pregnantWomenPerYear
      * @var integer $pregnantWomenPerYear
      */
     private $pregnantWomenPerYear;
 
     /**
+     * $womenOfChildBearingAge
      * @var integer $womenOfChildBearingAge
      */
     private $womenOfChildBearingAge;
 
     /**
+     * $estimationYear
      * @var datetime $estimationYear
      */
     private $estimationYear;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

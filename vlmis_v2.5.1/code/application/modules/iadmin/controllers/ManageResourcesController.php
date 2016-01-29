@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Iadmin_ManageResourcesController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Iadmin Manage Resources
+ */
 class Iadmin_ManageResourcesController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Iadmin_ManageResourcesController index
+     */
     public function indexAction() {
         $form = new Form_Iadmin_ResourceSearch();
         $form_add = new Form_Iadmin_Resources();
@@ -60,36 +73,40 @@ class Iadmin_ManageResourcesController extends App_Controller_Base {
         $this->view->pagination_params = $params;
     }
 
+    /**
+     * add
+     */
     public function addAction() {
         $form = new Form_Iadmin_Resources();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $resource = new Resources();
-                $resource->setResourceName($form->resource_name->getValue());
-                $resource->setDescription($form->description->getValue());
-                $resource_type = $this->_em->find('ResourceTypes', $form->resource_type->getValue());
-                $resource->setResourceType($resource_type);
-                $parent_val = $form->parent_id->getValue();
-                $parent_id = !empty($parent_val) ? $parent_val : 0;
-                $resource->setParentId($parent_id);
-                $resource->setRank($form->rank->getValue());
-                $resource->setLevel($form->level->getValue());
-                $resource->setPageTitle($form->page_title->getValue());
-                $resource->setMetaTitle($form->meta_title->getValue());
-                $resource->setMetaDescription($form->meta_desc->getValue());
-                $user_id = $this->_em->find('Users', $this->_userid);
-                $resource->setCreatedBy($user_id);
-                $resource->setModifiedBy($user_id);
-                $resource->setCreatedDate(App_Tools_Time::now());
-                $resource->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($resource);
-                $this->_em->flush();
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $resource = new Resources();
+            $resource->setResourceName($form->resource_name->getValue());
+            $resource->setDescription($form->description->getValue());
+            $resource_type = $this->_em->find('ResourceTypes', $form->resource_type->getValue());
+            $resource->setResourceType($resource_type);
+            $parent_val = $form->parent_id->getValue();
+            $parent_id = !empty($parent_val) ? $parent_val : 0;
+            $resource->setParentId($parent_id);
+            $resource->setRank($form->rank->getValue());
+            $resource->setLevel($form->level->getValue());
+            $resource->setPageTitle($form->page_title->getValue());
+            $resource->setMetaTitle($form->meta_title->getValue());
+            $resource->setMetaDescription($form->meta_desc->getValue());
+            $user_id = $this->_em->find('Users', $this->_userid);
+            $resource->setCreatedBy($user_id);
+            $resource->setModifiedBy($user_id);
+            $resource->setCreatedDate(App_Tools_Time::now());
+            $resource->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($resource);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-resources");
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->setLayout("ajax");
         $resource_id = $this->_request->getParam('resource_id', '');
@@ -113,36 +130,40 @@ class Iadmin_ManageResourcesController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * update
+     */
     public function updateAction() {
         $form = new Form_Iadmin_Resources();
         $form->addHidden();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $resource_id = $form->id->getValue();
-                $resource = $this->_em->getRepository("Resources")->find($resource_id);
-                $resource->setResourceName($form->resource_name->getValue());
-                $resource->setDescription($form->description->getValue());
-                $resource->setPageTitle($form->page_title->getValue());
-                $resource->setMetaTitle($form->meta_title->getValue());
-                $resource->setMetaDescription($form->meta_desc->getValue());
-                $resource_type = $this->_em->find('ResourceTypes', $form->resource_type->getValue());
-                $resource->setResourceType($resource_type);
-                $parent_val = $form->parent_id->getValue();
-                $parent_id = !empty($parent_val) ? $parent_val : 0;
-                $resource->setParentId($parent_id);
-                $resource->setRank($form->rank->getValue());
-                $resource->setLevel($form->level->getValue());
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $resource->setModifiedBy($created_by);
-                $resource->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($resource);
-                $this->_em->flush();
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $resource_id = $form->id->getValue();
+            $resource = $this->_em->getRepository("Resources")->find($resource_id);
+            $resource->setResourceName($form->resource_name->getValue());
+            $resource->setDescription($form->description->getValue());
+            $resource->setPageTitle($form->page_title->getValue());
+            $resource->setMetaTitle($form->meta_title->getValue());
+            $resource->setMetaDescription($form->meta_desc->getValue());
+            $resource_type = $this->_em->find('ResourceTypes', $form->resource_type->getValue());
+            $resource->setResourceType($resource_type);
+            $parent_val = $form->parent_id->getValue();
+            $parent_id = !empty($parent_val) ? $parent_val : 0;
+            $resource->setParentId($parent_id);
+            $resource->setRank($form->rank->getValue());
+            $resource->setLevel($form->level->getValue());
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $resource->setModifiedBy($created_by);
+            $resource->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($resource);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-resources");
     }
 
+    /**
+     * delete
+     */
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -153,6 +174,9 @@ class Iadmin_ManageResourcesController extends App_Controller_Base {
         return $this->_em->flush();
     }
 
+    /**
+     * check Resource
+     */
     public function checkResourceAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);

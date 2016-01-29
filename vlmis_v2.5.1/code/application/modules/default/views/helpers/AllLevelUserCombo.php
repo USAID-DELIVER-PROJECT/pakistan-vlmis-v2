@@ -1,7 +1,27 @@
 <?php
+/**
+ * Zend_View_Helper_AllLevelUserCombo
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Zend View Helper All Level User Combo
+ */
 class Zend_View_Helper_AllLevelUserCombo extends Zend_View_Helper_Abstract {
 
+    /**
+     * All Level User Combo
+     * @param type $office_term
+     * @param type $postfix
+     * @param type $menu_type
+     * @return boolean
+     */
     public function allLevelUserCombo($office_term = "", $postfix = null, $menu_type = 1) {
 
         $identity = App_Auth::getInstance();
@@ -19,7 +39,7 @@ class Zend_View_Helper_AllLevelUserCombo extends Zend_View_Helper_Abstract {
                     );
                     break;
                 case 2:
-
+                case 5:
                     $arr_province = array(
                         '2' => $translate->translate('Province'),
                         '3' => $translate->translate('Division'),
@@ -33,13 +53,6 @@ class Zend_View_Helper_AllLevelUserCombo extends Zend_View_Helper_Abstract {
                     break;
                 case 4:
                     $arr_province = array(
-                        '4' => $translate->translate('District')
-                    );
-                    break;
-                case 5:
-                    $arr_province = array(
-                        '2' => $translate->translate('Province'),
-                        '3' => $translate->translate('Division'),
                         '4' => $translate->translate('District')
                     );
                     break;
@@ -136,17 +149,18 @@ class Zend_View_Helper_AllLevelUserCombo extends Zend_View_Helper_Abstract {
                 <div class="col-md-3">
                     <div class="control-group">
                         <label class="control-label" for="office" class="col-md-7"><?php
-        if (empty($office_term))
-            echo $translate->translate("Office");
-        else
-            echo $office_term;
-        ?> <span class="red">*</span></label>
+                            if (empty($office_term)) {
+                                echo $translate->translate("Office");
+                            } else {
+                                echo $office_term;
+                            }
+                            ?> <span class="red">*</span></label>
                         <div class="controls">
                             <select name="office" id="office<?php echo $postfix; ?>" class="form-control">
                                 <option value=""><?php echo $translate->translate("Select"); ?></option>
-                            <?php
-                            foreach ($arr_province as $key => $value) {
-                                ?>
+                                <?php
+                                foreach ($arr_province as $key => $value) {
+                                    ?>
                                     <option value="<?php echo $key; ?>" ><?php echo $value; ?></option>
                                 <?php } ?>
                             </select>
@@ -159,8 +173,8 @@ class Zend_View_Helper_AllLevelUserCombo extends Zend_View_Helper_Abstract {
                         <select name="combo1" id="combo1<?php echo $postfix; ?>" class="form-control">
                         </select>
                     </div>
-                </div>	
-                <div class="col-md-3" id="div_combo2<?php echo $postfix; ?>" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>		
+                </div>
+                <div class="col-md-3" id="div_combo2<?php echo $postfix; ?>" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>
                     <label class="control-label" id="lblcombo2"><?php echo $translate->translate("District"); ?> <span class="red">*</span></label>
                     <div class="controls">
                         <select name="combo2" id="combo2<?php echo $postfix; ?>" class="form-control">

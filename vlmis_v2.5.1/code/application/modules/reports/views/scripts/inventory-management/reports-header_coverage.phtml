@@ -1,6 +1,10 @@
+<?php
+/**
+*  phtml for Reports Header Coverage
+*/
+?>
 <!--  BEGIN: REPORT Header -->
 <?php
-//echo $this->month_sel;
 $report_id = $this->report_id;
 
 $report_title = $this->report_title;
@@ -80,8 +84,8 @@ if (!empty($sel_month)) {
                     ?>
                     <td width="20%" valign="top" class="row-br-b">
                         <!-- Widget Heading -->                        
-                        </h3>-->
-                        <!-- // Widget Heading END -->
+                
+                        <!-- Widget Heading END -->
                         <div class="widget-body" style="padding: 2px 0 0 12px; line-height:13px; ">
                             <span><?php echo stripslashes($this->getReportDescription($geo_level_id, $in_item, $report_id)); ?></span>
                         </div>
@@ -148,8 +152,6 @@ if (!empty($sel_month)) {
                                             $paramTsel = 0;
                                             $paramTall = 1;
                                         }
-                                        //echo  $posT11.'*'.$posT10.'*'.$posT01.'*'.$paramTsel.'*'.$paramTall;
-                                        //echo  $paramTsel.'*'.$paramTall;
                                         ?>
                                         <?php
                                         if ($report_id == "PROVINCIALWAREHOUSE" ||
@@ -364,7 +366,6 @@ if (!empty($sel_month)) {
                                     }
 
                                     if ($report_id == "SNASUM" || $report_id == "STOCKOUTRPT") {
-                                        //|| $report_id == "SDISTRICTREPORT"
                                         ?>
                                         <!--<td>
                                                <div class="sb1NormalFont">Sector</div>

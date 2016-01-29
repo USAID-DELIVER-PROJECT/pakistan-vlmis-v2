@@ -1,6 +1,13 @@
 <?php
+/**
+*  php for Users
+*/
+?>
+<?php
 
-
+/**
+*  Model for Users
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,131 +17,157 @@ use Doctrine\ORM\Mapping as ORM;
 class Users
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $userName
      * @var string $userName
      */
     private $userName;
 
     /**
+     * $password
      * @var string $password
      */
     private $password;
 
     /**
+     * $email
      * @var string $email
      */
     private $email;
 
     /**
+     * $cellNumber
      * @var string $cellNumber
      */
     private $cellNumber;
 
     /**
+     * $recordId
      * @var string $recordId
      */
     private $recordId;
 
     /**
+     * $loginId
      * @var string $loginId
      */
     private $loginId;
 
     /**
+     * $designation
      * @var string $designation
      */
     private $designation;
 
     /**
+     * $department
      * @var string $department
      */
     private $department;
 
     /**
+     * $photo
      * @var string $photo
      */
     private $photo;
 
     /**
+     * $address
      * @var string $address
      */
     private $address;
 
     /**
+     * $phoneNumber
      * @var string $phoneNumber
      */
     private $phoneNumber;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $loggedAt
      * @var datetime $loggedAt
      */
     private $loggedAt;
 
     /**
+     * $failedAt
      * @var datetime $failedAt
      */
     private $failedAt;
 
     /**
+     * $failedQuantity
      * @var integer $failedQuantity
      */
     private $failedQuantity;
 
     /**
+     * $auth
      * @var string $auth
      */
     private $auth;
 
     /**
+     * $organization
      * @var string $organization
      */
     private $organization;
 
     /**
+     * $country
      * @var integer $country
      */
     private $country;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $role
      * @var Roles
      */
     private $role;
 
     /**
+     * $stakeholder
      * @var Stakeholders
      */
     private $stakeholder;
 
     /**
+     * $location
      * @var Locations
      */
     private $location;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

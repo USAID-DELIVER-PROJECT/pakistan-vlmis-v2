@@ -1,13 +1,51 @@
 <?php
 
-class Form_Iadmin_MessagesSearch extends Zend_Form {
+/**
+ * Form_Iadmin_MessagesSearch
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin Messages Search
+ * 
+ * Function:
+ * To Search Messages
+ */
+class Form_Iadmin_MessagesSearch extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * @page_name: Page Name
+     * @search_text: Page Name Description
+     * @status: Status
+     * @deleted: Deleted
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "page_name" => "Page Name",
         "search_text" => "Page Name Description",
         "status" => "Status",
         "deleted" => "Deleted"
     );
+
+    /**
+     * $_list
+     * 
+     * Private Variable
+     * 
+     * @var type 
+     */
     private $_list = array(
         'page_name' => array(),
         'status' => array(
@@ -16,12 +54,23 @@ class Form_Iadmin_MessagesSearch extends Zend_Form {
             '2' => 'Deleted'
         )
     );
+
+    /**
+     * $_checkbox
+     * 
+     * Private Variable
+     * 
+     * @var type 
+     */
     private $_checkbox = array(
         "deleted" => array(
             '1' => 'deleted'
         ),
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         $resources = new Model_Resources();
         $resources->form_values['only_childs'] = 1;
@@ -36,43 +85,16 @@ class Form_Iadmin_MessagesSearch extends Zend_Form {
             }
         }
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "search_text":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "search_text") {
+                parent::createText($col);
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array()
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
-            
+
             if (in_array($col, array_keys($this->_checkbox))) {
-                $this->addElement("checkbox", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_checkbox[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createCheckbox($col, $this->_checkbox[$col]);
             }
         }
     }

@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Cadmin_ManageMakesController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Cadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Cadmin Manage Makes 
+ */
 class Cadmin_ManageMakesController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Cadmin_ManageMakesController index
+     */
     public function indexAction() {
         $form = new Form_Cadmin_MakeSearch();
         $form_add = new Form_Cadmin_MakeAdd();
@@ -51,28 +64,32 @@ class Cadmin_ManageMakesController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * add
+     */
     public function addAction() {
         $form = new Form_Cadmin_MakeAdd();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
 
-                $makes = new CcmMakes();
-                $makes->setCcmMakeName($form->ccm_make_name->getValue());
-                $makes->setStatus($form->status->getValue());
-                $created_by = $this->_em->find('Users', $this->_userid);
-                $makes->setCreatedBy($created_by);
-                $makes->setCreatedDate(App_Tools_Time::now());
-                $makes->setModifiedBy($created_by);
-                $makes->setModifiedDate(App_Tools_Time::now());
+            $makes = new CcmMakes();
+            $makes->setCcmMakeName($form->ccm_make_name->getValue());
+            $makes->setStatus($form->status->getValue());
+            $created_by = $this->_em->find('Users', $this->_userid);
+            $makes->setCreatedBy($created_by);
+            $makes->setCreatedDate(App_Tools_Time::now());
+            $makes->setModifiedBy($created_by);
+            $makes->setModifiedDate(App_Tools_Time::now());
 
-                $this->_em->persist($makes);
-                $this->_em->flush();
-            }
+            $this->_em->persist($makes);
+            $this->_em->flush();
         }
         $this->_redirect("/cadmin/manage-makes");
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->disableLayout();
         $make_id = $this->_request->getParam('make_id', '');
@@ -85,6 +102,9 @@ class Cadmin_ManageMakesController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * update
+     */
     public function updateAction() {
 
         if ($this->_request->getPost()) {
@@ -101,6 +121,9 @@ class Cadmin_ManageMakesController extends App_Controller_Base {
         $this->_redirect("/cadmin/manage-makes");
     }
 
+    /**
+     * delete
+     */
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -115,6 +138,9 @@ class Cadmin_ManageMakesController extends App_Controller_Base {
         return $this->_em->flush();
     }
 
+    /**
+     * checkUser
+     */
     public function checkUserAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);

@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for Help Messages
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * HelpMessages
+ *  HelpMessages
  */
 class HelpMessages
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $description
      * @var text $description
      */
     private $description;
 
     /**
+     * $status
      * @var integer $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $resource
      * @var Resources
      */
     private $resource;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

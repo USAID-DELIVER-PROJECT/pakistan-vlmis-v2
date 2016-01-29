@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for Stock Batch VVM
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * StockBatchVvm
+ *  StockBatchVvm
  */
 class StockBatchVvm
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $stockBatchWarehouseId
      * @var integer $stockBatchWarehouseId
      */
     private $stockBatchWarehouseId;
 
     /**
+     * $vvmStage
      * @var integer $vvmStage
      */
     private $vvmStage;
 
     /**
+     * $quantity
      * @var decimal $quantity
      */
     private $quantity;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

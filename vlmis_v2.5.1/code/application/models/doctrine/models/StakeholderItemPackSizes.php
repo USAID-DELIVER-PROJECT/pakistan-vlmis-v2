@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for Stakeholder Item Pack Sizes
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * StakeholderItemPackSizes
+ *  StakeholderItemPackSizes
  */
 class StakeholderItemPackSizes
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $itemPackSize
      * @var ItemPackSizes
      */
     private $itemPackSize;
 
     /**
+     * $stakeholder
      * @var Stakeholders
      */
     private $stakeholder;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

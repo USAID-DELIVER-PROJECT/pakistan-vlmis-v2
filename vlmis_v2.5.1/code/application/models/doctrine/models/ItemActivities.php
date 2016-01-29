@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for Item Activities
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ItemActivities
+ *  ItemActivities
  */
 class ItemActivities
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $itemPackSize
      * @var ItemPackSizes
      */
     private $itemPackSize;
 
     /**
+     * $stakeholderActivity
      * @var StakeholderActivities
      */
     private $stakeholderActivity;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

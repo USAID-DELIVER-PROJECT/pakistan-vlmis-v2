@@ -1,7 +1,38 @@
 <?php
 
-class Form_Iadmin_Stores extends Zend_Form {
+/**
+ * Form_Iadmin_Stores
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin Stores
+ */
+class Form_Iadmin_Stores extends Form_Base {
+
+    /**
+     * Fields 
+     * for Form_Iadmin_Stores
+     * 
+     * 
+     * store_name_add
+     * store_name_update
+     * ccm_warehouse_id
+     * ccm_warehouse_id_update
+     * warehouse_type
+     * warehouse_type_update
+     * 
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "store_name_add" => "store/facility Name",
         "store_name_update" => "store/facility Name",
@@ -10,6 +41,29 @@ class Form_Iadmin_Stores extends Zend_Form {
         "warehouse_type" => "warehouse_type",
         "warehouse_type_update" => "warehouse_type_update"
     );
+
+    /**
+     * Hidden fields
+     * for Form_Iadmin_Stores
+     * 
+     * 
+     * wh_id
+     * office_type
+     * province_id
+     * district_id
+     * tehsil_id
+     * parent_id
+     * office_id_edit
+     * province_id_edit
+     * district_id_edit
+     * tehsil_id_edit
+     * parent_id_edit
+     * warehouse_type_id_hidden
+     * 
+     * 
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "wh_id" => "pkId",
         "office_type" => "pkId",
@@ -24,43 +78,53 @@ class Form_Iadmin_Stores extends Zend_Form {
         "parent_id_edit" => "pkId",
         "warehouse_type_id_hidden" => "pkId"
     );
+
+    /**
+     * Combo boxes for 
+     * Form_Iadmin_Stores
+     * 
+     * 
+     * warehouse_type
+     * warehouse_type_update
+     * 
+     * 
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'warehouse_type' => array(),
         'warehouse_type_update' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     * for Form_Iadmin_Stores
+     */
     public function init() {
 
+        // Generate fields 
+        // for Form_Iadmin_Stores
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
                 case "store_name_add":
                 case "store_name_update":
                 case "ccm_warehouse_id":
                 case "ccm_warehouse_id_update":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
             }
+
+            // Generate Combo boxes 
+            // for Form_Iadmin_Stores
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
 
+        // Generate hidden fields 
+        // for Form_Iadmin_Stores
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
 
@@ -77,8 +141,7 @@ class Form_Iadmin_Stores extends Zend_Form {
                 case "tehsil_id_edit":
                 case "parent_id_edit":
                 case "warehouse_type_id_hidden":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -86,26 +149,12 @@ class Form_Iadmin_Stores extends Zend_Form {
         }
     }
 
+    /**
+     * Add Hidden Fields
+     * for Form_Iadmin_Stores
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

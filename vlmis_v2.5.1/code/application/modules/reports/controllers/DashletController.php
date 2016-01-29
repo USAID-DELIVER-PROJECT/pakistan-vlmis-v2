@@ -1,15 +1,35 @@
 <?php
 
+/**
+ * Reports_DashletController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Reports
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+/**
+ * Reports Dashlet
+ */
 require_once 'FusionCharts/Code/PHP/Includes/FusionCharts.php';
 
+/**
+ *  Controller for Reports Dashlet
+ */
 class Reports_DashletController extends App_Controller_Base {
 
+    /**
+     * Reports_DashletController init
+     */
     public function init() {
         parent::init();
         $this->_helper->layout->setLayout("dashlets");
     }
 
     /**
+     * Stock Status
      * Inventory Management Dashlet
      */
     public function stockStatusAction() {
@@ -27,6 +47,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Stock Status Routine
      * Routine Immunization Dashlet Late
      */
     public function stockStatusRoutineAction() {
@@ -43,6 +64,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->item = $params["item"];
     }
 
+    /**
+     * ajaxStockStatusRoutine
+     */
     public function ajaxStockStatusRoutineAction() {
         $this->_helper->layout->disableLayout();
 
@@ -63,6 +87,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Reported Wastages
      * Main Dashboard Dashlet
      */
     public function reportedWastagesAction() {
@@ -117,11 +142,11 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->level = $level;
     }
 
+    /**
+     * Illegal Wastages
+     */
     public function illegalWastagesAction() {
-        $level = $this->_request->getParam("level");
         $province = $this->_request->getParam("province");
-        $district = $this->_request->getParam("district");
-        $period = $this->_request->getParam("period");
         $date = $this->_request->getParam("date");
         $item = $this->_request->getParam("item");
 
@@ -140,6 +165,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->xmlstore = $xmlstore;
     }
 
+    /**
+     * Wastages Comparison
+     */
     public function wastagesComparisonAction() {
         $province = $this->_request->getParam("province");
         $district = $this->_request->getParam("district");
@@ -174,6 +202,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->combo = $combo;
     }
 
+    /**
+     * ajaxWastagesComparison
+     */
     public function ajaxWastagesComparisonAction() {
         $province = $this->_request->getParam("province");
         $district = $this->_request->getParam("district");
@@ -198,6 +229,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->xmlstore = $xmlstore;
     }
 
+    /**
+     * Reported Wastage
+     */
     public function reportedWastageAction() {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
@@ -205,7 +239,6 @@ class Reports_DashletController extends App_Controller_Base {
         $level = $this->_request->getParam("level");
         $province = $this->_request->getParam("province");
         $district = $this->_request->getParam("district");
-        $period = $this->_request->getParam("period");
         $date = $this->_request->getParam("date");
         $item = $this->_request->getParam("item");
 
@@ -233,6 +266,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->level = $level;
     }
 
+    /**
+     * Reported Non Reported
+     */
     public function reportedNonReportedAction() {
         $district = $this->_request->getParam("district");
         $date = $this->_request->getParam("date");
@@ -250,6 +286,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->xmlstore = $xmlstore;
     }
 
+    /**
+     * ajaxReportedNonReported
+     */
     public function ajaxReportedNonReportedAction() {
         $data_arr = explode('|', $this->_request->getParam('param'));
         $district = $data_arr[0];
@@ -273,6 +312,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->type = $type;
     }
 
+    /**
+     * Stock Status By Item
+     */
     public function stockStatusByItemAction() {
         $district = $this->_request->getParam("district");
         $province = $this->_request->getParam("province");
@@ -301,6 +343,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->data = $data;
     }
 
+    /**
+     * ajaxStockStatusByItem
+     */
     public function ajaxStockStatusByItemAction() {
         $data_arr = explode('|', $this->_request->getParam('param'));
         $wh_id = $data_arr[0];
@@ -324,6 +369,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->type = $type;
     }
 
+    /**
+     * vvm Stage Status
+     */
     public function vvmStageStatusAction() {
         $district = $this->_request->getParam("district");
         $province = $this->_request->getParam("province");
@@ -353,6 +401,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->data = $data;
     }
 
+    /**
+     * ajaxVvmStageStatus
+     */
     public function ajaxVvmStageStatusAction() {
         $data_arr = explode('|', $this->_request->getParam('param'));
         $wh_id = $data_arr[0];
@@ -373,6 +424,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->type = $type;
     }
 
+    /**
+     * Reported Non Reported Province
+     */
     public function reportedNonReportedProvinceAction() {
 
         $province = $this->_request->getParam("province");
@@ -399,6 +453,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->xmlstore2 = $xmlstore2;
     }
 
+    /**
+     * ajaxReportedNonReportedProvince
+     */
     public function ajaxReportedNonReportedProvinceAction() {
         $data_arr = explode('|', $this->_request->getParam('param'));
         $province = $data_arr[0];
@@ -429,6 +486,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->xmlstore = $xmlstore;
     }
 
+    /**
+     * Consumption Amc
+     */
     public function consumptionAmcAction() {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
@@ -455,6 +515,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->xmlstore = $xmlstore;
     }
 
+    /**
+     * Consumption Mos
+     */
     public function consumptionMosAction() {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
@@ -481,6 +544,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->xmlstore = $xmlstore;
     }
 
+    /**
+     * Get SOH (Stock on Hand)
+     */
     public function getSohAction() {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
@@ -501,6 +567,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->xmlstore = $xmlstore;
     }
 
+    /**
+     * Get MOS (Months of Stock) of Districts
+     */
     public function getMosDistrictsAction() {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
@@ -513,6 +582,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->xmlstore = $xmlstore;
     }
 
+    /**
+     * Get SOH (Stock on Hand) of Districts
+     */
     public function getSohDistrictsAction() {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
@@ -525,6 +597,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->xmlstore = $xmlstore;
     }
 
+    /**
+     * Get MOS (Months of Stock)
+     */
     public function getMosAction() {
         $wh_data = new Model_HfDataMaster();
         $params["date"] = $this->_request->getParam("date");
@@ -556,12 +631,17 @@ class Reports_DashletController extends App_Controller_Base {
             case 6:
                 $xmlstore = $wh_data->getMOSByUc($district);
                 break;
+            default :
+                break;
         }
 
         $this->view->xmlstore = $xmlstore;
         $this->view->combo = $combo;
     }
 
+    /**
+     * ajaxGetMos
+     */
     public function ajaxGetMosAction() {
 
         $wh_data = new Model_HfDataMaster();
@@ -588,11 +668,16 @@ class Reports_DashletController extends App_Controller_Base {
             case 6:
                 $xmlstore = $wh_data->getMOSByUc($district);
                 break;
+            default :
+                break;
         }
 
         $this->view->xmlstore = $xmlstore;
     }
 
+    /**
+     * Get AMC (Average Monthly Consumption) 
+     */
     public function getAmcAction() {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
@@ -616,11 +701,16 @@ class Reports_DashletController extends App_Controller_Base {
             case 6:
                 $xmlstore = $wh_data->getAMCByUc($district);
                 break;
+            default :
+                break;
         }
 
         $this->view->xmlstore = $xmlstore;
     }
 
+    /**
+     * Get Consumption
+     */
     public function getConsumptionAction() {
         $item = new Model_ItemPackSizes();
         $this->view->items = $item->getAllItems();
@@ -664,6 +754,8 @@ class Reports_DashletController extends App_Controller_Base {
                 $xmlstore = $wh_data->getConsumptionByUc($district);
                 $this->view->xmltype = "MSCombi2D.swf";
                 break;
+            default :
+                break;
         }
 
         $this->view->xmlstore = $xmlstore;
@@ -671,6 +763,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->level = $level;
     }
 
+    /**
+     * ajaxGetConsumption
+     */
     public function ajaxGetConsumptionAction() {
         $wh_data = new Model_HfDataMaster();
         $params["date"] = $this->_request->getParam("date");
@@ -696,12 +791,15 @@ class Reports_DashletController extends App_Controller_Base {
                 $xmlstore = $wh_data->getConsumptionByUc($district);
                 $this->view->xmltype = "MSCombi2D.swf";
                 break;
+            default :
+                break;
         }
 
         $this->view->xmlstore = $xmlstore;
     }
 
     /**
+     * Stock Issue
      * Inventory Management Dashlet
      */
     public function stockIssueAction() {
@@ -734,6 +832,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->item = $params["item"];
     }
 
+    /**
+     * ajaxStockIssue
+     */
     public function ajaxStockIssueAction() {
         $this->_helper->layout->disableLayout();
 
@@ -762,6 +863,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Stock Receive
      * Inventory Management Dashlet Late
      */
     public function stockReceiveAction() {
@@ -780,6 +882,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->item = $params["item"];
     }
 
+    /**
+     * ajaxStockReceive
+     */
     public function ajaxStockReceiveAction() {
         $this->_helper->layout->disableLayout();
 
@@ -802,6 +907,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Wastages Rate
      * Routine Immunization Dashlet Late
      */
     public function wastagesRateAction() {
@@ -818,6 +924,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->item = $params["item"];
     }
 
+    /**
+     * ajaxWastagesRate
+     */
     public function ajaxWastagesRateAction() {
         $this->_helper->layout->disableLayout();
 
@@ -838,6 +947,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Reporting Rate
      * Routine Immunization Dashlet Late
      */
     public function reportingRateAction() {
@@ -849,10 +959,10 @@ class Reports_DashletController extends App_Controller_Base {
         $dashlet->form_values = array_reverse($months);
         $this->view->result = $dashlet->reportingRate();
         $this->view->months = array_reverse($months);
-        //  App_Controller_Functions::pr($this->view->result);
     }
 
     /**
+     * Stock Position
      * Routine Immunization Dashlet Late
      */
     public function stockPositionAction() {
@@ -862,6 +972,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Day Wise Coverage
      * Campaign Management Dashlet
      */
     public function dayWiseCoverageAction() {
@@ -885,6 +996,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Different Missed Types
      * Campaign Management Dashlet
      */
     public function differentMissedTypesAction() {
@@ -903,6 +1015,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Data Entry Status
      * Campaign Management Dashlet
      */
     public function dataEntryStatusAction() {
@@ -917,6 +1030,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Campaign Vaccines
      * Campaign Management Dashlet
      */
     public function campaignVaccinesAction() {
@@ -930,6 +1044,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Facility Stats
      * Cold Chain Equipment Management Dashlet
      */
     public function facilityStatsAction() {
@@ -937,6 +1052,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Refrigerator Freezer Type
      * Cold Chain Equipment Management Dashlet
      */
     public function refrigeratorFreezerTypeAction() {
@@ -944,6 +1060,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Assets Stats
      * Cold Chain Equipment Management Dashlet
      */
     public function assetsStatsAction() {
@@ -951,6 +1068,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Mode Of Vaccine Supplies
      * Cold Chain Equipment Management Dashlet
      */
     public function modeOfVaccineSuppliesAction() {
@@ -958,6 +1076,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Health Facility Stats
      * Cold Chain Equipment Management Dashlet
      */
     public function healthFacilityStatsAction() {
@@ -965,6 +1084,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Month Of Stock
      * Maps Dashlet
      */
     public function monthOfStockAction() {
@@ -979,9 +1099,11 @@ class Reports_DashletController extends App_Controller_Base {
 
         $this->view->inlineScript()->prependScript('var prov_id = "' . $prov_id . '"');
         $this->view->inlineScript()->appendFile($baseurl . '/js/reports/dashlet/month-of-stock2.js');
-        //  $this->view->inlineScript()->appendFile($baseurl . '/js/reports/dashlet/FilterArea.js');
     }
 
+    /**
+     * Expiry Schedule
+     */
     public function expiryScheduleAction() {
 
         $level = $this->_request->getParam('level');
@@ -993,6 +1115,8 @@ class Reports_DashletController extends App_Controller_Base {
                 break;
             case 6:
                 $params["loc_id"] = $this->_request->getParam('district');
+                break;
+            default :
                 break;
         }
         $item = $this->_request->getParam('item');
@@ -1016,6 +1140,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->title = $title;
     }
 
+    /**
+     * ajaxExpirySchedule
+     */
     public function ajaxExpiryScheduleAction() {
         $data_arr = explode('|', $this->_request->getParam('param'));
         $location = $data_arr[0];
@@ -1046,6 +1173,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->title = $title;
     }
 
+    /**
+     * Cold Chain Capacity
+     */
     public function ccCapacityAction() {
         $base_url = Zend_Registry::get('baseurl');
         $this->view->headScript()->appendFile($base_url . '/js/OpenLayers-2.13/OpenLayers.js');
@@ -1061,6 +1191,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($baseurl . '/js/reports/dashlet/cc-capacity2.js');
     }
 
+    /**
+     * Vaccine Storage Capacity At 2 to 8
+     */
     public function vaccineStorageCapacityAt2to8Action() {
         $this->_helper->layout->disableLayout();
         $ccm_warehouse = new Model_CcmWarehouses();
@@ -1075,8 +1208,6 @@ class Reports_DashletController extends App_Controller_Base {
         $main_heading = "Vaccine storage capacity at +2c to +8c";
         $str_sub_heading = "";
         $number_prefix = "";
-        $number_suffix = "%";
-        $s_number_prefix = "";
 
         $xmlstore = "<?xml version=\"1.0\"?>";
         $xmlstore .='<chart caption="' . $main_heading . '" numberprefix="' . $number_prefix . '" showvalues="0" exportEnabled="1" rotateValues="1" theme="fint">';
@@ -1121,6 +1252,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->height = '400';
     }
 
+    /**
+     * Vaccine Storage Capacity At 20
+     */
     public function vaccineStorageCapacityAt20Action() {
         $this->_helper->layout->disableLayout();
         $ccm_warehouse = new Model_CcmWarehouses();
@@ -1135,10 +1269,7 @@ class Reports_DashletController extends App_Controller_Base {
         $main_heading = "Vaccine storage capacity at -20c";
         $str_sub_heading = "";
         $number_prefix = "";
-        $number_suffix = "%";
-        $s_number_prefix = "";
 
-        $xmlstore = "<?xml version = \"1.0\"?>";
         $xmlstore = "<?xml version=\"1.0\"?>";
         $xmlstore .='<chart caption="' . $main_heading . '" numberprefix="' . $number_prefix . '" showvalues="0" exportEnabled="1" rotateValues="1" theme="fint">';
 
@@ -1182,6 +1313,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->height = '400';
     }
 
+    /**
+     * Icepack Freezing Capacity Against Routine Requirements
+     */
     public function icepackFreezingCapacityAgainstRoutineRequirementsAction() {
         $this->_helper->layout->disableLayout();
         $ccm_warehouse = new Model_CcmWarehouses();
@@ -1195,10 +1329,7 @@ class Reports_DashletController extends App_Controller_Base {
         $main_heading = "Icepack freezing capacity";
         $str_sub_heading = "";
         $number_prefix = "";
-        $number_suffix = "%";
-        $s_number_prefix = "";
 
-        $xmlstore = "<?xml version = \"1.0\"?>";
         $xmlstore = "<?xml version=\"1.0\"?>";
         $xmlstore .='<chart caption="' . $main_heading . '" numberprefix="' . $number_prefix . '" showvalues="0" exportEnabled="1" rotateValues="1" theme="fint">';
 
@@ -1208,7 +1339,6 @@ class Reports_DashletController extends App_Controller_Base {
         $dataset_3 = '<dataset seriesname="Match +/- 30%" >';
         $dataset_4 = '<dataset seriesname="Shortage 10-30%" >';
         $dataset_5 = '<dataset seriesname="Shortage > 30%" >';
-        //App_Controller_Functions::pr($data_arr );
         foreach ($data_arr as $sub_arr) {
             $categories .='<category label="' . $sub_arr['FacilityType'] . '" />';
             $dataset_1 .= '<set value="' . $sub_arr['surplus30'] . '" />';
@@ -1244,6 +1374,7 @@ class Reports_DashletController extends App_Controller_Base {
     }
 
     /**
+     * Cold Chain Capacity
      * Cold Chain Equipment Management Dashlet
      */
     public function coldChainCapacityAction() {
@@ -1264,9 +1395,6 @@ class Reports_DashletController extends App_Controller_Base {
         $auth = App_Auth::getInstance();
         $role_id = $auth->getRoleId();
 
-//        echo $role_id;
-//        exit;
-
         if ($role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7) {
             $stock_master = new Model_StockMaster();
             $this->view->pending_receive = $stock_master->getPendingReceive();
@@ -1274,10 +1402,11 @@ class Reports_DashletController extends App_Controller_Base {
 
         $this->view->user_role = $role_id;
         $this->view->warehousename = $this->_identity->getWarehouseName();
-        $base_url = Zend_Registry::get("baseurl");
-        //$this->view->inlineScript()->appendFile($base_url . '/common/assets/scripts/custom/table-advanced.js');
     }
 
+    /**
+     * Cold Chain Capacity Print
+     */
     public function coldChainCapacityPrintAction() {
         $this->_helper->layout->setLayout("print");
         $graphs = new Model_Graphs();
@@ -1290,6 +1419,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->warehousename = $this->_identity->getWarehouseName();
     }
 
+    /**
+     * Cold Chain Capacity Product
+     */
     public function coldChainCapacityProductAction() {
         $this->_helper->layout->setLayout("layout");
         $graphs = new Model_Graphs();
@@ -1301,8 +1433,6 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->to_date = $to_date;
         $xmlstore1 = $graphs->coldChainCapacityProduct(15);
         $this->view->xmlstore1 = $xmlstore1;
-        //$xmlstoresummary = $graphs->coldChainCapacityProductSummary(16);
-        //$this->view->xmlstoresummary = $xmlstoresummary;
         $xmlstore2 = $graphs->coldChainCapacityProduct(16);
         $this->view->xmlstore2 = $xmlstore2;
         $this->view->warehousename = $this->_identity->getWarehouseName();
@@ -1322,6 +1452,9 @@ class Reports_DashletController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/reports/dashlet/cold-chain-capacity.js');
     }
 
+    /**
+     * Cold Chain Capacity Vvm
+     */
     public function coldChainCapacityVvmAction() {
         $this->_helper->layout->setLayout("layout");
         $graphs = new Model_Graphs();
@@ -1340,6 +1473,85 @@ class Reports_DashletController extends App_Controller_Base {
 
         $base_url = Zend_Registry::get("baseurl");
         $this->view->inlineScript()->appendFile($base_url . '/js/reports/dashlet/cold-chain-capacity.js');
+    }
+
+    /**
+     * Donor's Contribution
+     * Donor's Contribution Dashlet
+     */
+    //donorContributions
+    public function donorContributionsAction() {
+        $this->_helper->layout->setLayout("layout");
+        $graphs = new Model_Graphs();
+        $to_date = $this->_request->getPost('to_date');
+        if (empty($to_date)) {
+            $to_date = $this->_request->getParam('to_date', '2015');
+        }
+
+        $graphs->form_values['to_date'] = $to_date;
+
+        $this->view->to_date = $to_date;
+        $wh_data = new Model_HfDataMaster();
+        $wh_data->form_values['to_date'] = $to_date;
+        // Donor's Contribution
+        $xmlstore = $wh_data->donorContribution();
+        $this->view->xmlstore = $xmlstore;
+        // Contribution Breakup
+        $xmlstore1 = $graphs->contributionBreakup();
+        $this->view->xmlstore1 = $xmlstore1;
+        // Product wise Contribution
+        $xmlstore2 = $graphs->productWiseContribution();
+        $this->view->xmlstore2 = $xmlstore2;
+        // Provincially Vaccination
+        $xmlstore3 = $wh_data->provinciallyVaccination();
+        $this->view->xmlstore3 = $xmlstore3;
+
+        $auth = App_Auth::getInstance();
+        $role_id = $auth->getRoleId();
+
+
+        $this->view->user_role = $role_id;
+        $this->view->warehousename = $this->_identity->getWarehouseName();
+    }
+
+    public function ajaxContributionBreakupAction() {
+        $this->_helper->layout->disableLayout();
+        $graphs = new Model_Graphs();
+        
+        $to_date = $this->_request->getParam('to_date');
+        $warehouse_id = $this->_request->getParam('wh_id');
+        $graphs->form_values['to_date'] = $to_date;
+        $graphs->form_values['wh_id'] = $warehouse_id;    
+        $this->view->to_date = $to_date;
+        // Contribution Breakup
+        $xmlstore1 = $graphs->contributionBreakup();
+        $this->view->xmlstore1 = $xmlstore1;
+    }
+    public function ajaxProductWiseContributionAction() {
+        $this->_helper->layout->disableLayout();
+        $graphs = new Model_Graphs();
+        
+        $to_date = $this->_request->getParam('to_date');
+        $warehouse_id = $this->_request->getParam('wh_id');
+        $graphs->form_values['to_date'] = $to_date;
+        $graphs->form_values['wh_id'] = $warehouse_id;    
+        $this->view->to_date = $to_date;
+        // Product wise Contribution
+        $xmlstore2 = $graphs->productWiseContribution();
+        $this->view->xmlstore2 = $xmlstore2;
+    }
+    public function ajaxProvinciallyVaccinationAction() {
+        $this->_helper->layout->disableLayout();
+        
+        $wh_data = new Model_HfDataMaster();
+        $to_date = $this->_request->getParam('to_date');
+        $warehouse_id = $this->_request->getParam('wh_id');
+        $wh_data->form_values['to_date'] = $to_date;
+        $wh_data->form_values['wh_id'] = $warehouse_id;    
+        $this->view->to_date = $to_date;
+        // Provincially Vaccination
+        $xmlstore3 = $wh_data->provinciallyVaccination();
+        $this->view->xmlstore3 = $xmlstore3;
     }
 
 }

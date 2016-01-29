@@ -1,16 +1,39 @@
 <?php
 
-class Form_Product extends Zend_Form {
+/**
+ * Form_Product
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Product
+ */
+class Form_Product extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "product" => "Product"
     );
-    private $_hidden = array(
-    );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'product' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         //Generate Products(items) Combo
@@ -23,17 +46,7 @@ class Form_Product extends Zend_Form {
 
         foreach ($this->_fields as $col => $name) {
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
     }

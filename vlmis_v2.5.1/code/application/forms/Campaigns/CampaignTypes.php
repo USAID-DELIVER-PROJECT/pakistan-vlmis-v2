@@ -1,67 +1,71 @@
 <?php
 
-class Form_Campaigns_CampaignTypes extends Zend_Form {
+/**
+ * Form_Campaigns_CampaignTypes
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Campaigns
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Campaigns Campaign Types
+ */
+class Form_Campaigns_CampaignTypes extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * @campaign_type_name: Campaign Type
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "campaign_type_name" => "Campaign Type"
     );
+
+    /**
+     * $_hidden
+     * 
+     * Private Variable
+     * 
+     * @var type 
+     */
     private $_hidden = array(
         "campaign_type_id" => "campaign_type_id"
-     
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
-     
+
 
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "campaign_type_name": 
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "campaign_type_name") {
+                parent::createText($col);
             }
         }
 
         foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-
-                case "campaign_type_id":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "campaign_type_id") {
+                $this->addElement("hidden", $col);
+                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

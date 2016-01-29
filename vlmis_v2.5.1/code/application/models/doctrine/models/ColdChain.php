@@ -1,115 +1,138 @@
 <?php
 
-
+/**
+*  Model for Cold Chain
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ColdChain
+ *  ColdChain
  */
 class ColdChain
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $assetId
      * @var string $assetId
      */
     private $assetId;
 
     /**
+     * $autoAssetId
      * @var integer $autoAssetId
      */
     private $autoAssetId;
 
     /**
+     * $serialNumber
      * @var string $serialNumber
      */
     private $serialNumber;
 
     /**
+     * $estimateLife
      * @var smallint $estimateLife
      */
     private $estimateLife;
 
     /**
+     * $workingSince
      * @var datetime $workingSince
      */
     private $workingSince;
 
     /**
+     * $quantity
      * @var integer $quantity
      */
     private $quantity;
 
     /**
+     * $manufactureYear
      * @var datetime $manufactureYear
      */
     private $manufactureYear;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $ccmStatusHistoryId
      * @var integer $ccmStatusHistoryId
      */
     private $ccmStatusHistoryId;
 
     /**
+     * $approvedBy
      * @var integer $approvedBy
      */
     private $approvedBy;
 
     /**
+     * $approvedOn
      * @var datetime $approvedOn
      */
     private $approvedOn;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $temperatureMonitor
      * @var integer $temperatureMonitor
      */
     private $temperatureMonitor;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $ccmAssetType
      * @var CcmAssetTypes
      */
     private $ccmAssetType;
 
     /**
+     * $ccmModel
      * @var CcmModels
      */
     private $ccmModel;
 
     /**
+     * $source
      * @var ListDetail
      */
     private $source;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

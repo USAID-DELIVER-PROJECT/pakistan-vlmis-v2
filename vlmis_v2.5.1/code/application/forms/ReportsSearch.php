@@ -1,7 +1,34 @@
 <?php
 
-class Form_ReportsSearch extends Zend_Form {
+/**
+ * Form_ReportsSearch
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Reports Search
+ */
+class Form_ReportsSearch extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Form Fields
+     * combo1: Province
+     * combo1_add: Province
+     * combo2_add: District
+     * combo2: District
+     * year: Year
+     * campaign_id: Campaigns
+     * facility_type: Facility Type
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "combo1" => "Province",
         "combo1_add" => "Province",
@@ -11,6 +38,21 @@ class Form_ReportsSearch extends Zend_Form {
         "campaign_id" => "Campaigns",
         "facility_type" => "Facility Type"
     );
+
+    /**
+     * $_list
+     * 
+     * List
+     * @combo1
+     * @combo1_add
+     * @combo2_add
+     * @combo2
+     * @year
+     * @campaign_id
+     * @facility_type
+     * 
+     * @var type 
+     */
     private $_list = array(
         'combo1' => array(),
         'combo1_add' => array(),
@@ -20,10 +62,18 @@ class Form_ReportsSearch extends Zend_Form {
         'campaign_id' => array(),
         'facility_type' => array()
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "district_id_hidden" => "pkId"
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         //Generate Provinces Combo
         $locations = new Model_Locations();
@@ -65,54 +115,15 @@ class Form_ReportsSearch extends Zend_Form {
         }
 
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                /* case "abc":
-                  $this->addElement("text", $col, array(
-                  "attribs" => array("class" => "form-control"),
-                  "allowEmpty" => true,
-                  "filters" => array("StringTrim", "StripTags"),
-                  "validators" => array()
-                  ));
-                  $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                  break; */
-                default:
-                    break;
-            }
-
-
-
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
 
         foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-
-                case "district_id_hidden":
-
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "district_id_hidden") {
+                $this->addElement("hidden", $col);
+                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
             }
         }
     }

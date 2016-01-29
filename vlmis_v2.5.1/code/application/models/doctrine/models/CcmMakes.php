@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for CCM Makes
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmMakes
+ *  CcmMakes
  */
 class CcmMakes
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $ccmMakeName
      * @var string $ccmMakeName
      */
     private $ccmMakeName;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

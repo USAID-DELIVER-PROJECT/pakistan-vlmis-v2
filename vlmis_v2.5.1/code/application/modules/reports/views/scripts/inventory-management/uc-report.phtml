@@ -1,4 +1,13 @@
 <?php
+/**
+*  phtml for UC Report
+*/
+
+/**
+* UC Report
+*/
+?>
+<?php
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 $xml_store .="<rows>";
 
@@ -6,8 +15,6 @@ $sel_month = $this->month_sel;
 $sel_year = $this->year_sel;
 $in_col = $this->in_col;
 $in_rg = $this->in_rg;
-//$in_type1 = $this->in_type_1;
-
 $in_type = $this->in_type1;
 $sel_item = $this->sel_item;
 $sel_teh = $this->sel_teh;
@@ -181,7 +188,6 @@ if (!empty($sel_month)) {
 
     $(function () {
         $('#wh_type').change(function () {
-            //alert("test");
             $('#loader').show();
             $.ajax({
                 type: "POST",

@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for CCM Warehouses Solar Energy
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmWarehousesSolarEnergy
+ *  CcmWarehousesSolarEnergy
  */
 class CcmWarehousesSolarEnergy
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $ccmWarehouse
      * @var CcmWarehouses
      */
     private $ccmWarehouse;
 
     /**
+     * $solarEnergy
      * @var ListDetail
      */
     private $solarEnergy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

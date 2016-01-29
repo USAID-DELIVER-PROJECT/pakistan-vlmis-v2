@@ -1,60 +1,72 @@
 <?php
 
-
+/**
+*  Model for EPI AMC
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * EpiAmc
+ *  EpiAmc
  */
 class EpiAmc
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $amc
      * @var decimal $amc
      */
     private $amc;
 
     /**
+     * $amcYear
      * @var integer $amcYear
      */
     private $amcYear;
 
     /**
+     * $remarks
      * @var string $remarks
      */
     private $remarks;
 
     /**
+     * $createdBy
      * @var integer $createdBy
      */
     private $createdBy;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedBy
      * @var integer $modifiedBy
      */
     private $modifiedBy;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $item
      * @var ItemPackSizes
      */
     private $item;

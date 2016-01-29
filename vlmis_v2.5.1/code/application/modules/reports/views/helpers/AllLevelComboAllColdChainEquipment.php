@@ -1,7 +1,27 @@
 <?php
+/**
+ * Zend_View_Helper_AllLevelComboAllColdChainEquipment
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage reports
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Zend View Helper All Level Combo All Cold Chain Equipment
+ */
 class Zend_View_Helper_AllLevelComboAllColdChainEquipment extends Zend_View_Helper_Abstract {
 
+    /**
+     * All Level Combo All Cold Chain Equipment
+     * @param type $data_array
+     * @param type $office_term
+     * @param type $postfix
+     * @return boolean
+     */
     public function allLevelComboAllColdChainEquipment($data_array, $office_term = "", $postfix = null) {
 
         $identity = App_Auth::getInstance();
@@ -17,10 +37,8 @@ class Zend_View_Helper_AllLevelComboAllColdChainEquipment extends Zend_View_Help
         $warehouse_id = $data_array["warehouse"];
         if ($office == 1) {
             $warehouse->form_values = array('stakeholder_id' => $stakeholder_id);
-            switch ($office) {
-                case 1:
-                    $warehouse_array = $warehouse->getFederalWarehouses();
-                    break;
+            if ($office == 1) {
+                $warehouse_array = $warehouse->getFederalWarehouses();
             }
         }
 
@@ -41,6 +59,8 @@ class Zend_View_Helper_AllLevelComboAllColdChainEquipment extends Zend_View_Help
                     case 4:
                         $warehouse_array = $warehouse->getDistrictWarehousesofProvince();
                         break;
+                    default:
+                        break;
                 }
             }
         }
@@ -52,18 +72,15 @@ class Zend_View_Helper_AllLevelComboAllColdChainEquipment extends Zend_View_Help
             $districts_array = $location->getLocationsByLevelByProvince();
             $warehouse->form_values = array('district_id' => $district, 'stakeholder_id' => $stakeholder_id);
             switch ($office) {
-
                 case 5:
-                    $warehouse_array = $warehouse->getTehsilWarehousesofDistrict();
-                    break;
-                case 6:
-                    $warehouse_array = $warehouse->getUCWarehousesofDistrict();
-                    break;
                 case 8:
                     $warehouse_array = $warehouse->getTehsilWarehousesofDistrict();
                     break;
+                case 6:
                 case 9:
                     $warehouse_array = $warehouse->getUCWarehousesofDistrict();
+                    break;
+                default:
                     break;
             }
         }
@@ -72,15 +89,6 @@ class Zend_View_Helper_AllLevelComboAllColdChainEquipment extends Zend_View_Help
             case 1:
             case 2:
             case 3:
-                $arr_levels = array(
-                    '1' => $translate->translate('National'),
-                    '2' => $translate->translate('Province'),
-                    //'3' => $translate->translate('Division'),
-                    '4' => $translate->translate('District'),
-                    '8' => $translate->translate('Tehsil-Taluka'),
-                    '9' => $translate->translate('UC')
-                );
-                break;
             case 4:
                 $arr_levels = array(
                     '1' => $translate->translate('National'),
@@ -122,7 +130,6 @@ class Zend_View_Helper_AllLevelComboAllColdChainEquipment extends Zend_View_Help
                 $arr_levels = array(
                     '1' => $translate->translate('National'),
                     '2' => $translate->translate('Province'),
-                    //'3' => $translate->translate('Division'),
                     '4' => $translate->translate('District'),
                     '5' => $translate->translate('Tehsil-Taluka'),
                     '6' => $translate->translate('Union Council')
@@ -141,8 +148,12 @@ class Zend_View_Helper_AllLevelComboAllColdChainEquipment extends Zend_View_Help
                                 <?php
                                 foreach ($arr_levels as $key => $value) {
                                     ?>
-                                    <option value="<?php echo $key; ?>" <?php if (!empty($office) && $key == $office) echo 'selected'; ?>><?php echo $value ?></option>
-                                <?php } ?>
+                                    <option value="<?php echo $key; ?>" <?php
+                                    if (!empty($office) && $key == $office) {
+                                        echo 'selected';
+                                    }
+                                    ?>><?php echo $value ?></option>
+                                        <?php } ?>
                             </select>
                         </div>
                     </div>
@@ -151,28 +162,15 @@ class Zend_View_Helper_AllLevelComboAllColdChainEquipment extends Zend_View_Help
                     <label class="control-label" id="lblcombo1"><?php echo $translate->translate("Province"); ?> </label>
                     <div class="controls">
                         <select name="combo1" id="combo1<?php echo $postfix; ?>" class="form-control">
-                            <?php if ($provinces_array != false) { ?>
+                            <?php if ($provinces_array) { ?>
                                 <option value=""><?php echo $translate->translate("Select"); ?></option>
                                 <?php foreach ($provinces_array as $row) {
                                     ?>
-                                    <option value="<?php echo $row['key']; ?>" <?php if (!empty($province) && $row['key'] == $province) echo 'selected'; ?>>
-                                        <?php echo $row['value']; ?></option>
-                                    <?php
-                                }
-                            }
-                            ?>
-                        </select>
-                    </div>
-                </div>	
-                <div class="col-md-3" id="div_combo2<?php echo $postfix; ?>" <?php if (($office == 5) || !empty($district)) { ?> style="display:block;" <?php } else { ?> style="display:none;"<?php } ?>>
-                    <label class="control-label" id="lblcombo2"><?php echo $translate->translate("District"); ?> </label>
-                    <div class="controls">
-                        <select name="combo2" id="combo2<?php echo $postfix; ?>" class="form-control">
-                            <?php if ($districts_array != false) { ?>
-                                <option value=""><?php echo $translate->translate("Select"); ?></option>
-                                <?php foreach ($districts_array as $row) {
-                                    ?>
-                                    <option value="<?php echo $row['key']; ?>" <?php if (!empty($district) && $row['key'] == $district) echo 'selected'; ?>>
+                                    <option value="<?php echo $row['key']; ?>" <?php
+                                    if (!empty($province) && $row['key'] == $province) {
+                                        echo 'selected';
+                                    }
+                                    ?>>
                                         <?php echo $row['value']; ?></option>
                                     <?php
                                 }
@@ -181,15 +179,40 @@ class Zend_View_Helper_AllLevelComboAllColdChainEquipment extends Zend_View_Help
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3" id="wh_combo<?php echo $postfix; ?>" <?php /* if (!empty($warehouse_id)) { ?> style="display:block;" <?php } else { ?> style="display:none;"<?php } */ ?>>
+                <div class="col-md-3" id="div_combo2<?php echo $postfix; ?>" <?php if (($office == 5) || !empty($district)) { ?> style="display:block;" <?php } else { ?> style="display:none;"<?php } ?>>
+                    <label class="control-label" id="lblcombo2"><?php echo $translate->translate("District"); ?> </label>
+                    <div class="controls">
+                        <select name="combo2" id="combo2<?php echo $postfix; ?>" class="form-control">
+                            <?php if ($districts_array) { ?>
+                                <option value=""><?php echo $translate->translate("Select"); ?></option>
+                                <?php foreach ($districts_array as $row) {
+                                    ?>
+                                    <option value="<?php echo $row['key']; ?>" <?php
+                                    if (!empty($district) && $row['key'] == $district) {
+                                        echo 'selected';
+                                    }
+                                    ?>>
+                                        <?php echo $row['value']; ?></option>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3" id="wh_combo<?php echo $postfix; ?>">
                     <label class="control-label" id="wh_l"><?php echo $translate->translate("Warehouse"); ?> <span class="red">*</span></label>
                     <div class="controls">
                         <select name="warehouse<?php echo $postfix; ?>" id="warehouse<?php echo $postfix; ?>" class="form-control">
-                            <?php if ($warehouse_array != false) { ?>
+                            <?php if ($warehouse_array) { ?>
                                 <option value=""><?php echo $translate->translate("Select"); ?></option>
                                 <?php foreach ($warehouse_array as $row) {
                                     ?>
-                                    <option value="<?php echo $row['key']; ?>" <?php if (!empty($warehouse_id) && $row['key'] == $warehouse_id) echo 'selected'; ?>>
+                                    <option value="<?php echo $row['key']; ?>" <?php
+                                    if (!empty($warehouse_id) && $row['key'] == $warehouse_id) {
+                                        echo 'selected';
+                                    }
+                                    ?>>
                                         <?php echo $row['value']; ?></option>
                                     <?php
                                 }

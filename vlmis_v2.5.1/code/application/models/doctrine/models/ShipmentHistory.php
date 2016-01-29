@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for Shipment History
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ShipmentHistory
+ *  ShipmentHistory
  */
 class ShipmentHistory
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $status
      * @var string $status
      */
     private $status;
 
     /**
+     * $referenceNumber
      * @var string $referenceNumber
      */
     private $referenceNumber;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $shipment
      * @var Shipments
      */
     private $shipment;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

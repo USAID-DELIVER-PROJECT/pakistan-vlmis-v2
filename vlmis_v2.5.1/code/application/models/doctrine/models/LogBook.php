@@ -1,100 +1,120 @@
 <?php
 
-
+/**
+*  Model for Log Book
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * LogBook
+ *  LogBook
  */
 class LogBook
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $name
      * @var string $name
      */
     private $name;
 
     /**
+     * $fatherName
      * @var string $fatherName
      */
     private $fatherName;
 
     /**
+     * $gender
      * @var string $gender
      */
     private $gender;
 
     /**
+     * $age
      * @var string $age
      */
     private $age;
 
     /**
+     * $contact
      * @var string $contact
      */
     private $contact;
 
     /**
+     * $address
      * @var string $address
      */
     private $address;
 
     /**
+     * $unionCouncilId
      * @var integer $unionCouncilId
      */
     private $unionCouncilId;
 
     /**
+     * $vaccinationDate
      * @var datetime $vaccinationDate
      */
     private $vaccinationDate;
 
     /**
+     * $referToWarehouseId
      * @var integer $referToWarehouseId
      */
     private $referToWarehouseId;
 
     /**
+     * $remarks
      * @var string $remarks
      */
     private $remarks;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $reportingStartDate
      * @var datetime $reportingStartDate
      */
     private $reportingStartDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $district
      * @var Locations
      */
     private $district;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

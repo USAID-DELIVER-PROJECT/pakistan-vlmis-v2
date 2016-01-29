@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for Warehouse Vaccines Storage Types
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * WarehouseVaccineStorageTypes
+ *  WarehouseVaccineStorageTypes
  */
 class WarehouseVaccineStorageTypes
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $temperatureType
      * @var integer $temperatureType
      */
     private $temperatureType;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $item
      * @var ItemPackSizes
      */
     private $item;
 
     /**
+     * $warehouseType
      * @var WarehouseTypes
      */
     private $warehouseType;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

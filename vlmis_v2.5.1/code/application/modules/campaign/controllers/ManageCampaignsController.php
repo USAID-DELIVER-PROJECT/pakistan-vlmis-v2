@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Campaign_ManageCampaignsController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Campaign
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Campaign Manage Campaigns
+ */
 class Campaign_ManageCampaignsController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Campaign_ManageCampaignsController index
+     */
     public function indexAction() {
         $form = new Form_Campaigns_CampaignSearch();
         $campaigns = new Model_Campaigns();
@@ -45,6 +58,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->counter = $counter;
     }
 
+    /**
+     * Add Campaign
+     */
     public function addCampaignAction() {
         $disticts = array();
         $form = new Form_Campaigns_AddCampaign();
@@ -53,15 +69,13 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $action = 'add-campaign';
         $btn_txt = 'Add New Campaign';
         $page_heading = 'Add New Campaign';
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $district_ids = $this->_request->getParam('district_id', '');
-                $campaigns->form_values = $this->_request->getPost(); //$form->getValues();
-                $campaigns->form_values['district_ids'] = $district_ids;
-                $last_id = $campaigns->addCampaign();
-                $doEdit = App_Controller_Functions::encrypt('edit|' . $last_id);
-                $this->redirect("/campaign/manage-campaigns/add-campaign?id=$doEdit");
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $district_ids = $this->_request->getParam('district_id', '');
+            $campaigns->form_values = $this->_request->getPost();
+            $campaigns->form_values['district_ids'] = $district_ids;
+            $last_id = $campaigns->addCampaign();
+            $doEdit = App_Controller_Functions::encrypt('edit|' . $last_id);
+            $this->redirect("/campaign/manage-campaigns/add-campaign?id=$doEdit");
         }
 
         $id = $this->_request->getParam('id', '');
@@ -114,6 +128,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->all_districts = $all_districts;
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->disableLayout();
         $id = $this->_request->getParam('id', '');
@@ -125,6 +142,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * Update Campaign
+     */
     public function updateCampaignAction() {
         if ($this->_request->getPost()) {
 
@@ -192,6 +212,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxForCampaign
+     */
     public function ajaxForCampaignAction() {
         $this->_helper->layout->disableLayout();
         $campaign_type_id = $this->_request->getParam('campaign_type_id', '');
@@ -292,7 +315,6 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
 
             $begin = new DateTime($start_date);
             $end = new DateTime($end_date);
-            $diff = $begin->diff($end);
             $interval = DateInterval::createFromDateString('1 day');
             $period = new DatePeriod($begin, $interval, $end);
 
@@ -313,6 +335,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxForCampaignUc
+     */
     public function ajaxForCampaignUcAction() {
         $this->_helper->layout->disableLayout();
         $campaign_type_id = $this->_request->getParam('campaign_type_id', '');
@@ -323,15 +348,12 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $date_from = $this->_request->getParam('date_from', '');
         $province_id = $this->_request->getParam('province_id', '');
         $province_id = (!empty($province_id)) ? $province_id : $this->_identity->getProvinceId();
-        $dist_id = $this->_request->getParam('dist_id', '');
         $campaign_id = $this->_request->getParam('campaign_id', '');
         $day = $this->_request->getParam('day', '');
         $wh_id = $this->_request->getParam('wh_id', '');
-        $provinces = $this->_request->getParam('provinces', '');
         $district_id = $this->_request->getParam('district_id', '');
 
         $condition = $this->_request->getParam('condition', '');
-        $show_all = $this->_request->getParam('show_all', '');
 
         $campaign = new Model_Campaigns();
 
@@ -365,6 +387,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Data Entry History
+     */
     public function dataEntryHistoryAction() {
         $form = new Form_Campaigns_DataEntrySearch();
         $campaigns = new Model_Campaigns();
@@ -398,7 +423,6 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
             $this->view->paginator = $campaign_data;
             $this->view->sort = $sort;
             $this->view->order = $order;
-            $this->view->counter = $counter;
         }
 
         if (isset($id) && !empty($id)) {
@@ -420,17 +444,14 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
             }
         }
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $campaigns->form_values = $form->getValues();
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $campaigns->form_values = $form->getValues();
 
-                $campaign_id = $form->getValue('campaign_id');
-                $province_id = $form->getValue('province_id');
-                $district_id = $form->getValue('district_id');
-                $item_id = $form->getValue('item_id');
-                $day = $form->getValue('day');
-                $warehouse_id = $form->getValue('warehouse_id');
-            }
+            $campaign_id = $form->getValue('campaign_id');
+            $province_id = $form->getValue('province_id');
+            $district_id = $form->getValue('district_id');
+            $item_id = $form->getValue('item_id');
+            $day = $form->getValue('day');
         }
 
         $form->campaign_id->setValue($campaign_id);
@@ -457,6 +478,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->action = $type;
     }
 
+    /**
+     * New Data Entry
+     */
     public function newDataEntryAction() {
         $notify_text = "";
         $order = "";
@@ -575,8 +599,6 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
                     $form->getElement('ad_syr_wasted')->setAttrib('readonly', 'readonly');
                 }
             } else if ($action == 'del') {
-                $data = $campaigns->getCampaignDataWH();
-
                 $campaigns->deleteCampaignData();
 
                 $cm_id = $arr[2];
@@ -588,51 +610,43 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
             }
         }
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $campaigns->form_values = $form->getValues();
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $campaigns->form_values = $form->getValues();
 
-                $date = App_Controller_Functions::dateToDbFormat($form->getValue('hdn_campaign_date'));
-                $date = date_create($date);
-                $year = date_format($date, 'Y');
-                $month = date_format($date, 'm');
-
-                // If new campaign
-                if ($action == 'add') {
-                    $campaigns->form_values['district_id'] = $district_id;
-                    $campaigns->addCampaignData();
-                    $notify = 'add_success';
-                }
-                // If campaign update
-                else if ($action == 'edit') {
-                    if (!empty($id)) {
-
-                        $campaigns->form_values['campaign_pk_id'] = $id;
-                    }
-
-                    $campaigns->form_values['district_id'] = $district_id;
-                    $campaigns->form_values['campaign_pk_id'] = $id;
-                    $campaigns->form_values['modified_by'] = $this->_identity->getIdentity();
-                    $campaigns->form_values['campaign_id'] = $campaign_id;
-                    $campaigns->form_values['campaign_day'] = $day;
-                    $campaigns->form_values['item_id'] = $itm_id;
-                    $campaigns->form_values['modified_date'] = date('Y-m-d');
-                    $campaigns->updateCampaignData();
-
-                    $notify = 'update_success';
-                }
-                $this->_redirect("/campaign/manage-campaigns/new-data-entry?notify=$notify&campaign_id=$campaign_id&day=$campaign_day");
-                return;
+            $date = App_Controller_Functions::dateToDbFormat($form->getValue('hdn_campaign_date'));
+            $date = date_create($date);
+            // If new campaign
+            if ($action == 'add') {
+                $campaigns->form_values['district_id'] = $district_id;
+                $campaigns->addCampaignData();
+                $notify = 'add_success';
             }
-        }
-        // Get Data for Listing Grid
-        if (isset($day) && $day != 'all' && !empty($day)) {
-            if (isset($campaign_id) && isset($day)) {
-                $campaigns->form_values['district_id'] = (isset($district_id)) ? $district_id : $dist_id;
+            // If campaign update
+            else if ($action == 'edit') {
+                if (!empty($id)) {
+                    $campaigns->form_values['campaign_pk_id'] = $id;
+                }
+
+                $campaigns->form_values['district_id'] = $district_id;
+                $campaigns->form_values['campaign_pk_id'] = $id;
+                $campaigns->form_values['modified_by'] = $this->_identity->getIdentity();
                 $campaigns->form_values['campaign_id'] = $campaign_id;
                 $campaigns->form_values['campaign_day'] = $day;
-                $campaign_data = $campaigns->getCampaignEnteredData();
+                $campaigns->form_values['item_id'] = $itm_id;
+                $campaigns->form_values['modified_date'] = date('Y-m-d');
+                $campaigns->updateCampaignData();
+
+                $notify = 'update_success';
             }
+            $this->_redirect("/campaign/manage-campaigns/new-data-entry?notify=$notify&campaign_id=$campaign_id&day=$campaign_day");
+            return;
+        }
+        // Get Data for Listing Grid
+        if (isset($day) && $day != 'all' && !empty($day) && isset($campaign_id)) {
+            $campaigns->form_values['district_id'] = (isset($district_id)) ? $district_id : $dist_id;
+            $campaigns->form_values['campaign_id'] = $campaign_id;
+            $campaigns->form_values['campaign_day'] = $day;
+            $campaign_data = $campaigns->getCampaignEnteredData();
         }
 
         // Paginate the contest results
@@ -664,6 +678,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->counter = $counter;
     }
 
+    /**
+     * Edit Data Entry
+     */
     public function editDataEntryAction() {
 
         $notify_text = "";
@@ -788,59 +805,51 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
                     $form->getElement('ad_syr_wasted')->setAttrib('readonly', 'readonly');
                 }
             } else if ($action == 'del') {
-                $data = $campaigns->getCampaignDataWH();
                 $campaigns->deleteCampaignData();
                 $notify = 'delete_success';
             }
         }
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $campaigns->form_values = $form->getValues();
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $campaigns->form_values = $form->getValues();
 
-                $date = App_Controller_Functions::dateToDbFormat($form->getValue('hdn_campaign_date'));
-                $date = date_create($date);
-                $year = date_format($date, 'Y');
-                $month = date_format($date, 'm');
+            $date = App_Controller_Functions::dateToDbFormat($form->getValue('hdn_campaign_date'));
+            $date = date_create($date);
+            // If new campaign
+            if ($action == 'add') {
+                $campaigns->form_values['district_id'] = $district_id;
+                $campaigns->addCampaignData();
 
-                // If new campaign
-                if ($action == 'add') {
-                    $campaigns->form_values['district_id'] = $district_id;
-                    $campaigns->addCampaignData();
-
-                    $notify = 'add_success';
-                }
-                // If campaign update 
-                else if ($action == 'edit') {
-                    if (!empty($id)) {
-
-                        $campaigns->form_values['campaign_pk_id'] = $id;
-                    }
-                    $campaigns->form_values['district_id'] = $district_id;
-                    $campaigns->form_values['campaign_pk_id'] = $id;
-                    $campaigns->form_values['modified_by'] = $this->_identity->getIdentity();
-                    $campaigns->form_values['campaign_id'] = $campaign_id;
-                    $campaigns->form_values['campaign_day'] = $day;
-                    $campaigns->form_values['item_id'] = $itm_id;
-                    $campaigns->form_values['modified_date'] = date('Y-m-d');
-                    $campaigns->updateCampaignData();
-
-
-                    $notify = 'update_success';
-                }
-                $this->_redirect("/campaign/manage-campaigns/new-data-entry?notify=$notify&campaign_id=$campaign_id&day=$campaign_day");
-
-                return;
+                $notify = 'add_success';
             }
-        }
-        //Get Data for Listing Grid
-        if (isset($day) && $day != 'all' && !empty($day)) {
-            if (isset($campaign_id) && isset($day)) {
-                $campaigns->form_values['district_id'] = (isset($district_id)) ? $district_id : $dist_id;
+            // If campaign update 
+            else if ($action == 'edit') {
+                if (!empty($id)) {
+
+                    $campaigns->form_values['campaign_pk_id'] = $id;
+                }
+                $campaigns->form_values['district_id'] = $district_id;
+                $campaigns->form_values['campaign_pk_id'] = $id;
+                $campaigns->form_values['modified_by'] = $this->_identity->getIdentity();
                 $campaigns->form_values['campaign_id'] = $campaign_id;
                 $campaigns->form_values['campaign_day'] = $day;
-                $campaign_data = $campaigns->getCampaignEnteredData();
+                $campaigns->form_values['item_id'] = $itm_id;
+                $campaigns->form_values['modified_date'] = date('Y-m-d');
+                $campaigns->updateCampaignData();
+
+
+                $notify = 'update_success';
             }
+            $this->_redirect("/campaign/manage-campaigns/new-data-entry?notify=$notify&campaign_id=$campaign_id&day=$campaign_day");
+
+            return;
+        }
+        //Get Data for Listing Grid
+        if (isset($day) && $day != 'all' && !empty($day) && isset($campaign_id)) {
+            $campaigns->form_values['district_id'] = (isset($district_id)) ? $district_id : $dist_id;
+            $campaigns->form_values['campaign_id'] = $campaign_id;
+            $campaigns->form_values['campaign_day'] = $day;
+            $campaign_data = $campaigns->getCampaignEnteredData();
         }
 
         //Paginate the contest results
@@ -874,6 +883,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->counter = $counter;
     }
 
+    /**
+     * Campaigns Target
+     */
     public function campaignsTargetAction() {
         $form = new Form_Campaigns_CampaignTarget();
         $campaigns_targets = new Model_CampaignTargets();
@@ -929,9 +941,12 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->export = $export;
         $this->view->district_name = $district_name[0]['locationName'];
 
-        $this->view->cam_closed = 0; //$campaign_closed;
+        $this->view->cam_closed = 0;
     }
 
+    /**
+     * ajaxCampaignsTarge
+     */
     public function ajaxCampaignsTargetAction() {
         $this->_helper->layout->setLayout("ajax");
 
@@ -951,6 +966,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/jquery.price_format.1.8.min.js');
     }
 
+    /**
+     * ajaxCampaignsName
+     */
     public function ajaxCampaignsNameAction() {
         $this->_helper->layout->setLayout("ajax");
 
@@ -963,6 +981,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Add Campaign Target
+     */
     public function addCampaignTargetAction() {
         $form_values = $this->_request->getPost();
 
@@ -1021,6 +1042,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->_redirect("/campaign/manage-campaigns/campaigns-target?campaign_id=$form_values[campaign_id]&district_id=$form_values[district_id]&province_id=$form_values[province_id]&item_id=$form_values[item_id]");
     }
 
+    /**
+     * Close Campaigns Target
+     */
     public function closeCampaignsTargetAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -1035,6 +1059,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         return;
     }
 
+    /**
+     * Open Campaigns Target
+     */
     public function openCampaignsTargetAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -1049,108 +1076,107 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         return;
     }
 
+    /**
+     * Campaign Target Import
+     */
     public function campaignTargetImportAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
         $import_type = $this->_request->getPost('import_option');
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
+        if ($this->_request->isPost() && $this->_request->getPost()) {
 
-                if ($import_type == 'campaign') {
-                    $form_values = $this->_request->getPost();
+            if ($import_type == 'campaign') {
+                $form_values = $this->_request->getPost();
 
-                    $campaign_id = $form_values['campaign_import_hidden'];
+                $campaign_id = $form_values['campaign_import_hidden'];
 
-                    $campaign_target = new Model_CampaignTargets();
+                $campaign_target = new Model_CampaignTargets();
+                $campaign_target->form_values = $form_values;
+                $data = $campaign_target->getCampaignTargets();
+
+                if (!empty($data)) {
                     $campaign_target->form_values = $form_values;
-                    $data = $campaign_target->getCampaignTargets();
+                    $campaign_target->deleteCampaignData();
+                }
 
-                    if (!empty($data)) {
-                        $campaign_target->form_values = $form_values;
-                        $campaign_target->deleteCampaignData();
+                if (!empty($data)) {
+
+                    foreach ($data as $data1) {
+                        $campaign_target = new CampaignTargets();
+                        $campaign_target->setDailyTarget($data1['dailyTarget']);
+                        $campaign_id_a = $this->_em->find('Campaigns', $campaign_id);
+                        $campaign_target->setCampaign($campaign_id_a);
+                        $warehouse_id_a = $this->_em->find('Warehouses', $data1['warehouseId']);
+                        $campaign_target->setWarehouse($warehouse_id_a);
+                        $item_id = $this->_em->find('ItemPackSizes', $data1['itemId']);
+                        $campaign_target->setItemPackSize($item_id);
+
+                        $created_by = $this->_em->find('Users', $this->_userid);
+                        $campaign_target->setCreatedBy($created_by);
+                        $campaign_target->setModifiedBy($created_by);
+                        $campaign_target->setCreatedDate(App_Tools_Time::now());
+                        $campaign_target->setModifiedDate(App_Tools_Time::now());
+                        $this->_em->persist($campaign_target);
+                        $this->_em->flush();
                     }
+                }
+            } else if ($import_type == 'csv') {
+                $form_values = $this->_request->getPost();
 
-                    if (!empty($data)) {
+                $campaign_target = new Model_CampaignTargets();
+                $campaign_target->form_values = $form_values;
+                $tempFileName = $_FILES['cvs_import']['tmp_name'];
+                $i = 1;
+                $error = "";
+                if (($handle = fopen($tempFileName, "r")) !== FALSE) {
+                    while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                        $warehouse_name = $data[0];
+                        $target1 = (int) $data[1];
+                        $target = abs($target1);
+                        $campaign_target->form_values['warehouse_name'] = $warehouse_name;
+                        $res = $campaign_target->getOldCampaignTarget();
 
-                        foreach ($data as $data1) {
-                            $campaign_target = new CampaignTargets();
-                            $campaign_target->setDailyTarget($data1['dailyTarget']);
-                            $campaign_id_a = $this->_em->find('Campaigns', $campaign_id);
-                            $campaign_target->setCampaign($campaign_id_a);
-                            $warehouse_id_a = $this->_em->find('Warehouses', $data1['warehouseId']);
-                            $campaign_target->setWarehouse($warehouse_id_a);
-                            $item_id = $this->_em->find('ItemPackSizes', $data1['itemId']);
-                            $campaign_target->setItemPackSize($item_id);
-
-                            $created_by = $this->_em->find('Users', $this->_userid);
-                            $campaign_target->setCreatedBy($created_by);
-                            $campaign_target->setModifiedBy($created_by);
-                            $campaign_target->setCreatedDate(App_Tools_Time::now());
-                            $campaign_target->setModifiedDate(App_Tools_Time::now());
-                            $this->_em->persist($campaign_target);
-                            $this->_em->flush();
+                        if (!is_numeric($data[1])) {
+                            $error .= "Import with Errors";
                         }
-                    }
-                } else if ($import_type == 'csv') {
-                    $form_values = $this->_request->getPost();
-
-                    $campaign_target = new Model_CampaignTargets();
-                    $campaign_target->form_values = $form_values;
-                    $tempFileName = $_FILES['cvs_import']['tmp_name'];
-                    $i = 1;
-                    $error = "";
-                    if (($handle = fopen($tempFileName, "r")) !== FALSE) {
-                        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                            $warehouse_name = $data[0];
-                            $target1 = (int) $data[1];
-                            $target = abs($target1);
-                            $campaign_target->form_values['warehouse_name'] = $warehouse_name;
-                            $res = $campaign_target->getOldCampaignTarget();
-
-                            if (is_numeric($data[1])) {
-                                
-                            } else {
-                                $error .= "Import with Errors";
-                            }
 
 
-                            if ($target != 0) {
-                                foreach ($res as $result) {
-                                    // If data already exists then update
-                                    if (!empty($result['pk_id'])) {
-                                        $cam_target = $this->_em->getRepository("CampaignTargets")->find($result['pk_id']);
+                        if ($target != 0) {
+                            foreach ($res as $result) {
+                                // If data already exists then update
+                                if (!empty($result['pk_id'])) {
+                                    $cam_target = $this->_em->getRepository("CampaignTargets")->find($result['pk_id']);
 
-                                        $cam_target->setDailyTarget($target);
-                                        $created_by = $this->_em->find('Users', $this->_userid);
-                                        $cam_target->setModifiedBy($created_by);
-                                        $cam_target->setModifiedDate(App_Tools_Time::now());
+                                    $cam_target->setDailyTarget($target);
+                                    $created_by = $this->_em->find('Users', $this->_userid);
+                                    $cam_target->setModifiedBy($created_by);
+                                    $cam_target->setModifiedDate(App_Tools_Time::now());
 
-                                        $this->_em->persist($cam_target);
-                                        $this->_em->flush();
-                                    }
-                                    // If data not exists then Insert
-                                    else {
-                                        $camp_target = new CampaignTargets();
-                                        $campaign = $this->_em->find('Campaigns', $form_values['campaign_import_hidden']);
-                                        $camp_target->setCampaign($campaign);
-                                        $item = $this->_em->find('ItemPackSizes', $form_values['item_import_hidden']);
-                                        $camp_target->setItemPackSize($item);
-                                        $warehouse = $this->_em->find('Warehouses', $result['warehouse_id']);
-                                        $camp_target->setWarehouse($warehouse);
-                                        $camp_target->setDailyTarget($target);
-                                        $created_by = $this->_em->find('Users', $this->_userid);
-                                        $camp_target->setModifiedBy($created_by);
-                                        $camp_target->setModifiedDate(App_Tools_Time::now());
-                                        $camp_target->setCreatedBy($created_by);
-                                        $camp_target->setCreatedDate(App_Tools_Time::now());
-
-                                        $this->_em->persist($camp_target);
-                                        $this->_em->flush();
-                                    }
+                                    $this->_em->persist($cam_target);
+                                    $this->_em->flush();
                                 }
-                                $i++;
+                                // If data not exists then Insert
+                                else {
+                                    $camp_target = new CampaignTargets();
+                                    $campaign = $this->_em->find('Campaigns', $form_values['campaign_import_hidden']);
+                                    $camp_target->setCampaign($campaign);
+                                    $item = $this->_em->find('ItemPackSizes', $form_values['item_import_hidden']);
+                                    $camp_target->setItemPackSize($item);
+                                    $warehouse = $this->_em->find('Warehouses', $result['warehouse_id']);
+                                    $camp_target->setWarehouse($warehouse);
+                                    $camp_target->setDailyTarget($target);
+                                    $created_by = $this->_em->find('Users', $this->_userid);
+                                    $camp_target->setModifiedBy($created_by);
+                                    $camp_target->setModifiedDate(App_Tools_Time::now());
+                                    $camp_target->setCreatedBy($created_by);
+                                    $camp_target->setCreatedDate(App_Tools_Time::now());
+
+                                    $this->_em->persist($camp_target);
+                                    $this->_em->flush();
+                                }
                             }
+                            $i++;
                         }
                     }
                 }
@@ -1165,6 +1191,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->_redirect("/campaign/manage-campaigns/campaigns-target?campaign_id=$form_values[campaign_import_hidden]&district_id=$form_values[district_import_hidden]&province_id=$form_values[province_import_hidden]&item_id=$form_values[item_import_hidden]&success=$success");
     }
 
+    /**
+     * Campaign Readiness
+     */
     public function campaignReadinessAction() {
 
         $form = new Form_Campaigns_CampaignReadiness();
@@ -1213,6 +1242,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->pagination_params = $params;
     }
 
+    /**
+     * Add Campaign Readiness
+     */
     public function addCampaignReadinessAction() {
 
         $this->_helper->layout->disableLayout();
@@ -1263,6 +1295,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->_redirect("campaign/manage-campaigns/campaign-readiness");
     }
 
+    /**
+     * ajaxEditReadiness
+     */
     public function ajaxEditReadinessAction() {
         $this->_helper->layout->setLayout("ajax");
 
@@ -1295,6 +1330,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * Update Campaign Readiness
+     */
     public function updateCampaignReadinessAction() {
 
         $this->_helper->layout->disableLayout();
@@ -1341,6 +1379,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->_redirect("campaign/manage-campaigns/campaign-readiness");
     }
 
+    /**
+     * Lqas Data Entry
+     */
     public function lqasDataEntryAction() {
         $form = new Form_Campaigns_LqasDataEntry();
         $campaigns_lqas_data = new Model_Campaigns();
@@ -1375,10 +1416,12 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->paginator = $result;
         $this->view->sort = $sort;
         $this->view->order = $order;
-        $this->view->counter = $counter;
         $this->view->pagination_params = $params;
     }
 
+    /**
+     * ajaxGetUcs
+     */
     public function ajaxGetUcsAction() {
 
         $this->_helper->layout->disableLayout();
@@ -1390,6 +1433,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->data = $result;
     }
 
+    /**
+     * Add Campaign Lqas
+     */
     public function addCampaignLqasAction() {
 
 
@@ -1424,6 +1470,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->_redirect("campaign/manage-campaigns/lqas-data-entry");
     }
 
+    /**
+     * Update Campaign Lqas
+     */
     public function updateCampaignLqasAction() {
 
 
@@ -1456,6 +1505,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->_redirect("campaign/manage-campaigns/lqas-data-entry");
     }
 
+    /**
+     * ajaxEditLqas
+     */
     public function ajaxEditLqasAction() {
         $this->_helper->layout->setLayout("ajax");
         $campaign_lqas = $this->_em->find('CampaignLqasData', $this->_request->getParam('lqas_id'));
@@ -1483,6 +1535,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/campaign/manage-campaigns/ajax-lqas.js');
     }
 
+    /**
+     * Campaign Readiness Uc
+     */
     public function campaignReadinessUcAction() {
 
         $form = new Form_Campaigns_CampaignReadinessUc();
@@ -1490,7 +1545,6 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $params = array();
 
         $campaign_readiness = new Model_CampaignReadiness();
-        $campaign = new Model_Campaigns();
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_request->getPost())) {
                 $form->uc_id_hidden->setValue($form->getValue('uc_id'));
@@ -1504,13 +1558,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
                 }
             }
         } else {
-
             $campaignId = $this->_getParam('campaignId');
             $ucId = $this->_getParam('ucId');
             $campaignId = $campaign_readiness->getLatestCampaignByDistrict();
-
-            $campaign->form_values['campaign_id'] = $campaignId;
-            $uc_list = $campaign->getCampaignUCsForReadiness();
 
             if (!empty($campaignId)) {
                 $params['campaignId'] = $campaignId;
@@ -1532,10 +1582,12 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->paginator = $result;
         $this->view->sort = $sort;
         $this->view->order = $order;
-        $this->view->counter = $counter;
         $this->view->pagination_params = $params;
     }
 
+    /**
+     * Add Campaign Readiness Uc
+     */
     public function addCampaignReadinessUcAction() {
 
         $this->_helper->layout->disableLayout();
@@ -1548,7 +1600,6 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $campaign_readiness->setUpecMeetingDate(new \DateTime(App_Controller_Functions::dateToDbFormat($form_values['date_upec_meeting'])));
         $campaign_readiness->setInaccessibleArea($form_values['inaccessible_area']);
         $campaign_readiness->setNumberFixedTeams($form_values['no_of_fixed_teams']);
-        //$campaign_readiness->set($form_values['area_in_charge']);
         $campaign_readiness->setNumberTransitPoints($form_values['no_of_transist_points']);
         $campaign_readiness->setAicTrained($form_values['aics_trained']);
         $campaign_readiness->setNumberTeamsTrained($form_values['no_of_teams_trained']);
@@ -1571,6 +1622,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->_redirect("campaign/manage-campaigns/campaign-readiness-uc");
     }
 
+    /**
+     * ajaxEditReadinessUc
+     */
     public function ajaxEditReadinessUcAction() {
         $this->_helper->layout->disableLayout();
         $campaign_readiness = $this->_em->find('CampaignReadinessUnionCouncil', $this->_request->getParam('item_id'));
@@ -1598,6 +1652,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/campaign/manage-campaigns/ajax-campaign-readiness-uc.js');
     }
 
+    /**
+     * Update Campaign Readiness Uc
+     */
     public function updateCampaignReadinessUcAction() {
 
         $this->_helper->layout->disableLayout();
@@ -1627,6 +1684,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->_redirect("campaign/manage-campaigns/campaign-readiness-uc");
     }
 
+    /**
+     * Reported Districts
+     */
     public function reportedDistrictsAction() {
         $form = new Form_Campaigns_LqasDataEntry();
         $campaigns_lqas_data = new Model_Campaigns();
@@ -1675,34 +1735,38 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->pagination_params = $params;
     }
 
+    /**
+     * Reported Ucs
+     */
     public function reportedUcsAction() {
         $form = new Form_Campaigns_LqasDataEntry();
         $campaigns_lqas_data = new Model_Campaigns();
 
         $params = array();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $campaignId = $form->getValue('campaign_search_id');
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $campaignId = $form->getValue('campaign_search_id');
 
-                if (!empty($campaignId)) {
-                    $params['campaignId'] = $campaignId;
-                }
-                $campaigns_lqas_data->form_values = $params;
-                $auth = App_Auth::getInstance();
-                $district_id = $auth->getDistrictId($auth->getIdentity());
-                $campaigns_lqas_data->form_values['district_id'] = $district_id;
-                $campaigns_lqas_data->form_values['campaign_id'] = $campaignId;
-                $all_ucs = $campaigns_lqas_data->getAllDistrictUcs();
-                $reported_uc = $campaigns_lqas_data->getAllReportedUcs();
-                $this->view->reported_uc = $reported_uc;
-                $this->view->all_uc = $all_ucs;
+            if (!empty($campaignId)) {
+                $params['campaignId'] = $campaignId;
             }
+            $campaigns_lqas_data->form_values = $params;
+            $auth = App_Auth::getInstance();
+            $district_id = $auth->getDistrictId($auth->getIdentity());
+            $campaigns_lqas_data->form_values['district_id'] = $district_id;
+            $campaigns_lqas_data->form_values['campaign_id'] = $campaignId;
+            $all_ucs = $campaigns_lqas_data->getAllDistrictUcs();
+            $reported_uc = $campaigns_lqas_data->getAllReportedUcs();
+            $this->view->reported_uc = $reported_uc;
+            $this->view->all_uc = $all_ucs;
         }
 
         $this->view->form = $form;
     }
 
+    /**
+     * ajaxCampaignTargetUc
+     */
     public function ajaxCampaignTargetUcAction() {
         $this->_helper->layout->disableLayout();
 
@@ -1713,6 +1777,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->data = $result;
     }
 
+    /**
+     * ajaxGetCampaignVaccince
+     */
     public function ajaxGetCampaignVaccinceAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
@@ -1722,6 +1789,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->data = $result;
     }
 
+    /**
+     * ajaxGetCampaignVialsRequired
+     */
     public function ajaxGetCampaignVialsRequiredAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
@@ -1731,6 +1801,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->data = $result;
     }
 
+    /**
+     * ajaxGetCampaignVialsAvailable
+     */
     public function ajaxGetCampaignVialsAvailableAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
@@ -1740,6 +1813,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->data = $result;
     }
 
+    /**
+     * ajaxGetUcTarget
+     */
     public function ajaxGetUcTargetAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
@@ -1765,6 +1841,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->days = $day;
     }
 
+    /**
+     * Campaign Types
+     */
     public function campaignTypesAction() {
         $form = new Form_Campaigns_CampaignTypes();
 
@@ -1800,56 +1879,61 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->counter = $counter;
     }
 
+    /**
+     * Add Campaign Type
+     */
     public function addCampaignTypeAction() {
         $form = new Form_Campaigns_CampaignTypes();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
 
-                $campaign_types = new CampaignTypes();
-                $campaign_types->setCamapignTypeName($form->campaign_type_name->getValue());
-                $createdBy = $this->_em->getRepository('Users')->find($this->_userid);
-                $campaign_types->setCreatedBy($createdBy);
-                $campaign_types->setModifiedBy($createdBy);
-                $campaign_types->setCreatedDate(App_Tools_Time::now());
-                $campaign_types->setModifiedDate(App_Tools_Time::now());
+            $campaign_types = new CampaignTypes();
+            $campaign_types->setCamapignTypeName($form->campaign_type_name->getValue());
+            $createdBy = $this->_em->getRepository('Users')->find($this->_userid);
+            $campaign_types->setCreatedBy($createdBy);
+            $campaign_types->setModifiedBy($createdBy);
+            $campaign_types->setCreatedDate(App_Tools_Time::now());
+            $campaign_types->setModifiedDate(App_Tools_Time::now());
 
-                $this->_em->persist($campaign_types);
-                $this->_em->flush();
-            }
+            $this->_em->persist($campaign_types);
+            $this->_em->flush();
         }
         $this->_redirect("/campaign/manage-campaigns/campaign-types?success=1");
     }
 
+    /**
+     * Add Product Groups
+     */
     public function addProductGroupsAction() {
         $form = new Form_Campaigns_ProductGroups();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
 
-                $campaign_item_groups = new CampaignItemGroups;
+            $campaign_item_groups = new CampaignItemGroups;
 
-                $item_pack_size_id = $this->_em->getRepository('ItemPackSizes')->find($form->item_id_add->getValue());
-                $campaign_item_groups->setItemPackSize($item_pack_size_id);
+            $item_pack_size_id = $this->_em->getRepository('ItemPackSizes')->find($form->item_id_add->getValue());
+            $campaign_item_groups->setItemPackSize($item_pack_size_id);
 
-                $campaign_item_groups->setAgeGroup1Min($form->age_group1_min->getValue());
-                $campaign_item_groups->setAgeGroup1Max($form->age_group1_max->getValue());
-                $campaign_item_groups->setAgeGroup2Min($form->age_group2_min->getValue());
-                $campaign_item_groups->setAgeGroup2Max($form->age_group2_max->getValue());
+            $campaign_item_groups->setAgeGroup1Min($form->age_group1_min->getValue());
+            $campaign_item_groups->setAgeGroup1Max($form->age_group1_max->getValue());
+            $campaign_item_groups->setAgeGroup2Min($form->age_group2_min->getValue());
+            $campaign_item_groups->setAgeGroup2Max($form->age_group2_max->getValue());
 
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $campaign_item_groups->setCreatedBy($created_by);
-                $campaign_item_groups->setCreatedDate(App_Tools_Time::now());
-                $campaign_item_groups->setModifiedBy($created_by);
-                $campaign_item_groups->setModifiedDate(App_Tools_Time::now());
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $campaign_item_groups->setCreatedBy($created_by);
+            $campaign_item_groups->setCreatedDate(App_Tools_Time::now());
+            $campaign_item_groups->setModifiedBy($created_by);
+            $campaign_item_groups->setModifiedDate(App_Tools_Time::now());
 
-                $this->_em->persist($campaign_item_groups);
-                $this->_em->flush();
-            }
+            $this->_em->persist($campaign_item_groups);
+            $this->_em->flush();
         }
         $this->_redirect("/campaign/manage-campaigns/product-groups?success=1");
     }
 
+    /**
+     * Update Product Groups
+     */
     public function updateProductGroupsAction() {
 
 
@@ -1875,6 +1959,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->_redirect("/campaign/manage-campaigns/product-groups?success=1");
     }
 
+    /**
+     * Check Campaign Type
+     */
     public function checkCampaignTypeAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->campaign_type_name;
@@ -1885,6 +1972,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * ajaxCampaignTypeEdit
+     */
     public function ajaxCampaignTypeEditAction() {
         $this->_helper->layout->disableLayout();
         $campaign_type = $this->_em->find('CampaignTypes', $this->_request->getParam('campaign_type_id'));
@@ -1895,6 +1985,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * Update Campaign Type
+     */
     public function updateCampaignTypeAction() {
         if ($this->_request->getPost()) {
             $form_values = $this->_request->getPost();
@@ -1910,17 +2003,21 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->_redirect("/campaign/manage-campaigns/campaign-types?success=2");
     }
 
+    /**
+     * ajaxGetNumberDoses
+     */
     public function ajaxGetNumberDosesAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
-        $vials_used = $form_values['vials_used'];
-        $coverage_not_accessible = $form_values['coverage_not_accessible'];
         $campaign = new Model_Campaigns();
         $campaign->form_values = $form_values;
         $result = $campaign->getNumberOfDoses();
         $this->view->data = $result;
     }
 
+    /**
+     * ajaxPreviousCampaignsName
+     */
     public function ajaxPreviousCampaignsNameAction() {
         $this->_helper->layout->setLayout("ajax");
 
@@ -1932,6 +2029,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->data = $result;
     }
 
+    /**
+     * ajaxAddReadinessUc
+     */
     public function ajaxAddReadinessUcAction() {
 
         $this->_helper->layout->disableLayout();
@@ -1954,6 +2054,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * Product Groups
+     */
     public function productGroupsAction() {
         $form = new Form_Campaigns_ProductGroups();
 
@@ -1989,6 +2092,9 @@ class Campaign_ManageCampaignsController extends App_Controller_Base {
         $this->view->counter = $counter;
     }
 
+    /**
+     * ajaxCampaignItemGroupsEdit
+     */
     public function ajaxCampaignItemGroupsEditAction() {
         $this->_helper->layout->disableLayout();
         $campaign_item_groups = $this->_em->find('CampaignItemGroups', $this->_request->getParam('campaign_item_group_id'));

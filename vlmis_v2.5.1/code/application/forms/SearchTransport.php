@@ -1,7 +1,24 @@
 <?php
 
-class Form_SearchTransport extends Zend_Form {
+/**
+ * Form_SearchTransport
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Search Transport
+ */
+class Form_SearchTransport extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "ccm_asset_sub_type_id" => "Transport Type",
         "ccm_status_list_id" => "Working Status",
@@ -12,15 +29,25 @@ class Form_SearchTransport extends Zend_Form {
         "ccm_model_id" => "Model",
         "manufacture_year_from" => "Manufacture Year",
         "manufacture_year_to" => "Manufacture Year",
-        "placed_at"=>"Placed At",
+        "placed_at" => "Placed At",
         "report_type" => "Report Type"
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "office_id" => "",
         "combo1_id" => "",
         "warehouse_id" => "",
         "model_id" => ""
     );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'ccm_asset_sub_type_id' => array(),
         'ccm_status_list_id' => array(),
@@ -30,6 +57,10 @@ class Form_SearchTransport extends Zend_Form {
         'fuel_type_id' => array()
     );
 
+    /**
+     * $_radio
+     * @var type 
+     */
     private $_radio = array(
         'placed_at' => array(
             "1" => "Select Warehouse",
@@ -40,7 +71,10 @@ class Form_SearchTransport extends Zend_Form {
             "1" => "Summary View",
         )
     );
-    
+
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         //Generate working status Combo
         $ccm_status_list = new Model_CcmStatusList();
@@ -84,10 +118,10 @@ class Form_SearchTransport extends Zend_Form {
                 $this->_list["fuel_type_id"][$fueltype['pkId']] = $fueltype['listValue'];
             }
         }
-        
+
         //Generate source of supply Combo
         $stakeholder = new Model_Stakeholders();
-          $stakeholder->form_values['type'] = 1;
+        $stakeholder->form_values['type'] = 1;
         $result2 = $stakeholder->getAllStakeholders();
         $this->_list["source_id"][''] = "Select Source Of Supply";
         foreach ($result2 as $row2) {
@@ -100,8 +134,7 @@ class Form_SearchTransport extends Zend_Form {
                 case "combo1_id":
                 case "warehouse_id":
                 case "model_id":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -111,84 +144,31 @@ class Form_SearchTransport extends Zend_Form {
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
                 case "registration_no":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 case "manufacture_year_from":
                 case "manufacture_year_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
-                default:
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
-            
+
             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
+                parent::createRadio($col, $this->_radio[$col]);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

@@ -1,7 +1,24 @@
 <?php
 
-class Form_Placement extends Zend_Form {
+/**
+ * Form_Placement
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Placement
+ */
+class Form_Placement extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "area" => "Area",
         "row" => "Row",
@@ -9,6 +26,11 @@ class Form_Placement extends Zend_Form {
         "pallet" => "Pallet",
         "level" => "Level",
     );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'area' => array(),
         'row' => array(),
@@ -16,10 +38,18 @@ class Form_Placement extends Zend_Form {
         'pallet' => array(),
         'level' => array(),
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "placement_id" => ""
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         //Generate Area Combo
@@ -88,13 +118,9 @@ class Form_Placement extends Zend_Form {
         }
 
         foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-                case "placement_id":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "placement_id") {
+                $this->addElement("hidden", $col);
+                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
             }
         }
 
@@ -107,61 +133,23 @@ class Form_Placement extends Zend_Form {
                 case "pallet":
                 case "level":
                 case "location_name":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

@@ -1,22 +1,46 @@
 <?php
 
 /**
+ * Form_VvmManagement
+ *
  * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
  */
-class Form_VvmManagement extends Zend_Form {
 
+/**
+*  Form for VVM Management
+*/
+
+class Form_VvmManagement extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Form Fields
+     * @product: Product
+     * @batch: Batch
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "product" => "Product",
         "batch" => "Batch"
     );
     
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'product' => array(),
         'batch' => array()
     );
 
     /**
-     * Initialize data members and controls.
+     * Initializes Form Fields
      */
     public function init() {
 
@@ -31,17 +55,7 @@ class Form_VvmManagement extends Zend_Form {
 
         foreach ($this->_fields as $col => $name) {
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
     }

@@ -1,65 +1,78 @@
 <?php
 
-
+/**
+*  Model for CCM Voltage Regulators
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmVoltageRegulators
+ *  CcmVoltageRegulators
  */
 class CcmVoltageRegulators
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $nominalVoltage
      * @var integer $nominalVoltage
      */
     private $nominalVoltage;
 
     /**
+     * $continousPower
      * @var integer $continousPower
      */
     private $continousPower;
 
     /**
+     * $frequency
      * @var string $frequency
      */
     private $frequency;
 
     /**
+     * $inputVoltageRange
      * @var string $inputVoltageRange
      */
     private $inputVoltageRange;
 
     /**
+     * $outputVoltageRange
      * @var string $outputVoltageRange
      */
     private $outputVoltageRange;
 
     /**
+     * $ccmId
      * @var integer $ccmId
      */
     private $ccmId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

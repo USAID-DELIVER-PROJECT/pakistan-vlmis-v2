@@ -1,70 +1,84 @@
 <?php
 
-
+/**
+*  Model for Map District Mapping
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MapDistrictMapping
+ *  MapDistrictMapping
  */
 class MapDistrictMapping
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $mappingId
      * @var integer $mappingId
      */
     private $mappingId;
 
     /**
+     * $districtName
      * @var string $districtName
      */
     private $districtName;
 
     /**
+     * $provinceName
      * @var string $provinceName
      */
     private $provinceName;
 
     /**
+     * $defaultDistrict
      * @var integer $defaultDistrict
      */
     private $defaultDistrict;
 
     /**
+     * $pilotDistrictStatus
      * @var boolean $pilotDistrictStatus
      */
     private $pilotDistrictStatus;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $district
      * @var Locations
      */
     private $district;
 
     /**
+     * $province
      * @var Locations
      */
     private $province;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

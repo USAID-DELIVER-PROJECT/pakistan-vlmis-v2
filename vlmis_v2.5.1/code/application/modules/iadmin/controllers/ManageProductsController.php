@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Iadmin_ManageProductsController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Iadmin Manage Products
+ */
 class Iadmin_ManageProductsController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * products
+     */
     public function productsAction() {
         $form = new Form_Iadmin_Products();
 
@@ -67,6 +80,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->pagination_params = $params;
     }
 
+    /**
+     * Item Categories
+     */
     public function itemCategoriesAction() {
         $form = new Form_Iadmin_Products();
 
@@ -103,6 +119,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->counter = $counter;
     }
 
+    /**
+     * Item Units
+     */
     public function itemUnitsAction() {
         $form = new Form_Iadmin_Products();
 
@@ -139,6 +158,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->counter = $counter;
     }
 
+    /**
+     * Item
+     */
     public function itemAction() {
         $form = new Form_Iadmin_Products();
 
@@ -175,199 +197,172 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->counter = $counter;
     }
 
+    /**
+     * Add Product
+     */
     public function addProductAction() {
         $form = new Form_Iadmin_Products();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
 
-                $item_pack_size = new ItemPackSizes();
-                $item_pack_size->setItemName($form->item_name->getValue());
-                $item_pack_size->setDescription($form->description->getValue());
-                $item_pack_size->setListRank($form->list_rank->getValue());
-                $item_unit = $this->_em->getRepository('ItemUnits')->find($form->item_unit->getValue());
-                $item_pack_size->setItemUnit($item_unit);
-                $items = $this->_em->getRepository('Items')->find($form->item->getValue());
-                $item_pack_size->setItem($items);
+            $item_pack_size = new ItemPackSizes();
+            $item_pack_size->setItemName($form->item_name->getValue());
+            $item_pack_size->setDescription($form->description->getValue());
+            $item_pack_size->setListRank($form->list_rank->getValue());
+            $item_unit = $this->_em->getRepository('ItemUnits')->find($form->item_unit->getValue());
+            $item_pack_size->setItemUnit($item_unit);
+            $items = $this->_em->getRepository('Items')->find($form->item->getValue());
+            $item_pack_size->setItem($items);
 
-                $item_category = $this->_em->getRepository('ItemCategories')->find($form->item_category->getValue());
-                $item_pack_size->setItemCategory($item_category);
-                if ($form->item_category->getValue() == '1') {
+            $item_category = $this->_em->getRepository('ItemCategories')->find($form->item_category->getValue());
+            $item_pack_size->setItemCategory($item_category);
+            if ($form->item_category->getValue() == '1') {
 
-                    $item_pack_size->setNumberOfDoses($form->number_of_doses->getValue());
-                }
-
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $item_pack_size->setCreatedBy($created_by);
-                $item_pack_size->setCreatedDate(App_Tools_Time::now());
-                $item_pack_size->setModifiedBy($created_by);
-                $item_pack_size->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($item_pack_size);
-                $this->_em->flush();
+                $item_pack_size->setNumberOfDoses($form->number_of_doses->getValue());
             }
+
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $item_pack_size->setCreatedBy($created_by);
+            $item_pack_size->setCreatedDate(App_Tools_Time::now());
+            $item_pack_size->setModifiedBy($created_by);
+            $item_pack_size->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($item_pack_size);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-products/products");
     }
 
+    /**
+     * Add Item Category
+     */
     public function addItemCategoryAction() {
         $form = new Form_Iadmin_Products();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                // Default status is 1.
-                $status = '1';
-                $item_category = new ItemCategories();
-                $item_category->setItemCategoryName($form->item_category_name->getValue());
-                $user_id = $this->_em->getRepository('Users')->find($this->_userid);
-                $item_category->setCreatedBy($user_id);
-                $item_category->setModifiedBy($user_id);
-                $item_category->setStatus($status);
-                $item_category->setCreatedDate(App_Tools_Time::now());
-                $item_category->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($item_category);
-                $this->_em->flush();
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            // Default status is 1.
+            $status = '1';
+            $item_category = new ItemCategories();
+            $item_category->setItemCategoryName($form->item_category_name->getValue());
+            $user_id = $this->_em->getRepository('Users')->find($this->_userid);
+            $item_category->setCreatedBy($user_id);
+            $item_category->setModifiedBy($user_id);
+            $item_category->setStatus($status);
+            $item_category->setCreatedDate(App_Tools_Time::now());
+            $item_category->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($item_category);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-products/item-categories");
     }
 
+    /**
+     * Update Item Category
+     */
     public function updateItemCategoryAction() {
         $form = new Form_Iadmin_Products();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $form_values = $this->_request->getPost();
-                $item_category = $this->_em->getRepository("ItemCategories")->find($form_values['item_category_id']);
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $form_values = $this->_request->getPost();
+            $item_category = $this->_em->getRepository("ItemCategories")->find($form_values['item_category_id']);
 
-                $item_category->setItemCategoryName($form_values['item_category_name']);
+            $item_category->setItemCategoryName($form_values['item_category_name']);
 
-                $modifiedBy = $this->_em->getRepository('Users')->find($this->_userid);
-                $item_category->setModifiedBy($modifiedBy);
-                $item_category->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($item_category);
-                $this->_em->flush();
-            }
+            $modifiedBy = $this->_em->getRepository('Users')->find($this->_userid);
+            $item_category->setModifiedBy($modifiedBy);
+            $item_category->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($item_category);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-products/item-categories");
     }
 
-//    public function addItemUnitAction() {
-//        $form = new Form_Iadmin_Products();
-//
-//        if ($this->_request->isPost()) {
-//            if ($form->isValid($this->_request->getPost())) {
-//
-//                $item_units = new ItemUnits();
-//                $item_units->setItemUnitName($form->item_unit_name->getValue());
-//                $createdBy = $this->_em->getRepository('Users')->find($this->_userid);
-//                $item_units->setCreatedBy($createdBy);
-//                $modifiedBy = $this->_em->getRepository('Users')->find($this->_userid);
-//                $item_units->setModifiedBy($modifiedBy);
-//                $this->_em->persist($item_units);
-//                $this->_em->flush();
-//            }
-//        }
-//        $this->_redirect("/iadmin/manage-products/item-units");
-//    }
-//
-//    public function updateItemUnitAction() {
-//        $form = new Form_Iadmin_Products();
-//
-//        if ($this->_request->isPost()) {
-//            if ($form->isValid($this->_request->getPost())) {
-//                $form_values = $this->_request->getPost();
-//                $item_units = $this->_em->getRepository("ItemUnits")->find($form_values['item_unit_id']);
-//
-//                $item_units->setItemUnitName($form_values['item_unit_name']);
-//
-//                $modifiedBy = $this->_em->getRepository('Users')->find($this->_userid);
-//                $item_units->setModifiedBy($modifiedBy);
-//                $this->_em->persist($item_units);
-//                $this->_em->flush();
-//            }
-//        }
-//        $this->_redirect("/iadmin/manage-products/item-units");
-//    }
+    /**
+     * Add Item Unit
+     */
     public function addItemUnitAction() {
         $form = new Form_Iadmin_Products();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
 
-                $items = new ItemUnits();
-                $items->setItemUnitName($form->item_unit_name->getValue());
-                $items->setStatus('1');
-                $createdBy = $this->_em->getRepository('Users')->find($this->_userid);
-                $items->setCreatedBy($createdBy);
-                $items->setModifiedBy($createdBy);
-                $items->setCreatedDate(App_Tools_Time::now());
-                $items->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($items);
-                $this->_em->flush();
-            }
+            $items = new ItemUnits();
+            $items->setItemUnitName($form->item_unit_name->getValue());
+            $items->setStatus('1');
+            $createdBy = $this->_em->getRepository('Users')->find($this->_userid);
+            $items->setCreatedBy($createdBy);
+            $items->setModifiedBy($createdBy);
+            $items->setCreatedDate(App_Tools_Time::now());
+            $items->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($items);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-products/item-units");
     }
 
+    /**
+     * Update Item Unit
+     */
     public function updateItemUnitAction() {
         $form = new Form_Iadmin_Products();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $form_values = $this->_request->getPost();
-                $items = $this->_em->getRepository("ItemUnits")->find($form_values['item_unit_id']);
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $form_values = $this->_request->getPost();
+            $items = $this->_em->getRepository("ItemUnits")->find($form_values['item_unit_id']);
 
-                $items->setItemUnitName($form->item_unit_name->getValue());
-                $modifiedBy = $this->_em->getRepository('Users')->find($this->_userid);
-                $items->setModifiedBy($modifiedBy);
-                $items->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($items);
-                $this->_em->flush();
-            }
+            $items->setItemUnitName($form->item_unit_name->getValue());
+            $modifiedBy = $this->_em->getRepository('Users')->find($this->_userid);
+            $items->setModifiedBy($modifiedBy);
+            $items->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($items);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-products/item-units");
     }
 
+    /**
+     * Add Item
+     */
     public function addItemAction() {
         $form = new Form_Iadmin_Products();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
 
-                $items = new Items();
-                $items->setDescription($form->item_description->getValue());
-                $createdBy = $this->_em->getRepository('Users')->find($this->_userid);
-                $items->setCreatedBy($createdBy);
-                $items->setModifiedBy($createdBy);
-                $items->setCreatedDate(App_Tools_Time::now());
-                $items->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($items);
-                $this->_em->flush();
-            }
+            $items = new Items();
+            $items->setDescription($form->item_description->getValue());
+            $createdBy = $this->_em->getRepository('Users')->find($this->_userid);
+            $items->setCreatedBy($createdBy);
+            $items->setModifiedBy($createdBy);
+            $items->setCreatedDate(App_Tools_Time::now());
+            $items->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($items);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-products/item");
     }
 
+    /**
+     * Update Item
+     */
     public function updateItemAction() {
         $form = new Form_Iadmin_Products();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $form_values = $this->_request->getPost();
-                $items = $this->_em->getRepository("Items")->find($form_values['item_group_id']);
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $form_values = $this->_request->getPost();
+            $items = $this->_em->getRepository("Items")->find($form_values['item_group_id']);
 
-                $items->setDescription($form_values['item_description']);
+            $items->setDescription($form_values['item_description']);
 
-                $modifiedBy = $this->_em->getRepository('Users')->find($this->_userid);
-                $items->setModifiedBy($modifiedBy);
-                $items->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($items);
-                $this->_em->flush();
-            }
+            $modifiedBy = $this->_em->getRepository('Users')->find($this->_userid);
+            $items->setModifiedBy($modifiedBy);
+            $items->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($items);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-products/item");
     }
 
+    /**
+     * ajaxProductEdit
+     */
     public function ajaxProductEditAction() {
         $this->_helper->layout->setLayout("ajax");
 
@@ -388,6 +383,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * ajaxItemCategoriesEdit
+     */
     public function ajaxItemCategoriesEditAction() {
         $this->_helper->layout->disableLayout();
         $item_category = $this->_em->find('ItemCategories', $this->_request->getParam('item_category_id'));
@@ -398,6 +396,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * ajaxItemCategoriesEdit
+     */
     public function ajaxItemUnitsEditAction() {
         $this->_helper->layout->disableLayout();
         $item_unit = $this->_em->find('ItemUnits', $this->_request->getParam('item_unit_id'));
@@ -408,6 +409,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * ajaxItemEdit
+     */
     public function ajaxItemEditAction() {
         $this->_helper->layout->disableLayout();
         $item_group = $this->_em->find('Items', $this->_request->getParam('item_id'));
@@ -418,6 +422,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * Update Product
+     */
     public function updateProductAction() {
         if ($this->_request->getPost()) {
             $form_values = $this->_request->getPost();
@@ -445,6 +452,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->_redirect("/iadmin/manage-products/products");
     }
 
+    /**
+     * Check Product
+     */
     public function checkProductAction() {
 
         $this->_helper->layout->disableLayout();
@@ -457,6 +467,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Check Item
+     */
     public function checkItemAction() {
 
         $this->_helper->layout->disableLayout();
@@ -469,6 +482,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Check Item Unit
+     */
     public function checkItemUnitAction() {
 
         $this->_helper->layout->disableLayout();
@@ -481,6 +497,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Check Item Category
+     */
     public function checkItemCategoryAction() {
 
         $this->_helper->layout->disableLayout();
@@ -493,6 +512,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * vvm Type
+     */
     public function vvmTypeAction() {
         $form = new Form_Iadmin_VvmTypeSearch();
         $form_add = new Form_Iadmin_VvmTypeAdd();
@@ -522,7 +544,7 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
 
         $paginator = false;
 
-        if ($result != false) {
+        if ($result) {
             //Paginate the contest results
             $paginator = Zend_Paginator::factory($result);
             $page = $this->_getParam("page", 1);
@@ -541,27 +563,31 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * add Vvm Type
+     */
     public function addVvmTypeAction() {
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
+        if ($this->_request->isPost() && $this->_request->getPost()) {
 
-                $form_values = $this->_request->getPost();
+            $form_values = $this->_request->getPost();
 
-                $vvm_type = new VvmTypes();
-                $vvm_type->setVvmTypeName($form_values['vvm_type_name']);
-                $vvm_type->setStatus($form_values['status']);
-                $user_id = $this->_em->find('Users', $this->_userid);
-                $vvm_type->setCreatedBy($user_id);
-                $vvm_type->setModifiedBy($user_id);
-                $vvm_type->setCreatedDate(App_Tools_Time::now());
-                $vvm_type->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($vvm_type);
-                $this->_em->flush();
-            }
+            $vvm_type = new VvmTypes();
+            $vvm_type->setVvmTypeName($form_values['vvm_type_name']);
+            $vvm_type->setStatus($form_values['status']);
+            $user_id = $this->_em->find('Users', $this->_userid);
+            $vvm_type->setCreatedBy($user_id);
+            $vvm_type->setModifiedBy($user_id);
+            $vvm_type->setCreatedDate(App_Tools_Time::now());
+            $vvm_type->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($vvm_type);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-products/vvm-type?success=1");
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->disableLayout();
         $vvm_type_id = $this->_request->getParam('vvm_type_id', '');
@@ -574,6 +600,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * update Vvm Type
+     */
     public function updateVvmTypeAction() {
 
         if ($this->_request->getPost()) {
@@ -595,6 +624,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->_redirect("/iadmin/manage-products/vvm-type?success=2");
     }
 
+    /**
+     * ajaxChangeStatus
+     */
     public function ajaxChangeStatusAction() {
         $this->_helper->layout->disableLayout();
         $row = $this->_em->getRepository("VvmTypes")->find($this->_request->getParam('id'));
@@ -612,6 +644,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->ajaxaction = $this->_request->getParam('ajaxaction');
     }
 
+    /**
+     * Transaction Type
+     */
     public function transactionTypeAction() {
         $form = new Form_Iadmin_TransactionTypeSearch();
         $form_add = new Form_Iadmin_TransactionTypeAdd();
@@ -657,6 +692,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * ajaxChangeStatusNature
+     */
     public function ajaxChangeStatusNatureAction() {
         $this->_helper->layout->disableLayout();
         $row = $this->_em->getRepository("TransactionTypes")->find($this->_request->getParam('idData'));
@@ -673,33 +711,35 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->ajaxactionnature = $this->_request->getParam('ajaxactionnature');
     }
 
+    /**
+     * Add Transaction Type
+     */
     public function addTransactionTypeAction() {
-        $form = new Form_Iadmin_TransactionTypeAdd();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $form_values = $this->_request->getPost();
+            $transaction_type = new TransactionTypes();
+            $transaction_type->setTransactionTypeName($form_values['transaction_type_name']);
 
-                $transaction_type = new TransactionTypes();
-                $transaction_type->setTransactionTypeName($form_values['transaction_type_name']);
+            $transaction_type->setNature($form_values['nature']);
+            $transaction_type->setIsAdjustment($form_values['is_adjustment']);
+            $transaction_type->setStatus($form_values['status']);
+            $created_by = $this->_em->find('Users', $this->_userid);
+            $transaction_type->setCreatedBy($created_by);
+            $transaction_type->setCreatedDate(App_Tools_Time::now());
+            $transaction_type->setModifiedBy($created_by);
+            $transaction_type->setModifiedDate(App_Tools_Time::now());
 
-                $transaction_type->setNature($form_values['nature']);
-                $transaction_type->setIsAdjustment($form_values['is_adjustment']);
-                $transaction_type->setStatus($form_values['status']);
-                $created_by = $this->_em->find('Users', $this->_userid);
-                $transaction_type->setCreatedBy($created_by);
-                $transaction_type->setCreatedDate(App_Tools_Time::now());
-                $transaction_type->setModifiedBy($created_by);
-                $transaction_type->setModifiedDate(App_Tools_Time::now());
-
-                $this->_em->persist($transaction_type);
-                $this->_em->flush();
-            }
+            $this->_em->persist($transaction_type);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-products/transaction-type?success=1");
     }
 
+    /**
+     * ajaxEditTran
+     */
     public function ajaxEditTranAction() {
         $this->_helper->layout->disableLayout();
         $transaction_type_id = $this->_request->getParam('transaction_type_id', '');
@@ -714,6 +754,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * Update Transaction Type
+     */
     public function updateTransactionTypeAction() {
         if ($this->_request->getPost()) {
             $form_values = $this->_request->getPost();
@@ -735,6 +778,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->_redirect("/iadmin/manage-products/transaction-type?success=2");
     }
 
+    /**
+     * ajaxChangeStatusTran
+     */
     public function ajaxChangeStatusTranAction() {
         $this->_helper->layout->disableLayout();
         $row = $this->_em->getRepository("TransactionTypes")->find($this->_request->getParam('id'));
@@ -752,6 +798,9 @@ class Iadmin_ManageProductsController extends App_Controller_Base {
         $this->view->ajaxaction = $this->_request->getParam('ajaxaction');
     }
 
+    /**
+     * Check Vvm Types
+     */
     public function checkVvmTypesAction() {
         $this->_helper->layout->disableLayout();
 

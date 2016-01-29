@@ -1,16 +1,32 @@
 <?php
 
+/**
+ * Reports_InventoryManagementController
+ *
+ * 
+ *
+ * Logistics Management Information System for Vaccines
+ * @subpackage Reports
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Reports Inventory Management
+ */
 class Reports_InventoryManagementController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Reports_InventoryManagementController index
+     */
     public function indexAction() {
         // action body
     }
 
     // function to generate national summary report
+    /**
+     * National Report
+     */
     public function nationalReportAction() {
         $this->_helper->layout->setLayout('reports');
         $item_pack_sizes = new Model_ItemPackSizes();
@@ -43,14 +59,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->actionpage = 'national-report';
         } else {
             $warehouse_data = new Model_HfDataMaster();
-            //$year = $warehouse_data->getMaxYear();
-            $year = date("Y");
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
             $warehouse_data->getMaxMonth($year);
-//            if (date('d') > 10) {
-//                $month = date("m", strtotime("-1"));
-//            } else {
-            $month = date("m", strtotime("-2 month"));
-//            }
 
             $stakeholder = new Model_Stakeholders();
             $stk = $stakeholder->nationReport();
@@ -79,9 +90,11 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->geo_level_id = 1;
     }
 
+    /**
+     * Provincial Vaccine Coverage
+     */
     public function provincialVaccineCoverageAction() {
         $this->_helper->layout->setLayout('reports');
-        // $this->view->report_id = 'SNONREPDIST';
         $this->view->report_id = 'PVCOVERAGE';
         $this->view->actionpage = 'provincial-vaccine-coverage';
         $this->view->parameters = 'TS01IP';
@@ -145,8 +158,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         }
 
         $end_date1 = $year . '-' . ($month) . '-01';
-        //echo $end_date1;
-
         $end_date = date('Y-m-d', strtotime("-1 days", strtotime("+1 month", strtotime($end_date1))));
         $start_date = date('Y-m-d', strtotime("-11 month", strtotime($end_date1)));
         $this->view->start_date = $start_date;
@@ -154,7 +165,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -167,6 +177,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Provincial Report
+     */
     public function provincialReportAction() {
         $this->_helper->layout->setLayout('reports');
         $item_pack_sizes = new Model_ItemPackSizes();
@@ -203,13 +216,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->actionpage = 'provincial-report';
         } else {
             $warehouse_data = new Model_HfDataMaster();
-            $year = date("Y");
-//            if (date('d') > 10) {
-//                $month = date("m", strtotime("-1"));
-//            } else {
-            $month = date("m", strtotime("-2 month"));
-//            }
-            //$warehouse_data->getMaxMonth($year);
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
             $this->view->report_id = 'SPROVINCEREPORT';
@@ -247,6 +255,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->geo_level_id = 2;
     }
 
+    /**
+     * Divisional Report
+     */
     public function divisionalReportAction() {
         $this->_helper->layout->setLayout('reports');
         if (isset($this->_request->year_sel) && !empty($this->_request->month_sel)) {
@@ -289,7 +300,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $item = $item_pack_sizes->productsReport();
 
             $this->view->item_id = $item;
-            $warehouse_data = new Model_HfDataMaster();
             $year = date("Y");
             if (date('d') > 10) {
                 $month = date("m", strtotime("-1"));
@@ -326,10 +336,11 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         }
     }
 
+    /**
+     * District Report
+     */
     public function districtReportAction() {
         $this->_helper->layout->setLayout('reports');
-        $sess_prov_id = App_Auth::getInstance()->getProvinceId();
-        $sess_dist_id = App_Auth::getInstance()->getDistrictId();
         if (isset($this->_request->year_sel) && !empty($this->_request->month_sel)) {
             $item_pack_sizes = new Model_ItemPackSizes();
             $item = $item_pack_sizes->productsReport();
@@ -371,13 +382,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $item = $item_pack_sizes->productsReport();
 
             $this->view->item_id = $item;
-            $warehouse_data = new Model_HfDataMaster();
-            $year = date("Y");
-//            if (date('d') > 10) {
-//                $month = date("m", strtotime("-1"));
-//            } else {
-            $month = date("m", strtotime("-2 month"));
-//            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
             $this->view->report_id = 'SDISTRICTREPORT';
@@ -425,6 +432,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->geo_level_id = 4;
     }
 
+    /**
+     * Tehsil Report
+     */
     public function tehsilReportAction() {
         $this->_helper->layout->setLayout('reports');
         if (isset($this->_request->year_sel) && !empty($this->_request->month_sel)) {
@@ -475,20 +485,15 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->in_item = $this->_request->prod_sel;
             $this->view->in_stk = 1;
             $this->view->in_prov = $this->_request->prov_sel;
-            //  $this->view->in_dist = $this->_request->dist_id;
             $this->view->counter = 1;
             $this->view->actionpage = 'tehsil-report';
         } else {
             $item_pack_sizes = new Model_ItemPackSizes();
             $item = $item_pack_sizes->productsReport();
             $this->view->item_id = $item;
-            $warehouse_data = new Model_HfDataMaster();
-            $year = date("Y");
-//            if (date('d') > 10) {
-//                $month = date("m", strtotime("-1"));
-//            } else {
+            $year = date("Y", strtotime("-1 year"));
             $month = date("m", strtotime("-2 month"));
-//            }
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
             $this->view->report_id = 'TEHSILREPORT';
@@ -544,6 +549,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->geo_level_id = 5;
     }
 
+    /**
+     * UC Report
+     */
     public function ucReportAction() {
         $this->_helper->layout->setLayout('reports');
 
@@ -566,7 +574,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->parameters = 'SPIT';
             $this->view->parameter_width = '90%';
             $sel_item = $this->_request->prod_sel;
-            // $sel_item = $this->_request->item_sel;
             $this->view->in_col = 'CABM';
             $this->view->in_rg = 'U';
             $this->view->in_type = 'D';
@@ -575,7 +582,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->in_type_1 = 'U';
             $this->view->prov_sel = $this->_request->prov_sel;
             $this->view->sel_item = $this->_request->prod_sel;
-            //  $this->view->sel_item = $this->_request->item_sel;
             $this->view->stk = $stk;
             $locations->form_values['province_id'] = $this->_request->prov_sel;
             $locations->form_values['district_id'] = $this->_request->dist_id;
@@ -623,13 +629,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $item = $item_pack_sizes->productsReport();
 
             $this->view->item_id = $item;
-            $warehouse_data = new Model_HfDataMaster();
-            $year = date("Y");
-//            if (date('d') > 10) {
-//                $month = date("m", strtotime("-1"));
-//            } else {
-            $month = date("m", strtotime("-2 month"));
-//            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
             $this->view->report_id = 'UCREPORT';
@@ -688,29 +690,27 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->geo_level_id = 6;
     }
 
+    /**
+     * Province 2 District
+     */
     function prov2distAction() {
         $this->_helper->layout->disableLayout();
         $type = $this->_request->combo;
         $locations = new Model_Locations();
-        if ($type == '4') {
-
-            if (isset($this->_request->dist_sel) && !empty($this->_request->dist_sel)) {
-                $dist_id = $this->_request->dist_sel;
-                $locations->form_values['geo_level_id'] = 5;
-                $locations->form_values['district_id'] = $dist_id;
-                $result = $locations->getLocationsByLevelByDistrict();
-                $this->view->result = $result;
-            }
+        if ($type == '4' && isset($this->_request->dist_sel) && !empty($this->_request->dist_sel)) {
+            $dist_id = $this->_request->dist_sel;
+            $locations->form_values['geo_level_id'] = 5;
+            $locations->form_values['district_id'] = $dist_id;
+            $result = $locations->getLocationsByLevelByDistrict();
+            $this->view->result = $result;
         }
 
-        if ($type == '2') {
-            if (isset($this->_request->prov_sel) && !empty($this->_request->prov_sel)) {
-                $prov_id = $this->_request->prov_sel;
-                $locations->form_values['geo_level_id'] = 4;
-                $locations->form_values['province_id'] = $prov_id;
-                $result = $locations->getLocationsByLevelByProvince();
-                $this->view->result = $result;
-            }
+        if ($type == '2' && isset($this->_request->prov_sel) && !empty($this->_request->prov_sel)) {
+            $prov_id = $this->_request->prov_sel;
+            $locations->form_values['geo_level_id'] = 4;
+            $locations->form_values['province_id'] = $prov_id;
+            $result = $locations->getLocationsByLevelByProvince();
+            $this->view->result = $result;
         }
 
         if ($type == '5' && !empty($this->_request->teh_sel)) {
@@ -730,6 +730,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Provincial Yearly Report
+     */
     public function provincialYearlyReportAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'PROVINCIALWAREHOUSE';
@@ -747,9 +750,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->ending_month;
         } else {
-            $year = date("Y");
-
-            $month = date("m", strtotime("-2 month"));
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -822,10 +824,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
-        // App_Controller_Functions::pr($period);
         $this->view->period = $period;
         $this->view->sel_item = $this->_request->prod_sel;
         $stakeholder = new Model_Stakeholders();
@@ -836,10 +836,12 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * store Issuance Report
+     */
     public function storeIssuanceReportAction() {
 
         $this->_helper->layout->setLayout('reports');
-        // $this->view->report_id = 'SNONREPDIST';
         $this->view->report_id = 'STOREISSUANCEREPORT';
         $this->view->actionpage = 'store-issuance-report';
         $this->view->parameters = 'TS01IP';
@@ -853,11 +855,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         //filters
         if (isset($this->_request->province) && !empty($this->_request->province)) {
             $this->view->province = $province = $this->_request->province;
-            //$locations->form_values['pk_id'] = $this->_request->province;
-            //$this->view->loc_name = "Province:" . ' ' . $locations->getLocationName();
         } else {
             $this->view->province = $province = 1;
-            //$this->view->loc_name = "Province:" . ' ' . 'Punjab';
         }
         if (isset($this->_request->district) && !empty($this->_request->district)) {
             $this->view->district1 = $this->_request->district;
@@ -908,7 +907,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->end_date = $end_date;
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -921,6 +919,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Store Issuance Report Old
+     */
     public function storeIssuanceReportOldAction() {
 
         $this->_helper->layout->setLayout('reports');
@@ -950,7 +951,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->sel_prod = 3;
         }
         if (!empty($this->_request->prov_sel)) {
-            $this->view->prov_sel = $prov_sel = $this->_request->prov_sel;
+            $this->view->prov_sel = $this->_request->prov_sel;
         }
 
         $item_pack_sizes = new Model_ItemPackSizes();
@@ -989,14 +990,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->district = array();
         }
 
-        /* $locations = new Model_Locations();
-          if ($this->_request->prov_sel) {
-          $locations->form_values['pk_id'] = $this->_request->prov_sel;
-          $this->view->location_name = $locations->getLocationName();
-          } else {
-          $this->view->location_name = "Punjab";
-          } */
-
         $end_date1 = $year . '-12-01';
         $end_date = date('Y-m-d', strtotime("-1 days", strtotime("+1 month", strtotime($end_date1))));
         $start_date = date('Y-m-d', strtotime("-364 days", strtotime($end_date)));
@@ -1004,12 +997,14 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
     }
 
+    /**
+     * Districts Yearly Report
+     */
     public function districtsYearlyReportAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'DISTRICTWAREHOUSE';
@@ -1030,12 +1025,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->ending_month;
         } else {
-            $year = date("Y");
-//            if (date('d') > 10) {
-//                $month = date("m", strtotime("-1"));
-//            } else {
-            $month = date("m", strtotime("-2 month"));
-//            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -1050,7 +1041,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->sel_prod = 28;
         }
         if (!empty($this->_request->prov_sel)) {
-            $this->view->prov_sel = $prov_sel = $this->_request->prov_sel;
+            $this->view->prov_sel = $this->_request->prov_sel;
         } else {
             $this->view->prov_sel = 1;
         }
@@ -1108,7 +1099,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         if ($this->_request->prov_sel) {
             $locations->form_values['pk_id'] = $this->_request->prov_sel;
             $this->view->location_name = "Province:" . ' ' . $locations->getLocationName();
-            // $this->view->location_name = $locations->getLocationName();
         } else {
             $this->view->location_name = "Province:" . ' ' . "Punjab";
         }
@@ -1131,7 +1121,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -1148,6 +1137,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->loc = $lct2;
     }
 
+    /**
+     * Districts Yearly Report
+     */
     public function wastagesReportAction() {
 
         $this->_helper->layout->setLayout('reports');
@@ -1207,9 +1199,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->ending_month;
         } else {
-            $year = date("Y");
-
-            $month = date("m", strtotime("-2 month"));
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
 
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
@@ -1237,12 +1228,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $end_date1 = $year . '-' . ($month) . '-01';
         $end_date = date('Y-m-d', strtotime("-1 days", strtotime("+1 month", strtotime($end_date1))));
         $start_date = date('Y-m-d', strtotime("-5 month", strtotime($end_date1)));
-        //$end_date = date('Y-m-d', strtotime("-1 days", strtotime("+1 month", strtotime($endDate1))));
-        //$start_date = date('Y-m-d', strtotime("-5 month", strtotime($endDate1)));
-        // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -1255,6 +1242,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Shipment Report
+     */
     public function shipmentReportAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SHIPMENTREPORT';
@@ -1271,12 +1261,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->ending_month;
         } else {
-            $year = date("Y");
-            if (date('d') > 10) {
-                $month = date("m", strtotime("-1"));
-            } else {
-                $month = date("m", strtotime("-2"));
-            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -1335,7 +1322,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -1348,6 +1334,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Central Provincial Warehouse
+     */
     public function centralProvincialWarehouseAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'CENTRALWAREHOUSE';
@@ -1378,7 +1367,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         } else {
             $this->view->sel_indicator = $sel_indicator = 1;
         }
-        $this->view->prov_sel = $prov_sel = $this->_request->prov_sel;
+        $this->view->prov_sel = $this->_request->prov_sel;
 
         if (isset($this->_request->stk_sel) && !empty($this->_request->stk_sel)) {
             $this->view->stk_sel = $sel_stk = $this->_request->stk_sel;
@@ -1418,7 +1407,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -1431,11 +1419,11 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Stock Availability Report
+     */
     public function stockAvailabilityReportAction() {
         $this->_helper->layout->setLayout('reports');
-        $q_str_pro = '';
-        $q_str_prov = '';
-        $sel_prov = '';
         $warehouses_data = new Model_HfDataMaster();
         $item_pack_sizes = new Model_ItemPackSizes();
         $locations = new Model_Locations();
@@ -1454,8 +1442,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->disttotal = 0;
         $this->view->old1 = '';
         $this->view->actionpage = 'stock-availability-report';
-        // $this->view->month_sel = $this->_request->month_sel;
-        // $this->view->year_sel = $this->_request->year_sel;
         $this->view->sel_item = $this->_request->prod_sel;
         $this->view->sel_stk = 1;
         $this->view->prov_sel = $this->_request->prov_sel;
@@ -1471,12 +1457,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
-//            if (date('d') > 10) {
-//                $month = date("m", strtotime("-1"));
-//            } else {
-            $month = date("m", strtotime("-2 month"));
-//            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -1503,6 +1485,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Reported Provinces
+     */
     public function reportedProvincesAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'REPORTEDPROVINCES';
@@ -1522,12 +1507,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->ending_month;
         } else {
-            $year = date("Y");
-            if (date('d') > 10) {
-                $month = date("m", strtotime("-1"));
-            } else {
-                $month = date("m", strtotime("-2"));
-            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -1536,7 +1518,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         } else {
             $this->view->sel_indicator = $sel_indicator = 1;
         }
-        $this->view->prov_sel = $prov_sel = $this->_request->prov_sel;
+        $this->view->prov_sel = $this->_request->prov_sel;
 
         if (isset($this->_request->stk_sel) && !empty($this->_request->stk_sel)) {
             $this->view->stk_sel = $sel_stk = $this->_request->stk_sel;
@@ -1571,7 +1553,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -1584,6 +1565,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Stock On Hand
+     */
     public function stockOnHandAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SOH';
@@ -1606,12 +1590,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
-//            if (date('d') > 10) {
-//                $month = date("m") - 1;
-//            } else {
-            $month = date("m", strtotime("-2 month"));
-//            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -1620,7 +1601,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         } else {
             $this->view->sel_indicator = $sel_indicator = 1;
         }
-        $this->view->prov_sel = $prov_sel = $this->_request->prov_sel;
+        $this->view->prov_sel = $this->_request->prov_sel;
 
         if (isset($this->_request->stk_sel) && !empty($this->_request->stk_sel)) {
             $this->view->stk_sel = $sel_stk = $this->_request->stk_sel;
@@ -1646,7 +1627,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -1659,22 +1639,26 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Stock Analysis District Report
+     */
     public function stockAnalysisDistrictReportAction() {
         $form = new Form_Reports_MonthYear();
         $this->_helper->layout->setLayout('reports');
         $this->view->report_title = 'Monthly Stock Analysis Report';
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $warehouse_data = new Model_HfDataMaster();
-                $warehouse_data->form_values = $form->getValues();
-                $this->view->xml_store = $warehouse_data->getStockAnalysisDistrictWiseReport();
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $warehouse_data = new Model_HfDataMaster();
+            $warehouse_data->form_values = $form->getValues();
+            $this->view->xml_store = $warehouse_data->getStockAnalysisDistrictWiseReport();
         }
 
         $this->view->form = $form;
     }
 
+    /**
+     * Month Of Stock
+     */
     public function monthOfStockAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'MOS';
@@ -1697,12 +1681,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
-//            if (date('d') > 10) {
-//                $month = date("m") - 1;
-//            } else {
-            $month = date("m", strtotime("-2 month"));
-//            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -1711,7 +1692,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         } else {
             $this->view->sel_indicator = $sel_indicator = 1;
         }
-        $this->view->prov_sel = $prov_sel = $this->_request->prov_sel;
+        $this->view->prov_sel = $this->_request->prov_sel;
 
         if (isset($this->_request->stk_sel) && !empty($this->_request->stk_sel)) {
             $this->view->stk_sel = $sel_stk = $this->_request->stk_sel;
@@ -1737,7 +1718,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -1750,6 +1730,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Consumption
+     */
     public function consumptionAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'CONSUMPTION';
@@ -1772,12 +1755,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
-//            if (date('d') > 10) {
-//                $month = date("m", strtotime("-1"));
-//            } else {
-            $month = date("m", strtotime("-2 month"));
-//            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -1786,7 +1765,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         } else {
             $this->view->sel_indicator = $sel_indicator = 1;
         }
-        $this->view->prov_sel = $prov_sel = $this->_request->prov_sel;
+        $this->view->prov_sel = $this->_request->prov_sel;
 
         if (isset($this->_request->stk_sel) && !empty($this->_request->stk_sel)) {
             $this->view->stk_sel = $sel_stk = $this->_request->stk_sel;
@@ -1812,7 +1791,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -1825,6 +1803,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * AMC
+     */
     public function amcAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'AMC';
@@ -1846,12 +1827,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
-//            if (date('d') > 10) {
-//                $month = date("m", strtotime("-1"));
-//            } else {
-            $month = date("m", strtotime("-2 month"));
-//            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -1860,7 +1838,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         } else {
             $this->view->sel_indicator = $sel_indicator = 1;
         }
-        $this->view->prov_sel = $prov_sel = $this->_request->prov_sel;
+        $this->view->prov_sel = $this->_request->prov_sel;
 
         if (isset($this->_request->stk_sel) && !empty($this->_request->stk_sel)) {
             $this->view->stk_sel = $sel_stk = $this->_request->stk_sel;
@@ -1886,7 +1864,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -1899,6 +1876,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Reported Districts By UC
+     */
     public function reportedDistrictsByUcAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'REPORTEDBYUC';
@@ -1912,7 +1892,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->item_id = $item;
         $location = new Model_Locations();
         if (isset($this->_request->province) && !empty($this->_request->province)) {
-            //$this->view->province = $this->_request->province;
             $province = $this->_request->province;
             $this->view->province = $province;
         } else {
@@ -1936,15 +1915,11 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->ending_month;
         } else {
-            $year = date("Y");
-            if (date('d') > 10) {
-                $month = date("m", strtotime("-1"));
-            } else {
-                $month = date("m", strtotime("-2"));
-            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
-            // $this->view->month_sel = $month;
         }
         if (isset($this->_request->wh_type) && !empty($this->_request->wh_type)) {
             $this->view->wh_type = $wh_type = $this->_request->wh_type;
@@ -1980,7 +1955,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -1993,6 +1967,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Reported Districts By User
+     */
     public function reportedDistrictsByUserAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'REPORTEDBYUC';
@@ -2006,7 +1983,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->item_id = $item;
         $location = new Model_Locations();
         if (isset($this->_request->province) && !empty($this->_request->province)) {
-            //$this->view->province = $this->_request->province;
             $province = $this->_request->province;
             $this->view->province = $province;
         } else {
@@ -2030,12 +2006,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->ending_month;
         } else {
-            $year = date("Y");
-            if (date('d') > 10) {
-                $month = date("m", strtotime("-1"));
-            } else {
-                $month = date("m", strtotime("-2"));
-            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -2074,7 +2047,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -2087,6 +2059,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Reported District By Facility
+     */
     public function reportedDistrictByFacilityAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'REPORTEDBYUC';
@@ -2100,7 +2075,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->item_id = $item;
         $location = new Model_Locations();
         if (isset($this->_request->province) && !empty($this->_request->province)) {
-            //$this->view->province = $this->_request->province;
             $province = $this->_request->province;
             $this->view->province = $province;
         } else {
@@ -2129,12 +2103,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->ending_month;
         } else {
-            $year = date("Y");
-            if (date('d') > 10) {
-                $month = date("m", strtotime("-1"));
-            } else {
-                $month = date("m", strtotime("-2"));
-            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -2160,7 +2131,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -2173,6 +2143,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Non Reported Districts By Facility
+     */
     public function nonReportedDistrictsByFacilityAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SNONREPDIST';
@@ -2186,7 +2159,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->item_id = $item;
         $location = new Model_Locations();
         if (isset($this->_request->province) && !empty($this->_request->province)) {
-//          $this->view->province = $this->_request->province;
             $province = $this->_request->province;
             $this->view->province = $province;
         } else {
@@ -2209,12 +2181,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
-            if (date('d') > 10) {
-                $month = date("m", strtotime("-1"));
-            } else {
-                $month = date("m", strtotime("-2"));
-            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -2247,7 +2216,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -2264,6 +2232,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->district = $district;
     }
 
+    /**
+     * Non Reported Districts By UC
+     */
     public function nonReportedDistrictsByUcAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SNONREPDIST';
@@ -2278,7 +2249,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->item_id = $item;
         $location = new Model_Locations();
         if (isset($this->_request->province) && !empty($this->_request->province)) {
-//          $this->view->province = $this->_request->province;
             $province = $this->_request->province;
             $this->view->province = $province;
         } else {
@@ -2302,12 +2272,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
-            if (date('d') > 10) {
-                $month = date("m", strtotime("-1"));
-            } else {
-                $month = date("m", strtotime("-2"));
-            }
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
+
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -2333,7 +2300,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -2350,6 +2316,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->district = $district;
     }
 
+    /**
+     * Province To Warehouse
+     */
     public function provinceToWarehouseAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
@@ -2359,57 +2328,78 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * ajaxCombos
+     */
     public function ajaxCombosAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
         $this->view->form_values = $form_values;
     }
 
+    /**
+     * Transaction Detail
+     */
     public function transactionDetailAction() {
         $this->_helper->layout->setLayout('print-report');
         $param = explode('|', base64_decode($this->_request->getParam('param', '')));
         $this->view->param = $param;
     }
 
+    /**
+     * Reported UC
+     */
     public function reportedUcAction() {
         $this->_helper->layout->setLayout('print-report');
         $param = explode('-', base64_decode($this->_request->getParam('param', '')));
         $this->view->param = $param;
     }
 
+    /**
+     * Reported UC User
+     */
     public function reportedUcUserAction() {
         $this->_helper->layout->setLayout('print-report');
         $param = explode('-', base64_decode($this->_request->getParam('param', '')));
         $this->view->param = $param;
     }
 
+    /**
+     * Reported Warehouse List
+     */
     public function reportedWarehouseListAction() {
         $this->_helper->layout->setLayout('print-report');
         $param = explode('-', base64_decode($this->_request->getParam('param', '')));
         $this->view->param = $param;
     }
 
+    /**
+     * Popup Data Entry
+     */
     public function popupDataEntryAction() {
-        // $this->_helper->layout->disableLayout();
         $this->_helper->layout->setLayout("print-report");
         $param = explode('|', base64_decode($this->_request->getParam('param', '')));
         $this->view->param = $param;
         $this->view->is_new_report = 2;
     }
 
+    /**
+     * Popup Data Entry Facility
+     */
     public function popupDataEntryFacilityAction() {
-        // $this->_helper->layout->disableLayout();
         $this->_helper->layout->setLayout("print-report");
         $param = $this->_request->getParam('param', '');
         $this->view->is_new_report = 2;
         $this->view->param = $param;
     }
 
+    /**
+     * Data Entry Status
+     */
     public function dataEntryStatusAction() {
         $this->view->report_id = 'DataEntryStatus';
         $this->view->parameters = 'TS01I';
 
-        $data_arr = array();
         $search_form = new Form_ReportsSearch();
         $stock_master = new Model_StockMaster();
         $role_id = $this->_identity->getRoleId();
@@ -2445,15 +2435,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->tehsil = $tehsil_id;
             $stock_master->form_values['tehsil'] = $tehsil_id;
         }
-//        $data_arr = $stock_master->getDataEntryStatusFederal();
-//        $data_arr1 = $stock_master->getDataEntryStatusProvincial();
-//        $data_arr2 = $stock_master->getDataEntryStatusDistrict();
-//        $data_arr3 = $stock_master->getDataEntryStatusTehsil();
-//        $this->view->data = $data_arr;
-//        $this->view->data1 = $data_arr1;
-//        $this->view->data2 = $data_arr2;
-//        $this->view->data3 = $data_arr3;
-
 
         $this->view->data = $stock_master->getFederalWarehouses();
         $this->view->data1 = $stock_master->getProvincialWarehouses();
@@ -2466,13 +2447,11 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->report_title = "Data Entry Status";
 
         $this->view->search_form = $search_form;
-        $this->view->form_values = $form_values;
-
 
         if (isset($this->_request->wh_type) && !empty($this->_request->wh_type)) {
             $this->view->wh_type = $wh_type = $this->_request->wh_type;
         } else {
-            if ($role_id == 3) {
+            if ($role_id == 3 || $role_id == 17) {
                 $wh_type_role = 1;
             } else if ($role_id == 4) {
                 $wh_type_role = 2;
@@ -2480,8 +2459,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
                 $wh_type_role = 4;
             } else if ($role_id == 7) {
                 $wh_type_role = 5;
-            } else if ($role_id == 17) {
-                $wh_type_role = 1;
             }
 
             $this->view->wh_type = $wh_type = $wh_type_role;
@@ -2489,44 +2466,48 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->actionpage = 'data-entry-status';
     }
 
+    /**
+     * Batch Tracking
+     */
     public function batchTrackingAction() {
         $form = new Form_BatchTracking();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $product_id = $this->_request->getPost('product');
-                $from_wh = $this->_request->getPost('from_wh');
-                $to_wh = $this->_request->getPost('to_wh');
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $product_id = $this->_request->getPost('product');
+            $from_wh = $this->_request->getPost('from_wh');
+            $to_wh = $this->_request->getPost('to_wh');
 
-                $form->product->setValue($product_id);
-                $stock_master = new Model_StockMaster();
-                $result1 = $stock_master->getWarehousesByProduct($product_id);
-                if ($result1 && count($result1) > 0) {
-                    foreach ($result1 as $whs) {
-                        $result1set[$whs['pkId']] = $whs['warehouseName'];
-                    }
+            $form->product->setValue($product_id);
+            $stock_master = new Model_StockMaster();
+            $result1 = $stock_master->getWarehousesByProduct($product_id);
+            if ($result1 && count($result1) > 0) {
+                foreach ($result1 as $whs) {
+                    $result1set[$whs['pkId']] = $whs['warehouseName'];
                 }
-                $form->from_wh->setMultiOptions($result1set);
-                $form->from_wh->setValue($from_wh);
-                $result2 = $stock_master->getToWarehousesByProduct($from_wh, $product_id);
-                if ($result2 && count($result1) > 0) {
-                    foreach ($result2 as $whs) {
-                        $result2set[$whs['pkId']] = $whs['warehouseName'];
-                    }
-                }
-                $form->to_wh->setMultiOptions($result2set);
-                $form->to_wh->setValue($to_wh);
-
-                $stock_master->form_values = $form->getValues();
-                $result3 = $stock_master->getAllWarehouseBatches();
-
-                $this->view->result = $result3;
             }
+            $form->from_wh->setMultiOptions($result1set);
+            $form->from_wh->setValue($from_wh);
+            $result2 = $stock_master->getToWarehousesByProduct($from_wh, $product_id);
+            if ($result2 && count($result1) > 0) {
+                foreach ($result2 as $whs) {
+                    $result2set[$whs['pkId']] = $whs['warehouseName'];
+                }
+            }
+            $form->to_wh->setMultiOptions($result2set);
+            $form->to_wh->setValue($to_wh);
+
+            $stock_master->form_values = $form->getValues();
+            $result3 = $stock_master->getAllWarehouseBatches();
+
+            $this->view->result = $result3;
         }
 
         $this->view->form = $form;
     }
 
+    /**
+     * ajaxGetWarehousesByProduct
+     */
     public function ajaxGetWarehousesByProductAction() {
         $this->_helper->layout->disableLayout();
         $product_id = $this->_request->getParam('product');
@@ -2537,6 +2518,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * ajaxGetToWarehousesByProduct
+     */
     public function ajaxGetToWarehousesByProductAction() {
         $this->_helper->layout->disableLayout();
         $product_id = $this->_request->getParam('product');
@@ -2548,6 +2532,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * ajaxGetBatchData
+     */
     public function ajaxGetBatchDataAction() {
         $this->_helper->layout->disableLayout();
 
@@ -2562,6 +2549,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->issue_result = $issue_result;
     }
 
+    /**
+     * ajaxLinkReceiveWithIssue
+     */
     public function ajaxLinkReceiveWithIssueAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -2571,12 +2561,13 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $stock_master->linkReceiveWithIssue();
     }
 
+    /**
+     * Batch Shelf Life Graph
+     */
     public function batchShelfLifeGraphAction() {
         $form = new Form_BatchShelfLife();
 
         $this->view->form = $form;
-        // $this->_helper->layout->setLayout('reports');
-
         $this->view->report_id = 'REPORTEDPROVINCES';
         $this->view->report_title = 'Vaccine Shelf Life';
         $this->view->actionpage = 'reported-provinces';
@@ -2594,7 +2585,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         if ($this->_request->isPost()) {
             $this->view->combos = $this->_request->getPost();
             $form_values = $this->_request->getPost();
-            // App_Controller_Functions::pr($form_values);
             $this->view->office = $form_values['office'];
             $this->view->warehouse_id = $form_values['warehouse'];
             $this->view->warehouse_hidden = $form_values['warehouse'];
@@ -2617,12 +2607,13 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Batch Shelf Life
+     */
     public function batchShelfLifeAction() {
         $form = new Form_BatchShelfLife();
 
         $this->view->form = $form;
-        //$this->_helper->layout->setLayout('reports');
-
         $this->view->report_id = 'REPORTEDPROVINCES';
         $this->view->report_title = 'Vaccine Shelf Life';
         $this->view->actionpage = 'reported-provinces';
@@ -2640,12 +2631,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         if ($this->_request->isPost()) {
             $this->view->combos = $this->_request->getPost();
             $form_values = $this->_request->getPost();
-            // App_Controller_Functions::pr($form_values);
-//            $this->view->office = $form_values['office'];
-//            $this->view->warehouse_id = $form_values['warehouse'];
-//            $this->view->warehouse_hidden = $form_values['warehouse'];
-//            $this->view->combo1_hidden = $form_values['combo1'];
-//            $this->view->combo2_hidden = $form_values['combo2'];
 
             $this->view->warehouse_id = $this->_identity->getWarehouseId();
             $this->view->warehouse_hidden = $this->_identity->getWarehouseId();
@@ -2666,6 +2651,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Stock Analysis Summary Report
+     */
     public function stockAnalysisSummaryReportAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'DISTRICTWAREHOUSE';
@@ -2750,7 +2738,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -2763,6 +2750,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Sufficient Report
+     */
     public function sufficientReportAction() {
 
         $base_url = Zend_Registry::get('baseurl');
@@ -2794,10 +2784,11 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->xml_store = $xmlstore;
     }
 
+    /**
+     * Pipeline Report
+     */
     public function pipelineReportAction() {
 
-        //$base_url = Zend_Registry::get('baseurl');
-        //$this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
         $this->view->role_id = $this->_identity->getRoleId();
 
         $stock_master = new Model_StockMaster();
@@ -2812,6 +2803,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->headTitle("Pipeline Report, $from_date - $to_date");
     }
 
+    /**
+     * Status Report
+     */
     public function statusReportAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SHIPMENTREPORT';
@@ -2888,7 +2882,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -2901,6 +2894,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Stock Issuance
+     */
     public function stockIssuanceAction() {
         $stock_master = new Model_StockMaster();
         $warehouse = $this->_identity->getWarehouseName();
@@ -2910,10 +2906,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $stock_master->form_values = $this->_request->getParams();
             $this->view->month = $this->_request->getParam('month');
             $this->view->year = $this->_request->getParam('year');
-            //if ($role_id == 23 || $role_id == 3) {
             $wh = new Model_Warehouses();
             $warehouse = $wh->getWarehouseNameByWarehouseId($this->_request->getParam('warehouse'));
-            //}
         } else {
             $stock_master->form_values = array(
                 'month' => date("m"),
@@ -2935,6 +2929,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->headScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Print Stock Issuance
+     */
     public function printStockIssuanceAction() {
         $this->_helper->layout->setLayout('print');
         $wh = new Model_Warehouses();
@@ -2949,6 +2946,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->warehousename = $wh->getWarehouseNameByWarehouseId($this->_request->getParam('warehouse'));
     }
 
+    /**
+     * Stock Report
+     */
     public function stockReportAction() {
         $stock_master = new Model_StockMaster();
         $warehouse = $this->_identity->getWarehouseName();
@@ -2983,6 +2983,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->headScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Print Stock Report
+     */
     public function printStockReportAction() {
         $this->_helper->layout->setLayout('print');
         $wh = new Model_Warehouses();
@@ -2998,6 +3001,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->warehousename = $wh->getWarehouseNameByWarehouseId($this->_request->getParam('warehouse'));
     }
 
+    /**
+     * BCG Coverage Detail
+     */
     public function bcgCoverageDetailAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SNONREPDIST';
@@ -3022,10 +3028,12 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->from_year_sel = $from_year = $this->_request->from_year_sel;
             $this->view->from_month_sel = $from_month = $this->_request->from_month_sel;
         } else {
-            $from_year = date("Y");
+
+            $from_date = date('m/Y', strtotime('-4 months'));
+            list($from_month, $from_year) = explode('/', $from_date);
 
             $this->view->from_year_sel = $from_year;
-            $this->view->from_month_sel = $from_month = date("m", strtotime("-4 month"));
+            $this->view->from_month_sel = $from_month;
         }
 
 
@@ -3034,15 +3042,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
 
-            if (date('d') > 10) {
-
-
-                $month = date("m", strtotime("-2 month"));
-            } else {
-                $month = date("m", strtotime("-2 month"));
-            }
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -3098,10 +3100,12 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->file_name = $fileName;
     }
 
+    /**
+     * Vaccines Coverage
+     */
     public function vaccinesCoverageAction() {
 
         $this->_helper->layout->setLayout('reports');
-        // $this->view->report_id = 'SNONREPDIST';
         $this->view->report_id = 'VCOVERAGE';
         $this->view->actionpage = 'vaccines-coverage';
         $this->view->parameters = 'TS01IP';
@@ -3154,7 +3158,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         }
 
         $end_date1 = $year . '-' . ($month) . '-01';
-        //  echo $end_date1;
 
         $end_date = date('Y-m-d', strtotime("-1 days", strtotime("+1 month", strtotime($end_date1))));
         $start_date = date('Y-m-d', strtotime("-11 month", strtotime($end_date1)));
@@ -3163,7 +3166,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -3176,10 +3178,12 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Vaccine Status Wastage
+     */
     public function vaccineStatusWastageAction() {
 
         $this->_helper->layout->setLayout('reports');
-        // $this->view->report_id = 'SNONREPDIST';
         $this->view->report_id = 'VSTATUSWASTAGE';
         $this->view->actionpage = 'vaccine-status-wastage';
         $this->view->parameters = 'TS01IP';
@@ -3211,9 +3215,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         } else {
             $this->view->wh_type = $wh_type = 4;
         }
-        //  $location->form_values['province_id'] = $province;
-        //  $location_name = $location->districtLocations();
-        // $this->view->location_name = $location_name;
+
         if ($this->_request->wh_type == 4) {
             $locations->form_values['pk_id'] = $this->_request->district;
             $this->view->loc_name = "District:" . ' ' . $locations->getLocationName();
@@ -3227,10 +3229,11 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->from_year_sel = $from_year = $this->_request->from_year_sel;
             $this->view->from_month_sel = $from_month = $this->_request->from_month_sel;
         } else {
-            $from_year = date("Y");
+            $from_date = date("m/Y", strtotime("-2 month"));
+            list($from_month, $from_year) = explode("/", $from_date);
 
             $this->view->from_year_sel = $from_year;
-            $this->view->from_month_sel = $from_month = date("m", strtotime("-3 month"));
+            $this->view->from_month_sel = $from_month;
         }
 
 
@@ -3259,7 +3262,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         }
         $this->view->sel_item = $sel_item;
         $end_date1 = $year . '-' . ($month) . '-01';
-        //  echo $end_date1;
 
         $end_date = date('Y-m-d', strtotime("-1 days", strtotime("+1 month", strtotime($end_date1))));
         $start_date = date('Y-m-d', strtotime("-11 month", strtotime($end_date1)));
@@ -3268,7 +3270,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -3281,10 +3282,12 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Vaccine Dropout Rate
+     */
     public function vaccineDropoutRateAction() {
 
         $this->_helper->layout->setLayout('reports');
-        // $this->view->report_id = 'SNONREPDIST';
         $this->view->report_id = 'VDROPOUTRATE';
         $this->view->actionpage = 'vaccine-dropout-rate';
         $this->view->parameters = 'TS01IP';
@@ -3326,18 +3329,16 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         } else {
             $this->view->loc_name = "District:" . ' ' . 'Bahawalpur';
         }
-        //  $location->form_values['province_id'] = $province;
-        //  $location_name = $location->districtLocations();
-        // $this->view->location_name = $location_name;
 
         if (!empty($this->_request->from_year_sel) && !empty($this->_request->from_month_sel)) {
             $this->view->from_year_sel = $from_year = $this->_request->from_year_sel;
             $this->view->from_month_sel = $from_month = $this->_request->from_month_sel;
         } else {
-            $from_year = date("Y");
+            $from_date = date("m/Y", strtotime("-2 month"));
+            list($from_month, $from_year) = explode("/", $from_date);
 
             $this->view->from_year_sel = $from_year;
-            $this->view->from_month_sel = $from_month = date("m", strtotime("-3 month"));
+            $this->view->from_month_sel = $from_month;
         }
 
 
@@ -3367,7 +3368,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         }
         $this->view->sel_item = $sel_item;
         $end_date1 = $year . '-' . ($month) . '-01';
-        //  echo $end_date1;
 
         $end_date = date('Y-m-d', strtotime("-1 days", strtotime("+1 month", strtotime($end_date1))));
         $start_date = date('Y-m-d', strtotime("-11 month", strtotime($end_date1)));
@@ -3376,7 +3376,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -3389,9 +3388,11 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * Stock Movement Report
+     */
     public function stockMovementReportAction() {
         $this->_helper->layout->setLayout('reports');
-        //$this->view->report_id = 'CENTRALWAREHOUSE';
         $this->view->report_id = 'STOCKMOVEMENT';
         $this->view->report_title = 'Stock Movement Report';
         $this->view->actionpage = 'stock-movement-report';
@@ -3420,7 +3421,7 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         } else {
             $this->view->sel_indicator = $sel_indicator = 1;
         }
-        $this->view->prov_sel = $prov_sel = $this->_request->prov_sel;
+        $this->view->prov_sel = $this->_request->prov_sel;
 
         if (isset($this->_request->stk_sel) && !empty($this->_request->stk_sel)) {
             $this->view->stk_sel = $sel_stk = $this->_request->stk_sel;
@@ -3478,7 +3479,6 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         // Start date and End date
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
-        $diff = $begin->diff($end);
         $interval = DateInterval::createFromDateString('1 month');
         $period = new DatePeriod($begin, $interval, $end);
         $this->view->period = $period;
@@ -3491,12 +3491,18 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->location = $lct;
     }
 
+    /**
+     * To Wh Type
+     */
     public function toWhTypeAction() {
         $this->_helper->layout->disableLayout();
 
         $this->view->wh_type = $this->_request->getParam('SkOfcLvl');
     }
 
+    /**
+     * TT Coverage Detail
+     */
     public function ttCoverageDetailAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SNONREPDIST';
@@ -3521,25 +3527,20 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->from_year_sel = $from_year = $this->_request->from_year_sel;
             $this->view->from_month_sel = $from_month = $this->_request->from_month_sel;
         } else {
-            $from_year = date("Y");
+            $from_date = date('m/Y', strtotime('-4 months'));
+            list($from_month, $from_year) = explode('/', $from_date);
 
             $this->view->from_year_sel = $from_year;
-            $this->view->from_month_sel = $from_month = date("m", strtotime("-4 month"));
+            $this->view->from_month_sel = $from_month;
         }
 
         if (!empty($this->_request->month_sel)) {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
 
-            if (date('d') > 10) {
-
-
-                $month = date("m", strtotime("-2 month"));
-            } else {
-                $month = date("m", strtotime("-2 month"));
-            }
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -3581,20 +3582,15 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->district = $district;
         $this->view->prov_sel = $prov_sel;
 
-
-        $distrctName = $locations->getLocationForReport();
         $locations->form_values['dist_id'] = $district_id;
         $locations->form_values['year'] = $year;
         $res = $locations->getLocationsForConsumptionReport();
         $this->view->result = $res;
-
-
-        //FOR Excel File Name
-        $reportingDate = $year . '-' . $month . '-01';
-        $fileName = 'tt' . $distrctName . '_for_' . date('M-Y', strtotime($reportingDate));
-        $this->view->file_name = $fileName;
     }
 
+    /**
+     * Pentavalent Coverage Detail
+     */
     public function pentavalentCoverageDetailAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SNONREPDIST';
@@ -3619,25 +3615,20 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->from_year_sel = $from_year = $this->_request->from_year_sel;
             $this->view->from_month_sel = $from_month = $this->_request->from_month_sel;
         } else {
-            $from_year = date("Y");
+            $from_date = date('m/Y', strtotime('-4 months'));
+            list($from_month, $from_year) = explode('/', $from_date);
 
             $this->view->from_year_sel = $from_year;
-            $this->view->from_month_sel = $from_month = date("m", strtotime("-4 month"));
+            $this->view->from_month_sel = $from_month;
         }
 
         if (!empty($this->_request->month_sel)) {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
 
-            if (date('d') > 10) {
-
-
-                $month = date("m", strtotime("-2 month"));
-            } else {
-                $month = date("m", strtotime("-2 month"));
-            }
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -3680,18 +3671,15 @@ class Reports_InventoryManagementController extends App_Controller_Base {
 
         $locations->form_values['dist_id'] = $district_id;
         $locations->form_values['year'] = $year;
-        $distrctName = $locations->getLocationForReport();
+
 
         $res = $locations->getLocationsForConsumptionReport();
         $this->view->result = $res;
-
-
-        //FOR Excel File Name
-        $reportingDate = $year . '-' . $month . '-01';
-        $fileName = 'PentavalentCoverageDetail_' . $distrctName . '_for_' . date('M-Y', strtotime($reportingDate));
-        $this->view->file_name = $fileName;
     }
 
+    /**
+     * Measles Coverage Detail
+     */
     public function measlesCoverageDetailAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SNONREPDIST';
@@ -3716,10 +3704,11 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->from_year_sel = $from_year = $this->_request->from_year_sel;
             $this->view->from_month_sel = $from_month = $this->_request->from_month_sel;
         } else {
-            $from_year = date("Y");
+            $from_date = date('m/Y', strtotime('-4 months'));
+            list($from_month, $from_year) = explode('/', $from_date);
 
             $this->view->from_year_sel = $from_year;
-            $this->view->from_month_sel = $from_month = date("m", strtotime("-4 month"));
+            $this->view->from_month_sel = $from_month;
         }
 
 
@@ -3728,15 +3717,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
 
-            if (date('d') > 10) {
-
-
-                $month = date("m", strtotime("-2 month"));
-            } else {
-                $month = date("m", strtotime("-2 month"));
-            }
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -3778,19 +3761,16 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->district = $district;
         $this->view->prov_sel = $prov_sel;
 
-        $distrctName = $locations->getLocationForReport();
+
         $locations->form_values['dist_id'] = $district_id;
         $locations->form_values['year'] = $year;
         $res = $locations->getLocationsForConsumptionReport();
         $this->view->result = $res;
-
-
-        //FOR Excel File Name
-        $reportingDate = $year . '-' . $month . '-01';
-        $fileName = 'MeaslesCoverageDetail_' . $distrctName . '_for_' . date('M-Y', strtotime($reportingDate));
-        $this->view->file_name = $fileName;
     }
 
+    /**
+     * PCV Coverage Detail
+     */
     public function pcvCoverageDetailAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SNONREPDIST';
@@ -3815,22 +3795,19 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->from_year_sel = $from_year = $this->_request->from_year_sel;
             $this->view->from_month_sel = $from_month = $this->_request->from_month_sel;
         } else {
-            $from_year = date("Y");
+            $from_date = date('m/Y', strtotime('-4 months'));
+            list($from_month, $from_year) = explode('/', $from_date);
 
             $this->view->from_year_sel = $from_year;
-            $this->view->from_month_sel = $from_month = date("m", strtotime("-4 month"));
+            $this->view->from_month_sel = $from_month;
         }
         if (!empty($this->_request->month_sel)) {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
 
-            if (date('d') > 10) {
-                $month = date("m", strtotime("-2 month"));
-            } else {
-                $month = date("m", strtotime("-2 month"));
-            }
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -3873,19 +3850,16 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->district = $district;
         $this->view->prov_sel = $province;
 
-        $distrctName = $locations->getLocationForReport();
+
         $locations->form_values['dist_id'] = $district_id;
         $locations->form_values['year'] = $year;
         $res = $locations->getLocationsForConsumptionReport();
         $this->view->result = $res;
-
-
-        //FOR Excel File Name
-        $reportingDate = $year . '-' . $month . '-01';
-        $fileName = 'PcvCoverageDetail_' . $distrctName . '_for_' . date('M-Y', strtotime($reportingDate));
-        $this->view->file_name = $fileName;
     }
 
+    /**
+     * topv Coverage Detail
+     */
     public function topvCoverageDetailAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SNONREPDIST';
@@ -3910,25 +3884,20 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->from_year_sel = $from_year = $this->_request->from_year_sel;
             $this->view->from_month_sel = $from_month = $this->_request->from_month_sel;
         } else {
-            $from_year = date("Y");
+            $from_date = date('m/Y', strtotime('-4 months'));
+            list($from_month, $from_year) = explode('/', $from_date);
 
             $this->view->from_year_sel = $from_year;
-            $this->view->from_month_sel = $from_month = date("m", strtotime("-4 month"));
+            $this->view->from_month_sel = $from_month;
         }
 
         if (!empty($this->_request->month_sel)) {
             $this->view->year_sel = $year = $this->_request->year_sel;
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
-            $year = date("Y");
+            $date = date('m/Y', strtotime('-2 months'));
+            list($month, $year) = explode('/', $date);
 
-            if (date('d') > 10) {
-
-
-                $month = date("m", strtotime("-2 month"));
-            } else {
-                $month = date("m", strtotime("-2 month"));
-            }
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -3968,19 +3937,16 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $district = $locations->getLocationsByLevelByProvinceConsumption();
         $this->view->district = $district;
         $this->view->prov_sel = $prov_sel;
-        $distrctName = $locations->getLocationForReport();
+
         $locations->form_values['dist_id'] = $district_id;
         $locations->form_values['year'] = $year;
         $res = $locations->getLocationsForConsumptionReport();
         $this->view->result = $res;
-
-
-        //FOR Excel File Name
-        $reportingDate = $year . '-' . $month . '-01';
-        $fileName = 'PcvCoverageDetail_' . $distrctName . '_for_' . date('M-Y', strtotime($reportingDate));
-        $this->view->file_name = $fileName;
     }
 
+    /**
+     * cba Coverage Detail
+     */
     public function cbaCoverageDetailAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SNONREPDIST';
@@ -4019,14 +3985,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
             $year = date("Y");
+            $month = date("m", strtotime("-2 month"));
 
-            if (date('d') > 10) {
-
-
-                $month = date("m", strtotime("-2 month"));
-            } else {
-                $month = date("m", strtotime("-2 month"));
-            }
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -4068,21 +4028,15 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->district = $district;
         $this->view->prov_sel = $prov_sel;
 
-
-
-        $distrctName = $locations->getLocationForReport();
         $locations->form_values['dist_id'] = $district_id;
         $locations->form_values['year'] = $year;
         $res = $locations->getLocationsForConsumptionReport();
         $this->view->result = $res;
-
-
-        //FOR Excel File Name
-        $reportingDate = $year . '-' . $month . '-01';
-        $fileName = 'CBACoverageDetail_' . $distrctName . '_for_' . date('M-Y', strtotime($reportingDate));
-        $this->view->file_name = $fileName;
     }
 
+    /**
+     * ajaxGetToMonths
+     */
     public function ajaxGetToMonthsAction() {
         $this->_helper->layout->disableLayout();
 
@@ -4093,6 +4047,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetToYear
+     */
     public function ajaxGetToYearAction() {
         $this->_helper->layout->disableLayout();
 
@@ -4102,6 +4059,9 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Inventory Management Reporting
+     */
     public function inventoryManagementReportingAction() {
         $this->_helper->layout->setLayout('reports');
         $this->view->report_id = 'SNONREPDIST';
@@ -4139,14 +4099,8 @@ class Reports_InventoryManagementController extends App_Controller_Base {
             $this->view->month_sel = $month = $this->_request->month_sel;
         } else {
             $year = date("Y");
+            $month = date("m", strtotime("-2 month"));
 
-            if (date('d') > 10) {
-
-
-                $month = date("m", strtotime("-2 month"));
-            } else {
-                $month = date("m", strtotime("-2 month"));
-            }
             $this->view->year_sel = $year;
             $this->view->month_sel = $month;
         }
@@ -4201,10 +4155,10 @@ class Reports_InventoryManagementController extends App_Controller_Base {
         $this->view->file_name = $fileName;
     }
 
+    /**
+     * Pipeline MOS Report
+     */
     public function pipelineMosReportAction() {
-
-        //$base_url = Zend_Registry::get('baseurl');
-        //$this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
         $form = new Form_Product();
         $this->view->role_id = $this->_identity->getRoleId();
         $this->view->wh_id = $this->_identity->getWarehouseId();

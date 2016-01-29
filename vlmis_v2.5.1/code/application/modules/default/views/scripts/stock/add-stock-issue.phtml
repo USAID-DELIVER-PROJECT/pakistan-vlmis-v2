@@ -1,9 +1,13 @@
+<?php
+/**
+*  phtml for Add Stock Issue
+*/
+?>
 <!-- Content -->
 <div class="page-content-wrapper">
-    <div class="page-content"> 
+    <div class="page-content">
         <div class="row">
-            <div class="col-md-12 right">               
-                <a class="btn btn-primary" href="<?php echo $this->baseUrl(); ?>/stock/stock-issue?month=<?php echo $this->month; ?>&year=<?php echo $this->year; ?>">Back to Stock/Issue Dispatch </a>
+            <div class="col-md-12 right">
             </div>
         </div>
         <br>
@@ -23,13 +27,13 @@
                     <button data-dismiss="alert" class="close" type="button">
                         ×
                     </button>
-                    <?php echo $this->msg; ?>                                        
+                    <?php echo $this->msg; ?>
                     <a id="issue-print" onclick="window.open('print-issue?id=<?php echo $this->master_id; ?>', '_blank', 'scrollbars=1,width=840,height=595');" href="javascript:void(0);"><strong><?php echo $this->voucher; ?></strong></a>
-                </div>                                
+                </div>
             </div>
         <?php } ?>
         <h3 class="page-title">
-            Stock Issue/Dispatch To "<b><?php echo $this->warehouse_name; ?></b>" 
+            Stock Issue/Dispatch To "<b><?php echo $this->warehouse_name; ?></b>"
         </h3>
         <form method="POST" name="add-stock-issue" id="add-stock-issue" action="" >
             <div class="row">
@@ -70,7 +74,7 @@
                     <div class="portlet box green">
                         <div class="portlet-title">
                             <div class="caption">
-                                <?php  echo $this->translate("Fill Form"); ?>
+                                <a style="color:#fff;" href="<?php echo $this->baseUrl(); ?>/stock/stock-issue?month=<?php echo $this->month; ?>&year=<?php echo $this->year; ?>">Back to Stock/Issue Dispatch </a>
                             </div>
                             <div class="tools">
                                 <a href="javascript:;" class="collapse">
@@ -92,7 +96,7 @@
                                                 </th>
                                                 <th class="col-md-3">
                                                     <?php echo $this->translate("Batch|Quantity|Priority "); ?>
-                                                </th>                                            
+                                                </th>
 
                                                 <th class="col-md-2">
                                                     <?php echo $this->translate("Expiry Date"); ?>
@@ -142,7 +146,7 @@
                                             ?>
                                             <!-- // Table row END -->
                                         </tbody>
-                                        <!-- // Table body END -->                                      
+                                        <!-- // Table body END -->
 
                                     </table>
                                 </div>
@@ -168,15 +172,12 @@
                                         <?php echo $this->translate("Add rows"); ?>
                                     </button>
                                 </div>
-                                <div class="col-md-1">   
+                                <div class="col-md-1">
                                     <button id="add_stock_issue" type="submit" class="btn btn-primary">
                                         <?php echo $this->translate("Save"); ?>
-                                    </button>                                    
+                                    </button>
                                     <input type="hidden" value="<?php echo $this->end; ?>" name="counter" id="counter" />
-                                </div>                                
-
-
-
+                                </div>
                             </div>
                         </div>
                     </div>

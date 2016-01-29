@@ -1,15 +1,28 @@
 <?php
 
+/**
+ * StockController
+ *
+ * @subpackage Default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ * Controller for Stock
+ */
 class StockController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * StockController index
+     */
     public function indexAction() {
         
     }
 
+    /**
+     * Receive Supplier
+     */
     public function receiveSupplierAction() {
 
         if (!empty($this->_request->stock_id)) {
@@ -43,18 +56,12 @@ class StockController extends App_Controller_Base {
         $form_values['transaction_type_id'] = 1;
         $form_values['adjustment_type'] = 1;
 
-        if (!empty($this->_request->warehouse)) {
-            $warehouse_id = $this->_request->warehouse;
-        }
-
         if ($this->_request->isPost()) {
             if (isset($this->_request->stockid) && !empty($this->_request->stockid)) {
                 $em = Zend_Registry::get('doctrine');
                 $em->getConnection()->beginTransaction();
                 try {
                     $master_affacted = $stock_master->updateStockMasterTemp($this->_request->stockid, $this->_request->comments);
-                    //echo $master_affacted;
-                    // exit;
                     $detail_affacted = $stock_detail->updateStockDetailTemp($this->_request->stockid);
 
                     //Save Data in warehouse_data table
@@ -92,9 +99,7 @@ class StockController extends App_Controller_Base {
                     $data = array_merge($temp, $form_values);
                     $data['edit_type'] = $red_type;
 
-                    if (empty($this->_request->transaction_number)) {
-                        $stock_id = $stock_master->addStockMaster($data);
-                    } else if (!empty($recedit)) {
+                    if (empty($this->_request->transaction_number) || (!empty($recedit))) {
                         $stock_id = $stock_master->addStockMaster($data);
                     }
 
@@ -108,8 +113,6 @@ class StockController extends App_Controller_Base {
                     $str_sql->execute();
 
                     $detail_id = $stock_detail->addStockDetail($data);
-                    // echo $detail_id;
-                    // exit;
                     if ($detail_id) {
                         $stock_batch->autoRunningLEFOBatch($form->getValue('item_id'));
                     }
@@ -118,6 +121,7 @@ class StockController extends App_Controller_Base {
                         $placement->form_values['batchId'] = $batch_id;
                         $placement->form_values['quantity'] = $data['quantity'];
                         $placement->form_values['placement_location_id'] = $data['cold_chain'];
+                        $placement->form_values['item_category_id'] = $this->_em->getRepository("ItemPackSizes")->find($data['item_id'])->getItemCategory()->getPkId();
                         $placement->form_values['stock_detail_id'] = $detail_id;
                         $placement->form_values['rcvedit'] = $recedit;
                         $placement->form_values['vvm_stage'] = $data['vvm_stage'];
@@ -127,7 +131,9 @@ class StockController extends App_Controller_Base {
 
                     if ($recedit == "Yes") {
                         $date_arr = explode(' ', $data['transaction_date']);
-                        list($dd, $mm, $yy) = explode("/", $date_arr[0]);
+                        $current_date = explode("/", $date_arr[0]);
+                        $mm = $current_date[1];
+                        $yy = $current_date[2];
                         $item_id = $data['item_id'];
 
                         $wh_id = $this->_identity->getWarehouseId();
@@ -172,15 +178,14 @@ class StockController extends App_Controller_Base {
 
         $stock_master->form_values = $form_values;
         $temp_stock = $stock_master->getTempStock();
-        if ($temp_stock != false) {
+        if ($temp_stock) {
             $arr_data = $temp_stock;
         }
         $temp_stock_list = $stock_master->getTempStocksList();
 
-        if ($temp_stock_list != false) {
+        if ($temp_stock_list) {
 
             $time_arr = explode(' ', $temp_stock_list[0]['transaction_date']);
-            //          $time = date('H:i A', strtotime($time_arr[1] . $time_arr[2])); // Undefined offset: 2 in $time_arr[2]
             $time = date('H:i A', strtotime($time_arr[1]));
 
             $form->transaction_number->setValue($temp_stock_list[0]['transaction_number']);
@@ -194,7 +199,6 @@ class StockController extends App_Controller_Base {
             $form->activity_id->setAttribs(array('disable' => 'disable'));
             $form->from_warehouse_id->setAttribs(array('disable' => 'disable'));
             $form->transaction_reference->setAttribs(array('disable' => 'disable'));
-            //$form->transaction_date->setAttribs(array('disable' => 'disable'));
             $arr_data['tempstocks'] = $temp_stock_list;
         } else {
             $form->transaction_date->setValue(date("d/m/Y h:i A"));
@@ -250,20 +254,21 @@ class StockController extends App_Controller_Base {
             $this->view->prod_cat = $obj_rec->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemCategory()->getPkId();
             $this->view->detail_id = $this->_request->id;
         }
-// Edit Receive End
+        // Edit Receive End
         $this->view->success = $this->_request->getParam('success', 0);
     }
 
+    /**
+     * Receive Search
+     */
     public function receiveSearchAction() {
         $form = new Form_StockReceiveSearch();
         $stock_master = new Model_StockMaster();
         $this->view->form = $form;
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $data = $form->getValues();
-                $stock_master->form_values = $data;
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $data = $form->getValues();
+            $stock_master->form_values = $data;
         }
 
         $dataset_search = $stock_master->getAllItemStock();
@@ -274,6 +279,9 @@ class StockController extends App_Controller_Base {
         $this->view->role_id = $auth->getRoleId();
     }
 
+    /**
+     * New Gatepass
+     */
     public function newGatepassAction() {
         $form = new Form_NewGatepass();
         $this->view->ispost = "false";
@@ -289,7 +297,7 @@ class StockController extends App_Controller_Base {
             $form->date_from->setValue($datefrom);
             $form->date_to->setValue($dateto);
 
-            if ($data == false) {
+            if (!$data) {
                 $form->readFields();
             }
         }
@@ -297,6 +305,9 @@ class StockController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * ajaxNewGatepass1
+     */
     public function ajaxNewGatepass1Action() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -306,6 +317,9 @@ class StockController extends App_Controller_Base {
         $gp_master->addGatepass();
     }
 
+    /**
+     * ajaxGetIssueNo
+     */
     public function ajaxGetIssueNoAction() {
         $this->_helper->layout->disableLayout();
         $form = new Form_NewGatepass();
@@ -320,6 +334,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxNewGatepass
+     */
     public function ajaxNewGatepassAction() {
         $this->_helper->layout->disableLayout();
         $form = new Form_NewGatepass();
@@ -334,6 +351,9 @@ class StockController extends App_Controller_Base {
         $this->view->data = $data;
     }
 
+    /**
+     * ajaxQuantityDataIssueno
+     */
     public function ajaxQuantityDataIssuenoAction() {
         $this->_helper->layout->disableLayout();
         $form = new Form_NewGatepass();
@@ -345,17 +365,18 @@ class StockController extends App_Controller_Base {
         $this->view->data = $result;
     }
 
+    /**
+     * Gatepass List
+     */
     public function gatepassListAction() {
         $form = new Form_GatepassList();
         $stock_batch = new Model_StockBatch();
         $this->view->form = $form;
         $params = array();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $data = $form->getValues();
-                $stock_batch->form_values = $data;
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $data = $form->getValues();
+            $stock_batch->form_values = $data;
         }
         $sort = $this->_getParam("sort", "asc");
         $order = $this->_getParam("order", "gpnumber");
@@ -375,6 +396,9 @@ class StockController extends App_Controller_Base {
         $this->view->pagination_params = $params;
     }
 
+    /**
+     * Stock Bin Placement
+     */
     public function stockBinPlacementAction() {
         $stock_master = new Model_StockMaster();
         $id = $this->_request->getParam('id', '');
@@ -391,10 +415,12 @@ class StockController extends App_Controller_Base {
         $this->view->area = $area;
         $this->view->level = $level;
         $this->view->title = $location_name;
-        $this->view->form = $form;
         $this->view->result = $data_record;
     }
 
+    /**
+     * Stock Bin Placement Vaccines
+     */
     public function stockBinPlacementVaccinesAction() {
         $stock_master = new Model_StockMaster();
         $id = $this->_request->getParam('id', '');
@@ -408,10 +434,12 @@ class StockController extends App_Controller_Base {
         $data_record = $stock_master->getAllItemVaccines();
         $this->view->id = $id;
         $this->view->title = $location_name;
-        //$this->view->form = $form;
         $this->view->result = $data_record;
     }
 
+    /**
+     * Stock In Bin Vaccines Print
+     */
     public function stockInBinVaccinesPrintAction() {
         $this->_helper->layout->setLayout("print");
 
@@ -430,6 +458,9 @@ class StockController extends App_Controller_Base {
         $this->view->warehousename = $this->_identity->getWarehouseName();
     }
 
+    /**
+     * Monthly Consumption
+     */
     public function monthlyConsumptionAction() {
         if ($this->_identity->getProvinceId() == 2) {
             $this->redirect("/stock/monthly-consumption2");
@@ -443,7 +474,6 @@ class StockController extends App_Controller_Base {
         if (isset($this->_request->do) && !empty($this->_request->do)) {
 
             $temp = $this->_request->do;
-            //App_Controller_Functions::pr(base64_decode(substr($temp, 1, strlen($temp) - 1)));
             $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->temp = $temp;
             $arr_temp = $warehouse_data->monthlyConsumtionTemp();
@@ -469,7 +499,7 @@ class StockController extends App_Controller_Base {
             $warehouse_data->form_values = array('warehouse_id' => $arr_temp['wh_id']);
             $result = $warehouse_data->getMonthYearByWarehouseId();
 
-            if ($result != false) {
+            if ($result) {
                 $arr_combo = array();
                 $arr_combo[] = array(
                     "key" => "",
@@ -501,8 +531,6 @@ class StockController extends App_Controller_Base {
             $this->view->warehouse_name = $warehouse_name;
             $this->view->locid = $loc_id;
             $this->view->items = $items;
-
-            //$form->uc->setValue($arr_temp['loc_id']);
         }
 
         if ($this->_request->isPost()) {
@@ -520,13 +548,13 @@ class StockController extends App_Controller_Base {
             }
         }
 
-//var_dump($this->_request->do);
-//exit;
-
         $this->view->form = $form;
         $this->view->do = $this->_request->do;
     }
 
+    /**
+     * Monthly Consumption 2
+     */
     public function monthlyConsumption2Action() {
         if ($this->_identity->getProvinceId() != 2) {
             $this->redirect("/stock/monthly-consumption");
@@ -539,11 +567,9 @@ class StockController extends App_Controller_Base {
 
         if (isset($this->_request->do) && !empty($this->_request->do)) {
             $temp = $this->_request->do;
-            //App_Controller_Functions::pr(base64_decode(substr($temp, 1, strlen($temp) - 1)));
             $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->temp = $temp;
             $arr_temp = $warehouse_data->monthlyConsumtionTemp();
-            // App_Controller_Functions::pr($arr_temp);
             $this->view->month = $arr_temp['month'];
             $this->view->mm = $arr_temp['mm'];
             $this->view->year = $arr_temp['yy'];
@@ -566,7 +592,7 @@ class StockController extends App_Controller_Base {
             $warehouse_data->form_values = array('warehouse_id' => $arr_temp['wh_id']);
             $result = $warehouse_data->getMonthYearByWarehouseId2();
 
-            if ($result != false) {
+            if ($result) {
                 $arr_combo = array();
                 $arr_combo[] = array(
                     "key" => "",
@@ -590,8 +616,6 @@ class StockController extends App_Controller_Base {
             $warehouse = $this->_em->getRepository("Warehouses")->find($arr_temp['wh_id']);
             $warehouse_name = $warehouse->getWarehouseName();
 
-            // $form->monthly_report->setMultiOptions($arr_combo);
-            //$form->monthly_report->setValue($temp);
             $this->view->monthly_report = $temp;
             $this->view->rpt_date = $arr_temp['rpt_date'];
             $this->view->wh_id = $arr_temp['wh_id'];
@@ -614,7 +638,6 @@ class StockController extends App_Controller_Base {
             $hf_data_master = new Model_HfDataMaster();
             $hf_data_master->form_values = $data;
             $result = $hf_data_master->addMonthlyConsumption2Validation();
-            // App_Controller_Functions::pr($result);
 
             if (empty($result)) {
                 $l3m_dt = new DateTime($data['rpt_date']);
@@ -622,7 +645,6 @@ class StockController extends App_Controller_Base {
                 $this->redirect("/stock/monthly-consumption2?do=" . $string);
             } else {
                 // Open report in edit form after save
-                //  App_Controller_Functions::pr($result);
                 $this->view->error = "P";
                 $this->view->msg = $result;
             }
@@ -632,6 +654,9 @@ class StockController extends App_Controller_Base {
         $this->view->do = $this->_request->do;
     }
 
+    /**
+     * Monthly Consumption Draft
+     */
     public function monthlyConsumptionDraftAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -641,10 +666,12 @@ class StockController extends App_Controller_Base {
 
             $warehouse_data_draft = new Model_HfDataMaster();
             $warehouse_data_draft->form_values = $data;
-            $result = $warehouse_data_draft->addMonthlyConsumptionDraft();
         }
     }
 
+    /**
+     * Monthly Consumption 2 Draft
+     */
     public function monthlyConsumption2DraftAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -655,10 +682,8 @@ class StockController extends App_Controller_Base {
             if ($this->_request->isPost()) {
                 $data = $this->_request->getPost();
 
-                //  $warehouse_data_draft = new Model_HfDataMaster();
                 $hf_data_master = new Model_HfDataMaster();
                 $hf_data_master->form_values = $data;
-                $result = $hf_data_master->addMonthlyConsumption2Draft();
                 $this->_em->getConnection()->commit();
             }
         } catch (Exception $e) {
@@ -668,6 +693,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Receive Warehouse
+     */
     public function receiveWarehouseAction() {
         $stock_master = new Model_StockMaster();
         $form = new Form_ReceiveWarehouse();
@@ -680,7 +708,6 @@ class StockController extends App_Controller_Base {
             if ($this->_request->isPost()) {
                 $data = $this->_request->getPost();
                 $issue_no = $data['issue_no'];
-                //  App_Controller_Functions::pr($data);
                 $stock_master = new Model_StockMaster();
                 $stock_master->form_values = $data;
 
@@ -695,7 +722,6 @@ class StockController extends App_Controller_Base {
                         $stock_master->transaction_number = $issue_no;
                         $stock_master->to_warehouse_id = $this->_identity->getWarehouseId();
 
-
                         $stock_batch = new Model_StockBatch();
                         $placement_locations = $stock_batch->getAllColdStores();
 
@@ -703,8 +729,6 @@ class StockController extends App_Controller_Base {
                         $non_ccm_locations = $non_ccm_loc->getAllDryStores();
 
                         $stockReceive = $stock_master->getwarehouseStockByIssueNo();
-
-
 
                         $transaction_type = new Model_TransactionTypes();
                         $trans_type = $transaction_type->findAll();
@@ -740,6 +764,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Receive Warehouse Via Scanner
+     */
     public function receiveWarehouseViaScannerAction() {
 
         $this->_helper->layout->disableLayout();
@@ -765,6 +792,9 @@ class StockController extends App_Controller_Base {
         $this->_redirect("stock/receive-warehouse?msg=Received sucessfully!");
     }
 
+    /**
+     * Issue Search
+     */
     public function issueSearchAction() {
         $form = new Form_StockIssueSearch();
         $this->view->form = $form;
@@ -790,7 +820,6 @@ class StockController extends App_Controller_Base {
 
             $from_edit->warehouse_name->setValue($issue->getStockMaster()->getToWarehouse()->getWarehouseName());
             $from_edit->transaction_reference->setValue($issue->getStockMaster()->getTransactionReference());
-//$from_edit->activity_id->setValue($issue->getStockMaster()->getStakeholderActivity());
             $from_edit->makeFieldReadonly();
 
             $this->view->issueedit = true;
@@ -810,6 +839,8 @@ class StockController extends App_Controller_Base {
                     $this->view->menu_type = 2;
                     $this->view->inlineScript()->appendFile($base_url . '/js/level_combos.js');
                     break;
+                default:
+                    break;
             }
         }
 // Edit Issue End
@@ -818,7 +849,6 @@ class StockController extends App_Controller_Base {
             $warehouse_id = $this->_request->warehouse;
         }
 
-//      $created_by = $this->_em->find('Users', $this->_user_id); // Undefined property: StockController::$_user_id
         $created_by = $this->_em->find('Users', $this->_userid);
         if ($this->_request->isPost()) {
             if ($from_edit->isValid($this->_request->getPost())) {
@@ -827,7 +857,6 @@ class StockController extends App_Controller_Base {
                     $d_id = $this->_request->getPost('detailid');
                     $obj_stock_detail = $em->getRepository("StockDetail")->find($d_id);
                     $data = $from_edit->getValues();
-//     App_Controller_Functions::pr($data);
 
                     $obj_stock_master = $obj_stock_detail->getStockMaster();
                     $master_update = false;
@@ -836,7 +865,11 @@ class StockController extends App_Controller_Base {
                         $trans = $stock_master->getTransactionNumber(2, $data['transaction_date']);
                         $obj_stock_master->setTransactionDate(new \DateTime(App_Controller_Functions::dateToDbFormat($data['transaction_date'])));
 
-                        list($h_dd, $h_mm, $h_yy) = explode("/", $data['hdn_transaction_date']);
+                        $current_date = explode("/", $data['hdn_transaction_date']);
+
+                        $h_mm = $current_date[1];
+                        $h_yy = $current_date[2];
+
                         list($dd, $mm, $yy) = explode("/", $data['transaction_date']);
 
                         if ($h_mm != $mm || $h_yy != $yy) {
@@ -904,6 +937,9 @@ class StockController extends App_Controller_Base {
         $this->view->vouchertype = $this->_request->getParam('voucher_type', 1);
     }
 
+    /**
+     * Issue
+     */
     public function issueAction() {
         $stock_master = new Model_StockMaster();
         $stock_batch = new Model_StockBatch();
@@ -923,7 +959,6 @@ class StockController extends App_Controller_Base {
         $stock_id = "";
         $master_id = "";
 
-//      $created_by = $this->_em->find('Users', $this->_user_id); // Undefined property: StockController::$_user_id
         $created_by = $this->_em->find('Users', $this->_userid);
         if (!empty($this->_request->hdn_stock_id)) {
             $stock_id = $this->_request->hdn_stock_id;
@@ -951,11 +986,6 @@ class StockController extends App_Controller_Base {
                     $stock_detail->updateStockDetailTemp($master_id);
                     //Save Data in warehouse_data table
                     $warehouse_data->addReport($master_id, 2);
-
-                    /*
-                     * Auto Receive for 6th level
-                     * $stock_master->autoReceiveData($master_id);
-                     */
 
                     $this->view->msg = 'Stock has been issued successfully. Your voucher number is ';
                     $this->view->voucher = $transaction_number;
@@ -1019,7 +1049,11 @@ class StockController extends App_Controller_Base {
                         $em->persist($obj_stock_detail);
                         $em->flush();
 
-                        list($dd, $mm, $yy) = explode("/", $data['transaction_date']);
+                        $current_date = explode("/", $data['transaction_date']);
+
+                        $mm = $current_date[1];
+                        $yy = $current_date[2];
+
                         $item_id = $data['item_id'];
 
                         $wh_id = $this->_identity->getWarehouseId();
@@ -1054,7 +1088,7 @@ class StockController extends App_Controller_Base {
                             $autorun = true;
                         }
 
-                        list($batch_id, $priority) = explode("|", $this->_request->number);
+                        list($batch_id) = explode("|", $this->_request->number);
                         $form_values['item_unit_id'] = $this->_request->item_unit_id;
                         $form_values['stock_master_id'] = $stock_id;
                         $form_values['stock_batch_id'] = $batch_id;
@@ -1062,19 +1096,12 @@ class StockController extends App_Controller_Base {
                         $detail_id = $stock_detail->addStockDetail($data);
 
                         $stock_batch->adjustQuantityByWarehouse($batch_id);
-                        if ($autorun == true) {
+                        if ($autorun) {
                             $stock_batch->autoRunningLEFOBatch($form->getValue('item_id'));
                             $stock_batch->form_values['pk_id'] = $batch_id;
                             $stock_batch->form_values['status'] = Model_StockBatch::FINISHED;
                             $stock_batch->changeStatus();
                         }
-
-                        /* $placement = new Model_Placements();
-                          $placement->form_values['stock_batch_id'] = $batch_id;
-                          $placement->form_values['quantity'] = $data['quantity'];
-                          $placement->form_values['placement_location_id'] = $data['pick_from'];
-                          $placement->form_values['stock_detail_id'] = $detail_id;
-                          $placement->addPlacement(); */
                     }
                     $em->getConnection()->commit();
                     $this->redirect("/stock/issue");
@@ -1082,11 +1109,9 @@ class StockController extends App_Controller_Base {
                     $em->getConnection()->rollback();
                     $em->close();
                     App_FileLogger::info($e);
-                    switch ($e->getMessage()) {
-                        case 'PLCD_QTY_GREATER_THAN_ISSUE_QTY':
-                            $this->view->status = false;
-                            $this->view->msg = "Issue quantity should not greater than placed quantity!";
-                            break;
+                    if ($e->getMessage() == 'PLCD_QTY_GREATER_THAN_ISSUE_QTY') {
+                        $this->view->status = false;
+                        $this->view->msg = "Issue quantity should not greater than placed quantity!";
                     }
                 }
             }
@@ -1101,11 +1126,11 @@ class StockController extends App_Controller_Base {
 
         $stock_master->form_values = $form_values;
         $temp_stock = $stock_master->getTempStock();
-        if ($temp_stock != false) {
+        if ($temp_stock) {
             $arr_data = array_merge($arr_data, $temp_stock);
         }
         $temp_stock_list = $stock_master->getTempStocksList();
-        if ($temp_stock_list != false) {
+        if ($temp_stock_list) {
             $form->transaction_number->setValue($temp_stock_list[0]['transaction_number']);
             $form->transaction_date->setValue(date("d/m/Y h:i A", strtotime($temp_stock_list[0]['transaction_date'])));
             $form->warehouse_name->setValue($temp_stock_list[0]['to_warehouse']);
@@ -1144,6 +1169,8 @@ class StockController extends App_Controller_Base {
                 $this->view->menu_type = 2;
                 $this->view->inlineScript()->appendFile($base_url . '/js/level_combos.js');
                 break;
+            default:
+                break;
         }
 
 // Edit Issue Start
@@ -1154,10 +1181,7 @@ class StockController extends App_Controller_Base {
             $form->transaction_date->setValue($issue->getStockMaster()->getTransactionDate()->format("d/m/Y h:i A"));
             $form->warehouse_name->setValue($issue->getStockMaster()->getToWarehouse()->getWarehouseName());
             $form->transaction_reference->setValue($issue->getStockMaster()->getTransactionReference());
-//$form->activity_id->setValue($issue->getStockMaster()->getStakeholderActivity()->getPkId());
-
             $arr_data['warehouse_name'] = $issue->getStockMaster()->getToWarehouse()->getWarehouseName();
-
             $form->item_id->setValue($issue->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId());
             $form->fillBatchCombo($issue->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId());
             $form->number->setValue($issue->getStockBatch()->getPkId());
@@ -1178,18 +1202,19 @@ class StockController extends App_Controller_Base {
         $this->view->role = $this->_identity->getRoleId();
     }
 
+    /**
+     * Adjustment Search
+     */
     public function adjustmentSearchAction() {
 
         $form = new Form_AdjustmentSearch();
         $this->view->form = $form;
         $stock_master = new Model_StockMaster();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $data = $form->getValues();
-                $form->hdn_batch_no->setValue($data['batch_no']);
-                $stock_master->form_values = $data;
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $data = $form->getValues();
+            $form->hdn_batch_no->setValue($data['batch_no']);
+            $stock_master->form_values = $data;
         }
 
         $stock_adjustment_search = $stock_master->stockAdjustmentSearch();
@@ -1197,6 +1222,9 @@ class StockController extends App_Controller_Base {
         $this->view->role = $this->_identity->getRoleId();
     }
 
+    /**
+     * ajaxAdjustedBatches
+     */
     public function ajaxAdjustedBatchesAction() {
         $this->_helper->layout->disableLayout();
 
@@ -1205,50 +1233,53 @@ class StockController extends App_Controller_Base {
         $this->view->adjusted_batches = $stock_batch->getAdjustedBatches();
     }
 
+    /**
+     * Add Adjustment
+     */
     public function addAdjustmentAction() {
         $form = new Form_Adjustment();
         $batch_form = new Form_AddBatch();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $em = Zend_Registry::get('doctrine');
-                $em->getConnection()->beginTransaction();
-                try {
-                    $data = $form->getValues();
-                    $stock_master = new Model_StockMaster();
-                    $stock_master->form_values = $data;
-                    $result = $stock_master->addAdjustment();
-                    $this->view->status = $result;
-                    $form->reset();
-                    $form->adjustment_date->setValue(date("d/m/Y"));
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $em = Zend_Registry::get('doctrine');
+            $em->getConnection()->beginTransaction();
+            try {
+                $data = $form->getValues();
+                $stock_master = new Model_StockMaster();
+                $stock_master->form_values = $data;
+                $result = $stock_master->addAdjustment();
+                $this->view->status = $result;
+                $form->reset();
+                $form->adjustment_date->setValue(date("d/m/Y"));
 
-                    $em->getConnection()->commit();
-                } catch (Exception $e) {
-                    $em->getConnection()->rollback();
-                    $em->close();
-                    App_FileLogger::info($e->getMessage());
-                    $this->view->status = false;
-                    switch ($e->getMessage()) {
-                        case 'NEGATIVE_OR_ZERO_QTY':
-                            $this->view->msg = 'Quantity should not be less than zero for negative adjustments!';
-                            break;
-                        case 'ADJ_QTY_GREATER_BATCH_QTY':
-                            $this->view->msg = 'Adjustment Quantity should not be greater than batch Quantity!';
-                            break;
-                        case 'PLCD_QTY_LESS_EQUAL_ZERO':
-                            $this->view->msg = 'Placed quantity should not be less than or equal to zero!';
-                            break;
-                        case 'PICK_ERROR':
-                            $this->view->msg = 'Adjustment Quantity should not be greater than placed quantity.';
-                            break;
-                        case 'ADJ_QTY_LESS_EQUAL_PLCD_QTY':
-                            $this->view->msg = 'Adjustment quantity should be less than or equal to placed quantity!';
-                            break;
-                    }
-
-                    $form->product->setValue("");
-                    $form->quantity->setValue("");
+                $em->getConnection()->commit();
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                $em->close();
+                App_FileLogger::info($e->getMessage());
+                $this->view->status = false;
+                switch ($e->getMessage()) {
+                    case 'NEGATIVE_OR_ZERO_QTY':
+                        $this->view->msg = 'Quantity should not be less than zero for negative adjustments!';
+                        break;
+                    case 'ADJ_QTY_GREATER_BATCH_QTY':
+                        $this->view->msg = 'Adjustment Quantity should not be greater than batch Quantity!';
+                        break;
+                    case 'PLCD_QTY_LESS_EQUAL_ZERO':
+                        $this->view->msg = 'Placed quantity should not be less than or equal to zero!';
+                        break;
+                    case 'PICK_ERROR':
+                        $this->view->msg = 'Adjustment Quantity should not be greater than placed quantity.';
+                        break;
+                    case 'ADJ_QTY_LESS_EQUAL_PLCD_QTY':
+                        $this->view->msg = 'Adjustment quantity should be less than or equal to placed quantity!';
+                        break;
+                    default:
+                        break;
                 }
+
+                $form->product->setValue("");
+                $form->quantity->setValue("");
             }
         }
         $this->view->province = $this->_identity->getProvinceId();
@@ -1258,6 +1289,9 @@ class StockController extends App_Controller_Base {
         $this->view->batch_form = $batch_form;
     }
 
+    /**
+     * Delete Adjustment
+     */
     public function deleteAdjustmentAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -1282,55 +1316,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
-//    public function deleteAction() {
-//        $this->_helper->layout->disableLayout();
-//        $this->_helper->viewRenderer->setNoRender(TRUE);
-//
-//        if (isset($this->_request->id) && !empty($this->_request->id)) {
-//            $id = $this->_request->id;
-//
-//            $this->_em->getConnection()->beginTransaction();
-//            try {
-//                //Delete Placement
-//                $rowinfo = $this->_request->rowinfo;
-//                $qtydel = $this->_request->qtydel;
-//
-//                $data = '';
-//                foreach ($qtydel as $key => $value) {
-//                    if (!empty($value)) {
-//                        $data .= $rowinfo[$key] . "|$value,";
-//                    }
-//                }
-//                $data = rtrim($data, ",");
-//                $placement_type = Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_PICK;
-//                $placement = new Model_Placements();
-//                $flag = $placement->updateStockPlacement($data, $placement_type);
-//                //End Delete Placement
-//                //
-//            //
-//            //Delete receive
-//                $stock_master = new Model_StockMaster();
-//                $stock_master->deleteReceive($id);
-//                //End Delete receive
-//                $this->_em->getConnection()->commit();
-//
-//                //End Delete Issue
-//            } catch (Exception $e) {
-//                $this->_em->getConnection()->rollback();
-//                $this->_em->close();
-//                App_FileLogger::info($e);
-//            }
-//
-//            if (!empty($this->_request->p) && $this->_request->p == 'stock') {
-//                $this->redirect("/stock/receive-search?s=t");
-//                exit;
-//            }
-//
-//            $this->redirect("/stock/receive-supplier?s=t");
-//            exit;
-//        }
-//    }
-
+    /**
+     * Delete
+     */
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -1351,62 +1339,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
-//    public function deleteIssueAction() {
-//        $this->_helper->layout->disableLayout();
-//        $this->_helper->viewRenderer->setNoRender(TRUE);
-//
-//        if (isset($this->_request->id) && !empty($this->_request->id)) {
-//            $id = $this->_request->id;
-//            $this->_em->getConnection()->beginTransaction();
-//            try {
-//                //Delete placement
-//                $batch_id = $this->_request->b_id;
-//                $loc_id = $this->_request->loc_id;
-//                $vvm_stage_id = $this->_request->vvm_id;
-//                $qty_issued = $this->_request->qty_issued;
-//                $item_cat_id = $this->_request->item_cat_id;
-//
-//                if ($item_cat_id == 1) {
-//                    $loc_type = Model_PlacementLocations::LOCATIONTYPE_CCM;
-//                } else {
-//                    $loc_type = Model_PlacementLocations::LOCATIONTYPE_NONCCM;
-//                }
-//                $placement_locations = $this->_em->getRepository("PlacementLocations")->findBy(array("locationId" => $loc_id, "locationType" => $loc_type));
-//                $placement_loc_id = $placement_locations[0]->getPkId();
-//                $placement_details = $batch_id . "|" . $placement_loc_id . "|" . $vvm_stage_id . "|" . $qty_issued;
-//                $placement_type = Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_P;
-//                $placement = new Model_Placements();
-//                $flag = $placement->updateStockPlacement($placement_details, $placement_type);
-//                //End Delete placement
-//                //
-//                //Delete Issue
-//
-//                $stock_detail = new Model_StockDetail();
-//
-//                $flag2 = $stock_detail->deleteIssue($id);
-//
-//                $this->_em->getConnection()->commit();
-//
-//                //End Delete Issue
-//            } catch (Exception $e) {
-//                $this->_em->getConnection()->rollback();
-//                $this->_em->close();
-//                App_FileLogger::info($e);
-//            }
-//
-//            if (!empty($this->_request->p) && $this->_request->p == 'stock') {
-//                $this->redirect("/stock/issue-search");
-//                exit;
-//            } elseif (!empty($this->_request->p) && $this->_request->p == 'issue') {
-//                $this->redirect("/stock/issue");
-//                exit;
-//            }
-//
-//            $this->redirect("/stock/issue-supplier");
-//            exit;
-//        }
-//    }
-
+    /**
+     * Delete Issue
+     */
     public function deleteIssueAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -1438,6 +1373,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Check Cc Capacity
+     */
     public function checkCcCapacityAction() {
         $cold_chain = $this->_request->cold_chain;
         $quantity = $this->_request->quantity;
@@ -1447,6 +1385,9 @@ class StockController extends App_Controller_Base {
         exit;
     }
 
+    /**
+     * cc Qty Add
+     */
     public function ccQtyAddAction() {
 
         $form = new Form_ColdChainQtyAdd();
@@ -1475,41 +1416,45 @@ class StockController extends App_Controller_Base {
         $this->view->batch = $batch_name;
         $this->view->result = $var;
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $data = $form->getValues();
-                $other = '&batchID=' . base64_encode($var['batchID']) . '&qty=' . base64_encode($var['qty']) . '&stockDetailId=' . base64_encode($var['stockDetailId']) . '&product=' . base64_encode($var['product']);
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $data = $form->getValues();
+            $other = '&batchID=' . base64_encode($var['batchID']) . '&qty=' . base64_encode($var['qty']) . '&stockDetailId=' . base64_encode($var['stockDetailId']) . '&product=' . base64_encode($var['product']);
 
 
-                if ($data['quantity'] > $data['rem_quantity']) {
-                    $err_msg = 'Quantity is greater than available Quantity ' . $data['rem_quantity'];
-                    $this->redirect("/stock/cc-qty-add?err_msg=" . base64_encode($err_msg) . $other);
-                    exit;
-                } else if ($data['quantity'] < 1) {
-                    $err_msg = 'Please insert some quantity';
-                    $this->redirect("/stock/cc-qty-add?err_msg=" . base64_encode($err_msg) . $other);
-                    exit;
-                } else {
-                    $net_quantity = $placement_qty->find_by_asset_batch($data['coldchain'], $var['batchID']);
+            if ($data['quantity'] > $data['rem_quantity']) {
+                $err_msg = 'Quantity is greater than available Quantity ' . $data['rem_quantity'];
+                $this->redirect("/stock/cc-qty-add?err_msg=" . base64_encode($err_msg) . $other);
+                exit;
+            } else if ($data['quantity'] < 1) {
+                $err_msg = 'Please insert some quantity';
+                $this->redirect("/stock/cc-qty-add?err_msg=" . base64_encode($err_msg) . $other);
+                exit;
+            } else {
+                $net_quantity = $placement_qty->find_by_asset_batch($data['coldchain'], $var['batchID']);
 
-                    $data['pk_id'] = $net_quantity['0']['pk_id'];
+                $data['pk_id'] = $net_quantity['0']['pk_id'];
 
-                    $data['batchID'] = $var['batchID'];
-                    $data['stockDetailId'] = $var['stockDetailId'];
+                $data['batchID'] = $var['batchID'];
+                $data['stockDetailId'] = $var['stockDetailId'];
 
-                    $placement_qty->add($data);
-                    $placement->add($data);
-                    $placement_qty->update($data);
-                }
+                $placement_qty->add($data);
+                $placement->add($data);
+                $placement_qty->update($data);
             }
         }
     }
 
+    /**
+     * cc Qty Pick
+     */
     public function ccQtyPickAction() {
         $form = new Form_ColdChainQtyAdd();
         $this->view->form = $form;
     }
 
+    /**
+     * print Receive
+     */
     public function printReceiveAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Stock Receive Voucher");
@@ -1525,14 +1470,13 @@ class StockController extends App_Controller_Base {
         $this->view->username = $this->_identity->getUserName();
         $this->view->warehousename = $this->_identity->getWarehouseName();
         $this->view->wh_id = $this->_identity->getWarehouseId();
-        //if (!empty($result[0]['warehouseName'])) {
-        //    $this->view->print_title = "Stock Receive from " . $result[0]['warehouseName'];
-        //} else {
         $this->view->print_title = "Stock Receive Voucher";
         $this->view->print_serial = strtotime(date("Y-m-d H:i:s"));
-        //}
     }
 
+    /**
+     * print Receive Shipment
+     */
     public function printReceiveShipmentAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Stock Receive List");
@@ -1549,6 +1493,9 @@ class StockController extends App_Controller_Base {
         $this->view->print_title = "Stock Receive from Warehouse Voucher";
     }
 
+    /**
+     * stock Receive List
+     */
     public function stockReceiveListAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Stock Receive List");
@@ -1566,6 +1513,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $dataset;
     }
 
+    /**
+     * Vaccine Placement Issue
+     */
     public function vaccinePlacementIssueAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Vaccine Placement List");
@@ -1596,6 +1546,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Vaccine Placement Receive
+     */
     public function vaccinePlacementReceiveAction() {
         $this->_helper->layout->setLayout('print');
         $var = $this->_request->grpBy;
@@ -1628,6 +1581,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Export Excel
+     */
     public function exportExcelAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -1653,6 +1609,9 @@ class StockController extends App_Controller_Base {
         $xls->generateXML('issue-list');
     }
 
+    /**
+     * Export Excel Receive
+     */
     public function exportExcelReceiveAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -1678,6 +1637,9 @@ class StockController extends App_Controller_Base {
         $xls->generateXML('receive-list');
     }
 
+    /**
+     * Vaccine Placement Issue Summary
+     */
     public function vaccinePlacementIssueSummaryAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Vaccine Placement List");
@@ -1702,6 +1664,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Vaccine Placement Receive Summary
+     */
     public function vaccinePlacementReceiveSummaryAction() {
         $this->_helper->layout->setLayout('print');
 
@@ -1728,6 +1693,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * 
+     */
     public function printIssueAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Stock Issue/Dispatch Voucher");
@@ -1742,6 +1710,9 @@ class StockController extends App_Controller_Base {
         $this->view->print_serial = strtotime(date("Y-m-d H:i:s"));
     }
 
+    /**
+     * Print Issue
+     */
     public function printIssueCancelAction() {
 
         $this->_helper->layout->setLayout('print');
@@ -1760,6 +1731,9 @@ class StockController extends App_Controller_Base {
         $this->view->print_serial = strtotime(date("Y-m-d H:i:s"));
     }
 
+    /**
+     * Print Issue Shipment
+     */
     public function printIssueShipmentAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Stock Issue List");
@@ -1774,6 +1748,9 @@ class StockController extends App_Controller_Base {
         $this->view->department = $this->_identity->getUserDepartment();
     }
 
+    /**
+     * Print Pending Shipment
+     */
     public function printPendingShipmentAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Stock Issue List");
@@ -1788,6 +1765,9 @@ class StockController extends App_Controller_Base {
         $this->view->department = $this->_identity->getUserDepartment();
     }
 
+    /**
+     * Stock Issue Print
+     */
     public function stockIssuePrintAction() {
         $this->_helper->layout->setLayout('print');
 
@@ -1803,6 +1783,9 @@ class StockController extends App_Controller_Base {
         $this->view->print_title = "Stock Issue Voucher";
     }
 
+    /**
+     * Stock Adjustment Print
+     */
     public function stockAdjustmentPrintAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Stock Adjustments List");
@@ -1820,6 +1803,9 @@ class StockController extends App_Controller_Base {
         $this->view->print_title = "Stock Adjustment";
     }
 
+    /**
+     * ajaxProductCatAndDoses
+     */
     public function ajaxProductCatAndDosesAction() {
         $this->_helper->layout->disableLayout();
         $item_pack_size = new Model_ItemPackSizes();
@@ -1836,6 +1822,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxCheckProductCategory
+     */
     public function ajaxCheckProductCategoryAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -1846,6 +1835,9 @@ class StockController extends App_Controller_Base {
         echo $item->getItemCategory()->getPkId();
     }
 
+    /**
+     * ajaxInlineEdit
+     */
     public function ajaxInlineEditAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -1864,7 +1856,7 @@ class StockController extends App_Controller_Base {
                 $stock_batch->form_values['pk_id'] = $this->_request->id;
                 $stock_batch->form_values['number'] = $this->_request->data;
                 $str_result = $stock_batch->editBatchNo();
-                if ($str_result == true) {
+                if ($str_result) {
                     echo "true";
                 } else {
                     echo "false";
@@ -1873,6 +1865,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxUcCenters
+     */
     public function ajaxUcCentersAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->uc) && !empty($this->_request->uc)) {
@@ -1884,6 +1879,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Load Last 3 months
+     */
     public function loadLast3monthsAction() {
         $this->_helper->layout->disableLayout();
 
@@ -1901,6 +1899,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Stock Receive Print
+     */
     public function stockReceivePrintAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Stock Receive Voucher");
@@ -1910,11 +1911,12 @@ class StockController extends App_Controller_Base {
         $stock_master->form_values = $form_values;
 
         $temp_stock = $stock_master->getTempStock();
-        if ($temp_stock != false)
+        if ($temp_stock) {
             $arr_data = array_merge($arr_data, $temp_stock);
+        }
         $temp_stock_list = $stock_master->getTempStocksList();
 
-        if ($temp_stock_list != false) {
+        if ($temp_stock_list) {
             $arr_data['tempstocks'] = $temp_stock_list;
         }
 
@@ -1924,11 +1926,17 @@ class StockController extends App_Controller_Base {
         $this->view->warehousename = $this->_identity->getWarehouseName();
     }
 
+    /**
+     * Explorer
+     */
     public function explorerAction() {
         $base_url = Zend_Registry::get('baseurl');
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * ajaxExplorer
+     */
     public function ajaxExplorerAction() {
         $this->_helper->layout->setLayout('ajax');
         $warehouse_data = new Model_HfDataMaster();
@@ -1968,6 +1976,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxExplorer2
+     */
     public function ajaxExplorer2Action() {
         $this->_helper->layout->setLayout('ajax');
         $warehouse_data = new Model_HfDataMaster();
@@ -2006,6 +2017,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxConsumption
+     */
     public function ajaxConsumptionAction() {
         $this->_helper->layout->setLayout('ajax');
 
@@ -2047,7 +2061,9 @@ class StockController extends App_Controller_Base {
 
             $this->view->rpt_date = $arr_temp['rpt_date'];
             $this->view->wh_id = $arr_temp['wh_id'];
+
             if ($arr_temp['mm'] . "-" . $arr_temp['yy'] >= '05-2015' && $province_id == 2) {
+
                 $item_pack_sizes = new Model_ItemPackSizes();
                 $items = $item_pack_sizes->monthlyConsumtion2();
                 $items_non_vaccines = $item_pack_sizes->monthlyConsumtion2_non_vaccinces();
@@ -2074,6 +2090,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxConsumption2
+     */
     public function ajaxConsumption2Action() {
         $this->_helper->layout->setLayout('ajax');
 
@@ -2128,9 +2147,11 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Print Explorer
+     */
     public function printExplorerAction() {
         $this->_helper->layout->setLayout('print');
-// $this->_helper->layout->disableLayout();
         $warehouse_data = new Model_HfDataMaster();
 
         if (isset($this->_request->do) && !empty($this->_request->do)) {
@@ -2138,7 +2159,6 @@ class StockController extends App_Controller_Base {
 
             $warehouse_data->temp = $temp;
             $arr_temp = $warehouse_data->getExplorerReport();
-//  App_Controller_Functions::pr($arr_temp);
 
             $this->view->month = $arr_temp['month'];
             $this->view->wh_id = $arr_temp['wh_id'];
@@ -2155,10 +2175,12 @@ class StockController extends App_Controller_Base {
             $wh = $this->_em->getRepository("Warehouses")->find($arr_temp['wh_id']);
             $this->view->warehousename = $wh->getWarehouseName();
             $this->view->print_title = "LMIS Explorer";
-            // exit;
         }
     }
 
+    /**
+     * ajaxReportCombo
+     */
     public function ajaxReportComboAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->warehouse_id) && !empty($this->_request->warehouse_id)) {
@@ -2173,6 +2195,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Update Placement
+     */
     public function updatePlacementAction() {
         $this->_helper->layout->disableLayout();
         $placement_id = $this->_request->getParam('placement_id', '');
@@ -2188,7 +2213,10 @@ class StockController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
-    function updatePlacement1Action() {
+    /**
+     * Update Placement 1
+     */
+    public function updatePlacement1Action() {
         $form = new Form_Placement();
         $non_ccm_location = new Model_NonCcmLocations();
         $non_ccm_location->form_values = $this->_request->getPost();
@@ -2203,7 +2231,10 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
-    function placementAction() {
+    /**
+     * Placement
+     */
+    public function placementAction() {
         $form = new Form_Placement();
         $non_ccm_location = new Model_NonCcmLocations();
         if ($this->_request->getPost()) {
@@ -2220,6 +2251,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Delete Placement
+     */
     public function deletePlacementAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -2242,7 +2276,10 @@ class StockController extends App_Controller_Base {
         }
     }
 
-    function placementAreaAction() {
+    /**
+     * Placement Area
+     */
+    public function placementAreaAction() {
         $form = new Form_PlacementArea();
         $non_ccm_location = new Model_NonCcmLocations();
         if ($this->_request->getPost()) {
@@ -2258,6 +2295,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Location Status 1
+     */
     public function locationStatus1Action() {
         $form = new Form_LocationStatus();
 
@@ -2274,6 +2314,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Location Status
+     */
     public function locationStatusAction() {
         $form = new Form_LocationStatus();
         $params = array();
@@ -2296,7 +2339,6 @@ class StockController extends App_Controller_Base {
 
                 $non_ccm_location->form_values = $params;
                 $result = $non_ccm_location->locationStatus($area, $level);
-//$this->view->max_value_row = $non_ccm_location->getMaxRow($area, $level);
                 $this->view->max_value_shelf = $non_ccm_location->getMaxShelf($area, $level);
                 $this->view->max_value_rack = $non_ccm_location->getMaxRack($area, $level);
                 $this->view->max_value_pallet = $non_ccm_location->getMaxPallet();
@@ -2304,7 +2346,6 @@ class StockController extends App_Controller_Base {
         } else {
             $level = $this->getParam('level');
             $area = $this->getParam('area');
-            $id = $this->getParam('id');
             if (!empty($level) && !empty($area)) {
 
                 $levl = $this->_em->getRepository("ListDetail")->find($level);
@@ -2316,7 +2357,6 @@ class StockController extends App_Controller_Base {
                 $result = $non_ccm_location->locationStatus($area, $level);
                 $this->view->getarea = $area;
                 $this->view->getlevel = $level;
-                //$this->view->max_value_row = $non_ccm_location->getMaxRow($area, $level);
                 $this->view->max_value_shelf = $non_ccm_location->getMaxShelf($area, $level);
                 $this->view->max_value_rack = $non_ccm_location->getMaxRack($area, $level);
                 $this->view->max_value_pallet = $non_ccm_location->getMaxPallet();
@@ -2332,18 +2372,23 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Location Status Vaccines
+     */
     public function locationStatusVaccinesAction() {
         $placement_location = new Model_PlacementLocations();
         $result = $placement_location->locationStatusVaccines();
         $this->view->result = $result;
     }
 
-    function productLocationAction() {
+    /**
+     * Product Location
+     */
+    public function productLocationAction() {
         $form = new Form_ProductLocation();
         $form->addHidden();
         $form->readFields();
         $placement = new Model_Placements();
-        $placement_loc = new Model_PlacementLocations();
         $stock_detail = new Model_StockDetail();
         $id = $this->_request->getParam("itemid");
         $locid = $this->_request->getParam("locid");
@@ -2357,16 +2402,14 @@ class StockController extends App_Controller_Base {
         $item_p_id = $item_pack_size_id->getPkId();
         $itemname = $item_pack_size_id->getItemName();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $placement->form_values = $form->getValues();
-                $placement->form_values['stock_detail_id'] = $id;
-                $form->form_values['batchId'] = $batchnumer;
-                $form->form_values['itemId'] = $item_p_id;
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $placement->form_values = $form->getValues();
+            $placement->form_values['stock_detail_id'] = $id;
+            $form->form_values['batchId'] = $batchnumer;
+            $form->form_values['itemId'] = $item_p_id;
 
-                $placement->addPlacement();
-                $this->redirect("/stock/product-location?success=1&itemid=$id&locid=$locid");
-            }
+            $placement->addPlacement();
+            $this->redirect("/stock/product-location?success=1&itemid=$id&locid=$locid");
         }
 
         $this->view->form = $form;
@@ -2389,6 +2432,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * ajaxGetBatchNumber
+     */
     public function ajaxGetBatchNumberAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->item_pack_size_id) && !empty($this->_request->item_pack_size_id)) {
@@ -2415,6 +2461,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxBatchNumber
+     */
     public function ajaxBatchNumberAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->item_pack_size_id) && !empty($this->_request->item_pack_size_id)) {
@@ -2424,14 +2473,13 @@ class StockController extends App_Controller_Base {
 
             $array = $stock_batch->getBatchNumberByProducts();
 
-            foreach ($array as $key => $row) {
-                $batch_id = $row['pkId'];
-            }
-
             $this->view->data = $array;
         }
     }
 
+    /**
+     * ajaxVehicleNumber
+     */
     public function ajaxVehicleNumberAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->vehicle_type_id) && !empty($this->_request->vehicle_type_id)) {
@@ -2441,13 +2489,13 @@ class StockController extends App_Controller_Base {
 
             $array = $gatepass_vehicle->getVehicleNumberByType();
 
-            foreach ($array as $key => $row) {
-                $number = $row['pkId'];
-            }
             $this->view->data = $array;
         }
     }
 
+    /**
+     * ajaxStockPlacement
+     */
     public function ajaxStockPlacementAction() {
         $this->_helper->layout->setLayout('ajax');
         $id = $this->_request->getParam('id', '');
@@ -2464,6 +2512,9 @@ class StockController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * ajaxStockBinPlacement
+     */
     public function ajaxStockBinPlacementAction() {
         $this->_helper->layout->setLayout('ajax');
         $id = $this->_request->getParam('id', '');
@@ -2480,6 +2531,9 @@ class StockController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * ajaxGetTotalQuantityByBatch
+     */
     public function ajaxGetTotalQuantityByBatchAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -2493,6 +2547,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxCheckQuantity
+     */
     public function ajaxCheckQuantityAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -2515,17 +2572,18 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetColdChainsWrtStorage
+     */
     public function ajaxGetColdChainsWrtStorageAction() {
         $this->_helper->layout->disableLayout();
         $item_id = $this->_request->getParam('item_id', '');
-        $quantity = $this->_request->getParam('quantity', '');
-        $ccm_model = $this->_em->getRepository("CcmModels")->find($item_id);
-        $net_capacity = $ccm_model->getNetCapacity20();
-        $item_pack_size = $this->_em->getRepository("ItemPackSizes")->find($item_id);
-        $volum_per_vial = $item_pack_size->getVolumPerVial();
-        $total_volume = ( $quantity * $volum_per_vial ) / 1000;
+        $this->_em->getRepository("ItemPackSizes")->find($item_id);
     }
 
+    /**
+     * ajaxGetCampaignsByProduct
+     */
     public function ajaxGetCampaignsByProductAction() {
         $this->_helper->layout->disableLayout();
         $item_id = $this->_request->getParam('item_id', '');
@@ -2542,9 +2600,6 @@ class StockController extends App_Controller_Base {
             $district = $sub_sql->fetchAll();
             $dist_id = $district[0]['district_id'];
 
-            //echo $dist_id;
-            //exit;
-
             $qry = "and campaign_districts.district_id= $dist_id ";
         }
         $str_sql = $this->_em->getConnection()->prepare("SELECT DISTINCT
@@ -2558,8 +2613,6 @@ class StockController extends App_Controller_Base {
                 campaign_item_pack_sizes.item_pack_size_id = $item_id
                 $qry ");
 
-        // echo $str_sql;
-        //exit;
 
         $str_sql->execute();
         $campaigns = $str_sql->fetchAll();
@@ -2571,17 +2624,13 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetCampaignsByProductReceive
+     */
     public function ajaxGetCampaignsByProductReceiveAction() {
         $this->_helper->layout->disableLayout();
         $item_id = $this->_request->getParam('item_id', '');
-//        $warehouse = $this->_request->getParam('warehouse_id', '');
-//        $sub_sql = $this->_em->getConnection()->prepare("SELECT district_id from warehouses where pk_id=$warehouse ");
-//
-//        $sub_sql->execute();
-//        $district = $sub_sql->fetchAll();
-//        $dist_id = $district[0]['district_id'];
-//        //  echo $dist_id;
-//        // exit;
+
         $str_sql = $this->_em->getConnection()->prepare("SELECT DISTINCT
                 campaigns.campaign_name,
                 campaigns.pk_id
@@ -2603,6 +2652,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetManufacturerByProduct
+     */
     public function ajaxGetManufacturerByProductAction() {
         $this->_helper->layout->disableLayout();
         $item_id = $this->_request->getParam('item_id', '');
@@ -2620,6 +2672,9 @@ class StockController extends App_Controller_Base {
         $this->view->not_associated = $not_associated;
     }
 
+    /**
+     * Add New Manufacturer
+     */
     public function addNewManufacturerAction() {
         $this->_helper->layout->disableLayout();
 
@@ -2636,6 +2691,9 @@ class StockController extends App_Controller_Base {
         $this->view->associated = $stakeholder_items->getManufacturerByProduct();
     }
 
+    /**
+     * Stock In Bin
+     */
     public function stockInBinAction() {
         $placement = new Model_Placements();
         $id = $this->_request->getParam('id', '');
@@ -2647,13 +2705,6 @@ class StockController extends App_Controller_Base {
         $placement->form_values['id'] = $id;
         $bin_name = $placement->getStockBinName($id);
         $result = $placement->getStockInBin($order, $sort);
-
-        //Paginate the contest results
-//        $paginator = Zend_Paginator::factory($result);
-//        $page = $this->_getParam("page", 1);
-//        $counter = $this->_getParam("counter", 10);
-//        $paginator->setCurrentPageNumber((int) $page);
-//        $paginator->setItemCountPerPage((int) $counter);
 
         $this->view->id = $id;
         $this->view->area = $area;
@@ -2669,6 +2720,9 @@ class StockController extends App_Controller_Base {
         $this->view->pagination_params = array("id" => $id, "area" => $area, "level" => $level);
     }
 
+    /**
+     * Stock In Bin Vaccines
+     */
     public function stockInBinVaccinesAction() {
 
         $cold_chain = new Model_ColdChain();
@@ -2703,6 +2757,9 @@ class StockController extends App_Controller_Base {
         $this->view->xmlstore = $result_xml;
     }
 
+    /**
+     * ajaxBatchDetailBody
+     */
     public function ajaxBatchDetailBodyAction() {
         $this->_helper->layout->disableLayout();
         $batch_id = $this->_request->getParam("id");
@@ -2710,6 +2767,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $placment->getBatchPlacmentDetail($batch_id);
     }
 
+    /**
+     * ajaxNonVaccineBatchDetailBody
+     */
     public function ajaxNonVaccineBatchDetailBodyAction() {
         $this->_helper->layout->disableLayout();
         $batch_id = $this->_request->getParam("id");
@@ -2717,6 +2777,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $placment->getNonVaccineBatchPlacmentDetail($batch_id);
     }
 
+    /**
+     * Product Placement Detail
+     */
     public function productPlacementDetailAction() {
         $form = new Form_ProductLedger();
         $this->view->form = $form;
@@ -2724,6 +2787,9 @@ class StockController extends App_Controller_Base {
         $this->view->headTitle("Product Placement Detail");
     }
 
+    /**
+     * ajaxProductPlacementDetail
+     */
     public function ajaxProductPlacementDetailAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getParams();
@@ -2737,12 +2803,14 @@ class StockController extends App_Controller_Base {
         $this->view->detail_summary = $form_values['detail_summary'];
     }
 
-    function transferStockAction() {
+    /**
+     * Transfer Stock
+     */
+    public function transferStockAction() {
         $this->_helper->layout->setLayout("ajax");
         $form = new Form_TransferStock();
         $form->addHidden();
         $form->readFields();
-        //$placement = new Model_Placements();
         $non_ccm_loc = new Model_NonCcmLocations();
 
 
@@ -2754,7 +2822,6 @@ class StockController extends App_Controller_Base {
         $level = $this->_request->getParam('level');
         $placement = $this->_em->find("PlacementSummary", $placement_id);
 
-        //$batch_numer = $placement->getStockBatchWarehouse()->getStockBatch()->getNumber();
         $batch_numer = $placement->getStockBatchWarehouse()->getStockBatch()->getNumber();
         $item_name = $placement->getStockBatchWarehouse()->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemName();
         $non_ccm_id = $non_ccm_loc->getNonCcmLocationId($bin_id);
@@ -2771,6 +2838,9 @@ class StockController extends App_Controller_Base {
         $this->view->level = $level;
     }
 
+    /**
+     * Save Transfer Stock
+     */
     public function saveTransferStockAction() {
         $this->_helper->layout->disableLayout();
 
@@ -2782,26 +2852,25 @@ class StockController extends App_Controller_Base {
         $id = $this->_request->getParam("bin_id");
         $quantity_per_pack = $this->_request->getPost("quantity_per_pack");
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $quantity_per_pack = $this->_request->getPost("quantity_per_pack");
-                $area = $this->_request->getPost("area");
-                $level = $this->_request->getPost("level");
-//  print_r($form->getValues());exit;
-                $placement->form_values = $form->getValues();
-                $placement->form_values['quantity_per_pack'] = $quantity_per_pack;
-                $placement->addTransferStock();
-                $this->_redirect("/stock/stock-in-bin?success=1&id=$id&area=$area&level=$level");
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $quantity_per_pack = $this->_request->getPost("quantity_per_pack");
+            $area = $this->_request->getPost("area");
+            $level = $this->_request->getPost("level");
+            $placement->form_values = $form->getValues();
+            $placement->form_values['quantity_per_pack'] = $quantity_per_pack;
+            $placement->addTransferStock();
+            $this->_redirect("/stock/stock-in-bin?success=1&id=$id&area=$area&level=$level");
         }
     }
 
-    function transferStockVaccinesAction() {
+    /**
+     * Transfer Stock Vaccines
+     */
+    public function transferStockVaccinesAction() {
         $this->_helper->layout->setLayout("ajax");
         $form = new Form_TransferStockVaccines();
         $form->addHidden();
         $form->readFields();
-        //$placement = new Model_Placements();
         $loc_name = new Model_ColdChain();
 
         $placement_id = $this->_request->getParam('placement_id');
@@ -2824,13 +2893,11 @@ class StockController extends App_Controller_Base {
         $this->view->asset_name = $asset_name;
         $this->view->bin_id = $placement->getPlacementLocation()->getPkId();
         $this->view->bin_location_id = $placement->getPlacementLocation()->getLocationId();
-        /* $this->view->bin_id = $bin_id;
-          $this->view->non_ccm_id = $non_ccm_id;
-          $this->view->quantity_per_pack = $quantity_per_pack;
-          $this->view->totqty = $totqty[$placement_id];
-         */
     }
 
+    /**
+     * Save Transfer Stock Vaccines
+     */
     public function saveTransferStockVaccinesAction() {
         $this->_helper->layout->disableLayout();
 
@@ -2841,15 +2908,16 @@ class StockController extends App_Controller_Base {
 
         $bin_id = $this->_request->getParam("bin_id");
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $placement->form_values = $form->getValues();
-                $placement->addTransferStockVaccines();
-                $this->_redirect("/stock/stock-in-bin-vaccines?success=1&id=$bin_id");
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $placement->form_values = $form->getValues();
+            $placement->addTransferStockVaccines();
+            $this->_redirect("/stock/stock-in-bin-vaccines?success=1&id=$bin_id");
         }
     }
 
+    /**
+     * ajaxAddStockPlacement
+     */
     public function ajaxAddStockPlacementAction() {
         $placement = new Model_Placements();
 
@@ -2860,6 +2928,9 @@ class StockController extends App_Controller_Base {
         $this->redirect("/stock/stock-bin-placement?id=$id");
     }
 
+    /**
+     * ajaxAddStockPlacementVaccines
+     */
     public function ajaxAddStockPlacementVaccinesAction() {
         $placement = new Model_Placements();
         $placement->form_values = $this->_request->getParams();
@@ -2869,8 +2940,6 @@ class StockController extends App_Controller_Base {
         $placement->addPlaceStockVaccines();
 
         $placement_location = $placement->locationType($id);
-// $this->_em->getRepository('PlacementLocations')->find($id);
-
 
         if ($placement_location == 99) {
             $this->redirect("/stock/stock-bin-placement-vaccines?id=$id");
@@ -2879,23 +2948,31 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Pick Stock
+     */
     public function pickStockAction() {
         $form = new Form_PickStock();
         $this->view->form = $form;
     }
 
+    /**
+     * ajaxDetailDataIssueno
+     */
     public function ajaxDetailDataIssuenoAction() {
         $this->_helper->layout->disableLayout();
         $form = new Form_PickStock();
         $this->view->form = $form;
 
-//$placement->form_values = $this->_request->getParams();
         $stock_master_id = $this->_request->stock_master_id;
         $stock_master = new Model_StockMaster();
         $result = $stock_master->detailDataIssueno($stock_master_id);
         $this->view->data = $result;
     }
 
+    /**
+     * Stock Pick Data
+     */
     public function stockPickDataAction() {
         $placement = new Model_Placements();
         $qry_string = base64_decode(str_replace("Zr2", "", $this->_request->getParam('qry')));
@@ -2920,37 +2997,47 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Pick Stock Quantity
+     */
     public function pickStockQuantityAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
         $placement = new Model_Placements();
         $placement->form_values = $this->_request->getParams();
-        $quantity_per_pack = $placement->form_values['quantity_per_pack'];
         $result = $placement->addStockQuantity();
         $this->view->result = $result;
     }
 
+    /**
+     * ajaxGetProductsByPurpose
+     */
     public function ajaxGetProductsByPurposeAction() {
         $this->_helper->layout->disableLayout();
         $sips = new Model_StakeholderItemPackSizes();
         $params = $this->_request->getParam('params', '');
         $purpose = $this->_request->getParam('purpose', '');
 
-        list($batch_id, $vvm, $placement_id, $activity_id) = explode("_", $params);
+        list($batch_id) = explode("_", $params);
 
         $stock_batch = $this->_em->getRepository("StockBatchWarehouses")->find($batch_id);
         $item_id = $stock_batch->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItem()->getPkId();
-        $item_pack_size_id = $stock_batch->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getPkId();
 
         $sips->form_values = array(
             'item_id' => $item_id,
             'purpose' => $purpose
         );
-        $items = $sips->getProductByItemPurpose();
+
+        $item_category_id = $stock_batch->getStockBatch()->getPackInfo()->getStakeholderItemPackSize()->getItemPackSize()->getItemCategory()->getPkId();
+
+        $items = $sips->getProductByItemPurpose($item_category_id);
 
         $this->view->items = $items;
     }
 
+    /**
+     * ajaxGetProductsByStakeholderActivity
+     */
     public function ajaxGetProductsByStakeholderActivityAction() {
         $this->_helper->layout->disableLayout();
         $sips = new Model_StakeholderItemPackSizes();
@@ -2969,6 +3056,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * ajaxGetProductsByWhTransactions
+     */
     public function ajaxGetProductsByWhTransactionsAction() {
         $this->_helper->layout->disableLayout();
         $ips = new Model_ItemPackSizes();
@@ -2976,6 +3066,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $ips->getProductsByWhTransactions();
     }
 
+    /**
+     * ajaxGetAllStakeholderActivities
+     */
     public function ajaxGetAllStakeholderActivitiesAction() {
         $this->_helper->layout->disableLayout();
         $sips = new Model_StakeholderActivities();
@@ -2984,6 +3077,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * ajaxGetStakeholderActivities
+     */
     public function ajaxGetStakeholderActivitiesAction() {
         $this->_helper->layout->disableLayout();
         $sips = new Model_StakeholderActivities();
@@ -2992,6 +3088,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * printMonthlyConsumption
+     */
     public function printMonthlyConsumptionAction() {
         $this->_helper->layout->setLayout('print-consumption');
         $form = new Form_MonthlyConsumption();
@@ -3003,7 +3102,6 @@ class StockController extends App_Controller_Base {
         if (isset($this->_request->do) && !empty($this->_request->do)) {
 
             $temp = $this->_request->do;
-// App_Controller_Functions::pr(base64_decode(substr($temp, 1, strlen($temp) - 1)));
             $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->temp = $temp;
             $arr_temp = $warehouse_data->monthlyConsumtionTemp();
@@ -3029,7 +3127,7 @@ class StockController extends App_Controller_Base {
             $warehouse_data->form_values = array('warehouse_id' => $arr_temp['wh_id']);
             $result = $warehouse_data->getMonthYearByWarehouseId();
 
-            if ($result != false) {
+            if ($result) {
                 $arr_combo = array();
                 $arr_combo[] = array(
                     "key" => "",
@@ -3083,9 +3181,11 @@ class StockController extends App_Controller_Base {
         $this->view->print_title = "Monthly Consumption Reporting Form (EPI Center)";
     }
 
+    /**
+     * printMonthlyConsumption2
+     */
     public function printMonthlyConsumption2Action() {
         $this->_helper->layout->setLayout('print-consumption2');
-        $form = new Form_MonthlyConsumption();
 
         $warehouse = new Model_Warehouses();
         $warehouses = $warehouse->getWarehouseNames();
@@ -3094,7 +3194,6 @@ class StockController extends App_Controller_Base {
         if (isset($this->_request->do) && !empty($this->_request->do)) {
 
             $temp = $this->_request->do;
-// App_Controller_Functions::pr(base64_decode(substr($temp, 1, strlen($temp) - 1)));
             $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->temp = $temp;
             $arr_temp = $warehouse_data->monthlyConsumtionTemp();
@@ -3122,7 +3221,7 @@ class StockController extends App_Controller_Base {
             $warehouse_data->form_values = array('warehouse_id' => $arr_temp['wh_id']);
             $result = $warehouse_data->getMonthYearByWarehouseId();
 
-            if ($result != false) {
+            if ($result) {
                 $arr_combo = array();
                 $arr_combo[] = array(
                     "key" => "",
@@ -3142,9 +3241,6 @@ class StockController extends App_Controller_Base {
 
             $wh = $this->_em->getRepository("Warehouses")->find($warehouse_id);
             $warehouse_name = $wh->getWarehouseName();
-
-// $form->monthly_report->setMultiOptions($arr_combo);
-//  $form->monthly_report->setValue($temp);
 
             $this->view->rpt_date = $arr_temp['rpt_date'];
             $this->view->wh_id = $arr_temp['wh_id'];
@@ -3174,24 +3270,30 @@ class StockController extends App_Controller_Base {
                 $this->view->provinc_name = $provinc_name;
             }
         }
-// $this->view->form = $form;
         $this->view->do = $this->_request->do;
         $this->view->username = $this->_identity->getUserName();
         $this->view->print_title = "Monthly Consumption Reporting Form (EPI Center)";
     }
 
+    /**
+     * ajaxGetPreMonthCb
+     */
     public function ajaxGetPreMonthCbAction() {
         $this->_helper->layout->disableLayout();
         $this->view->data = $this->_request->getParams();
-//   App_Controller_Functions::pr($this->_request->getParams());
     }
 
+    /**
+     * ajaxGetPreMonthCb2
+     */
     public function ajaxGetPreMonthCb2Action() {
         $this->_helper->layout->disableLayout();
         $this->view->data = $this->_request->getParams();
-//   App_Controller_Functions::pr($this->_request->getParams());
     }
 
+    /**
+     * ajaxGetPreMonthReceive
+     */
     public function ajaxGetPreMonthReceiveAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -3224,6 +3326,9 @@ class StockController extends App_Controller_Base {
         echo json_encode($result);
     }
 
+    /**
+     * pipelineConsignments
+     */
     public function pipelineConsignmentsAction() {
         $start = 0;
         $end = $this->_request->getParam('counter', 10);
@@ -3250,7 +3355,7 @@ class StockController extends App_Controller_Base {
             } else {
                 $draft = new Model_PipelineConsignments();
                 $saved_draft = $draft->getPipelineConsignmentsDraft();
-                if ($saved_draft != false) {
+                if ($saved_draft) {
                     $sum = count($saved_draft);
                     $end = $sum + 10;
                     $form->addRows($start, $end);
@@ -3277,7 +3382,6 @@ class StockController extends App_Controller_Base {
             }
             $em->getConnection()->commit();
         } catch (Exception $e) {
-            // echo $e;
             $em->getConnection()->rollback();
             $em->close();
         }
@@ -3287,52 +3391,55 @@ class StockController extends App_Controller_Base {
         $this->view->end = $end;
     }
 
+    /**
+     * autoAdjustment
+     */
     public function autoAdjustmentAction() {
         $start = 0;
         $end = 10;
         $batch_form = new Form_AddBatch();
         $form = new Form_AutoAdjustment();
         $form->addRows($start, $end);
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $em = Zend_Registry::get('doctrine');
-                $em->getConnection()->beginTransaction();
-                try {
-                    $data = $form->getValues();
-                    $stock_master = new Model_StockMaster();
-                    $stock_master->form_values = $data;
-                    $result = $stock_master->addAdjustment();
-                    $this->view->status = $result;
-                    $form->reset();
-                    $form->adjustment_date->setValue(date("d/m/Y"));
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $em = Zend_Registry::get('doctrine');
+            $em->getConnection()->beginTransaction();
+            try {
+                $data = $form->getValues();
+                $stock_master = new Model_StockMaster();
+                $stock_master->form_values = $data;
+                $result = $stock_master->addAdjustment();
+                $this->view->status = $result;
+                $form->reset();
+                $form->adjustment_date->setValue(date("d/m/Y"));
 
-                    $em->getConnection()->commit();
-                } catch (Exception $e) {
-                    $em->getConnection()->rollback();
-                    $em->close();
-                    App_FileLogger::info($e->getMessage());
-                    $this->view->status = false;
-                    switch ($e->getMessage()) {
-                        case 'NEGATIVE_OR_ZERO_QTY':
-                            $this->view->msg = 'Quantity should not be less than zero for negative adjustments!';
-                            break;
-                        case 'ADJ_QTY_GREATER_BATCH_QTY':
-                            $this->view->msg = 'Adjustment Quantity should not be greater than batch Quantity!';
-                            break;
-                        case 'PLCD_QTY_LESS_EQUAL_ZERO':
-                            $this->view->msg = 'Placed quantity should not be less than or equal to zero!';
-                            break;
-                        case 'PICK_ERROR':
-                            $this->view->msg = 'Adjustment Quantity should not be greater than placed quantity.';
-                            break;
-                        case 'ADJ_QTY_LESS_EQUAL_PLCD_QTY':
-                            $this->view->msg = 'Adjustment quantity should be less than or equal to placed quantity!';
-                            break;
-                    }
-
-                    $form->product->setValue("");
-                    $form->quantity->setValue("");
+                $em->getConnection()->commit();
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                $em->close();
+                App_FileLogger::info($e->getMessage());
+                $this->view->status = false;
+                switch ($e->getMessage()) {
+                    case 'NEGATIVE_OR_ZERO_QTY':
+                        $this->view->msg = 'Quantity should not be less than zero for negative adjustments!';
+                        break;
+                    case 'ADJ_QTY_GREATER_BATCH_QTY':
+                        $this->view->msg = 'Adjustment Quantity should not be greater than batch Quantity!';
+                        break;
+                    case 'PLCD_QTY_LESS_EQUAL_ZERO':
+                        $this->view->msg = 'Placed quantity should not be less than or equal to zero!';
+                        break;
+                    case 'PICK_ERROR':
+                        $this->view->msg = 'Adjustment Quantity should not be greater than placed quantity.';
+                        break;
+                    case 'ADJ_QTY_LESS_EQUAL_PLCD_QTY':
+                        $this->view->msg = 'Adjustment quantity should be less than or equal to placed quantity!';
+                        break;
+                    default :
+                        break;
                 }
+
+                $form->product->setValue("");
+                $form->quantity->setValue("");
             }
         }
         $this->view->province = $this->_identity->getProvinceId();
@@ -3344,6 +3451,9 @@ class StockController extends App_Controller_Base {
         $this->view->end = $end;
     }
 
+    /**
+     * plannedIssue
+     */
     public function plannedIssueAction() {
         $start = 0;
         $end = $this->_request->getParam('counter', 10);
@@ -3363,7 +3473,7 @@ class StockController extends App_Controller_Base {
                     $pipeline_consignments->form_values['voucher'] = $this->_request->voucher;
                     $pipeline_consignments->form_values['trans_id'] = $this->_request->trans_id;
                     $result = $pipeline_consignments->addPlannedIssue();
-                    if ($result != false) {
+                    if ($result) {
                         $this->view->success = "Planned stock has been issued successfully. Your temprary voucher number is " . $result;
                         $form->reset();
                     } else {
@@ -3375,7 +3485,7 @@ class StockController extends App_Controller_Base {
                 $em->getConnection()->rollback();
                 $em->close();
             }
-        } 
+        }
 
         $params = array(
             "office" => $this->_request->getParam('office', 0),
@@ -3411,9 +3521,14 @@ class StockController extends App_Controller_Base {
                 $this->view->menu_type = 2;
                 $this->view->headScript()->appendFile($base_url . '/js/level_combos.js');
                 break;
+            default:
+                break;
         }
     }
 
+    /**
+     * ajaxAddMoreIssueRows
+     */
     public function ajaxAddMoreIssueRowsAction() {
         $this->_helper->layout->disableLayout();
 
@@ -3428,6 +3543,9 @@ class StockController extends App_Controller_Base {
         $this->view->end = $end;
     }
 
+    /**
+     * ajaxPipelineConsignmentsDraft
+     */
     public function ajaxPipelineConsignmentsDraftAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -3438,21 +3556,22 @@ class StockController extends App_Controller_Base {
         $form = new Form_PipelineConsignments();
         $form->addRows($start, $end);
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $pipeline_consignments = new Model_PipelineConsignments();
-                $pipeline_consignments->form_values = $form->getValues();
-                $pipeline_consignments->form_values['counter'] = $end;
-                $result = $pipeline_consignments->addPipelineConsignmentsDraft();
-                if ($result) {
-                    echo 1;
-                } else {
-                    echo 0;
-                }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $pipeline_consignments = new Model_PipelineConsignments();
+            $pipeline_consignments->form_values = $form->getValues();
+            $pipeline_consignments->form_values['counter'] = $end;
+            $result = $pipeline_consignments->addPipelineConsignmentsDraft();
+            if ($result) {
+                echo 1;
+            } else {
+                echo 0;
             }
         }
     }
 
+    /**
+     * ajaxAddMoreRows
+     */
     public function ajaxAddMoreRowsAction() {
         $this->_helper->layout->disableLayout();
 
@@ -3467,45 +3586,50 @@ class StockController extends App_Controller_Base {
         $this->view->end = $end;
     }
 
+    /**
+     * ajaxAddPipelineConsignments
+     */
     public function ajaxAddPipelineConsignmentsAction() {
         $this->_helper->layout->disableLayout();
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $id = $this->_request->getParam('', '');
-                $fa = $this->_em->getRepository("PipelineConsignments")->find($id);
-                $fa->setPageName($form->page_name->getValue());
-                $fa->setDescription($form->description->getValue());
-                $fa->setStatus($form->status->getValue());
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $fa->setCreatedBy($created_by);
-                $fa->setCreatedDate(App_Tools_Time::now());
-                $fa->setModifiedBy($created_by);
-                $fa->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($fa);
-                $this->_em->flush();
-            }
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $id = $this->_request->getParam('', '');
+            $fa = $this->_em->getRepository("PipelineConsignments")->find($id);
+            $fa->setPageName($form->page_name->getValue());
+            $fa->setDescription($form->description->getValue());
+            $fa->setStatus($form->status->getValue());
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $fa->setCreatedBy($created_by);
+            $fa->setCreatedDate(App_Tools_Time::now());
+            $fa->setModifiedBy($created_by);
+            $fa->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($fa);
+            $this->_em->flush();
         }
     }
 
+    /**
+     * ajaxUpdatePipelineConsignments
+     */
     public function ajaxUpdatePipelineConsignmentsAction() {
         $this->_helper->layout->disableLayout();
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $id = $this->_request->getParam('', '');
-                $fa = $this->_em->getRepository("PipelineConsignments")->find($id);
-                $fa->setPageName($form->page_name->getValue());
-                $fa->setDescription($form->description->getValue());
-                $fa->setStatus($form->status->getValue());
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $fa->setModifiedBy($created_by);
-                $fa->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($fa);
-                $this->_em->flush();
-            }
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $id = $this->_request->getParam('', '');
+            $fa = $this->_em->getRepository("PipelineConsignments")->find($id);
+            $fa->setPageName($form->page_name->getValue());
+            $fa->setDescription($form->description->getValue());
+            $fa->setStatus($form->status->getValue());
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $fa->setModifiedBy($created_by);
+            $fa->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($fa);
+            $this->_em->flush();
         }
     }
 
+    /**
+     * searchPipelineConsignments
+     */
     public function searchPipelineConsignmentsAction() {
         $form = new Form_PipelineConsignmentsFilters();
         $pipeline_consignments = new Model_PipelineConsignments();
@@ -3530,6 +3654,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * searchPlannedIssue
+     */
     public function searchPlannedIssueAction() {
         $form = new Form_PlannedIssueFilters();
         $pipeline_consignments = new Model_PipelineConsignments();
@@ -3554,6 +3681,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * 
+     */
     public function uploadPipelineConsignmentsAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -3562,7 +3692,6 @@ class StockController extends App_Controller_Base {
         if ($this->_request->isPost()) {
             $em = Zend_Registry::get('doctrine');
             $em->getConnection()->beginTransaction();
-//            try {
             $pipelines = $this->_request->getPost('pipeline');
             $receivedqty = $this->_request->getPost('receivedqty');
             $vvmstage = $this->_request->getPost('vvmstage');
@@ -3583,7 +3712,6 @@ class StockController extends App_Controller_Base {
                     $pc = $str_sql->getQuery()->getResult();
                     $pipeline_consignments = $pc[0];
 
-                    $locations = array();
                     if (count($pc) > 0) {
 
                         $type = $pipeline_consignments->getTransactionType()->getPkId();
@@ -3604,10 +3732,6 @@ class StockController extends App_Controller_Base {
 
                         $pipeline_consignments->setReceivedQuantity($receivedqty[$i]);
                         $pipeline_consignments->setStatus("Received");
-
-                        //$created_by = $this->_em->find('Users', $this->_user_id);
-//                            echo $row->getCreatedBy()->getPkId();
-//                            exit;
                         $pipeline_consignments->setCreatedBy($pipeline_consignments->getCreatedBy());
                         $pipeline_consignments->setCreatedDate(App_Tools_Time::now());
                         $pipeline_consignments->setModifiedBy($pipeline_consignments->getCreatedBy());
@@ -3620,11 +3744,6 @@ class StockController extends App_Controller_Base {
                 }
             }
             $em->getConnection()->commit();
-//            } catch (Exception $e) {
-//                echo $e;
-//                $em->getConnection()->rollback();
-//                $em->close();
-//            }
         }
 
         if ($type == Model_TransactionTypes::TRANSACTION_RECIEVE) {
@@ -3635,6 +3754,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * uploadPipelineConsignments
+     */
     public function ajaxPipelineConsignmentDetailsAction() {
         $this->_helper->layout->disableLayout();
         $id = $this->_request->getParam('id', '');
@@ -3648,6 +3770,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxPlannedIssueDetails
+     */
     public function ajaxPlannedIssueDetailsAction() {
         $this->_helper->layout->disableLayout();
         $id = $this->_request->getParam('id', '');
@@ -3665,6 +3790,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxDeletePipelineConsignment
+     */
     public function ajaxDeletePipelineConsignmentAction() {
         $id = $this->_request->getParam('id', '');
         $this->_helper->layout->disableLayout();
@@ -3676,6 +3804,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Product Ledger
+     */
     public function productLedgerAction() {
         $form = new Form_ProductLedger();
 
@@ -3686,6 +3817,9 @@ class StockController extends App_Controller_Base {
         $this->view->role_id = $this->_identity->getRoleId();
     }
 
+    /**
+     * ajaxProductLedger
+     */
     public function ajaxProductLedgerAction() {
         $this->_helper->layout->disableLayout();
         $query = array();
@@ -3694,7 +3828,6 @@ class StockController extends App_Controller_Base {
         $to_date = $query['to_date'];
 
         $stock_master = new Model_StockMaster();
-        //$query['from_date'] = date("01/01/2013");
         $stock_master->form_values = $query;
         $result = $stock_master->getProductLedger();
         $ob = $stock_master->getProductOB();
@@ -3711,16 +3844,18 @@ class StockController extends App_Controller_Base {
         $this->view->role_id = $this->_identity->getRoleId();
     }
 
+    /**
+     * Batch Summary Comparison
+     */
     public function batchSummaryComparisonAction() {
         $form = new Form_ProductLedger();
 
         $this->view->form = $form;
-
-        //$base_url = Zend_Registry::get('baseurl');
-        //$this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
-        //$this->view->role_id = $this->_identity->getRoleId();
     }
 
+    /**
+     * ajaxBatchSummaryComparison
+     */
     public function ajaxBatchSummaryComparisonAction() {
         $this->_helper->layout->disableLayout();
         $product_id = $this->_request->getParam('product_id');
@@ -3743,6 +3878,9 @@ class StockController extends App_Controller_Base {
         $this->view->to_date = $to_date;
     }
 
+    /**
+     * Merge Batch
+     */
     public function mergeBatchAction() {
 
         $item_pack_sizes = new Model_ItemPackSizes();
@@ -3754,6 +3892,9 @@ class StockController extends App_Controller_Base {
         $this->view->role_id = $this->_identity->getRoleId();
     }
 
+    /**
+     * ajaxMergeBatch
+     */
     public function ajaxMergeBatchAction() {
 
         $this->_helper->layout->disableLayout();
@@ -3769,6 +3910,9 @@ class StockController extends App_Controller_Base {
         $this->view->role_id = $this->_identity->getRoleId();
     }
 
+    /**
+     * ajaxUpdateBatchMaster
+     */
     public function ajaxUpdateBatchMasterAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -3784,6 +3928,9 @@ class StockController extends App_Controller_Base {
         echo $data[1];
     }
 
+    /**
+     * ajaxValidateMergeBatches
+     */
     public function ajaxValidateMergeBatchesAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -3809,6 +3956,9 @@ class StockController extends App_Controller_Base {
         echo $counter;
     }
 
+    /**
+     * ajaxMergeBatchQuantity
+     */
     public function ajaxMergeBatchQuantityAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -3866,6 +4016,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Product Ledger Date Edit
+     */
     public function productLedgerDateEditAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -3887,6 +4040,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxCheckReference
+     */
     public function ajaxCheckReferenceAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -3902,29 +4058,18 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * 
+     */
     public function deleteStockPlacementAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
-
-        $id = $this->_request->getParam("placement_id");
-        $plac_sumry = $this->_em->getRepository("PlacementSummary")->find($id);
-
-        $placment = $this->_em->getRepository("Placements")->findBy(array(
-            "vvmStage" => $plac_sumry->getVvmStage()->getPkId(),
-            "stockBatch" => $plac_sumry->getStockBatch()->getPkId(),
-            "placementLocation" => $plac_sumry->getPlacementLocation()->getPkId()
-        ));
-
-        /* if (count($placment) > 0) {
-          foreach ($placment as $row) {
-          $this->_em->remove($row);
-          }
-          $this->_em->flush();
-          } */
-
         return true;
     }
 
+    /**
+     * Delete Stock Placement
+     */
     public function physicalStockTakingAction() {
         $form = new Form_ProductLedger();
 
@@ -3935,6 +4080,9 @@ class StockController extends App_Controller_Base {
         $this->view->role_id = $this->_identity->getRoleId();
     }
 
+    /**
+     * ajaxPhysicalStockTaking
+     */
     public function ajaxPhysicalStockTakingAction() {
         $this->_helper->layout->disableLayout();
         $query = array();
@@ -3948,6 +4096,9 @@ class StockController extends App_Controller_Base {
         $this->view->role_id = $this->_identity->getRoleId();
     }
 
+    /**
+     * ajaxUpdatePhysicalCurrentQuantity
+     */
     public function ajaxUpdatePhysicalCurrentQuantityAction() {
 
         $this->_helper->layout->disableLayout();
@@ -3971,20 +4122,11 @@ class StockController extends App_Controller_Base {
 
                 if ($placement_physical_summary->getStockBatch() != "") {
 
-//$physical_quantity = $placement_physical_summary->getQuantity();
                     $current_quantity = $placement_physical_summary->getStockBatch()->getQuantity();
                     $batch_id = $placement_physical_summary->getStockBatch()->getPkId();
 
                     $stk_master = new Model_StockMaster();
                     $physical_quantity = $stk_master->getPhysicalBatchQuantity($batch_id);
-                    /* $already_exists = $this->_em->getRepository("PhysicalStockTakingDetail")->findBy(array("stockBatch" => $batch_id, "warehouse" => $this->_identity->getWarehouseId()));
-                      if (count($already_exists) > 0) {
-                      foreach ($already_exists as $physical_stk) {
-                      if ($physical_stk->getPkId() != $placement_physical_summary->getPkId()) {
-                      $physical_quantity = $physical_quantity + $physical_stk->getQuantity();
-                      }
-                      }
-                      } */
 
                     if ($current_quantity > $physical_quantity) {
                         $quantity = $current_quantity - $physical_quantity;
@@ -4135,9 +4277,6 @@ class StockController extends App_Controller_Base {
                             $placement->setQuantity($physical_stk->getQuantity());
                             $placement->setPlacementLocation($physical_stk->getPlacementLocation());
                             $placement->setStockBatch($physical_stk->getStockBatch());
-//                            if ($stock_detail != null) {
-//                                $placement->setStockDetail($stock_detail);
-//                            }
                             $type_id = $this->_em->getRepository("ListDetail")->find(114);
                             $placement->setPlacementTransactionType($type_id);
                             $created_by = $this->_em->getRepository("Users")->find($this->_userid);
@@ -4164,6 +4303,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Physical Stock Taking Report
+     */
     public function physicalStockTakingReportAction() {
         $form = new Form_PhysicalStockTaking();
 
@@ -4174,6 +4316,9 @@ class StockController extends App_Controller_Base {
         $this->view->role_id = $this->_identity->getRoleId();
     }
 
+    /**
+     * ajaxPhysicalStockTakingReport
+     */
     public function ajaxPhysicalStockTakingReportAction() {
         $this->_helper->layout->disableLayout();
         $query = array();
@@ -4187,6 +4332,9 @@ class StockController extends App_Controller_Base {
         $this->view->role_id = $this->_identity->getRoleId();
     }
 
+    /**
+     * Priority Vaccines Distribution
+     */
     public function priorityVaccinesDistributionAction() {
         $form = new Form_ProductLedger();
         $this->view->form = $form;
@@ -4195,6 +4343,9 @@ class StockController extends App_Controller_Base {
         $this->view->products = $ips->getAllItemsNonDil();
     }
 
+    /**
+     * ajaxPriorityVaccineDistribution
+     */
     public function ajaxPriorityVaccineDistributionAction() {
         $this->_helper->layout->disableLayout();
         $detail_summary = $this->_request->getParam('detail_summary');
@@ -4208,6 +4359,9 @@ class StockController extends App_Controller_Base {
         $this->view->detail_summary = $detail_summary;
     }
 
+    /**
+     * Priority Vaccines Distribution Print
+     */
     public function priorityVaccinesDistributionPrintAction() {
         $this->_helper->layout->setLayout('print');
         $form = new Form_ProductLedger();
@@ -4219,6 +4373,9 @@ class StockController extends App_Controller_Base {
         $this->view->warehousename = $this->_identity->getWarehouseName();
     }
 
+    /**
+     * Priority Vaccines Distribution Detail Print
+     */
     public function priorityVaccinesDistributionDetailPrintAction() {
         $this->_helper->layout->setLayout('print');
         $ips = new Model_ItemPackSizes();
@@ -4228,10 +4385,24 @@ class StockController extends App_Controller_Base {
         $this->view->headTitle("Priority Vaccines Distribution");
     }
 
+    /**
+     * Priority Vaccines Distribution Detail Print
+     */
+    public function priorityNonVaccinesDistributionDetailPrintAction() {
+        $this->_helper->layout->setLayout('print');
+        $ips = new Model_ItemPackSizes();
+        $this->view->products = $ips->getAllNonVaccineItems();
+        $this->view->username = $this->_identity->getUserName();
+        $this->view->warehousename = $this->_identity->getWarehouseName();
+        $this->view->headTitle("Priority Non Vaccines Distribution");
+    }
+
+    /**
+     * Expired Stock Report
+     */
     public function expiredStockReportAction() {
         $expired = '';
         $ccbreak = '';
-        // 9: Expired, 6: Cold chain break
         $default_adj_type = 9;
         $form = new Form_AdjustmentSearch();
         $form->adjustment_type->setMultiOptions(array("all" => "All", "9" => "Expired", "6" => "Coldchain Break"));
@@ -4262,6 +4433,8 @@ class StockController extends App_Controller_Base {
                         $stock_master->form_values['adjustment_type'] = 6;
                         $ccbreak = $stock_master->expiredStockReport();
                         break;
+                    default:
+                        break;
                 }
             }
         } else {
@@ -4274,6 +4447,9 @@ class StockController extends App_Controller_Base {
         $this->view->date_to = App_Controller_Functions::dateToMonthYear(App_Controller_Functions::dateToDbFormat($stock_master->form_values['date_to']), "M, Y");
     }
 
+    /**
+     * Expired Stock Print
+     */
     public function expiredStockPrintAction() {
         $this->_helper->layout->setLayout('print');
         $expired = '';
@@ -4299,6 +4475,8 @@ class StockController extends App_Controller_Base {
                 $stock_master->form_values['adjustment_type'] = 6;
                 $ccbreak = $stock_master->expiredStockReport();
                 break;
+            default:
+                break;
         }
 
         $this->view->expired = $expired;
@@ -4308,6 +4486,9 @@ class StockController extends App_Controller_Base {
         $this->view->date_to = App_Controller_Functions::dateToMonthYear(App_Controller_Functions::dateToDbFormat($stock_master->form_values['date_to']), "M, Y");
     }
 
+    /**
+     * Add New Batch
+     */
     public function addNewBatchAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -4332,8 +4513,10 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Log Book
+     */
     public function logBookAction() {
-//ini_set('max_input_vars', '10000');
         $form = new Form_MonthlyConsumption();
 
         $start = 0;
@@ -4351,14 +4534,13 @@ class StockController extends App_Controller_Base {
         $tt = explode("-", $rpt_date);
         $yy = $tt[0];
         $mm = $tt[1];
-        $dd = $tt[2];
         if (isset($this->_request->do) && !empty($this->_request->do)) {
             $temp1 = $this->_request->do;
             $warehouse_data = new Model_HfDataMaster();
             $warehouse_data->form_values = array('warehouse_id' => $warehouse_id);
             $result = $warehouse_data->getMonthYearByWarehouseIdLogBook();
 
-            if ($result != false) {
+            if ($result) {
                 $arr_combo = array();
                 $arr_combo[] = array(
                     "key" => "",
@@ -4398,7 +4580,6 @@ class StockController extends App_Controller_Base {
 
                     $log_book = new Model_HfDataMaster();
                     $log_book->form_values = $this->_request->getPost();
-// App_Controller_Functions::pr($_REQUEST);
                     $log_book->form_values['temp'] = $temp;
 
                     $result = $log_book->addLog();
@@ -4425,24 +4606,21 @@ class StockController extends App_Controller_Base {
         $this->view->items = $items;
         $this->view->mm = $mm;
         $this->view->yy = $yy;
-        $this->view->params = $params;
         $this->view->form = $form;
         $this->view->start = $start;
         $this->view->end = $end;
         $this->view->do = $this->_request->do;
         $this->view->locid = $loc_id;
         $this->view->rpt_date = $rpt_date;
-
-
-
-
-
         $locations = new Model_Locations();
         $result = $locations->getSindhDistricts();
         $this->view->locations = $result;
     }
 
-    // For new Log Book Form
+    /**
+     * Log Book Add
+     * For new Log Book Form
+     */
     public function logBookAddAction() {
         $form = new Form_LogBookAdd();
         $this->view->form = $form;
@@ -4454,12 +4632,10 @@ class StockController extends App_Controller_Base {
         $temp = explode("|", $temp);
 
         $warehouse_id = $temp[0];
-        $is_new_rpt = $temp[2];
         $rpt_date = $temp[1];
         $tt = explode("-", $rpt_date);
         $yy = $tt[0];
         $mm = $tt[1];
-        $dd = $tt[2];
 
         $item_pack_sizes = new Model_ItemPackSizes();
         $items = $item_pack_sizes->logBookItemPackSize();
@@ -4482,7 +4658,10 @@ class StockController extends App_Controller_Base {
         $this->view->query = $query;
     }
 
-    // For new Log Book Form
+    /**
+     * Log Book Add Print
+     * For new Log Book Form
+     */
     public function logBookAddPrintAction() {
         $this->_helper->layout->setLayout('print-landscape');
         $this->view->headTitle("Log Book");
@@ -4511,6 +4690,9 @@ class StockController extends App_Controller_Base {
         $this->view->username = $this->_identity->getUserName();
     }
 
+    /**
+     * ajaxDisplayLogBookResult
+     */
     public function ajaxDisplayLogBookResultAction() {
         $this->_helper->layout->disableLayout();
 
@@ -4519,12 +4701,10 @@ class StockController extends App_Controller_Base {
         $temp = explode("|", $temp);
 
         $warehouse_id = $temp[0];
-        $is_new_rpt = $temp[2];
         $rpt_date = $temp[1];
         $tt = explode("-", $rpt_date);
         $yy = $tt[0];
         $mm = $tt[1];
-        $dd = $tt[2];
 
         $item_pack_sizes = new Model_ItemPackSizes();
         $items = $item_pack_sizes->logBookItemPackSize();
@@ -4545,7 +4725,6 @@ class StockController extends App_Controller_Base {
                     $log_book = new Model_LogBook();
                     $log_book->form_values = $this->_request->getPost();
                     $log_book->form_values['temp'] = $temp;
-                    $result = $log_book->addLogBook();
                     $em->getConnection()->commit();
                 }
             } catch (Exception $e) {
@@ -4562,6 +4741,9 @@ class StockController extends App_Controller_Base {
         $this->view->query = $query;
     }
 
+    /**
+     * Delete Log Book
+     */
     public function deleteLogBookAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -4585,6 +4767,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetDistricts
+     */
     public function ajaxGetDistrictsAction() {
         $this->_helper->layout->disableLayout();
 
@@ -4599,6 +4784,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetTehsils
+     */
     public function ajaxGetTehsilsAction() {
         $this->_helper->layout->disableLayout();
 
@@ -4613,6 +4801,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetUcsByTehsil
+     */
     public function ajaxGetUcsByTehsilAction() {
         $this->_helper->layout->disableLayout();
 
@@ -4627,6 +4818,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetWarehousesByTehsil
+     */
     public function ajaxGetWarehousesByTehsilAction() {
         $this->_helper->layout->disableLayout();
 
@@ -4638,6 +4832,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetUcsAction
+     */
     public function ajaxGetUcsAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->district_id) && !empty($this->_request->district_id)) {
@@ -4653,6 +4850,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Search Log Book
+     */
     public function searchLogBookAction() {
         $form = new Form_LogBook();
 
@@ -4729,6 +4929,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxAddMoreLogRows
+     */
     public function ajaxAddMoreLogRowsAction() {
         $this->_helper->layout->disableLayout();
 
@@ -4745,11 +4948,13 @@ class StockController extends App_Controller_Base {
         $this->view->end = $end;
     }
 
+    /**
+     * ajaxReportCombo2
+     */
     public function ajaxReportCombo2Action() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->warehouse_id) && !empty($this->_request->warehouse_id)) {
             $warehouse_data = new Model_HfDataMaster();
-            //$warehouse_id = $this->_request->wharehouse_id;
             $warehouse_id = $this->_request->warehouse_id;
             $warehouse_data->form_values = array('warehouse_id' => $warehouse_id);
             $result = $warehouse_data->getMonthYearByWarehouseId2();
@@ -4759,6 +4964,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxCheckLogbookName
+     */
     public function ajaxCheckLogbookNameAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -4775,10 +4983,6 @@ class StockController extends App_Controller_Base {
         );
         return $log_book->checkLogbookName();
     }
-
-    /* public function updateWhAmcAction() {
-
-      } */
 
     /**
      * This function generates report for
@@ -4852,13 +5056,14 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Target Issuance Print
+     */
     public function targetIssuancePrintAction() {
         $this->_helper->layout->setLayout("print");
         $this->view->headTitle("Vaccine Balance");
-        //$res = $this->_request->getPost();
 
         $stock_master = new Model_StockMaster();
-
         $stock_master->form_values['month'] = $this->_request->m;
         $stock_master->form_values['year'] = $this->_request->y;
         $stock_master->form_values['warehouse_id'] = $this->_request->w;
@@ -4876,6 +5081,9 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * vvm Management
+     */
     public function vvmManagementAction() {
         $form = new Form_VvmManagement();
         $msg = '';
@@ -4884,7 +5092,6 @@ class StockController extends App_Controller_Base {
             $product_id = $this->_request->getPost('product');
             $batch_id = $this->_request->getPost('batch');
 
-//          $msg = ''; // Undefined variable: msg (when page initially loaded)
             $em = Zend_Registry::get('doctrine');
             $em->getConnection()->beginTransaction();
             try {
@@ -4960,9 +5167,6 @@ class StockController extends App_Controller_Base {
                 App_FileLogger::info($e);
             }
             $stock_detail = new Model_StockDetail();
-            //     echo  $stock_detail->getOpeningBalanceVvm($product_id, $batch_id);
-            //  $this->view->opening_balance_result = $stock_detail->getOpeningBalanceVvm($product_id, $batch_id);
-            //    $this->view->closing_balance_result = $stock_detail->getClosingBalanceVvm($product_id, $batch_id);
             $this->view->h_result = $stock_detail->getVvmTransferHistory($product_id);
         }
 
@@ -4970,6 +5174,9 @@ class StockController extends App_Controller_Base {
         $this->view->msg = $msg;
     }
 
+    /**
+     * Purpose Transfer Management
+     */
     public function purposeTransferManagementAction() {
         $form = new Form_PurposeTransfer();
         $stock_detail = new Model_StockDetail();
@@ -4979,7 +5186,6 @@ class StockController extends App_Controller_Base {
             $product_id = $this->_request->getPost('product');
             $batch_id = $this->_request->getPost('batch');
 
-//          $msg = ''; // Undefined variable: msg (when page initially loaded)
             $em = Zend_Registry::get('doctrine');
             $em->getConnection()->beginTransaction();
             try {
@@ -5078,8 +5284,6 @@ class StockController extends App_Controller_Base {
                 }
 
                 $this->view->result = $stock_detail->purposeTransferManagement($batch_id);
-                //$this->view->h_result = $stock_detail->getPurposeTransferHistory($product_id);
-                //$this->view->history = $stock_detail->purposeTransferHistory($batch_id);
                 $form->product->setValue($product_id);
                 $this->view->batch = $batch_id;
 
@@ -5100,6 +5304,9 @@ class StockController extends App_Controller_Base {
         $this->view->msg = $msg;
     }
 
+    /**
+     * Stock Issue
+     */
     public function stockIssueAction() {
 
         $form = new Form_StockIssueDispatch();
@@ -5109,7 +5316,6 @@ class StockController extends App_Controller_Base {
 
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_request->getPost())) {
-                //    App_Controller_Functions::pr($form->getValues());
                 $data = $form->getValues();
                 $stock_master->form_values = $data;
                 $form->month->setValue($data['month']);
@@ -5154,21 +5360,17 @@ class StockController extends App_Controller_Base {
         $this->view->role_id = $auth->getRoleId();
     }
 
+    /**
+     * Add Stock Issue
+     */
     public function addStockIssueAction() {
         $stock_master = new Model_StockMaster();
         $stock_batch = new Model_StockBatch();
         $placements = new Model_Placements();
         $stock_detail = new Model_StockDetail();
-        $warehouse_data = new Model_HfDataMaster();
         $form_values = array();
         $temp = array();
         $batch = array();
-        $arr_data = array('transaction_number' => "",
-            'stock_id' => "",
-            'transaction_date' => date("d/m/Y"),
-            'warehouse_name' => "",
-            'success' => $this->_request->success
-        );
 
         $date_em = '01' . "-" . $this->_request->month . "-" . $this->_request->year;
 
@@ -5258,7 +5460,6 @@ class StockController extends App_Controller_Base {
 
 
                 $temp = $this->_request->getPost();
-                //  App_Controller_Functions::pr($temp);
                 $data = array_merge($temp, $form_values);
                 $data['warehouse'] = $warehouse_id;
                 // Stock Master
@@ -5298,7 +5499,6 @@ class StockController extends App_Controller_Base {
                     $this->view->error = "B";
                 } else {
 // Open report in edit form after save
-                    //  App_Controller_Functions::pr($result);
                     $this->view->error = "P";
                     $this->view->msg = $detail_id;
                 }
@@ -5341,6 +5541,9 @@ class StockController extends App_Controller_Base {
         $this->view->end = $end;
     }
 
+    /**
+     * ajaxAddIssueMoreRows
+     */
     public function ajaxAddIssueMoreRowsAction() {
         $this->_helper->layout->disableLayout();
 
@@ -5355,6 +5558,9 @@ class StockController extends App_Controller_Base {
         $this->view->end = $end;
     }
 
+    /**
+     * ajaxGetProductsIssueByStakeholderActivity
+     */
     public function ajaxGetProductsIssueByStakeholderActivityAction() {
         $this->_helper->layout->disableLayout();
         $sips = new Model_StakeholderItemPackSizes();
@@ -5372,64 +5578,62 @@ class StockController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * ajaxStockIssueTempAction
+     */
     public function ajaxStockIssueTempAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
 
-        $stock_batch = new Model_StockBatch();
         $stock_detail = new Model_StockDetail();
         $form_values = array();
         $start = 0;
         $end = $this->_request->getParam('counter', 10);
         $form = new Form_AddStockIssue();
         $form->addRows($start, $end);
+
+
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $stock_master = new Model_StockMaster();
+            $temp = $form->getValues();
+            $form_values['counter'] = $end;
+            $form_values['transaction_type_id'] = 2;
+            $form_values['adjustment_type'] = 2;
+            $data = array_merge($temp, $form_values);
+            $stock_master->deleteIssueDraft($data);
+        }
+
         $em = Zend_Registry::get('doctrine');
         $em->getConnection()->beginTransaction();
-
         try {
-            if ($this->_request->isPost()) {
-                if ($form->isValid($this->_request->getPost())) {
+            if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
 
-                    $stock_master = new Model_StockMaster();
+                $stock_master = new Model_StockMaster();
 
-                    $temp = $form->getValues();
-                    $form_values['counter'] = $end;
-                    $form_values['transaction_type_id'] = 2;
-                    $form_values['adjustment_type'] = 2;
+                $temp = $form->getValues();
+                $form_values['counter'] = $end;
+                $form_values['transaction_type_id'] = 2;
+                $form_values['adjustment_type'] = 2;
+                $data = array_merge($temp, $form_values);
+                $stock_id = $stock_master->addStockMasterTemp($data);
 
-                    //$form_values['stock_master_id'] = $this->_request->stock_master_id;
-                    $data = array_merge($temp, $form_values);
-                    $stock_id = $stock_master->addStockMasterTemp($data);
+                // need to dynamic
+                $form_values['type'] = 'd';
 
-                    // need to dynamic
+                $form_values['stock_master_id'] = $stock_id;
+                $form_values['counter'] = $end;
+                $form_values['transaction_type_id'] = 2;
+                $form_values['counter'] = $end;
+                $data = array_merge($temp, $form_values);
 
-                    $form_values['type'] = 'd';
-
-                    $form_values['stock_master_id'] = $stock_id;
-                    $form_values['counter'] = $end;
-                    $form_values['transaction_type_id'] = 2;
-                    $form_values['counter'] = $end;
-                    $data = array_merge($temp, $form_values);
-
-                    $detail_id = $stock_detail->addStockDetailTempValidation($data);
-
-                    //  echo $detail_id;
-                    //  exit;
-                }
+                $detail_id = $stock_detail->addStockDetailTempValidation($data);
             }
             $em->getConnection()->commit();
         } catch (Exception $e) {
             $em->getConnection()->rollback();
             $em->close();
         }
-        echo $stock_id;
-        $master = $this->_em->getRepository("StockDetail")->findBy(array("stockMaster" => $stock_id));
-        if (count($master) == 0) {
 
-            $stock_master = $this->_em->getRepository("StockMaster")->find($stock_id);
-            $this->_em->remove($stock_master);
-            $this->_em->flush();
-        }
         if ($detail_id) {
             echo '1';
         } else {
@@ -5437,29 +5641,26 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Activity Log Action
+     */
     public function activityLogAction() {
         $form = new Form_StockIssueSearch();
         $this->view->form = $form;
         $stock_master = new Model_StockMaster();
 
-        if (!empty($this->_request->warehouse)) {
-            $warehouse_id = $this->_request->warehouse;
-        }
-
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $data = $form->getValues();
-                $stock_master->form_values = $data;
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $data = $form->getValues();
+            $stock_master->form_values = $data;
         }
         $dataset = $stock_master->activityLogSearch();
         $this->view->result = $dataset;
     }
 
+    /**
+     * Procurements
+     */
     public function procurementsAction() {
-
-
-        $form_values = array();
 
         $arr_data = array('transaction_number' => "",
             'stock_id' => "",
@@ -5469,22 +5670,15 @@ class StockController extends App_Controller_Base {
 
         $form = new Form_Procurements();
         $form_manufacturer = new Form_AddManufacturer();
-
-
-
         if ($this->_request->isPost()) {
             $em = Zend_Registry::get('doctrine');
             $em->getConnection()->beginTransaction();
             try {
                 if ($this->_request->isPost()) {
-
-
-
                     $shipment = new Model_Shipments();
-
                     $data = $this->_request->getPost();
                     $shipment->form_values = $data;
-                    $result = $shipment->addProcurements();
+                    $shipment->addProcurements();
                     $this->view->msg = 'Procurement has been added successfully';
                 }
 
@@ -5506,6 +5700,9 @@ class StockController extends App_Controller_Base {
         $this->view->success = $this->_request->getParam('success', 0);
     }
 
+    /**
+     * Search Procurements
+     */
     public function searchProcurementsAction() {
         $form = new Form_ProcurementFilters();
         $shipments = new Model_Shipments();
@@ -5523,6 +5720,9 @@ class StockController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * ajaxAddMoreAdjustmentRows
+     */
     public function ajaxAddMoreAdjustmentRowsAction() {
         $this->_helper->layout->disableLayout();
 
@@ -5537,6 +5737,9 @@ class StockController extends App_Controller_Base {
         $this->view->end = $end;
     }
 
+    /**
+     * Multiple Adjustment
+     */
     public function multipleAdjustmentAction() {
         $stock_master = new Model_StockMaster();
         $stock_batch = new Model_StockBatch();
@@ -5583,11 +5786,6 @@ class StockController extends App_Controller_Base {
                     $stock_detail->updateStockDetailTemp($master_id);
                     //Save Data in warehouse_data table
                     $warehouse_data->addReport($master_id, 2);
-
-                    /*
-                     * Auto Receive for 6th level
-                     * $stock_master->autoReceiveData($master_id);
-                     */
 
                     $this->view->msg = 'Stock has been issued successfully. Your voucher number is ';
                     $this->view->voucher = $transaction_number;
@@ -5651,7 +5849,10 @@ class StockController extends App_Controller_Base {
                         $em->persist($obj_stock_detail);
                         $em->flush();
 
-                        list($dd, $mm, $yy) = explode("/", $data['transaction_date']);
+                        $current_date = explode("/", $data['transaction_date']);
+                        $mm = $current_date[1];
+                        $yy = $current_date[2];
+
                         $item_id = $data['item_id'];
 
                         $wh_id = $this->_identity->getWarehouseId();
@@ -5686,7 +5887,7 @@ class StockController extends App_Controller_Base {
                             $autorun = true;
                         }
 
-                        list($batch_id, $priority) = explode("|", $this->_request->number);
+                        list($batch_id) = explode("|", $this->_request->number);
                         $form_values['item_unit_id'] = $this->_request->item_unit_id;
                         $form_values['stock_master_id'] = $stock_id;
                         $form_values['stock_batch_id'] = $batch_id;
@@ -5694,26 +5895,18 @@ class StockController extends App_Controller_Base {
                         $detail_id = $stock_detail->addStockDetail($data);
 
                         $stock_batch->adjustQuantityByWarehouse($batch_id);
-                        if ($autorun == true) {
+                        if ($autorun) {
                             $stock_batch->autoRunningLEFOBatch($form->getValue('item_id'));
                             $stock_batch->form_values['pk_id'] = $batch_id;
                             $stock_batch->form_values['status'] = Model_StockBatch::FINISHED;
                             $stock_batch->changeStatus();
                         }
-
-                        /* $placement = new Model_Placements();
-                          $placement->form_values['stock_batch_id'] = $batch_id;
-                          $placement->form_values['quantity'] = $data['quantity'];
-                          $placement->form_values['placement_location_id'] = $data['pick_from'];
-                          $placement->form_values['stock_detail_id'] = $detail_id;
-                          $placement->addPlacement(); */
                     }
                     $em->getConnection()->commit();
                     $this->redirect("/stock/multiple-adjustment");
                     // For Data Show
                     $temp_stock_list = $stock_master->getTempStocksList();
-                    if ($temp_stock_list != false) {
-                        //  $form->transaction_number->setValue($temp_stock_list[0]['transaction_number']);
+                    if ($temp_stock_list) {
                         $form->transaction_date->setValue(date("d/m/Y h:i A", strtotime($temp_stock_list[0]['transaction_date'])));
                         $form->warehouse_name->setValue($temp_stock_list[0]['to_warehouse']);
                         $form->transaction_reference->setValue($temp_stock_list[0]['transaction_reference']);
@@ -5732,15 +5925,12 @@ class StockController extends App_Controller_Base {
                     $em->getConnection()->rollback();
                     $em->close();
                     App_FileLogger::info($e);
-                    switch ($e->getMessage()) {
-                        case 'PLCD_QTY_GREATER_THAN_ISSUE_QTY':
-                            $this->view->status = false;
-                            $this->view->msg = "Issue quantity should not greater than placed quantity!";
-                            break;
+                    if ($e->getMessage() == 'PLCD_QTY_GREATER_THAN_ISSUE_QTY') {
+                        $this->view->status = false;
+                        $this->view->msg = "Issue quantity should not greater than placed quantity!";
                     }
                 }
             }
-
 
             $this->view->form = $form;
             $this->view->arr_data = $arr_data;
@@ -5752,7 +5942,7 @@ class StockController extends App_Controller_Base {
 
         $stock_master->form_values = $form_values;
         $temp_stock = $stock_master->getTempStock();
-        if ($temp_stock != false) {
+        if ($temp_stock) {
             $arr_data = array_merge($arr_data, $temp_stock);
         }
 
@@ -5781,6 +5971,8 @@ class StockController extends App_Controller_Base {
                 $this->view->menu_type = 2;
                 $this->view->inlineScript()->appendFile($base_url . '/js/level_combos.js');
                 break;
+            default:
+                break;
         }
 
 // Edit Issue Start
@@ -5791,7 +5983,6 @@ class StockController extends App_Controller_Base {
             $form->transaction_date->setValue($issue->getStockMaster()->getTransactionDate()->format("d/m/Y h:i A"));
             $form->warehouse_name->setValue($issue->getStockMaster()->getToWarehouse()->getWarehouseName());
             $form->transaction_reference->setValue($issue->getStockMaster()->getTransactionReference());
-//$form->activity_id->setValue($issue->getStockMaster()->getStakeholderActivity()->getPkId());
 
             $arr_data['warehouse_name'] = $issue->getStockMaster()->getToWarehouse()->getWarehouseName();
 
@@ -5815,9 +6006,12 @@ class StockController extends App_Controller_Base {
         $this->view->role = $this->_identity->getRoleId();
     }
 
+    /**
+     * ajaxGetPlacementDetail
+     */
     public function ajaxGetPlacementDetailAction() {
         $this->_helper->layout->disableLayout();
-        $detail_id = $this->_request->id;
+        $detail_id = $this->_request->detail_id;
         $stock_batch = new Model_StockBatch();
         $arr = explode('|', $this->_request->id);
         $this->view->array_data = $arr;
@@ -5826,27 +6020,43 @@ class StockController extends App_Controller_Base {
         $this->view->id = $detail_id;
     }
 
+    /**
+     * Delete Batch Placement
+     */
     public function deleteBatchPlacementAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
 
         if ($this->_request->isPost()) {
+            $em = Zend_Registry::get('doctrine');
+            $em->getConnection()->beginTransaction();
+            try {
+                $rowinfo = $this->_request->rowinfo;
+                $qtydel = $this->_request->qtydel;
+                $detail_id = $this->_request->id;
 
-            $rowinfo = $this->_request->rowinfo;
-            $qtydel = $this->_request->qtydel;
-            //var_dump($rowinfo);
-            //var_dump($qtydel);
-            $data = '';
-            foreach ($qtydel as $key => $value) {
-                if (!empty($value)) {
-                    $data .= $rowinfo[$key] . "|$value,";
+                $data = '';
+                foreach ($qtydel as $key => $value) {
+                    if (!empty($value)) {
+                        $data .= $rowinfo[$key] . "|$value,";
+                    }
                 }
+
+                $data = rtrim($data, ",");
+                $placement_type = Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_PICK;
+                $placement = new Model_Placements();
+                $flag = $placement->updateStockPlacement($data, $placement_type);
+
+                $stock_master = new Model_StockMaster();
+                $stock_master->deleteReceive($detail_id);
+
+                $em->getConnection()->commit();
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                $em->close();
+                App_FileLogger::info($e);
             }
 
-            $data = rtrim($data, ",");
-            $placement_type = Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_PICK;
-            $placement = new Model_Placements();
-            $flag = $placement->updateStockPlacement($data, $placement_type);
             if ($flag) {
                 $this->redirect("/stock/receive-search");
                 exit;
@@ -5854,29 +6064,46 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Delete Stock Issue
+     */
     public function deleteStockIssueAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
 
         if ($this->_request->isPost()) {
+            $em = Zend_Registry::get('doctrine');
+            $em->getConnection()->beginTransaction();
+            try {
+                $batch_id = $this->_request->b_id;
+                $loc_id = $this->_request->loc_id;
+                $vvm_stage_id = $this->_request->vvm_id;
+                $qty_issued = $this->_request->qty_issued;
+                $item_cat_id = $this->_request->item_cat_id;
+                $detail_id = $this->_request->id;
 
-            $batch_id = $this->_request->b_id;
-            $loc_id = $this->_request->loc_id;
-            $vvm_stage_id = $this->_request->vvm_id;
-            $qty_issued = $this->_request->qty_issued;
-            $item_cat_id = $this->_request->item_cat_id;
+                if ($item_cat_id == 1) {
+                    $loc_type = Model_PlacementLocations::LOCATIONTYPE_CCM;
+                } else {
+                    $loc_type = Model_PlacementLocations::LOCATIONTYPE_NONCCM;
+                }
+                $placement_locations = $this->_em->getRepository("PlacementLocations")->findBy(array("locationId" => $loc_id, "locationType" => $loc_type));
+                $placement_loc_id = $placement_locations[0]->getPkId();
+                $placement_details = $batch_id . "|" . $placement_loc_id . "|" . $vvm_stage_id . "|" . $qty_issued;
+                $placement_type = Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_P;
+                $placement = new Model_Placements();
+                $flag = $placement->updateStockPlacement($placement_details, $placement_type);
 
-            if ($item_cat_id == 1) {
-                $loc_type = Model_PlacementLocations::LOCATIONTYPE_CCM;
-            } else {
-                $loc_type = Model_PlacementLocations::LOCATIONTYPE_NONCCM;
+                $stock_detail = new Model_StockDetail();
+                $stock_detail->deleteIssue($detail_id);
+
+                $em->getConnection()->commit();
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                $em->close();
+                App_FileLogger::info($e);
             }
-            $placement_locations = $this->_em->getRepository("PlacementLocations")->findBy(array("locationId" => $loc_id, "locationType" => $loc_type));
-            $placement_loc_id = $placement_locations[0]->getPkId();
-            $placement_details = $batch_id . "|" . $placement_loc_id . "|" . $vvm_stage_id . "|" . $qty_issued;
-            $placement_type = Model_PlacementLocations::PLACEMENT_TRANSACTION_TYPE_P;
-            $placement = new Model_Placements();
-            $flag = $placement->updateStockPlacement($placement_details, $placement_type);
+
             if ($flag) {
                 $this->redirect("/stock/issue-search");
                 exit;
@@ -5884,6 +6111,9 @@ class StockController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetPlacementLocations
+     */
     public function ajaxGetPlacementLocationsAction() {
 
         $this->_helper->layout->disableLayout();

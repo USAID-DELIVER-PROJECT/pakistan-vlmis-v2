@@ -1,90 +1,108 @@
 <?php
 
-
+/**
+*  Model for Campaign Readiness Union Council
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CampaignReadinessUnionCouncil
+ *  CampaignReadinessUnionCouncil
  */
 class CampaignReadinessUnionCouncil
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $inaccessibleChildren
      * @var string $inaccessibleChildren
      */
     private $inaccessibleChildren;
 
     /**
+     * $inaccessibleArea
      * @var string $inaccessibleArea
      */
     private $inaccessibleArea;
 
     /**
+     * $numberMobileTeams
      * @var integer $numberMobileTeams
      */
     private $numberMobileTeams;
 
     /**
+     * $numberFixedTeams
      * @var integer $numberFixedTeams
      */
     private $numberFixedTeams;
 
     /**
+     * $numberTransitPoints
      * @var integer $numberTransitPoints
      */
     private $numberTransitPoints;
 
     /**
+     * $aicTrained
      * @var integer $aicTrained
      */
     private $aicTrained;
 
     /**
+     * $numberTeamsTrained
      * @var integer $numberTeamsTrained
      */
     private $numberTeamsTrained;
 
     /**
+     * $mobilePopulationAreas
      * @var integer $mobilePopulationAreas
      */
     private $mobilePopulationAreas;
 
     /**
+     * $upecMeetingDate
      * @var datetime $upecMeetingDate
      */
     private $upecMeetingDate;
 
     /**
+     * $unionCouncilId
      * @var integer $unionCouncilId
      */
     private $unionCouncilId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $campaign
      * @var Campaigns
      */
     private $campaign;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

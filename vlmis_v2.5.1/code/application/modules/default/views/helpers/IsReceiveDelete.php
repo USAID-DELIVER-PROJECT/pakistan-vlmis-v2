@@ -1,38 +1,120 @@
 <?php
 
+/**
+ * Zend_View_Helper_IsReceiveDelete
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Zend View Helper Is Receive Delete
+ * 
+ */
 class Zend_View_Helper_IsReceiveDelete extends Zend_View_Helper_Abstract {
 
-    public function isReceiveDelete($detail_id, $wh_id) {
+    /**
+     * Is Receive Delete
+     * This determines whether the receive voucher
+     * is deleteable or not because there are
+     * many use case in which receive voucher can not be deleted
+     * and in some use cases receive voucher can be deleted.
+     * @param type $detail_id
+     * @return boolean|string
+     */
+    public function isReceiveDelete($detail_id) {
 
+        // Get doctrine instance.
         $em = Zend_Registry::get('doctrine');
-        $identity = App_Auth::getInstance();
-        $store_wh_id = $identity->getWarehouseId();
 
+        /**
+         * Get batch_id and transaction_date by detail_id
+         */
         $str_sql = $em->createQueryBuilder()
-                ->select("sb.pkId as stock_batch_id,sm.transactionDate")
+                ->select("sb.pkId as stock_batch_id,sm.transactionDate, sd.quantity, sd.createdDate")
                 ->from('StockDetail', 'sd')
                 ->join('sd.stockBatchWarehouse', 'sb')
                 ->join('sd.stockMaster', 'sm')
                 ->andWhere("sd.pkId = $detail_id");
 
+        // Execute query and get result.
         $row = $str_sql->getQuery()->getResult();
-        
-        $str_sql2 = $em->createQueryBuilder()
-                ->select("sd.pkId")
-                ->from('StockDetail', 'sd')
-                ->join('sd.stockBatchWarehouse', 'sb')
-                ->join('sd.stockMaster', 'sm')
-                ->where("sm.transactionDate >= '" . $row[0]['transactionDate'] . "'")
-                ->andWhere("sb.pkId= '" . $row[0]['stock_batch_id'] . "'")
-                ->andWhere("sm.fromWarehouse = '" . $store_wh_id . "'")
-                ->andWhere("sm.transactionType IN (2,5,6,7,9,11,13,14,17)");
-        $row2 = $str_sql2->getQuery()->getResult();
-        if (count($row2) > 0) {
-            return false;
+
+        /**
+         * Check if detail_id is available in placements table
+         */
+        $sql_plc = $em->createQueryBuilder()
+                ->select("SUM(p.quantity) as qty")
+                ->from('Placements', 'p')
+                ->where("p.stockDetail = $detail_id")
+                ->having("qty = '" . $row[0]['quantity'] . "'");
+
+        // Execute query and get result.
+        $sql_plc->getQuery()->getResult();
+
+        /**
+         * Check if detail_id is available in placements table
+         */
+        $sql_plc2 = $em->createQueryBuilder()
+                ->select("p")
+                ->from('Placements', 'p')
+                ->where("p.stockBatchWarehouse = '" . $row[0]['stock_batch_id'] . "'")
+                ->andWhere("p.createdDate >= '" . $row[0]['createdDate'] . "'");
+
+        // Execute query and get result.
+        $row_plc2 = $sql_plc2->getQuery()->getResult();
+
+        // Check the result set.
+        if (count($row_plc2) == 0) {
+            if ($this->checkCurrentQty($row[0]['stock_batch_id'], $row[0]['quantity']) && ($this->checkDelDateQty($row[0]['transactionDate'], $row[0]['stock_batch_id'], $row[0]['quantity']))) {
+                return 'DIRECT_DELETE';
+            }
         } else {
-            return true;
+            if ($this->checkCurrentQty($row[0]['stock_batch_id'], $row[0]['quantity']) && ($this->checkDelDateQty($row[0]['transactionDate'], $row[0]['stock_batch_id'], $row[0]['quantity']))) {
+                return 'CUSTOME_DELETE';
+            }
         }
 
+        return false;
+    }
+
+    /**
+     * Check if current available batch quantity is equal or greater than delete quantity
+     */
+    public function checkCurrentQty($batch, $quantity) {
+        $em = Zend_Registry::get('doctrine');
+        $sql_current = $em->createQueryBuilder()
+                ->select("SUM(sd.quantity) as qty")
+                ->from('StockDetail', 'sd')
+                ->where("sd.stockBatchWarehouse = '" . $batch . "'")
+                ->having("qty >= '" . $quantity . "'");
+
+        // Execute query and get result.
+        $row_current = $sql_current->getQuery()->getResult();
+        return count($row_current) > 0;
+    }
+
+    /**
+     * Check if delete date available batch quantity is equal or greater than delete quantity
+     */
+    public function checkDelDateQty($date, $batch, $quantity) {
+        $em = Zend_Registry::get('doctrine');
+        $sql_del_qty = $em->createQueryBuilder()
+                ->select("SUM(sd.quantity) as qty")
+                ->from('StockDetail', 'sd')
+                ->join('sd.stockMaster', 'sm')
+                ->where("sm.transactionDate <= '" . $date . "'")
+                ->andWhere("sd.stockBatchWarehouse = '" . $batch . "'")
+                ->having("qty >= '" . $quantity . "'");
+
+        // Execute query and get result.
+        $row_del_qty = $sql_del_qty->getQuery()->getResult();
+
+        return count($row_del_qty) > 0;
     }
 
 }

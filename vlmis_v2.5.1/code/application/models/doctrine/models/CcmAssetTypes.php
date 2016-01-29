@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for CCM Asset Types
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmAssetTypes
+ *  CcmAssetTypes
  */
 class CcmAssetTypes
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $assetTypeName
      * @var string $assetTypeName
      */
     private $assetTypeName;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $ccmEquipmentTypeId
      * @var integer $ccmEquipmentTypeId
      */
     private $ccmEquipmentTypeId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $parent
      * @var CcmAssetTypes
      */
     private $parent;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

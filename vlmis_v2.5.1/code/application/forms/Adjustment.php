@@ -1,7 +1,44 @@
 <?php
 
-class Form_Adjustment extends Zend_Form {
+/**
+ * Form_Adjustment
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Adjustment
+ */
+class Form_Adjustment extends Form_Base {
+
+    /**
+     * fileds for Form_Adjustment
+     * 
+     * 
+     * 
+     * 
+     * adjustment_date
+     * ref_no
+     * product
+     * comments
+     * adjustment_type
+     * batch_no
+     * quantity
+     * available
+     * vvm_stage
+     * old_vvm
+     * $_fields
+     * location_id
+     * 
+     * 
+     * 
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "adjustment_date" => "Adjustment Date",
         "ref_no" => "Reference number",
@@ -15,11 +52,37 @@ class Form_Adjustment extends Zend_Form {
         "old_vvm" => "Old VVM Stage",
         "location_id" => "Location"
     );
+
+    /**
+     * Hidden fileds for Form_Adjustment
+     * 
+     * 
+     * pk_id
+     * item_unit_id
+     * 
+     * 
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "pk_id" => "ID",
         "item_unit_id" => "item_unit_id"
     );
-   
+
+    /**
+     * Combo boxes for Form_Adjustment
+     * 
+     * adjustment_type
+     * product
+     * batch_no
+     * vvm_stage
+     * old_vvm
+     * location_id
+     * 
+     * 
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'adjustment_type' => array(),
         'product' => array(),
@@ -29,6 +92,10 @@ class Form_Adjustment extends Zend_Form {
         'location_id' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     * for form Form_Adjustment
+     */
     public function init() {
 
         $transaction_types = new Model_TransactionTypes();
@@ -47,18 +114,14 @@ class Form_Adjustment extends Zend_Form {
                 $this->_list["product"][$whs['pkId']] = $whs['itemName'];
             }
         }
-        
+
         $this->_list["vvm_stage"][""] = "NA";
         $this->_list["old_vvm"][""] = "NA";
 
         foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-                case "item_unit_id":
+            if ($col == "item_unit_id") {
 
-                    $this->addElement("hidden", $col);
-                    break;
-                default:
-                    break;
+                $this->addElement("hidden", $col);
             }
         }
 
@@ -66,45 +129,21 @@ class Form_Adjustment extends Zend_Form {
 
             switch ($col) {
                 case "adjustment_date":
-
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                        "value" => date("d/m/Y")
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
+                    parent::createText($col);
                     break;
                 case "available":
                 case "quantity":
                 case "ref_no":
                 case "transaction_reference":
                 case "comments":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
     }

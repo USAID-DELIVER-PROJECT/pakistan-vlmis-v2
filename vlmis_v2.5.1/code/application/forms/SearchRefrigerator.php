@@ -1,7 +1,24 @@
 <?php
 
-class Form_SearchRefrigerator extends Zend_Form {
+/**
+ * Form_SearchRefrigerator
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Search Refrigerator
+ */
+class Form_SearchRefrigerator extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "ccm_asset_sub_type_id" => "Transport Type",
         "source_id" => "Source of supply",
@@ -19,6 +36,11 @@ class Form_SearchRefrigerator extends Zend_Form {
         "placed_at" => "Placed At",
         "report_type" => "Report Type"
     );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'ccm_asset_sub_type_id' => array(),
         'ccm_status_list_id' => array(),
@@ -26,12 +48,22 @@ class Form_SearchRefrigerator extends Zend_Form {
         'ccm_make_id' => array(),
         'ccm_model_id' => array()
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "office_id" => "",
         "combo1_id" => "",
         "warehouse_id" => "",
         "model_id" => ""
     );
+
+    /**
+     * $_radio
+     * @var type 
+     */
     private $_radio = array(
         'placed_at' => array(
             "1" => "Select Warehouse",
@@ -48,6 +80,9 @@ class Form_SearchRefrigerator extends Zend_Form {
         )
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         //Generate Asset Sub Type Combo
         $asset_types = new Model_CcmAssetTypes();
@@ -64,7 +99,7 @@ class Form_SearchRefrigerator extends Zend_Form {
         $stakeholder = new Model_Stakeholders();
         $stakeholder->form_values['type'] = 1;
         $result2 = $stakeholder->getAllStakeholders();
-        
+
         $this->_list["source_id"][''] = "Select Source Of Supply";
         foreach ($result2 as $row2) {
             $this->_list["source_id"][$row2['pkId']] = $row2['stakeholderName'];
@@ -89,15 +124,14 @@ class Form_SearchRefrigerator extends Zend_Form {
 
         //Generate Models Combo
         $this->_list["ccm_model_id"][''] = "Select Make First";
-        
+
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
                 case "office_id":
                 case "combo1_id":
                 case "warehouse_id":
                 case "model_id":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -106,86 +140,34 @@ class Form_SearchRefrigerator extends Zend_Form {
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
                 case "catalogue_id":
-                case "asset_id":              
+                case "asset_id":
                 case "serial_number":
                 case "gross_capacity_from":
                 case "gross_capacity_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 case "working_since_from":
                 case "working_since_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
                 default:
                     break;
             }
             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createRadio($col, $this->_radio[$col]);
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => 'form-control'),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

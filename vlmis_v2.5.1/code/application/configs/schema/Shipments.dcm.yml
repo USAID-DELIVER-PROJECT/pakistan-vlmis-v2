@@ -24,11 +24,6 @@ Shipments:
       type: decimal
       nullable: true
       column: shipment_quantity
-    fundingSourceId:
-      type: integer
-      unsigned: false
-      nullable: true
-      column: funding_source_id
     createdDate:
       type: date
       nullable: true
@@ -38,6 +33,15 @@ Shipments:
       nullable: false
       column: modified_date
   oneToOne:
+    fundingSource:
+      targetEntity: Warehouses
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        funding_source_id:
+          referencedColumnName: pk_id
+      orphanRemoval: false
     modifiedBy:
       targetEntity: Users
       cascade: {  }

@@ -1,5 +1,18 @@
 <?php
+/**
+ * Zend_View_Helper_TableHeading
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage campaign
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Zend View Helper for All Level Area Combo
+ */
 class Zend_View_Helper_AllLevelAreaCombo extends Zend_View_Helper_Abstract {
 
     public function allLevelAreaCombo($data_array) {
@@ -28,13 +41,8 @@ class Zend_View_Helper_AllLevelAreaCombo extends Zend_View_Helper_Abstract {
             case 1:
             case 2:
             case 3:
-                $arr_province = array(
-                    '1' => $translate->translate('National'),
-                    '2' => $translate->translate('Province'),
-                    '6' => $translate->translate('District')
-                );
-                break;
             case 4:
+            case 6:
                 $arr_province = array(
                     '1' => $translate->translate('National'),
                     '2' => $translate->translate('Province'),
@@ -44,13 +52,6 @@ class Zend_View_Helper_AllLevelAreaCombo extends Zend_View_Helper_Abstract {
             case 5:
                 $arr_province = array(
                     '2' => $translate->translate('Province')
-                );
-                break;
-            case 6:
-                $arr_province = array(
-                    '1' => $translate->translate('National'),
-                    '2' => $translate->translate('Province'),
-                    '6' => $translate->translate('District')
                 );
                 break;
             case 7:
@@ -73,17 +74,17 @@ class Zend_View_Helper_AllLevelAreaCombo extends Zend_View_Helper_Abstract {
             <div class="control-group span12" id="all_level_combo">
                 <div class="col-md-3">
                     <label class="control-label" for="office"><?php
-                        if (empty($office_term)) {
-                            echo $translate->translate("Office");
-                        } else {
-                            echo $office_term;
-                        }
-                        ?> <span class="red">*</span></label>
+        if (empty($office_term)) {
+            echo $translate->translate("Office");
+        } else {
+            echo $office_term;
+        }
+        ?> <span class="red">*</span></label>
                     <div class="controls">
                         <select name="office" id="office" class="form-control input-small">
-                            <?php
-                            foreach ($arr_province as $key => $value) {
-                                ?>
+        <?php
+        foreach ($arr_province as $key => $value) {
+            ?>
                                 <option value="<?php echo $key; ?>" <?php if ($key == $office) { ?>selected=""<?php } ?> ><?php echo $value; ?></option>
                             <?php } ?>
                         </select>
@@ -91,41 +92,49 @@ class Zend_View_Helper_AllLevelAreaCombo extends Zend_View_Helper_Abstract {
                 </div>
                 <div class="col-md-3" id="div_combo1" <?php if (empty($province)) { ?> style="display:none;" <?php } ?>>
                     <label class="control-label" id="lblcombo1">
-                        <?php echo $translate->translate("Province"); ?> 
+        <?php echo $translate->translate("Province"); ?> 
                         <span class="red">*</span>
                     </label>
                     <div class="controls">
                         <select name="combo1" id="combo1" class="form-control input-small">
-                            <?php if ($provinces_array != false) { ?>
+        <?php if ($provinces_array) { ?>
                                 <option value=""><?php echo $translate->translate("Select"); ?></option>
                                 <?php foreach ($provinces_array as $row) {
                                     ?>
-                                    <option value="<?php echo $row['key']; ?>" <?php if (!empty($province) && $row['key'] == $province) echo 'selected'; ?>>
-                                        <?php echo $row['value']; ?></option>
-                                    <?php
+                                    <option value="<?php echo $row['key']; ?>" <?php
+                                    if (!empty($province) && $row['key'] == $province) {
+                                        echo 'selected';
+                                    }
+                                    ?>>
+                                    <?php echo $row['value']; ?></option>
+                                            <?php
+                                    }
                                 }
-                            }
-                            ?>
+                                ?>
                         </select>
                     </div>
-                </div>	
-                <div class="col-md-3" id="div_combo2" <?php if (empty($district)) { ?> style="display:none;" <?php } ?>>		
+                </div>
+                <div class="col-md-3" id="div_combo2" <?php if (empty($district)) { ?> style="display:none;" <?php } ?>>
                     <label class="control-label" id="lblcombo2">
-                        <?php echo $translate->translate("District"); ?> 
+        <?php echo $translate->translate("District"); ?> 
                         <span class="red">*</span>
                     </label>
                     <div class="controls">
                         <select name="combo2" id="combo2" class="form-control input-small">
-                            <?php if ($districts_array != false) { ?>
+        <?php if ($districts_array) { ?>
                                 <option value=""><?php echo $translate->translate("Select"); ?></option>
                                 <?php foreach ($districts_array as $row) {
                                     ?>
-                                    <option value="<?php echo $row['key']; ?>" <?php if (!empty($district) && $row['key'] == $district) echo 'selected'; ?>>
-                                        <?php echo $row['value']; ?></option>
-                                    <?php
+                                    <option value="<?php echo $row['key']; ?>" <?php
+                                    if (!empty($district) && $row['key'] == $district) {
+                                        echo 'selected';
+                                    }
+                                    ?>>
+                                    <?php echo $row['value']; ?></option>
+                                            <?php
+                                    }
                                 }
-                            }
-                            ?>
+                                ?>
                         </select>
                     </div>
                 </div>

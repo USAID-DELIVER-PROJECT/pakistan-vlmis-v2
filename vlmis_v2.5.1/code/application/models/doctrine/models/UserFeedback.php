@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for User Feedback
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UserFeedback
+ *  UserFeedback
  */
 class UserFeedback
 {
     /**
+     * $pkId
      * @var bigint $pkId
      */
     private $pkId;
 
     /**
+     * $name
      * @var string $name
      */
     private $name;
 
     /**
+     * $email
      * @var string $email
      */
     private $email;
 
     /**
+     * $phone
      * @var string $phone
      */
     private $phone;
 
     /**
+     * $department
      * @var string $department
      */
     private $department;
 
     /**
+     * $message
      * @var text $message
      */
     private $message;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;

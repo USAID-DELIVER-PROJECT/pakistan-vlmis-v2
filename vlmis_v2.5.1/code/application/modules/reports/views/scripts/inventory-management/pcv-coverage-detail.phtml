@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for PCV Coverage Detail
+*/
+?>
+<?php
 $from_sel_month = $this->from_month_sel;
 $from_sel_year = $this->from_year_sel;
 $year = $this->year_sel;
@@ -67,13 +72,21 @@ $header1 .= ',<span>PCV-3</span>';
 $header1 .= ',<span>PCV-3</span>';
 $ro .= ',ro,ro,ro,ro,ro,ro,ro,ro';
 
+$header .= ',Total,Total %';
+$header0 .= ',#rspan,#rspan';
+$header1 .= ',#rspan,#rspan';
+$cspan .= ',#cspan,#cspan';
+$width .= ',60,60';
+$ro .= ',ro,ro';
+
+
 
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 $xml_store .= "<rows>";
 
 $sum_arr = array();
 
-$query = $this->reports()->pcvCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 1,0,11);
+$query = $this->reports()->pcvCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 1, 0, 11);
 $j = 1;
 
 foreach ($query as $row) {
@@ -91,9 +104,10 @@ foreach ($query as $row) {
     $data_arr[$location_id][] = $row['outreach_female_1'];
     $data_arr[$location_id][] = $row['consumption_1'];
     $data_arr[$location_id][] = $row['consumptionPercentage_1'];
+    $total_consumpiton[$location_id][] = $row['consumption_1'];
     $j++;
 }
-$query1 = $this->reports()->pcvCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 2,0,11);
+$query1 = $this->reports()->pcvCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 2, 0, 11);
 
 
 foreach ($query1 as $row) {
@@ -108,8 +122,9 @@ foreach ($query1 as $row) {
     $data_arr[$location_id][] = $row['outreach_female_1'];
     $data_arr[$location_id][] = $row['consumption_1'];
     $data_arr[$location_id][] = $row['consumptionPercentage_1'];
+    $total_consumpiton[$location_id][] = $row['consumption_1'];
 }
-$query2 = $this->reports()->pcvCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 3,0,11);
+$query2 = $this->reports()->pcvCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 3, 0, 11);
 
 foreach ($query2 as $row) {
 
@@ -122,6 +137,17 @@ foreach ($query2 as $row) {
     $data_arr[$location_id][] = $row['outreach_female_1'];
     $data_arr[$location_id][] = $row['consumption_1'];
     $data_arr[$location_id][] = $row['consumptionPercentage_1'];
+    $total_consumpiton[$location_id][] = $row['consumption_1'];
+}
+
+$query3 = $this->reports()->pcvCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 3, 0, 11);
+
+foreach ($query3 as $row) {
+
+    $location_id = $row['location_id'];
+    $data_arr[$location_id][] = array_sum($total_consumpiton[$location_id]);
+
+    $data_arr[$location_id][] = @Round((array_sum($total_consumpiton[$location_id])/$row['lbt'])*100);
 }
 
 foreach ($data_arr as $dis_id => $sub_arr) {
@@ -136,7 +162,6 @@ foreach ($data_arr as $dis_id => $sub_arr) {
             $sum_arr[$key] = 0;
         }
         $sum_arr[$key] += $value;
-        //$accpLimit = '0';
         if ($key > 2) {
 
             $xml_store .= "<cell style=\"text-align:right;\">$value </cell>";
@@ -179,6 +204,12 @@ foreach ($sum_arr as $key => $value) {
     } else if ($key == 26) {
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val3 / $total_wh) * 100) . " %</cell>";
     }
+    else if ($key == 27) {
+        $total_val4 = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 28) {
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val4 / $total_wh) * 100) . " %</cell>";
+    }
 }
 
 $xml_store .="</row>";
@@ -196,7 +227,7 @@ if (!empty($sel_month)) {
 
 <div class="page-content-wrapper">
     <div class="page-content">
-        <h3 class="page-title"><?php echo $report_title . ' ' . $report_month . ' ' . $sel_year; ?></h3>
+        <h3 class="page-title"><?php echo $report_title;?></h3>
         <h5 style="color: red">
             Note: This report is under user testing.Please check and provide feedback at support@lmis.gov.pk
         </h5>

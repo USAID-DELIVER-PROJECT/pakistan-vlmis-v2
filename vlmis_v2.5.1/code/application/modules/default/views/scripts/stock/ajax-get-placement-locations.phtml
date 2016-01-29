@@ -1,3 +1,8 @@
+<?php
+/**
+*  phtml for Ajax Get Placement Locations
+*/
+?>
 <div class="scroller" style="min-height:200px" data-always-visible="1" data-rail-visible1="1">
     <strong>Product : </strong><?php echo $this->result['product']; ?>,&nbsp;&nbsp;&nbsp;<strong>Batch No : </strong> <?php echo $this->result['batch_number']; ?>,&nbsp;&nbsp;&nbsp;<strong>Expiry : </strong><?php echo date("d/m/Y", strtotime($this->result['expiray_date'])); ?>,&nbsp;&nbsp;&nbsp;
     <br><strong>Qty Issued: </strong><?php echo $this->result['qty_issued']; ?>

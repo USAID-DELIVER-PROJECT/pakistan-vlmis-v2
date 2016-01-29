@@ -90,18 +90,6 @@ class CcmMakesProxy extends \CcmMakes implements \Doctrine\ORM\Proxy\Proxy
         return parent::getModifiedDate();
     }
 
-    public function setCreatedBy(\Users $createdBy)
-    {
-        $this->__load();
-        return parent::setCreatedBy($createdBy);
-    }
-
-    public function getCreatedBy()
-    {
-        $this->__load();
-        return parent::getCreatedBy();
-    }
-
     public function setModifiedBy(\Users $modifiedBy)
     {
         $this->__load();
@@ -114,10 +102,22 @@ class CcmMakesProxy extends \CcmMakes implements \Doctrine\ORM\Proxy\Proxy
         return parent::getModifiedBy();
     }
 
+    public function setCreatedBy(\Users $createdBy)
+    {
+        $this->__load();
+        return parent::setCreatedBy($createdBy);
+    }
+
+    public function getCreatedBy()
+    {
+        $this->__load();
+        return parent::getCreatedBy();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'ccmMakeName', 'status', 'createdDate', 'modifiedDate', 'createdBy', 'modifiedBy');
+        return array('__isInitialized__', 'pkId', 'ccmMakeName', 'status', 'createdDate', 'modifiedDate', 'modifiedBy', 'createdBy');
     }
 
     public function __clone()

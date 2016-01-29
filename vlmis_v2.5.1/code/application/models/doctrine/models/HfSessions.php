@@ -1,70 +1,90 @@
 <?php
+/**
+*  php for HF Sessions
+*/
+?>
+<?php
 
-
+/**
+*  HF Sessions
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * HfSessions
- */
+*  Model for HF Sessions
+*/
+
 class HfSessions
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $fixedPlannedSessions
      * @var integer $fixedPlannedSessions
      */
     private $fixedPlannedSessions;
 
     /**
+     * $fixedActuallyHeldSessions
      * @var integer $fixedActuallyHeldSessions
      */
     private $fixedActuallyHeldSessions;
 
     /**
+     * $outreachPlannedSessions
      * @var integer $outreachPlannedSessions
      */
     private $outreachPlannedSessions;
 
     /**
+     * $outreachActuallyHeldSessions
      * @var integer $outreachActuallyHeldSessions
      */
     private $outreachActuallyHeldSessions;
 
     /**
+     * $reportingStartDate
      * @var datetime $reportingStartDate
      */
     private $reportingStartDate;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $warehouseStatus
      * @var ListDetail
      */
     private $warehouseStatus;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

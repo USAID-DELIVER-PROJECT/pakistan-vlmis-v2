@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for Item Units
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ItemUnits
+ *  ItemUnits
  */
 class ItemUnits
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $itemUnitName
      * @var string $itemUnitName
      */
     private $itemUnitName;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

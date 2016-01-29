@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Stock Movement Report
+*/
+?>
+<?php
 $sel_month = $this->month_sel;
 $sel_year = $this->year_sel;
 $counter = 1;
@@ -57,7 +62,6 @@ foreach ($period as $date) {
     $width .= ',*';
     $ro .= ',ro';
 
-    //$query_vals = $this->reports()->getCentralProvincialReport($colName,$colName1, $where,$where1, $str_date);
     $cond = $where . " '" . $str_date . "'";
     $query_vals = $this->reports()->getEPIStoresReport($cond);
 
@@ -76,7 +80,6 @@ foreach ($period as $date) {
 $header .= ',<span>' . "Total" . '</span>';
 $width .= ',*';
 $ro .= ',ro';
-//App_Controller_Functions::pr(array_sum($data_arr_sum[3]));
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 $xml_store .= "<rows>";
 

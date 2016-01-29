@@ -1,60 +1,72 @@
 <?php
 
-
+/**
+*  Model for CCM Voltage Regulators
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmWarehouses
+ *  CcmWarehouses
  */
 class CcmWarehouses
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $routineImmunizationIcepackRequirments
      * @var string $routineImmunizationIcepackRequirments
      */
     private $routineImmunizationIcepackRequirments;
 
     /**
+     * $campaignIcepackRequirments
      * @var string $campaignIcepackRequirments
      */
     private $campaignIcepackRequirments;
 
     /**
+     * $vaccineSupplyMode
      * @var integer $vaccineSupplyMode
      */
     private $vaccineSupplyMode;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $electricityAvailability
      * @var ListDetail
      */
     private $electricityAvailability;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

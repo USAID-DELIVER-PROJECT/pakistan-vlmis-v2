@@ -1,15 +1,44 @@
 <?php
 
-class Form_Iadmin_RoleResource extends Zend_Form {
+/**
+ * Form_Iadmin_RoleResource
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+*  Form for Iadmin Role Resource
+*/
+
+class Form_Iadmin_RoleResource extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * @role: Role Name
+     * @resource: Resource Name
+     * @permission: Permission
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "role" => "Role Name",
         "resource" => "Resource Name",
         "permission" => "Permission"
     );
-    private $_hidden = array(
-        "pk_id" => "pkId"
-    );
+    
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'role' => array(),
         'resource' => array(),
@@ -19,11 +48,14 @@ class Form_Iadmin_RoleResource extends Zend_Form {
         )
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         $roles = new Model_Roles();
         $result = $roles->getRoles();
-       
+
         if ($result) {
             foreach ($result as $row) {
                 $this->_list["role"][$row->getPkId()] = $row->getRoleName();
@@ -43,16 +75,7 @@ class Form_Iadmin_RoleResource extends Zend_Form {
 
         foreach ($this->_fields as $col => $name) {
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array()
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
     }

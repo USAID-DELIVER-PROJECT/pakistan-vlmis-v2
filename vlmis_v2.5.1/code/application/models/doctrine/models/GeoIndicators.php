@@ -1,40 +1,48 @@
 <?php
 
-
+/**
+*  Model for Geo Indicators
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GeoIndicators
+ *  GeoIndicators
  */
 class GeoIndicators
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $geoIndicatorName
      * @var string $geoIndicatorName
      */
     private $geoIndicatorName;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

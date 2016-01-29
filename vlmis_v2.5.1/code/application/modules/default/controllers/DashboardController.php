@@ -1,11 +1,23 @@
 <?php
 
+/**
+ * DashboardController
+ *
+ * 
+ *
+ * @subpackage Default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ * Controller for Dashboard
+ */
 class DashboardController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * DashboardController index
+     */
     public function indexAction() {
 
         $auth = App_Auth::getInstance();
@@ -16,6 +28,7 @@ class DashboardController extends App_Controller_Base {
 
         $level = '';
         // National Level
+
         if ($role_id == 3 || $role_id == 23 || $role_id == 26 || $role_id == 27) {
             $this->view->level = 1;
         }
@@ -27,7 +40,8 @@ class DashboardController extends App_Controller_Base {
             $this->view->province = $province;
         }
         // 6 - District Level, 20 - Policy District User
-        if ($role_id == 6 || $role_id == 7 || $role_id == 20 || $role_id == 21 || $role_id == 23) {
+        $roleIds = array(6, 7, 20, 21, 23);
+        if (in_array($role_id, $roleIds)) {
             $this->view->level = 6;
             $province = $this->_identity->getProvinceId();
             $district = $this->_identity->getDistrictId();
@@ -53,20 +67,15 @@ class DashboardController extends App_Controller_Base {
             $this->view->province = $province;
             $this->view->district = $district;
         }
-        if ($role_id == 17 || $role_id == 18 || $role_id == 23 || $role_id == 25 || $role_id == 26 || $role_id == 28 || $role_id == 29) {
+        $roleIdlist = array(17, 18, 23, 25, 26, 28, 29);
+        if (in_array($role_id, $roleIdlist)) {
             $province = 1;
             $district = 33;
             $this->view->province = $province;
             $this->view->district = $district;
             $this->view->level = 1;
         }
-        /* if ($role_id == 27) {
-          $province = 2;
-          $district = 87;
-          $this->view->province = $province;
-          $this->view->district = $district;
-          $this->view->level = 1;
-          } */
+
         if ($role_id == 30 || $role_id == 27) {
 
             $province = $this->_identity->getProvinceId();
@@ -212,6 +221,9 @@ class DashboardController extends App_Controller_Base {
         }
     }
 
+    /**
+     * province
+     */
     public function provinceAction() {
 
         $auth = App_Auth::getInstance();
@@ -293,13 +305,15 @@ class DashboardController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_area_combo.js');
     }
 
+    /**
+     * vlmis
+     */
     public function vlmisAction() {
 
         $salt = '159jboFHjeQK5mc1K0cdSz5';
         $token = sha1(md5($salt . date('Y-m-d')));
         if (!$this->_identity->login('userdashboard', base64_encode(123))) {
-            $error = true;
-            throw new Exception();
+            throw new InvalidArgumentException('Invalid Token');
         }
         if ($token != $_GET['token']) {
             $this->view->message = 'Invalid Token';
@@ -311,7 +325,6 @@ class DashboardController extends App_Controller_Base {
         $this->view->province = $province;
 
         $this->_helper->layout->setLayout('vlmis-dashboad');
-        $auth = App_Auth::getInstance();
         $campaign = new Model_Campaigns();
         $location = new Model_Locations();
 
@@ -400,11 +413,6 @@ class DashboardController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_area_combo.js');
 
         $this->view->id = $this->_request->getParam("id", $dashboards[0]->getResource()->getPkId());
-
-        /* if ($role_id == 7) {
-          $this->view->province = $this->_identity->getProvinceId();
-          $this->renderScript("dashboard/user-tehsil.phtml");
-          } */
     }
 
 }

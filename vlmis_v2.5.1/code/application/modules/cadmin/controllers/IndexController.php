@@ -1,11 +1,26 @@
 <?php
 
+/**
+ * Cadmin_IndexController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Cadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+*  Controller for Cadmin Index Controller
+*/
+
 class Cadmin_IndexController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
 
+    /**
+     * Cadmin_IndexController index
+     */
     public function indexAction() {
         $auth = App_Auth::getInstance();
         $role = $auth->getRoleId();

@@ -1,65 +1,78 @@
 <?php
 
-
+/**
+*  Model for Campaigns
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Campaigns
+ *  Campaigns
  */
 class Campaigns
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $campaignName
      * @var string $campaignName
      */
     private $campaignName;
 
     /**
+     * $dateFrom
      * @var datetime $dateFrom
      */
     private $dateFrom;
 
     /**
+     * $dateTo
      * @var datetime $dateTo
      */
     private $dateTo;
 
     /**
+     * $catchUpDays
      * @var integer $catchUpDays
      */
     private $catchUpDays;
 
     /**
+     * $isClosed
      * @var boolean $isClosed
      */
     private $isClosed;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $campaignType
      * @var CampaignTypes
      */
     private $campaignType;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

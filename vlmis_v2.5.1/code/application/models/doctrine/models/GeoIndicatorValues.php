@@ -1,65 +1,78 @@
 <?php
 
-
+/**
+*  Model for Geo Indicator Values
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GeoIndicatorValues
+ *  GeoIndicatorValues
  */
 class GeoIndicatorValues
 {
     /**
+     * $id
      * @var integer $id
      */
     private $id;
 
     /**
+     * $startValue
      * @var string $startValue
      */
     private $startValue;
 
     /**
+     * $endValue
      * @var string $endValue
      */
     private $endValue;
 
     /**
+     * $interval
      * @var string $interval
      */
     private $interval;
 
     /**
+     * $description
      * @var string $description
      */
     private $description;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $geoIndicator
      * @var GeoIndicators
      */
     private $geoIndicator;
 
     /**
+     * $geoColor
      * @var GeoColor
      */
     private $geoColor;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

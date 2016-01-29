@@ -1,11 +1,37 @@
 <?php
 
+/**
+ * Zend_View_Helper_Docs
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+/**
+ *  Zend View Helper Docs
+ */
+
 class Zend_View_Helper_Docs extends Zend_View_Helper_Abstract {
 
+    /**
+     * docs
+     * @return \Zend_View_Helper_Docs
+     */
     public function docs() {
         return $this;
     }
 
+    /**
+     * Get Doc Sub Categories
+     * @param type $category_id
+     * @return type
+     */
     public function getDocSubCategories($category_id) {
 
         $querypro = "SELECT
@@ -25,6 +51,11 @@ class Zend_View_Helper_Docs extends Zend_View_Helper_Abstract {
         return $row->fetchAll();
     }
     
+    /**
+     * Get Document Detail
+     * @param type $category_id
+     * @return type
+     */
     public function getDocumentDetail($category_id) {
 
         $querypro = "SELECT

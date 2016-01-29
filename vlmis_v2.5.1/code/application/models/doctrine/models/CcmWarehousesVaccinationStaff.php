@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for CCM Warehouses Vaccination Staff
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmWarehousesVaccinationStaff
+ *  CcmWarehousesVaccinationStaff
  */
 class CcmWarehousesVaccinationStaff
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $ccmWarehouse
      * @var CcmWarehouses
      */
     private $ccmWarehouse;
 
     /**
+     * $vaccinationStaff
      * @var ListDetail
      */
     private $vaccinationStaff;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

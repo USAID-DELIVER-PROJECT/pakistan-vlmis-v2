@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for CCM Status List
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmStatusList
+ *  CcmStatusList
  */
 class CcmStatusList
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $ccmStatusListName
      * @var string $ccmStatusListName
      */
     private $ccmStatusListName;
 
     /**
+     * $type
      * @var boolean $type
      */
     private $type;
 
     /**
+     * $reasonType
      * @var boolean $reasonType
      */
     private $reasonType;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Warehouses
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

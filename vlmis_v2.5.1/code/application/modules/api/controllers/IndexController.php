@@ -1,7 +1,24 @@
 <?php
 
+/**
+ * Api_IndexController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Api
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Api Index Controller
+ */
 class Api_IndexController extends App_Controller_Base {
 
+    /**
+     * Api_IndexController init
+     */
     public function init() {
         parent::init();
         $this->_helper->layout->disableLayout();
@@ -25,15 +42,19 @@ class Api_IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Authenticate User
+     * @param type $auth
+     * @return type boolean
+     */
     private function authenticateUser($auth) {
         $user = $this->_em->getRepository("Users")->findOneBy(array('auth' => $auth));
-        if (count($user) > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return count($user) > 0;
     }
 
+    /**
+     * Authenticate User
+     */
     public function authenticateUserAction() {
         if ($this->_request->getParam('auth')) {
             if ($this->_identity->loginAuth($this->_request->getParam('auth'))) {
@@ -45,8 +66,11 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($return);
     }
 
-    // Added by Gul Muhammad
-    // Used by Barcode services
+    /**
+     * Get Item All Batches
+     * @author Gul Muhammad <gul@deliver-pk.org>
+     * Used by Barcode services
+     */
     public function getItemAllBatchesAction() {
         $wh_id = $this->_request->getParam('wh_id');
         if ($wh_id) {
@@ -58,6 +82,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Location By Wh Id
+     */
     public function getLocationByWhIdAction() {
 
         if ($this->_request->getParam('wh_id')) {
@@ -205,12 +232,10 @@ class Api_IndexController extends App_Controller_Base {
                 $rec_id = $this->_request->getParam('rec_id', 0);
                 $pipeline_consignments = $this->_em->getRepository("PipelineConsignments")->find($rec_id);
 
-                if (count($pipeline_consignments) > 0) {
-                    if ($pipeline_consignments->getStatus() == 'Received') {
-                        $result = array("message" => 104);
-                        echo Zend_Json::encode(array($result));
-                        return false;
-                    }
+                if (count($pipeline_consignments) > 0 && $pipeline_consignments->getStatus() == 'Received') {
+                    $result = array("message" => 104);
+                    echo Zend_Json::encode(array($result));
+                    return false;
                 }
 
                 if ($rec_id > 0) {
@@ -292,6 +317,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode(array($result));
     }
 
+    /**
+     * Get Table Data
+     */
     public function getTableDataAction() {
         $query = $this->_request->getParam('query');
 
@@ -300,6 +328,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Issue Voucher Items
+     */
     public function getIssueVoucherItemsAction() {
 
         $voucher = $this->_request->getParam('voucher');
@@ -315,6 +346,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Issue Voucher List
+     */
     public function getIssueVoucherListAction() {
 
         $wh_id = $this->_request->getParam('wh_id', '');
@@ -323,6 +357,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Search Batch By Number
+     */
     public function searchBatchByNumberAction() {
 
 
@@ -339,6 +376,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Item Batch List
+     */
     public function getItemBatchListAction() {
 
         if ($this->_request->getParam('item_id')) {
@@ -352,6 +392,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Item List
+     */
     public function getItemListAction() {
 
 
@@ -361,10 +404,16 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($items_list);
     }
 
+    /**
+     * Get Vvm Stage List
+     */
     public function getVvmStageListAction() {
         echo "Hello";
     }
 
+    /**
+     * Get Receive Voucher Items
+     */
     public function getReceiveVoucherItemsAction() {
 
 
@@ -379,6 +428,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Receive Voucher List
+     */
     public function getReceiveVoucherListAction() {
 
         $wh_id = $this->_request->getParam('wh_id', '');
@@ -388,6 +440,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Search Item By Location Id
+     */
     public function searchItemByLocationIdAction() {
 
 
@@ -402,6 +457,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Stakeholder List
+     */
     public function getStakeholderListAction() {
 
         $stakeholders = new Model_Stakeholders();
@@ -410,6 +468,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Stakeholder List
+     */
     public function addPlacementAction() {
 
         $array = array(
@@ -427,6 +488,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Ccm Locations
+     */
     public function getCcmLocationsAction() {
 
 
@@ -441,6 +505,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Item Categories
+     */
     public function getItemCategoriesAction() {
 
 
@@ -450,6 +517,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Item Pack Sizes
+     */
     public function getItemPackSizesAction() {
 
 
@@ -459,6 +529,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Items
+     */
     public function getItemsAction() {
 
         $items = new Model_Items();
@@ -467,6 +540,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Item Units
+     */
     public function getItemUnitsAction() {
 
 
@@ -476,6 +552,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Non Ccm Locations
+     */
     public function getNonCcmLocationsAction() {
 
         $wh_id = $this->_request->getParam('wh_id');
@@ -486,6 +565,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Placement Locations
+     */
     public function getPlacementLocationsAction() {
 
         $wh_id = $this->_request->getParam('wh_id');
@@ -497,6 +579,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Rack Information
+     */
     public function getRackInformationAction() {
 
 
@@ -506,6 +591,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Stakeholder Items
+     */
     public function getStakeholderItemsAction() {
 
 
@@ -515,6 +603,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Item Batches
+     */
     public function getItemBatchesAction() {
 
 
@@ -529,7 +620,10 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
-// 14 July 2014 - Modify - Startu
+    /**
+     * Upload Transactions
+     * 14 July 2014 - Modify - Startu
+     */
     public function uploadTransactionsAction() {
         try {
             $data = array();
@@ -553,8 +647,11 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
-// 14 July 2014 - Modify - Start
-// 08 July 2014 - Start
+    /**
+     * Search Batch Locations
+     * 14 July 2014 - Modify - Start
+     * 08 July 2014 - Start
+     */
     public function searchBatchLocationsAction() {
 
         $data = array();
@@ -569,6 +666,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Search Locations Products
+     */
     public function searchLocationsProductsAction() {
 
         $data = array();
@@ -583,6 +683,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Update Vvm Stage
+     */
     public function updateVvmStageAction() {
 
         $data = array();
@@ -598,6 +701,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode(array($result));
     }
 
+    /**
+     * Get Stakeholder Item Pack Sizes
+     */
     public function getStakeholderItemPackSizesAction() {
 
 
@@ -607,6 +713,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Ccm Locations Status
+     */
     public function getCcmLocationsStatusAction() {
         $wh_id = $this->_request->getParam('wh_id');
         $locations = new Model_Locations();
@@ -615,6 +724,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Non Ccm Locations Status
+     */
     public function getNonCcmLocationsStatusAction() {
         $wh_id = $this->_request->getParam('wh_id');
         $locations = new Model_Locations();
@@ -623,6 +735,9 @@ class Api_IndexController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Upload Stock Ticking
+     */
     public function uploadStockTickingAction() {
         $params = $this->_request->getParams();
         $stock_ticking = new Model_StockTicking();

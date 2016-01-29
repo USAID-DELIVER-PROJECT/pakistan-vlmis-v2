@@ -1,7 +1,24 @@
 <?php
 
+/**
+ * MapsController
+ *
+ * 
+ *
+ * @subpackage Default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+* Controller for Maps
+*/
+
 class MapsController extends App_Controller_Base {
 
+    /**
+     * MapsController init
+     */
     public function init() {
         parent::init();
         $base_url = Zend_Registry::get('baseurl');
@@ -9,10 +26,16 @@ class MapsController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/html2canvas.js');
     }
 
+    /**
+     * MapsController index
+     */
     public function indexAction() {
         
     }
 
+    /**
+     * MOS
+     */
     public function mosAction() {
         $id = $this->_request->getParam('id', '');
         if ($id == 4 || $id == "") {
@@ -82,6 +105,9 @@ class MapsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * AMC
+     */
     public function amcAction() {
         $id = $this->_request->getParam('id', '');
         if ($id == 4 || $id == "") {
@@ -152,6 +178,9 @@ class MapsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Reporting Rate
+     */
     public function reportingRateAction() {
 
         $id = $this->_request->getParam('id', '');
@@ -212,6 +241,9 @@ class MapsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Wastages
+     */
     public function wastagesAction() {
 
         $id = $this->_request->getParam('id', '');
@@ -272,6 +304,9 @@ class MapsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Wastages Reporting
+     */
     public function wastagesReportingAction() {
         $form = new Form_Maps_Mos();
         $form->province->setValue($this->_identity->getProvinceId());
@@ -295,6 +330,9 @@ class MapsController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download2Frame.js');
     }
 
+    /**
+     * Expiry Alert
+     */
     public function expiryAlertAction() {
 
         $id = $this->_request->getParam('id', '');
@@ -344,6 +382,9 @@ class MapsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Vaccine Coverage
+     */
     public function vaccineCoverageAction() {
 
         $id = $this->_request->getParam('id', '');
@@ -415,6 +456,9 @@ class MapsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Cold Chain Capacity
+     */
     public function coldChainCapacityAction() {
 
         $id = $this->_request->getParam('id', '');
@@ -485,12 +529,18 @@ class MapsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Demographic
+     */
     public function demographicAction() {
         $baseurl = Zend_Registry::get('baseurl');
         $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/symbology.js');
         $this->view->inlineScript()->appendFile($baseurl . '/js/default/maps/download.js');
     }
 
+    /**
+     * Batch Tracking
+     */
     public function batchTrackingAction() {
 
         $form = new Form_Maps_Mos();

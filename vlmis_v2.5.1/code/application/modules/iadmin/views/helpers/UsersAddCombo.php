@@ -1,14 +1,34 @@
 <?php
+/**
+ * Zend_View_Helper_UsersAddCombo
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Zend View Helper Users Add Combo
+ */
 class Zend_View_Helper_UsersAddCombo extends Zend_View_Helper_Abstract {
 
+    /**
+     * Users Add Combo
+     * Used to load users combo
+     * to add
+     * @param type $office_term
+     */
     public function usersAddCombo($office_term) {
-
-        $identity = App_Auth::getInstance();
+        // Get translater instance.
         $translate = Zend_Registry::get('Zend_Translate');
+        // Get base URL.
         $base_url = Zend_Registry::get('baseurl');
-        $user_lvl = $identity->getRoleId();
+        // If routine purpose.
         if ($office_term == "routine") {
+            // Init locations array
             $arr_location_level = array(
                 '1' => $translate->translate('National'),
                 '2' => $translate->translate('Provincial'),
@@ -19,7 +39,9 @@ class Zend_View_Helper_UsersAddCombo extends Zend_View_Helper_Abstract {
             );
         }
 
+        // Check for Immunization.
         if ($office_term == "im") {
+            // Init locations array
             $arr_location_level = array(
                 '1' => $translate->translate('National'),
                 '2' => $translate->translate('Provincial'),
@@ -28,7 +50,9 @@ class Zend_View_Helper_UsersAddCombo extends Zend_View_Helper_Abstract {
                 '5' => $translate->translate('Tehsil'),
             );
         }
+        // Check for campaigns.
         if ($office_term == "campaigns") {
+            // Init locations array
             $arr_location_level = array(
                 '1' => $translate->translate('National'),
                 '2' => $translate->translate('Provincial'),
@@ -47,8 +71,12 @@ class Zend_View_Helper_UsersAddCombo extends Zend_View_Helper_Abstract {
                     <?php
                     foreach ($arr_location_level as $key => $value) {
                         ?>
-                        <option value="<?php echo $key; ?>" <?php if (!empty($office_term['office_type_add']) && $key == $office_term['office_type_add']) echo 'selected'; ?> ><?php echo $value; ?></option>
-                    <?php } ?>
+                        <option value="<?php echo $key; ?>" <?php
+                        if (!empty($office_term['office_type_add']) && $key == $office_term['office_type_add']) {
+                            echo 'selected';
+                        }
+                        ?> ><?php echo $value; ?></option>
+                            <?php } ?>
                 </select>
             </div>
         </div>
@@ -58,8 +86,8 @@ class Zend_View_Helper_UsersAddCombo extends Zend_View_Helper_Abstract {
                 <select name="combo1_add" id="combo1_add" class="form-control">
                 </select>
             </div>
-        </div>	
-        <div class="col-md-4" id="div_combo2_add" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>		
+        </div>
+        <div class="col-md-4" id="div_combo2_add" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>
             <label class="control-label" id="lblcombo2_add"><?php echo $translate->translate("District"); ?> <span class="red">*</span></label>
             <div class="controls">
                 <select name="combo2_add" id="combo2_add" class="form-control">
@@ -84,7 +112,6 @@ class Zend_View_Helper_UsersAddCombo extends Zend_View_Helper_Abstract {
 
         <div class="col-md-1" id="loader" style="display:none;"><img src="<?php echo $base_url; ?>/images/loader.gif" style="margin-top:8px; float:left" alt="" /></div>
         <?php
-        // return true;
     }
 
 }

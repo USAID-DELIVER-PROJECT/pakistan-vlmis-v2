@@ -1,7 +1,30 @@
 <?php
 
+/**
+ * Zend_View_Helper_GetManufacturer
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+
+/**
+ *  Zend View Helpe Get Manufacturer
+ */
+
 class Zend_View_Helper_GetManufacturer extends Zend_View_Helper_Abstract {
 
+    /**
+     * Get Manufacturer
+     * @param type $batch_id
+     */
     public function getManufacturer($batch_id) {
 
         $em = Zend_Registry::get('doctrine');

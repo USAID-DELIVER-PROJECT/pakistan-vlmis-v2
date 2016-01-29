@@ -1,7 +1,32 @@
 <?php
 
-class Form_PipelineConsignmentsFilters extends Zend_Form {
+/**
+ * Form_PipelineConsignmentsFilters
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Pipleine Consignments Filters
+ */
+class Form_PipelineConsignmentsFilters extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Form Fields
+     * @from_warehouse_id: Source
+     * @item_pack_size_id: Product Id
+     * @from_date: From Date
+     * @to_date: To Date
+     * @status: Status
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "from_warehouse_id" => "Source",
         "item_pack_size_id" => "Product Id",
@@ -9,15 +34,26 @@ class Form_PipelineConsignmentsFilters extends Zend_Form {
         "to_date" => "To Date",
         "status" => "Status"
     );
-    private $_hidden = array(
-        "id" => "ID"
-    );
+
+    /**
+     * $_list
+     * 
+     * List
+     * @from_warehouse_id
+     * @item_pack_size_id
+     * @status
+     * 
+     * @var type 
+     */
     private $_list = array(
         'from_warehouse_id' => array(),
         'item_pack_size_id' => array(),
         'status' => array('Planned' => 'Planned', 'Receiving' => 'Receiving', 'Received' => 'Received')
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         //Generate WareHouses Combo
         $warehouse = new Model_Warehouses();
@@ -32,7 +68,6 @@ class Form_PipelineConsignmentsFilters extends Zend_Form {
         $result = $item_pack_size->getItemsAll();
         $this->_list["item_pack_size_id"][''] = "Select";
         if ($result) {
-            $item_id = $result[0]->getPkId();
             foreach ($result as $row) {
                 $this->_list["item_pack_size_id"][$row->getPkId()] = $row->getItemName();
             }
@@ -40,76 +75,30 @@ class Form_PipelineConsignmentsFilters extends Zend_Form {
 
         $from_date = date('01/m/Y');
         $to_date = date('d/m/Y');
-        
+
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
                 case "from_date":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                        "value" => $from_date
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyTextWithValue($col, $from_date);
                     break;
                 case "to_date":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                        "value" => $to_date
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyTextWithValue($col, $to_date);
                     break;
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>    API Documentation &raquo; \Reports_CcemController
+</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+            <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+            <!--[if lt IE 9]>
+        <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+        <![endif]-->
+        <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
+        <script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
+        <script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script>
+        <script src="../js/bootstrap.js" type="text/javascript"></script>
+        <script src="../js/template.js" type="text/javascript"></script>
+        <script src="../js/prettify/prettify.min.js" type="text/javascript"></script>
+    
+            <link rel="shortcut icon" href="../img/favicon.ico"/>
+        <link rel="apple-touch-icon" href="../img/apple-touch-icon.png"/>
+        <link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png"/>
+        <link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png"/>
+    </head>
+<body>
+
+        <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    <span class="icon-bar"></span> </a>
+                <a class="brand" href="../index.html">API Documentation</a>
+
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="dropdown">
+                            <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                API Documentation <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                                                                            </ul>
+                        </li>
+                        <li class="dropdown" id="charts-menu">
+                            <a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                Charts <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="../graph_class.html">
+                                        <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown" id="reports-menu">
+                            <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                Reports <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="../errors.html">
+                                        <i class="icon-list-alt"></i>&#160;Errors
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="../markers.html">
+                                        <i class="icon-list-alt"></i>&#160;Markers
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="../deprecated.html">
+                                        <i class="icon-list-alt"></i>&#160;Deprecated
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="go_to_top">
+            <a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>
+        </div>
+    </div>
+    
+    <div id="___" class="container">
+        <noscript>
+            <div class="alert alert-warning">
+                Javascript is disabled; several features are only available if Javascript is enabled.
+            </div>
+        </noscript>
+
+        
+            <style>
+        .deprecated h2 {
+            text-decoration: line-through;
+        }
+    </style>
+    <div class="row">
+        <div class="span4">
+                    <div class="btn-group view pull-right" data-toggle="buttons-radio">
+        <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+        <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    </div>
+    <div class="btn-group visibility" data-toggle="buttons-checkbox">
+        <button class="btn public active" title="Show public elements">Public</button>
+        <button class="btn protected" title="Show protected elements">Protected</button>
+        <button class="btn private" title="Show private elements">Private</button>
+        <button class="btn inherited active" title="Show inherited elements">Inherited</button>
+    </div>
+
+        <ul class="side-nav nav nav-list">
+        <li class="nav-header">
+            <i class="icon-custom icon-method"></i> Methods
+            <ul>
+                                                                                                    <li class="method public">
+        <a href="#method_annualCCCostsByFacilityTypeAction" title="annualCCCostsByFacilityTypeAction :: Annual CC Costs By Facility Type">
+            <span class="description">Annual CC Costs By Facility Type</span><pre>annualCCCostsByFacilityTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_annualColdChainRunningCostsByFTypeAction" title="annualColdChainRunningCostsByFTypeAction :: Annual Cold Chain Running Costs By Facility Type">
+            <span class="description">Annual Cold Chain Running Costs By Facility Type</span><pre>annualColdChainRunningCostsByFTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_annualEnergyCostsForRefrigeratorEnergyTypesAction" title="annualEnergyCostsForRefrigeratorEnergyTypesAction :: Annual Energy Costs For Refrigerator Energy Types">
+            <span class="description">Annual Energy Costs For Refrigerator Energy Types</span><pre>annualEnergyCostsForRefrigeratorEnergyTypesAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_averagePopulationPerVaccinatorAction" title="averagePopulationPerVaccinatorAction :: Average Population Per Vaccinator">
+            <span class="description">Average Population Per Vaccinator</span><pre>averagePopulationPerVaccinatorAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_coldboxAndVaccineCarrierCapacityByFacilityAction" title="coldboxAndVaccineCarrierCapacityByFacilityAction :: Coldbox And Vaccine Carrier Capacity By Facility">
+            <span class="description">Coldbox And Vaccine Carrier Capacity By Facility</span><pre>coldboxAndVaccineCarrierCapacityByFacilityAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_coldboxAndVaccineCarriersByWorkingStatusAction" title="coldboxAndVaccineCarriersByWorkingStatusAction :: Coldbox And Vaccine Carriers By Working Status">
+            <span class="description">Coldbox And Vaccine Carriers By Working Status</span><pre>coldboxAndVaccineCarriersByWorkingStatusAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_coldRoomQualityAttributesAction" title="coldRoomQualityAttributesAction :: Cold Room Quality Attributes">
+            <span class="description">Cold Room Quality Attributes</span><pre>coldRoomQualityAttributesAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_coldRooms4to20ByModelAndWorkingStatusAction" title="coldRooms4to20ByModelAndWorkingStatusAction :: cold Rooms 4 to 20 By Model And Working Status">
+            <span class="description">cold Rooms 4 to 20 By Model And Working Status</span><pre>coldRooms4to20ByModelAndWorkingStatusAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_distributionCfcFreeEquipmentByFTypeAction" title="distributionCfcFreeEquipmentByFTypeAction :: Distribution Cfc Free Equipment By Facility Type">
+            <span class="description">Distribution Cfc Free Equipment By Facility Type</span><pre>distributionCfcFreeEquipmentByFTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_distributionRefrigeratorByModelByFTypeAction" title="distributionRefrigeratorByModelByFTypeAction :: Distribution Refrigerator By Model By Facility Type">
+            <span class="description">Distribution Refrigerator By Model By Facility Type</span><pre>distributionRefrigeratorByModelByFTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_electricityAvailabilityAction" title="electricityAvailabilityAction :: Electricity Availability">
+            <span class="description">Electricity Availability</span><pre>electricityAvailabilityAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_energyAvailabilityAtFacilitiesAction" title="energyAvailabilityAtFacilitiesAction :: Energy Availability At Facilities">
+            <span class="description">Energy Availability At Facilities</span><pre>energyAvailabilityAtFacilitiesAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_equipmentByAvailabilityOfElectricityAction" title="equipmentByAvailabilityOfElectricityAction :: Equipment By Availability Of Electricity">
+            <span class="description">Equipment By Availability Of Electricity</span><pre>equipmentByAvailabilityOfElectricityAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_facilitiesSuitableForSolarEquipmentByAreaAction" title="facilitiesSuitableForSolarEquipmentByAreaAction :: Facilities Suitable For Solar Equipment By Area">
+            <span class="description">Facilities Suitable For Solar Equipment By Area</span><pre>facilitiesSuitableForSolarEquipmentByAreaAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_facilitiesWithInsufficientColdBoxByAreaAction" title="facilitiesWithInsufficientColdBoxByAreaAction :: Facilities With Insufficient Cold Box By Area">
+            <span class="description">Facilities With Insufficient Cold Box By Area</span><pre>facilitiesWithInsufficientColdBoxByAreaAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_icepackFreezingCapacityAgainstRoutineAndSIAAction" title="icepackFreezingCapacityAgainstRoutineAndSIAAction :: Icepack Freezing Capacity Against Routine And SIA">
+            <span class="description">Icepack Freezing Capacity Against Routine And SIA</span><pre>icepackFreezingCapacityAgainstRoutineAndSIAAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_icepackFreezingShortageRiByAreaAction" title="icepackFreezingShortageRiByAreaAction :: Icepack Freezing Shortage Ri By Area">
+            <span class="description">Icepack Freezing Shortage Ri By Area</span><pre>icepackFreezingShortageRiByAreaAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_icepackStorageShortageSIAByAreaAction" title="icepackStorageShortageSIAByAreaAction :: Icepack Storage Shortage SIA By Area">
+            <span class="description">Icepack Storage Shortage SIA By Area</span><pre>icepackStorageShortageSIAByAreaAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_indexAction" title="indexAction :: Reports_CcemController index">
+            <span class="description">Reports_CcemController index</span><pre>indexAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_init" title="init :: Reports_CcemController init">
+            <span class="description">Reports_CcemController init</span><pre>init</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_inventoryListOfAllColdChainEquipmentByFacilityAction" title="inventoryListOfAllColdChainEquipmentByFacilityAction :: Inventory List Of All Cold Chain Equipment By Facility">
+            <span class="description">Inventory List Of All Cold Chain Equipment By Facility</span><pre>inventoryListOfAllColdChainEquipmentByFacilityAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_lineListOfEquipmentWithEquipmentUtilizationAction" title="lineListOfEquipmentWithEquipmentUtilizationAction :: line List Of Equipment With Equipment Utilization">
+            <span class="description">line List Of Equipment With Equipment Utilization</span><pre>lineListOfEquipmentWithEquipmentUtilizationAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_lineListOfEquipmentWithWorkingStatusAction" title="lineListOfEquipmentWithWorkingStatusAction :: Line List Of Equipment With Working Status">
+            <span class="description">Line List Of Equipment With Working Status</span><pre>lineListOfEquipmentWithWorkingStatusAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_listingOfColdRoomFacilitiesAndWorkingStatusAction" title="listingOfColdRoomFacilitiesAndWorkingStatusAction :: Listing Of Cold Room Facilities And Working Status">
+            <span class="description">Listing Of Cold Room Facilities And Working Status</span><pre>listingOfColdRoomFacilitiesAndWorkingStatusAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_nonPQSRefrigeratorsByModelAndFacilityTypeAction" title="nonPQSRefrigeratorsByModelAndFacilityTypeAction :: Non PQS Refrigerators By Model And Facility Type">
+            <span class="description">Non PQS Refrigerators By Model And Facility Type</span><pre>nonPQSRefrigeratorsByModelAndFacilityTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_quantityOfColdBoxesCarriersAction" title="quantityOfColdBoxesCarriersAction :: Quantity Of Cold Boxes Carriers">
+            <span class="description">Quantity Of Cold Boxes Carriers</span><pre>quantityOfColdBoxesCarriersAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_refrigeratorByModelFacilityTypeAction" title="refrigeratorByModelFacilityTypeAction :: Refrigerator By Model Facility Type">
+            <span class="description">Refrigerator By Model Facility Type</span><pre>refrigeratorByModelFacilityTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_refrigeratorByWorkingStatusFTypeAreaAction" title="refrigeratorByWorkingStatusFTypeAreaAction :: RefrigeratorByWorkingStatusFTypeArea">
+            <span class="description">RefrigeratorByWorkingStatusFTypeArea</span><pre>refrigeratorByWorkingStatusFTypeAreaAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_refrigeratorFreezersUtilizationAction" title="refrigeratorFreezersUtilizationAction :: Refrigerator Freezers Utilization">
+            <span class="description">Refrigerator Freezers Utilization</span><pre>refrigeratorFreezersUtilizationAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_refrigeratorModelsByAgeGroupAction" title="refrigeratorModelsByAgeGroupAction :: Refrigerator Models By Age Group">
+            <span class="description">Refrigerator Models By Age Group</span><pre>refrigeratorModelsByAgeGroupAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_refrigeratorModelsByWorkingStatusAction" title="refrigeratorModelsByWorkingStatusAction :: Refrigerator Models By Working Status">
+            <span class="description">Refrigerator Models By Working Status</span><pre>refrigeratorModelsByWorkingStatusAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_shortagesOfColdBoxTransportCapacityByAreaAction" title="shortagesOfColdBoxTransportCapacityByAreaAction :: Shortages Of Cold Box Transport Capacity By Area">
+            <span class="description">Shortages Of Cold Box Transport Capacity By Area</span><pre>shortagesOfColdBoxTransportCapacityByAreaAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_standbyGeneratorsByFacilityTypeAndWorkingStatusAction" title="standbyGeneratorsByFacilityTypeAndWorkingStatusAction :: Standby Generators By Facility Type And Working Status">
+            <span class="description">Standby Generators By Facility Type And Working Status</span><pre>standbyGeneratorsByFacilityTypeAndWorkingStatusAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_storageCapacityByArea20cAction" title="storageCapacityByArea20cAction :: Storage Capacity By Area 20c">
+            <span class="description">Storage Capacity By Area 20c</span><pre>storageCapacityByArea20cAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_storageCapacityByArea4cAction" title="storageCapacityByArea4cAction :: Storage Capacity By Area 4c">
+            <span class="description">Storage Capacity By Area 4c</span><pre>storageCapacityByArea4cAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_summaryOfAbsorptionRefrigeratorsExistFacilitiesAction" title="summaryOfAbsorptionRefrigeratorsExistFacilitiesAction :: Summary Of Absorption Refrigerators Exist Facilities">
+            <span class="description">Summary Of Absorption Refrigerators Exist Facilities</span><pre>summaryOfAbsorptionRefrigeratorsExistFacilitiesAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_totalPopulationByFacilityTypeAction" title="totalPopulationByFacilityTypeAction :: Total Population By Facility Type">
+            <span class="description">Total Population By Facility Type</span><pre>totalPopulationByFacilityTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_vaccineResupplyIntervalsAndReserveStocksByFacilityTypeAction" title="vaccineResupplyIntervalsAndReserveStocksByFacilityTypeAction :: Vaccine Resupply Intervals And Reserve Stocks By Facility Type">
+            <span class="description">Vaccine Resupply Intervals And Reserve Stocks By Facility Type</span><pre>vaccineResupplyIntervalsAndReserveStocksByFacilityTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_vaccineStorageCapacityAt20Action" title="vaccineStorageCapacityAt20Action :: Vaccine Storage Capacity At 20">
+            <span class="description">Vaccine Storage Capacity At 20</span><pre>vaccineStorageCapacityAt20Action</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_vaccineStorageCapacityAt2to8Action" title="vaccineStorageCapacityAt2to8Action :: Vaccine Storage Capacity At 2 to 8">
+            <span class="description">Vaccine Storage Capacity At 2 to 8</span><pre>vaccineStorageCapacityAt2to8Action</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_voltageStabilizersAndRegulatorsWorkingStatusAction" title="voltageStabilizersAndRegulatorsWorkingStatusAction :: Voltage Stabilizers And Regulators Working Status">
+            <span class="description">Voltage Stabilizers And Regulators Working Status</span><pre>voltageStabilizersAndRegulatorsWorkingStatusAction</pre>
+        </a>
+    </li>
+
+                                                </ul>
+        </li>
+        <li class="nav-header protected">» Protected
+            <ul>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </ul>
+        </li>
+        <li class="nav-header private">» Private
+            <ul>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </ul>
+        </li>
+        <li class="nav-header">
+            <i class="icon-custom icon-constant"></i> Constants
+            <ul>
+                            </ul>
+        </li>
+    </ul>
+
+
+        </div>
+
+        <div class="span8">
+            <div class="element class">
+                <h1>Reports_CcemController</h1>
+                <small style="display: block; text-align: right">
+                                            Extends \App_Controller_Base
+                                                        </small>
+                <p class="short_description">Controller for Reports CCEM</p>
+                <div class="details">
+                    <div class="long_description">
+                        
+                    </div>
+                    <table class="table table-bordered">
+                                                                                    <tr>
+                                    <th>
+                                        package
+                                                                            </th>
+                                    <td>
+                                                                                    
+                                                                                <p>Default</p>
+                                    </td>
+                                </tr>
+                                                                                                                                                                                </table>
+
+                    <h3><i class="icon-custom icon-method"></i> Methods</h3>
+                                                                <a id="method_annualCCCostsByFacilityTypeAction"></a>
+                        <div class="element clickable method public  method_annualCCCostsByFacilityTypeAction" data-toggle="collapse" data-target=".method_annualCCCostsByFacilityTypeAction .collapse">
+                            <h2>Annual CC Costs By Facility Type</h2>
+                            <pre>annualCCCostsByFacilityTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_annualColdChainRunningCostsByFTypeAction"></a>
+                        <div class="element clickable method public  method_annualColdChainRunningCostsByFTypeAction" data-toggle="collapse" data-target=".method_annualColdChainRunningCostsByFTypeAction .collapse">
+                            <h2>Annual Cold Chain Running Costs By Facility Type</h2>
+                            <pre>annualColdChainRunningCostsByFTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_annualEnergyCostsForRefrigeratorEnergyTypesAction"></a>
+                        <div class="element clickable method public  method_annualEnergyCostsForRefrigeratorEnergyTypesAction" data-toggle="collapse" data-target=".method_annualEnergyCostsForRefrigeratorEnergyTypesAction .collapse">
+                            <h2>Annual Energy Costs For Refrigerator Energy Types</h2>
+                            <pre>annualEnergyCostsForRefrigeratorEnergyTypesAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_averagePopulationPerVaccinatorAction"></a>
+                        <div class="element clickable method public  method_averagePopulationPerVaccinatorAction" data-toggle="collapse" data-target=".method_averagePopulationPerVaccinatorAction .collapse">
+                            <h2>Average Population Per Vaccinator</h2>
+                            <pre>averagePopulationPerVaccinatorAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_coldboxAndVaccineCarrierCapacityByFacilityAction"></a>
+                        <div class="element clickable method public  method_coldboxAndVaccineCarrierCapacityByFacilityAction" data-toggle="collapse" data-target=".method_coldboxAndVaccineCarrierCapacityByFacilityAction .collapse">
+                            <h2>Coldbox And Vaccine Carrier Capacity By Facility</h2>
+                            <pre>coldboxAndVaccineCarrierCapacityByFacilityAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_coldboxAndVaccineCarriersByWorkingStatusAction"></a>
+                        <div class="element clickable method public  method_coldboxAndVaccineCarriersByWorkingStatusAction" data-toggle="collapse" data-target=".method_coldboxAndVaccineCarriersByWorkingStatusAction .collapse">
+                            <h2>Coldbox And Vaccine Carriers By Working Status</h2>
+                            <pre>coldboxAndVaccineCarriersByWorkingStatusAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_coldRoomQualityAttributesAction"></a>
+                        <div class="element clickable method public  method_coldRoomQualityAttributesAction" data-toggle="collapse" data-target=".method_coldRoomQualityAttributesAction .collapse">
+                            <h2>Cold Room Quality Attributes</h2>
+                            <pre>coldRoomQualityAttributesAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_coldRooms4to20ByModelAndWorkingStatusAction"></a>
+                        <div class="element clickable method public  method_coldRooms4to20ByModelAndWorkingStatusAction" data-toggle="collapse" data-target=".method_coldRooms4to20ByModelAndWorkingStatusAction .collapse">
+                            <h2>cold Rooms 4 to 20 By Model And Working Status</h2>
+                            <pre>coldRooms4to20ByModelAndWorkingStatusAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_distributionCfcFreeEquipmentByFTypeAction"></a>
+                        <div class="element clickable method public  method_distributionCfcFreeEquipmentByFTypeAction" data-toggle="collapse" data-target=".method_distributionCfcFreeEquipmentByFTypeAction .collapse">
+                            <h2>Distribution Cfc Free Equipment By Facility Type</h2>
+                            <pre>distributionCfcFreeEquipmentByFTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_distributionRefrigeratorByModelByFTypeAction"></a>
+                        <div class="element clickable method public  method_distributionRefrigeratorByModelByFTypeAction" data-toggle="collapse" data-target=".method_distributionRefrigeratorByModelByFTypeAction .collapse">
+                            <h2>Distribution Refrigerator By Model By Facility Type</h2>
+                            <pre>distributionRefrigeratorByModelByFTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_electricityAvailabilityAction"></a>
+                        <div class="element clickable method public  method_electricityAvailabilityAction" data-toggle="collapse" data-target=".method_electricityAvailabilityAction .collapse">
+                            <h2>Electricity Availability</h2>
+                            <pre>electricityAvailabilityAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_energyAvailabilityAtFacilitiesAction"></a>
+                        <div class="element clickable method public  method_energyAvailabilityAtFacilitiesAction" data-toggle="collapse" data-target=".method_energyAvailabilityAtFacilitiesAction .collapse">
+                            <h2>Energy Availability At Facilities</h2>
+                            <pre>energyAvailabilityAtFacilitiesAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_equipmentByAvailabilityOfElectricityAction"></a>
+                        <div class="element clickable method public  method_equipmentByAvailabilityOfElectricityAction" data-toggle="collapse" data-target=".method_equipmentByAvailabilityOfElectricityAction .collapse">
+                            <h2>Equipment By Availability Of Electricity</h2>
+                            <pre>equipmentByAvailabilityOfElectricityAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_facilitiesSuitableForSolarEquipmentByAreaAction"></a>
+                        <div class="element clickable method public  method_facilitiesSuitableForSolarEquipmentByAreaAction" data-toggle="collapse" data-target=".method_facilitiesSuitableForSolarEquipmentByAreaAction .collapse">
+                            <h2>Facilities Suitable For Solar Equipment By Area</h2>
+                            <pre>facilitiesSuitableForSolarEquipmentByAreaAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_facilitiesWithInsufficientColdBoxByAreaAction"></a>
+                        <div class="element clickable method public  method_facilitiesWithInsufficientColdBoxByAreaAction" data-toggle="collapse" data-target=".method_facilitiesWithInsufficientColdBoxByAreaAction .collapse">
+                            <h2>Facilities With Insufficient Cold Box By Area</h2>
+                            <pre>facilitiesWithInsufficientColdBoxByAreaAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_icepackFreezingCapacityAgainstRoutineAndSIAAction"></a>
+                        <div class="element clickable method public  method_icepackFreezingCapacityAgainstRoutineAndSIAAction" data-toggle="collapse" data-target=".method_icepackFreezingCapacityAgainstRoutineAndSIAAction .collapse">
+                            <h2>Icepack Freezing Capacity Against Routine And SIA</h2>
+                            <pre>icepackFreezingCapacityAgainstRoutineAndSIAAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_icepackFreezingShortageRiByAreaAction"></a>
+                        <div class="element clickable method public  method_icepackFreezingShortageRiByAreaAction" data-toggle="collapse" data-target=".method_icepackFreezingShortageRiByAreaAction .collapse">
+                            <h2>Icepack Freezing Shortage Ri By Area</h2>
+                            <pre>icepackFreezingShortageRiByAreaAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_icepackStorageShortageSIAByAreaAction"></a>
+                        <div class="element clickable method public  method_icepackStorageShortageSIAByAreaAction" data-toggle="collapse" data-target=".method_icepackStorageShortageSIAByAreaAction .collapse">
+                            <h2>Icepack Storage Shortage SIA By Area</h2>
+                            <pre>icepackStorageShortageSIAByAreaAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_indexAction"></a>
+                        <div class="element clickable method public  method_indexAction" data-toggle="collapse" data-target=".method_indexAction .collapse">
+                            <h2>Reports_CcemController index</h2>
+                            <pre>indexAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_init"></a>
+                        <div class="element clickable method public  method_init" data-toggle="collapse" data-target=".method_init .collapse">
+                            <h2>Reports_CcemController init</h2>
+                            <pre>init() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_inventoryListOfAllColdChainEquipmentByFacilityAction"></a>
+                        <div class="element clickable method public  method_inventoryListOfAllColdChainEquipmentByFacilityAction" data-toggle="collapse" data-target=".method_inventoryListOfAllColdChainEquipmentByFacilityAction .collapse">
+                            <h2>Inventory List Of All Cold Chain Equipment By Facility</h2>
+                            <pre>inventoryListOfAllColdChainEquipmentByFacilityAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_lineListOfEquipmentWithEquipmentUtilizationAction"></a>
+                        <div class="element clickable method public  method_lineListOfEquipmentWithEquipmentUtilizationAction" data-toggle="collapse" data-target=".method_lineListOfEquipmentWithEquipmentUtilizationAction .collapse">
+                            <h2>line List Of Equipment With Equipment Utilization</h2>
+                            <pre>lineListOfEquipmentWithEquipmentUtilizationAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_lineListOfEquipmentWithWorkingStatusAction"></a>
+                        <div class="element clickable method public  method_lineListOfEquipmentWithWorkingStatusAction" data-toggle="collapse" data-target=".method_lineListOfEquipmentWithWorkingStatusAction .collapse">
+                            <h2>Line List Of Equipment With Working Status</h2>
+                            <pre>lineListOfEquipmentWithWorkingStatusAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_listingOfColdRoomFacilitiesAndWorkingStatusAction"></a>
+                        <div class="element clickable method public  method_listingOfColdRoomFacilitiesAndWorkingStatusAction" data-toggle="collapse" data-target=".method_listingOfColdRoomFacilitiesAndWorkingStatusAction .collapse">
+                            <h2>Listing Of Cold Room Facilities And Working Status</h2>
+                            <pre>listingOfColdRoomFacilitiesAndWorkingStatusAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_nonPQSRefrigeratorsByModelAndFacilityTypeAction"></a>
+                        <div class="element clickable method public  method_nonPQSRefrigeratorsByModelAndFacilityTypeAction" data-toggle="collapse" data-target=".method_nonPQSRefrigeratorsByModelAndFacilityTypeAction .collapse">
+                            <h2>Non PQS Refrigerators By Model And Facility Type</h2>
+                            <pre>nonPQSRefrigeratorsByModelAndFacilityTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_quantityOfColdBoxesCarriersAction"></a>
+                        <div class="element clickable method public  method_quantityOfColdBoxesCarriersAction" data-toggle="collapse" data-target=".method_quantityOfColdBoxesCarriersAction .collapse">
+                            <h2>Quantity Of Cold Boxes Carriers</h2>
+                            <pre>quantityOfColdBoxesCarriersAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_refrigeratorByModelFacilityTypeAction"></a>
+                        <div class="element clickable method public  method_refrigeratorByModelFacilityTypeAction" data-toggle="collapse" data-target=".method_refrigeratorByModelFacilityTypeAction .collapse">
+                            <h2>Refrigerator By Model Facility Type</h2>
+                            <pre>refrigeratorByModelFacilityTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_refrigeratorByWorkingStatusFTypeAreaAction"></a>
+                        <div class="element clickable method public  method_refrigeratorByWorkingStatusFTypeAreaAction" data-toggle="collapse" data-target=".method_refrigeratorByWorkingStatusFTypeAreaAction .collapse">
+                            <h2>RefrigeratorByWorkingStatusFTypeArea</h2>
+                            <pre>refrigeratorByWorkingStatusFTypeAreaAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_refrigeratorFreezersUtilizationAction"></a>
+                        <div class="element clickable method public  method_refrigeratorFreezersUtilizationAction" data-toggle="collapse" data-target=".method_refrigeratorFreezersUtilizationAction .collapse">
+                            <h2>Refrigerator Freezers Utilization</h2>
+                            <pre>refrigeratorFreezersUtilizationAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_refrigeratorModelsByAgeGroupAction"></a>
+                        <div class="element clickable method public  method_refrigeratorModelsByAgeGroupAction" data-toggle="collapse" data-target=".method_refrigeratorModelsByAgeGroupAction .collapse">
+                            <h2>Refrigerator Models By Age Group</h2>
+                            <pre>refrigeratorModelsByAgeGroupAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_refrigeratorModelsByWorkingStatusAction"></a>
+                        <div class="element clickable method public  method_refrigeratorModelsByWorkingStatusAction" data-toggle="collapse" data-target=".method_refrigeratorModelsByWorkingStatusAction .collapse">
+                            <h2>Refrigerator Models By Working Status</h2>
+                            <pre>refrigeratorModelsByWorkingStatusAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_shortagesOfColdBoxTransportCapacityByAreaAction"></a>
+                        <div class="element clickable method public  method_shortagesOfColdBoxTransportCapacityByAreaAction" data-toggle="collapse" data-target=".method_shortagesOfColdBoxTransportCapacityByAreaAction .collapse">
+                            <h2>Shortages Of Cold Box Transport Capacity By Area</h2>
+                            <pre>shortagesOfColdBoxTransportCapacityByAreaAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_standbyGeneratorsByFacilityTypeAndWorkingStatusAction"></a>
+                        <div class="element clickable method public  method_standbyGeneratorsByFacilityTypeAndWorkingStatusAction" data-toggle="collapse" data-target=".method_standbyGeneratorsByFacilityTypeAndWorkingStatusAction .collapse">
+                            <h2>Standby Generators By Facility Type And Working Status</h2>
+                            <pre>standbyGeneratorsByFacilityTypeAndWorkingStatusAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_storageCapacityByArea20cAction"></a>
+                        <div class="element clickable method public  method_storageCapacityByArea20cAction" data-toggle="collapse" data-target=".method_storageCapacityByArea20cAction .collapse">
+                            <h2>Storage Capacity By Area 20c</h2>
+                            <pre>storageCapacityByArea20cAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_storageCapacityByArea4cAction"></a>
+                        <div class="element clickable method public  method_storageCapacityByArea4cAction" data-toggle="collapse" data-target=".method_storageCapacityByArea4cAction .collapse">
+                            <h2>Storage Capacity By Area 4c</h2>
+                            <pre>storageCapacityByArea4cAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_summaryOfAbsorptionRefrigeratorsExistFacilitiesAction"></a>
+                        <div class="element clickable method public  method_summaryOfAbsorptionRefrigeratorsExistFacilitiesAction" data-toggle="collapse" data-target=".method_summaryOfAbsorptionRefrigeratorsExistFacilitiesAction .collapse">
+                            <h2>Summary Of Absorption Refrigerators Exist Facilities</h2>
+                            <pre>summaryOfAbsorptionRefrigeratorsExistFacilitiesAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_totalPopulationByFacilityTypeAction"></a>
+                        <div class="element clickable method public  method_totalPopulationByFacilityTypeAction" data-toggle="collapse" data-target=".method_totalPopulationByFacilityTypeAction .collapse">
+                            <h2>Total Population By Facility Type</h2>
+                            <pre>totalPopulationByFacilityTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_vaccineResupplyIntervalsAndReserveStocksByFacilityTypeAction"></a>
+                        <div class="element clickable method public  method_vaccineResupplyIntervalsAndReserveStocksByFacilityTypeAction" data-toggle="collapse" data-target=".method_vaccineResupplyIntervalsAndReserveStocksByFacilityTypeAction .collapse">
+                            <h2>Vaccine Resupply Intervals And Reserve Stocks By Facility Type</h2>
+                            <pre>vaccineResupplyIntervalsAndReserveStocksByFacilityTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_vaccineStorageCapacityAt20Action"></a>
+                        <div class="element clickable method public  method_vaccineStorageCapacityAt20Action" data-toggle="collapse" data-target=".method_vaccineStorageCapacityAt20Action .collapse">
+                            <h2>Vaccine Storage Capacity At 20</h2>
+                            <pre>vaccineStorageCapacityAt20Action() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_vaccineStorageCapacityAt2to8Action"></a>
+                        <div class="element clickable method public  method_vaccineStorageCapacityAt2to8Action" data-toggle="collapse" data-target=".method_vaccineStorageCapacityAt2to8Action .collapse">
+                            <h2>Vaccine Storage Capacity At 2 to 8</h2>
+                            <pre>vaccineStorageCapacityAt2to8Action() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_voltageStabilizersAndRegulatorsWorkingStatusAction"></a>
+                        <div class="element clickable method public  method_voltageStabilizersAndRegulatorsWorkingStatusAction" data-toggle="collapse" data-target=".method_voltageStabilizersAndRegulatorsWorkingStatusAction .collapse">
+                            <h2>Voltage Stabilizers And Regulators Working Status</h2>
+                            <pre>voltageStabilizersAndRegulatorsWorkingStatusAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                    
+                    
+                                                        </div>
+            </div>
+            <a id="\Reports_CcemController"></a>
+            <ul class="breadcrumb">
+                <li><a href="../index.html"><i class="icon-custom icon-class"></i></a></li>
+                    
+    
+    <li><span class="divider">\</span><a href="../namespaces/default.html">\</a></li>
+
+                <li class="active"><span class="divider">\</span><a href="../classes/Reports_CcemController.html">Reports_CcemController</a></li>
+            </ul>
+        </div>
+    </div>
+
+    </div>
+
+        <footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by
+            <a href="http://glyphicons.com/">Glyphicons</a>.<br/>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and<br/>
+            generated on Thu, 21 Jan 2016 07:28:52 +0000.<br/>
+    </footer>
+    </body>
+</html>

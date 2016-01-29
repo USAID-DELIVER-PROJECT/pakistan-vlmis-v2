@@ -1,14 +1,38 @@
 <?php
 
+/**
+ * Zend_View_Helper_GetReportDescription
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+/**
+ *  Zend View Helper Get Report Description
+ */
+
 class Zend_View_Helper_GetReportDescription extends Zend_View_Helper_Abstract {
 
+    /**
+     * Get Report Description
+     * @param type $id
+     * @param type $check
+     * @return string
+     */
     function getReportDescription($id, $check = false) {
         if ($id == 'TEHSILREPORT' || $id == 'UCREPORT') {
             $r_val = '0';
         } else {
             $r_val = '1';
         }
-        if ($check == true) {
+        if ($check) {
             return $r_val;
         }
 
@@ -28,7 +52,7 @@ class Zend_View_Helper_GetReportDescription extends Zend_View_Helper_Abstract {
             foreach ($rows as $row) {
                 echo "<tr><td style='font-size:10px;' width='86%'>" . $row['longTerm'] . " </td>";
                 echo "<td><div style='display:inline-block;width:10px; height:10px; background-color:" . $row['colorCode'] . ";margin-left:5px;'></div></td></tr>
-			";
+                        ";
                 $i++;
             }
             echo "</table>";

@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Inventory Management Reporting
+*/
+?>
+<?php
 $from_sel_month = $this->from_month_sel;
 $from_sel_year = $this->from_year_sel;
 $year = $this->year_sel;
@@ -61,7 +66,6 @@ foreach ($data_arr as $dis_id => $sub_arr) {
             $sum_arr[$key] = 0;
         }
         $sum_arr[$key] += $value;
-        //$accpLimit = '0';
         if ($key > 1) {
 
             $xml_store .= "<cell style=\"text-align:right;\">$value </cell>";
@@ -96,10 +100,6 @@ $xml_store .="</row>";
 
 $xml_store .="</rows>";
 
-/* $in_type = 'N';
-  $in_stk = 1;
-  $in_year = $sel_year;
- */
 ?>
 <?php
 $report_title = $this->report_title;

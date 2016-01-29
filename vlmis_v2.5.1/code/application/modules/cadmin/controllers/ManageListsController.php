@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Cadmin_ManageListsController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Cadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Cadmin Manage Lists
+ */
 class Cadmin_ManageListsController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Cadmin_ManageListsController index
+     */
     public function indexAction() {
         $form = new Form_Cadmin_ListSearch();
         $form_add = new Form_Cadmin_List();
@@ -63,55 +76,58 @@ class Cadmin_ManageListsController extends App_Controller_Base {
         $this->view->pagination_params = $params;
     }
 
+    /**
+     * add
+     */
     public function addAction() {
 
         $form = new Form_Cadmin_List;
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
 
-                $listValue = new ListDetail();
-                $master_id = $this->_em->find('ListMaster', $form->list_master->getValue());
-                $listValue->setListMaster($master_id);
-                $listValue->setListValue($form->list_value->getValue());
-                $listValue->setDescription($form->description->getValue());
-                $user_id = $this->_em->find('Users', $this->_userid);
+            $listValue = new ListDetail();
+            $master_id = $this->_em->find('ListMaster', $form->list_master->getValue());
+            $listValue->setListMaster($master_id);
+            $listValue->setListValue($form->list_value->getValue());
+            $listValue->setDescription($form->description->getValue());
+            $user_id = $this->_em->find('Users', $this->_userid);
 
-                $listValue->setCreatedBy($user_id);
-                $listValue->setCreatedDate(App_Tools_Time::now());
-                $listValue->setModifiedBy($user_id);
-                $listValue->setModifiedDate(App_Tools_Time::now());
+            $listValue->setCreatedBy($user_id);
+            $listValue->setCreatedDate(App_Tools_Time::now());
+            $listValue->setModifiedBy($user_id);
+            $listValue->setModifiedDate(App_Tools_Time::now());
 
-                $this->_em->persist($listValue);
-                $this->_em->flush();
-            }
+            $this->_em->persist($listValue);
+            $this->_em->flush();
         }
         $this->_redirect("/cadmin/manage-lists");
     }
 
+    /**
+     * update
+     */
     public function updateAction() {
-        $form = new Form_Cadmin_List;
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
+            $list_id = $this->_em->find('ListDetail', $form_values['id']);
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
-                $list_id = $this->_em->find('ListDetail', $form_values['id']);
+            $list_id->setListValue($form_values['list_value']);
+            $list_id->setDescription($form_values['description']);
 
-                $list_id->setListValue($form_values['list_value']);
-                $list_id->setDescription($form_values['description']);
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $list_id->setModifiedBy($created_by);
+            $list_id->setModifiedDate(App_Tools_Time::now());
 
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $list_id->setModifiedBy($created_by);
-                $list_id->setModifiedDate(App_Tools_Time::now());
-
-                $this->_em->persist($list_id);
-                $this->_em->flush();
-            }
+            $this->_em->persist($list_id);
+            $this->_em->flush();
         }
 
         $this->_redirect("/cadmin/manage-lists");
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->disableLayout();
         $item_id = $this->_request->getParam('user_id', '');
@@ -130,6 +146,9 @@ class Cadmin_ManageListsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * delete
+     */
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);

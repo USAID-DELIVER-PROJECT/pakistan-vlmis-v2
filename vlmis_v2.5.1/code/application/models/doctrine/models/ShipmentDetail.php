@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for Shipment Detail
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ShipmentDetail
+ *  ShipmentDetail
  */
 class ShipmentDetail
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $receivedDate
      * @var date $receivedDate
      */
     private $receivedDate;
 
     /**
+     * $receivedQuantity
      * @var decimal $receivedQuantity
      */
     private $receivedQuantity;
 
     /**
+     * $createdDate
      * @var date $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $shipment
      * @var Shipments
      */
     private $shipment;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

@@ -1,10 +1,14 @@
 <?php
+/**
+*  phtml for Stock Availability Report
+*/
+?>
+<?php
 $total = 0;
 $cwhtotal = 0;
 $ppiutotal = 0;
 $disttotal = 0;
 $old1 = '';
-//print_r($this->rs_items['national']);
 
 $num_item_cwh = ($this->rs_items['national']) ? count($this->rs_items['national']) : 0;
 $xml_national = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -25,8 +29,6 @@ if ($num_item_cwh > 0) {
         $cwhsoh = 0;
         $cwhamc = $this->reports()->reportAmc('NP', $rpt_date, 0, $sel_item, $sel_stk);
         $cwhsoh = $this->reports()->reportCb('NP', $rpt_date, 0, $sel_item, $sel_stk);
-        //App_Controller_Functions::pr($cwhsoh);
-
         if ($old1 != $row_item['warehouse_name']) {
             $cwh_name = $row_item['warehouse_name'];
         }
@@ -61,7 +63,6 @@ if (!empty($num_item) && $num_item > 0) {
     foreach ($pwhsoh as $cb) {
         $data_arr[$cb['pk_id']]['cb'] = $cb['CB'];
     }
-    //App_Controller_Functions::pr($this->rs_items['provincial']);
     foreach ($this->rs_items['provincial'] as $row_item) {
 
         $xml_provincial .="<row id=\"$counter\">";
@@ -72,15 +73,10 @@ if (!empty($num_item) && $num_item > 0) {
         $xml_provincial .="<cell>" . number_format(round($data_arr[$row_item['province_id']]['cb']), 2) . "</cell>";
         $xml_provincial .="<cell>" . (($data_arr[$row_item['province_id']]['amc'] > 0) ? number_format(($data_arr[$row_item['province_id']]['cb'] / $data_arr[$row_item['province_id']]['amc']), 1) : 0) . "</cell>";
         $xml_provincial .="</row>";
-
-        //$old1 = $row_item['warehouse_name'];
-        //$total = $total + $ppiutotal[0]['Rate'];
         $counter++;
     }
 }
 $xml_provincial .="</rows>";
-
-//App_Controller_Functions::pr($xml_provincial);
 
 $old1 = '';
 unset($data_arr);

@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for Non CCM Locations
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * NonCcmLocations
+ *  NonCcmLocations
  */
 class NonCcmLocations
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $locationName
      * @var string $locationName
      */
     private $locationName;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $rackInformation
      * @var RackInformation
      */
     private $rackInformation;
 
     /**
+     * $area
      * @var ListDetail
      */
     private $area;
@@ -55,21 +65,25 @@ class NonCcmLocations
     private $row;
 
     /**
+     * $rack
      * @var ListDetail
      */
     private $rack;
 
     /**
+     * $pallet
      * @var ListDetail
      */
     private $pallet;
 
     /**
+     * $level
      * @var ListDetail
      */
     private $level;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

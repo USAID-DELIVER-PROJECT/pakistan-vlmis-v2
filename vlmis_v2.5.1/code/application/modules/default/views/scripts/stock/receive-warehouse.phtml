@@ -1,3 +1,8 @@
+<?php
+/**
+ *  phtml for Receive Warehouse
+ */
+?>
 <!-- Content -->
 <div class="page-content-wrapper">
     <div class="page-content">
@@ -227,33 +232,33 @@
                                         <!-- Widget -->
                                         <br>
                                         <?php //for ($j = $i; $j <= $i + 5; $j++) { ?>
-                                            <!-- <div class="row">
-                                                <div class="col-md-12">
-                                                    <table class="table table-bordered table-condensed table-striped table-vertical-center checkboxs js-table-sortable">
-                                                        <tr>
-                                                            <td><?php //echo $j; ?></td>
-                                                            <td>
-                                                                <select id="product" name="product" class="form-control">
-                                                                    <option value="">Select</option>
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <select id="batch" name="batch" class="form-control">
-                                                                    <option value="">Select</option>
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <select id="location" name="location" class="form-control">
-                                                                    <option value="">Select</option>
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <input name="quantity" id="quantity" class="form-control"/>
-                                                            </td>
-                                                        </tr>
-                                                    </table>                                                
-                                                </div>                                            
-                                            </div><br> -->
+                                        <!-- <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table table-bordered table-condensed table-striped table-vertical-center checkboxs js-table-sortable">
+                                                    <tr>
+                                                        <td><?php //echo $j;  ?></td>
+                                                        <td>
+                                                            <select id="product" name="product" class="form-control">
+                                                                <option value="">Select</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select id="batch" name="batch" class="form-control">
+                                                                <option value="">Select</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select id="location" name="location" class="form-control">
+                                                                <option value="">Select</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input name="quantity" id="quantity" class="form-control"/>
+                                                        </td>
+                                                    </tr>
+                                                </table>                                                
+                                            </div>                                            
+                                        </div><br> -->
                                         <?php //} ?>                                        
                                         <div class="row">
                                             <div class="col-md-5">
@@ -294,9 +299,7 @@
                                                     &nbsp;
                                                 </label>
                                                 <div class="controls">
-                                                    <button type="submit" id="save" name="save" class="btn btn-primary">
-                                                        <?php echo $this->translate("Save"); ?>
-                                                    </button>
+                                                 <button id="btn-loading" class="btn btn-primary" type="submit" data-loading-text="Please Wait ..."> Save </button>
                                                     <input class="form-control" type="hidden" name="stock_id" id="stock_id" value="<?php echo $master_id; ?>"/>
                                                 </div>
                                             </div>

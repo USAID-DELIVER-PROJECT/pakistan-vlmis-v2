@@ -1,95 +1,120 @@
 <?php
+/**
+*  php for HF Data Master Draft
+*/
+?>
+<?php
 
-
+/**
+*  HF Data Master Draft
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * HfDataMasterDraft
- */
+*  Model for HF Data Master Draft
+*/
+
 class HfDataMasterDraft
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $openingBalance
      * @var integer $openingBalance
      */
     private $openingBalance;
 
     /**
+     * $receivedBalance
      * @var integer $receivedBalance
      */
     private $receivedBalance;
 
     /**
+     * $issueBalance
      * @var integer $issueBalance
      */
     private $issueBalance;
 
     /**
+     * $closingBalance
      * @var integer $closingBalance
      */
     private $closingBalance;
 
     /**
+     * $wastages
      * @var integer $wastages
      */
     private $wastages;
 
     /**
+     * $vialsUsed
      * @var integer $vialsUsed
      */
     private $vialsUsed;
 
     /**
+     * $adjustments
      * @var integer $adjustments
      */
     private $adjustments;
 
     /**
+     * $reportingStartDate
      * @var datetime $reportingStartDate
      */
     private $reportingStartDate;
 
     /**
+     * $nearestExpiry
      * @var datetime $nearestExpiry
      */
     private $nearestExpiry;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $itemAmc
      * @var integer $itemAmc
      */
     private $itemAmc;
 
     /**
+     * $itemPackSize
      * @var ItemPackSizes
      */
     private $itemPackSize;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

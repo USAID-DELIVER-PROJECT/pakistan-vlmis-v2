@@ -1,85 +1,102 @@
 <?php
 
-
+/**
+*  Model for CCM Status History
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmStatusHistory
+ *  CcmStatusHistory
  */
 class CcmStatusHistory
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $temperatureAlarm
      * @var integer $temperatureAlarm
      */
     private $temperatureAlarm;
 
     /**
+     * $workingQuantity
      * @var integer $workingQuantity
      */
     private $workingQuantity;
 
     /**
+     * $comments
      * @var text $comments
      */
     private $comments;
 
     /**
+     * $statusDate
      * @var datetime $statusDate
      */
     private $statusDate;
 
     /**
+     * $warehouseId
      * @var integer $warehouseId
      */
     private $warehouseId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $ccm
      * @var ColdChain
      */
     private $ccm;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $ccmStatusList
      * @var CcmStatusList
      */
     private $ccmStatusList;
 
     /**
+     * $reason
      * @var CcmStatusList
      */
     private $reason;
 
     /**
+     * $ccmAssetType
      * @var CcmAssetTypes
      */
     private $ccmAssetType;
 
     /**
+     * $utilization
      * @var CcmStatusList
      */
     private $utilization;

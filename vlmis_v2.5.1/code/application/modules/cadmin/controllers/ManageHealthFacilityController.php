@@ -1,11 +1,25 @@
 <?php
 
+/**
+ * Cadmin_ManageHealthFacilityController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Cadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+*  Controller for Cadmin Manage Health Facility
+*/
+
 class Cadmin_ManageHealthFacilityController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Cadmin_ManageHealthFacilityController index
+     */
     public function indexAction() {
         $form = new Form_Cadmin_HealthFacilitySearch();
         $form_add = new Form_Cadmin_HealthFacility();
@@ -40,8 +54,6 @@ class Cadmin_ManageHealthFacilityController extends App_Controller_Base {
                 }
             }
         } else {
-            $loginid = $this->_getParam('login_id');
-            $role_id = $this->_getParam('role');
             $office = $this->_getParam('office');
             $combo1 = $this->_getParam('combo1');
             $combo2 = $this->_getParam('combo2');
@@ -85,7 +97,7 @@ class Cadmin_ManageHealthFacilityController extends App_Controller_Base {
         $list_detail->form_values['master_id'] = Model_ListMaster::SOLAR_ENERGY;
         $result2 = $list_detail->getListDetailByMasterId();
         $this->view->solar_energy = $result2;
-        $list_detail->form_values['master_id'] = Model_ListMaster::Service_Types;
+        $list_detail->form_values['master_id'] = Model_ListMaster::SERVICE_TYPES;
         $result23 = $list_detail->getListDetailByMasterId();
         $this->view->services_type = $result23;
 
@@ -102,11 +114,13 @@ class Cadmin_ManageHealthFacilityController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos3.js');
     }
 
+    /**
+     * add
+     */
     public function addAction() {
         $form = new Form_Cadmin_HealthFacility();
         $form_values = $this->_request->getPost();
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
                 $ccm_warehouses = new CcmWarehouses();
                 $ccm_warehouses->setRoutineImmunizationIcepackRequirments($form_values['routine_immunization_ice_pack']);
                 $ccm_warehouses->setCampaignIcepackRequirments($form_values['snid_nid_ice_pack']);
@@ -188,11 +202,13 @@ class Cadmin_ManageHealthFacilityController extends App_Controller_Base {
 
                 $this->_em->persist($warehouses);
                 $this->_em->flush();
-            }
         }
         $this->_redirect("/cadmin/manage-health-facility");
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->setLayout("ajax");
         $ccm_warehouse_id = $this->_request->getParam('ccm_warehouse_id', '');
@@ -210,7 +226,7 @@ class Cadmin_ManageHealthFacilityController extends App_Controller_Base {
         $form->vaccine_supply_mode->setValue($ccm_warehouses->getVaccineSupplyMode()->getPkId());
         $form->id->setValue($ccm_warehouses->getPkId());
         $list_detail = new Model_ListDetail();
-        $list_detail->form_values['master_id'] = Model_ListMaster::Service_Types;
+        $list_detail->form_values['master_id'] = Model_ListMaster::SERVICE_TYPES;
         $result23 = $list_detail->getListDetailByMasterId();
         $this->view->services_type = $result23;
         $list_detail->form_values['master_id'] = Model_ListMaster::VACCINATION_STAFF;
@@ -258,6 +274,9 @@ class Cadmin_ManageHealthFacilityController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos2.js');
     }
 
+    /**
+     * update
+     */
     public function updateAction() {
         $form = new Form_Cadmin_HealthFacility();
         $form->addFields();
@@ -360,6 +379,9 @@ class Cadmin_ManageHealthFacilityController extends App_Controller_Base {
         $this->_redirect("/cadmin/manage-health-facility");
     }
 
+    /**
+     * delete
+     */
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -376,6 +398,9 @@ class Cadmin_ManageHealthFacilityController extends App_Controller_Base {
         return $this->_em->flush();
     }
 
+    /**
+     * checkUser
+     */
     public function checkUserAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -391,6 +416,9 @@ class Cadmin_ManageHealthFacilityController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxGetHealthFacilityType
+     */
     public function ajaxGetHealthFacilityTypeAction() {
         $this->_helper->layout->disableLayout();
         $warehouses = new Model_Warehouses();
@@ -398,7 +426,10 @@ class Cadmin_ManageHealthFacilityController extends App_Controller_Base {
         $result = $warehouses->getHealthFacilityTypes();
         $this->view->result = $result;
     }
-
+    
+    /**
+     * ajaxGetServicesType
+     */
     public function ajaxGetServicesTypeAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->wh_id;

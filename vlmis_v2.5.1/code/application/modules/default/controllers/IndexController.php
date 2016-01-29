@@ -1,26 +1,22 @@
 <?php
 
+/**
+ * IndexController
+ * 
+ * @subpackage Default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ * Controller for Index
+ */
 class IndexController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * indexAction index
+     */
     public function indexAction() {
-        /* $event_manager = new App_EventTrigger();
-          $event_manager->events()->attach('bar', function ($e) {
-          $event = $e->getName();
-          $target = get_class($e->getTarget());
-          $params = json_encode($e->getParams());
-
-          sprintf(
-          '%s called on %s, using params %s', $event, $target, $params
-          );
-          });
-
-          // Results in log message:
-          $event_manager->bar('baz', 'bat'); */
-
         $this->_helper->layout->setLayout('front-home');
         $referrer = $this->_getParam('referrer', '');
         $form = new Form_Login();
@@ -34,7 +30,7 @@ class IndexController extends App_Controller_Base {
                 try {
                     if (!$this->_identity->login($form->login_id->getValue(), base64_encode($form->password->getValue()))) {
                         $error = true;
-                        throw new Exception();
+                        throw new InvalidArgumentException('INVALID_USER');
                     }
                     $role = $this->_identity->getRoleId();
 
@@ -57,7 +53,7 @@ class IndexController extends App_Controller_Base {
                         parent::_redirect('/dashboard/?office=6');
                     }
 
-                    if (in_array($role, array(3, 4, 5, 6, 17, 24))) {
+                    if (in_array($role, array(3, 4, 5, 6, 17, 24, 34))) {
                         parent::_redirect("/reports/dashlet/cold-chain-capacity");
                     }
 
@@ -100,7 +96,10 @@ class IndexController extends App_Controller_Base {
         }
     }
 
-    function Update() {
+    /**
+     * Update
+     */
+    public function Update() {
         $str_sql = $this->_em->createQueryBuilder()
                 ->update('Model_Users u')
                 ->set('u.password', '?', $this->m_strPass)
@@ -113,6 +112,9 @@ class IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Check Old Password
+     */
     public function checkOldPasswordAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -133,6 +135,9 @@ class IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Change Password
+     */
     public function changePasswordAction() {
 
         if ($this->_request->isPost()) {
@@ -150,42 +155,53 @@ class IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * FAQs
+     */
     public function faqsAction() {
         $this->_helper->layout->setLayout('front-inner');
     }
 
+    /**
+     * FAQ
+     */
     public function faqAction() {
         $this->_helper->layout->setLayout('front-inner');
     }
 
+    /**
+     * Release Notes
+     */
     public function releaseNotesAction() {
         $this->_helper->layout->setLayout('front-inner');
     }
 
+    /**
+     * Contact Us
+     */
     public function contactUsAction() {
         $this->_helper->layout->setLayout('front-inner');
-
-        $phone = '/^((\(((\+|00)92)\)|(\+|00)92)(( |\-)?)(3[0-9]{2})\6|0(3[0-9]{2})( |\-)?)[0-9]{3}( |\-)?[0-9]{4}$/';
 
         $form = new Form_ContactUs();
         $this->view->form = $form;
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $data = $form->getValues();
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $data = $form->getValues();
 
-                $user = new Model_Users();
-                $user->form_values = $data;
-                $saved = $user->saveUserFeedback();
-                if ($saved == true) {
-                    // Reset the form
-                    $form->reset();
-                    $this->view->saved = true;
-                }
+            $user = new Model_Users();
+            $user->form_values = $data;
+            $saved = $user->saveUserFeedback();
+            if ($saved) {
+                // Reset the form
+                $form->reset();
+                $this->view->saved = true;
             }
         }
     }
 
+    /**
+     * Login
+     */
     public function loginAction() {
         $this->_helper->layout->setLayout('doc');
         $referrer = $this->_getParam('referrer', '');
@@ -199,7 +215,7 @@ class IndexController extends App_Controller_Base {
                 try {
                     if (!$this->_identity->login($form->login_id->getValue(), base64_encode($form->password->getValue()))) {
                         $error = true;
-                        throw new Exception();
+                        throw new InvalidArgumentException('INVALID_USER');
                     }
                     $role = $this->_identity->getRoleId();
 
@@ -226,6 +242,9 @@ class IndexController extends App_Controller_Base {
         $this->view->error = $error;
     }
 
+    /**
+     * Register User
+     */
     public function registerUserAction() {
         $this->_helper->layout->setLayout('doc');
 
@@ -233,49 +252,48 @@ class IndexController extends App_Controller_Base {
         $form = new Form_RegisterUser();
         $this->view->form = $form;
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
 
-                $data = $form->getValues();
-                $base_url = Zend_Registry::get('baseurl');
-                $user = new Model_Users();
-                $user->form_values = $data;
-                $email = $data['e_mail'];
+            $data = $form->getValues();
+            $base_url = Zend_Registry::get('baseurl');
+            $user = new Model_Users();
+            $user->form_values = $data;
+            $email = $data['e_mail'];
 
-                //Generate password
-                $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                $password = substr(str_shuffle($chars), 0, 8);
-                $enc_pswd = base64_encode($password);
+            //Generate password
+            $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            $password = substr(str_shuffle($chars), 0, 8);
+            $enc_pswd = base64_encode($password);
 
-                // Save data to users table
-                // Documentation User
-                define("ROLE_ID", 32);
-                $user->form_values['enc_pswd'] = $enc_pswd;
-                $user->form_values['role_id'] = ROLE_ID;
-                $saved = $user->registerUser();
-
-
-                //Get user id
-                $u_data = $user->getUserId();
-                $id = $u_data[0]['pk_id'];
-
-                //Generat hash
-                $hash = 'zr' . base64_encode($email . '|' . $id);
-
-                if ($saved == true) {
-                    // Reset the form
-                    $form->reset();
-                    $this->view->saved = true;
-
-                    $this->view->pswd = $password;
-                    $this->view->id = $id;
-                }
+            // Save data to users table
+            // Documentation User
+            define("ROLE_ID", 32);
+            $user->form_values['enc_pswd'] = $enc_pswd;
+            $user->form_values['role_id'] = ROLE_ID;
+            $saved = $user->registerUser();
 
 
-                //send email
-                $to = $email;
-                $subject = "User Registration/Verification for LMIS Documentation";
-                $message = "Thank you for registration!
+            //Get user id
+            $u_data = $user->getUserId();
+            $id = $u_data[0]['pk_id'];
+
+            //Generat hash
+            $hash = 'zr' . base64_encode($email . '|' . $id);
+
+            if ($saved) {
+                // Reset the form
+                $form->reset();
+                $this->view->saved = true;
+
+                $this->view->pswd = $password;
+                $this->view->id = $id;
+            }
+
+
+            //send email
+            $to = $email;
+            $subject = "User Registration/Verification for LMIS Documentation";
+            $message = "Thank you for registration!
                 Your account has been created, you can login with the following credentials
                 after you have activated your account by pressing the url below.
 
@@ -286,13 +304,15 @@ class IndexController extends App_Controller_Base {
                 Password: $password
                 ------------------------";
 
-                $headers = "From: support@lmis.gov.pk";
+            $headers = "From: support@lmis.gov.pk";
 
-                mail($to, $subject, $message, $headers);
-            }
+            mail($to, $subject, $message, $headers);
         }
     }
 
+    /**
+     * ajaxCheckEmail
+     */
     public function ajaxCheckEmailAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -312,6 +332,9 @@ class IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxRefreshCaptcha
+     */
     public function ajaxRefreshCaptchaAction() {
 
         $this->_helper->layout->disableLayout();
@@ -329,6 +352,9 @@ class IndexController extends App_Controller_Base {
         $this->_helper->json($data);
     }
 
+    /**
+     * Verify User Account
+     */
     public function verifyAction() {
 
         $this->_helper->layout->setLayout('doc');
@@ -350,20 +376,35 @@ class IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Training Manuals
+     */
     public function trainingManualsAction() {
         
     }
 
+    /**
+     * Technical Documents
+     */
     public function technicalDocumentsAction() {
         
     }
 
+    /**
+     * Acronyms
+     */
     public function acronymsAction() {
         
     }
 
+    /**
+     * All Level Combos One
+     */
     public function allLevelCombosOneAction() {
         $this->_helper->layout->disableLayout();
+
+        $session = new Zend_Session_Namespace('alllevel');
+        $this->view->sel_prov = $session->warehouse;
 
         if (isset($this->_request->office) && !empty($this->_request->office)) {
             $office = $this->_request->office;
@@ -384,12 +425,19 @@ class IndexController extends App_Controller_Base {
                 $locations = new Model_Locations();
                 $locations->form_values = array('parent_id' => 10, 'geo_level_id' => 2);
                 $this->view->result = $locations->getLocationsByLevel();
+                $this->view->sel_prov = $session->province;
             }
         }
     }
 
+    /**
+     * All Level Combos Two
+     */
     public function allLevelCombosTwoAction() {
         $this->_helper->layout->disableLayout();
+
+        $session = new Zend_Session_Namespace('alllevel');
+        $this->view->prov_id = $session->warehouse;
 
         if (isset($this->_request->combo1) && !empty($this->_request->combo1)) {
             $office = $this->_request->office;
@@ -402,41 +450,34 @@ class IndexController extends App_Controller_Base {
             switch ($office) {
                 case 2:
                     $stakeholder_id = $this->_identity->getStakeholderId();
-
                     $warehouse->form_values = array('stakeholder_id' => $stakeholder_id, 'province_id' => $province_id);
-
                     $this->view->result = $warehouse->getProvincialWarehouses();
                     break;
                 case 3:
                     $stakeholder_id = $this->_identity->getStakeholderId();
-
                     $warehouse->form_values = array('stakeholder_id' => $stakeholder_id, 'province_id' => $province_id);
-
                     $this->view->result = $warehouse->getDivsionalWarehousesofProvince();
                     break;
                 case 4:
                     $stakeholder_id = $this->_identity->getStakeholderId();
-
                     $warehouse->form_values = array('stakeholder_id' => $stakeholder_id, 'province_id' => $province_id);
-
                     $this->view->result = $warehouse->getDistrictWarehousesofProvince();
                     break;
                 case 5:
-                    $this->view->result = $location->getLocationsByLevelByProvince();
-                    break;
                 case 6:
-                    $this->view->result = $location->getLocationsByLevelByProvince();
-                    break;
                 case 8:
-                    $this->view->result = $location->getLocationsByLevelByProvince();
-                    break;
                 case 9:
                     $this->view->result = $location->getLocationsByLevelByProvince();
+                    break;
+                default:
                     break;
             }
         }
     }
 
+    /**
+     * All Level Combos Three
+     */
     public function allLevelCombosThreeAction() {
         $this->_helper->layout->disableLayout();
 
@@ -451,21 +492,23 @@ class IndexController extends App_Controller_Base {
 
             switch ($office) {
                 case 5:
-                    $this->view->result = $warehouse->getTehsilWarehousesofDistrict();
-                    break;
-                case 6:
-                    $this->view->result = $warehouse->getUCWarehousesofDistrict();
-                    break;
                 case 8:
                     $this->view->result = $warehouse->getTehsilWarehousesofDistrict();
                     break;
+                case 6:
                 case 9:
                     $this->view->result = $warehouse->getUCWarehousesofDistrict();
+                    break;
+
+                default:
                     break;
             }
         }
     }
 
+    /**
+     * Level Combos One
+     */
     public function levelCombosOneAction() {
         $this->_helper->layout->disableLayout();
         $office = $this->_request->office;
@@ -515,9 +558,14 @@ class IndexController extends App_Controller_Base {
             case 60:
                 $this->view->result = $warehouse->getIHRWarehouses($office);
                 break;
+            default:
+                break;
         }
     }
 
+    /**
+     * Level Combos Two
+     */
     public function levelCombosTwoAction() {
         $this->_helper->layout->disableLayout();
 
@@ -541,26 +589,21 @@ class IndexController extends App_Controller_Base {
                 $this->view->result = $warehouse->getDivsionalWarehousesofProvince();
                 break;
             case 4:
-                $this->view->result = $location->getLocationsByLevel(10, 2);
-                break;
             case 5:
-                $this->view->result = $location->getLocationsByLevel(10, 2);
-                break;
             case 6:
-                $this->view->result = $location->getLocationsByLevel(10, 2);
-                break;
             case 7:
-                $this->view->result = $location->getLocationsByLevel(10, 2);
-                break;
             case 8:
-                $this->view->result = $location->getLocationsByLevel(10, 2);
-                break;
             case 9:
                 $this->view->result = $location->getLocationsByLevel(10, 2);
+                break;
+            default:
                 break;
         }
     }
 
+    /**
+     * Level Combos Three
+     */
     public function levelCombosThreeAction() {
         $this->_helper->layout->disableLayout();
         $office = $this->_request->office;
@@ -578,9 +621,14 @@ class IndexController extends App_Controller_Base {
             case 9:
                 $this->view->result = $location->getLocationsByLevel(10, 2);
                 break;
+            default:
+                break;
         }
     }
 
+    /**
+     * Locations Combos One
+     */
     public function locationsCombosOneAction() {
         $this->_helper->layout->disableLayout();
 
@@ -597,6 +645,9 @@ class IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Locations Combos Two
+     */
     public function locationsCombosTwoAction() {
         $this->_helper->layout->disableLayout();
 
@@ -614,6 +665,9 @@ class IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Locations Combos Three
+     */
     public function locationsCombosThreeAction() {
         $this->_helper->layout->disableLayout();
 
@@ -631,6 +685,9 @@ class IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Locations Combos Four
+     */
     public function locationsCombosFourAction() {
         $this->_helper->layout->disableLayout();
 
@@ -647,6 +704,9 @@ class IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Level Combos Four
+     */
     public function levelCombosFourAction() {
         $this->_helper->layout->disableLayout();
 
@@ -659,11 +719,17 @@ class IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Project Documentation
+     */
     public function projectDocAction() {
 
         $this->_helper->layout->setLayout('doc');
     }
 
+    /**
+     * Change Password Doc
+     */
     public function changePasswordDocAction() {
         $this->_helper->layout->setLayout('doc');
 
@@ -684,6 +750,9 @@ class IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Forget Password Doc
+     */
     public function forgetPasswordDocAction() {
         $this->_helper->layout->setLayout('doc');
 
@@ -720,6 +789,9 @@ class IndexController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxCheckUser
+     */
     public function ajaxCheckUserAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);

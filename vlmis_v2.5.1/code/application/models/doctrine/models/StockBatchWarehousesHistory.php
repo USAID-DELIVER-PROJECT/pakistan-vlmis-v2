@@ -1,105 +1,126 @@
 <?php
 
-
+/**
+*  Model for Stock Batch Warehouses History
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * StockBatchWarehousesHistory
+ *  StockBatchWarehousesHistory
  */
 class StockBatchWarehousesHistory
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $number
      * @var string $number
      */
     private $number;
 
     /**
+     * $batchMasterId
      * @var integer $batchMasterId
      */
     private $batchMasterId;
 
     /**
+     * $expiryDate
      * @var datetime $expiryDate
      */
     private $expiryDate;
 
     /**
+     * $quantity
      * @var bigint $quantity
      */
     private $quantity;
 
     /**
+     * $status
      * @var string $status
      */
     private $status;
 
     /**
+     * $unitPrice
      * @var float $unitPrice
      */
     private $unitPrice;
 
     /**
+     * $productionDate
      * @var datetime $productionDate
      */
     private $productionDate;
 
     /**
+     * $lastUpdate
      * @var datetime $lastUpdate
      */
     private $lastUpdate;
 
     /**
+     * $itemPackSizeId
      * @var integer $itemPackSizeId
      */
     private $itemPackSizeId;
 
     /**
+     * $vvmTypeId
      * @var integer $vvmTypeId
      */
     private $vvmTypeId;
 
     /**
+     * $warehouseId
      * @var integer $warehouseId
      */
     private $warehouseId;
 
     /**
+     * $stakeholderItemPackSizeId
      * @var integer $stakeholderItemPackSizeId
      */
     private $stakeholderItemPackSizeId;
 
     /**
+     * $actionType
      * @var boolean $actionType
      */
     private $actionType;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $stockBatchWarehouse
      * @var StockBatchWarehouses
      */
     private $stockBatchWarehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

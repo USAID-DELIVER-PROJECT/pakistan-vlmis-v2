@@ -1,8 +1,26 @@
 <?php
 
+/**
+ * ErrorController
+ *
+ * 
+ *
+ * @subpackage Default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+* Controller for Error
+*/
+
 class ErrorController extends App_Controller_Base {
 
+    /**
+     * Error action.
+     */
     public function errorAction() {
+        // Set layout.
         $this->_helper->layout->setLayout('error');
         $errors = $this->_getParam('error_handler');
 
@@ -11,6 +29,7 @@ class ErrorController extends App_Controller_Base {
             return;
         }
 
+        // Check exception types.
         switch ($errors->type) {
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ROUTE:
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
@@ -37,23 +56,32 @@ class ErrorController extends App_Controller_Base {
         }
 
         // conditionally display exceptions
-        if ($this->getInvokeArg('displayExceptions') == true) {
+        if ($this->getInvokeArg('displayExceptions')) {
             $this->view->exception = $errors->exception;
         }
 
+        // set view.
         $this->view->request = $errors->request;
     }
 
+    /**
+     * Get Log
+     * @return boolean
+     */
     public function getLog() {
         $bootstrap = $this->getInvokeArg('bootstrap');
         if (!$bootstrap->hasResource('Log')) {
             return false;
         }
-        $log = $bootstrap->getResource('Log');
-        return $log;
+        // Get resource.
+        return $bootstrap->getResource('Log');
     }
-    
+
+    /**
+     * Forbidden
+     */
     public function forbiddenAction() {
+        // Set layout.
         $this->_helper->layout->disableLayout();
         $base_url = Zend_Registry::get('baseurl');
         $this->view->headLink()->appendStylesheet($base_url . '/common/assets/admin/pages/css/error.css');

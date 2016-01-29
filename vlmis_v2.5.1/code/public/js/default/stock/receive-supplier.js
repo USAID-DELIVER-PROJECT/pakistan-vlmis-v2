@@ -52,19 +52,30 @@ $(function () {
             },
             dataType: 'html',
             success: function (data) {
+                $('#cold_chain').html('<option value="">Select</option>');
                 if (data == 1) {
                     $("#expiry_date").rules("add", "required");
-                    $("#cold_chain").show();
                     $("#vvmtype_div").show();
                     $("#vvmstage_div").show();
                 } else {
                     $("#expiry_date").rules("remove", "required");
-                    $("#cold_chain").hide();
                     $("#vvmtype_div").hide();
                     $("#vvmstage_div").hide();
                 }
+
+                $.ajax({
+                    type: "POST",
+                    url: appName + "/stock-batch/ajax-placement-locations",
+                    data: {product: item_id},
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#cold_chain').html(data);
+                    }
+                });
             }
         });
+
+
 
         $.ajax({
             type: "POST",
@@ -125,6 +136,7 @@ $(function () {
                 $('#vvm_stage').html(data);
             }
         });
+
     });
 
     $.inlineEdit_receive_supplier({
@@ -252,17 +264,7 @@ $('#item_id').change(function (e) {
                 }
             }
         });
-        /*$.ajax({
-         type: "POST",
-         url: appName + "/stock/ajax-get-cold-chains-wrt-storage",
-         data: {
-         data: 'quantity=' + quantity + '&item_id=' + item_id,
-         },
-         dataType: 'html',
-         success: function(data) {
-         $('#cold_chain').html(data);
-         }
-         });*/
+
         $.ajax({
             type: "POST",
             url: appName + "/stock/ajax-get-campaigns-by-product",
@@ -351,21 +353,7 @@ $("#new_receive").validate({
         vvm_type_id: {
             required: true
         }
-        /*,
-         cold_chain: {
-         remote: {
-         url: appName + "/stock/check-cc-capacity",
-         type: "post",
-         data: {
-         cold_chain: function() {
-         return $("#cold_chain").val();
-         },
-         quantity: function() {
-         return $("#quantity").val();
-         }
-         }
-         }
-         }*/
+
     },
     messages: {
         'transaction_reference': {
@@ -395,7 +383,7 @@ $("#new_receive").validate({
             required: "Please select manufacturer"
         },
         cold_chain: {
-            required: "Please select cold chain"
+            required: "Please select placement location"
         },
         vvm_stage: {
             required: "Please select VVM stage"
@@ -422,8 +410,8 @@ $("#new_receive").validate({
  */
 
 $.validator.addMethod("refnum", function (value, element) {
-        return this.optional(element) || value == value.match(/^[a-zA-Z0-9-\s\#\_/,/./=/|/(/)]+$/);
-    });
+    return this.optional(element) || value == value.match(/^[a-zA-Z0-9-\s\#\_/,/./=/|/(/)]+$/);
+});
 
 $('#activity_id').change(function (e) {
     var activity_id = $('#activity_id').val();

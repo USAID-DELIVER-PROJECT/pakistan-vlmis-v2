@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Vaccine Status Wastage
+*/
+?>
+<?php
 $sel_month = $this->month_sel;
 $sel_year = $this->year_sel;
 $counter = 1;
@@ -128,7 +133,7 @@ if (!empty($sel_month)) {
                 </tr>
                 <tr>
                     <td>
-                        Wastage Rate = (Total Wastages /(Total Issue Balance + Total Wastages)) * 100
+                        Wastage Rate = (Total Wastages /(Total Consumption + Total Wastages)) * 100
                     </td></tr>
             </table>
         </div>

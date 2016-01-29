@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for Warehouse Storage Types
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * WarehouseStorageTypes
+ *  WarehouseStorageTypes
  */
 class WarehouseStorageTypes
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $storageTemperature
      * @var integer $storageTemperature
      */
     private $storageTemperature;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $stakeholderActivity
      * @var StakeholderActivities
      */
     private $stakeholderActivity;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $stakeholderItemPackSize
      * @var StakeholderItemPackSizes
      */
     private $stakeholderItemPackSize;
 
     /**
+     * $warehouseType
      * @var WarehouseTypes
      */
     private $warehouseType;

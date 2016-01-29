@@ -1,65 +1,78 @@
 <?php
 
-
+/**
+*  Model for Stock Batch
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * StockBatch
+ *  StockBatch
  */
 class StockBatch
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $number
      * @var string $number
      */
     private $number;
 
     /**
+     * $expiryDate
      * @var date $expiryDate
      */
     private $expiryDate;
 
     /**
+     * $unitPrice
      * @var float $unitPrice
      */
     private $unitPrice;
 
     /**
+     * $productionDate
      * @var date $productionDate
      */
     private $productionDate;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $vvmType
      * @var VvmTypes
      */
     private $vvmType;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $packInfo
      * @var PackInfo
      */
     private $packInfo;

@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for Barcode Scanner Warehouses
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * BarcodeScannerWarehouses
+ *  BarcodeScannerWarehouses
  */
 class BarcodeScannerWarehouses
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $scanner
      * @var BarcodeScanners
      */
     private $scanner;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

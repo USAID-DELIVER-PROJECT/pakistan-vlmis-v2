@@ -1,3 +1,8 @@
+<?php
+/**
+*  phtml for Reports Header Coverage
+*/
+?>
 <!--  BEGIN: REPORT Header -->
 <?php
 $report_id = $this->report_id;
@@ -68,7 +73,6 @@ if (!empty($sel_month)) {
                             $report_id !== "SHIPMENTREPORT" &&
                             $report_id !== "DataEntryStatus"
                     ) {
-                        // echo $this->render('inventory-management/rate-summary.phtml');
                     }
                     ?>
                 </td>
@@ -877,7 +881,6 @@ if (!empty($sel_month)) {
                                                 }
                                                 ?>>All</option>-->
                                                 <?php
-                                                // echo $this->report_id;
                                                 if ($this->report_id1 != 'STATUSREPORT' && $this->report_id != 'REPORTEDBYUC' && $this->report_id != 'WASTAGESREPORTING' && $this->report_id != 'SNONREPDIST' && $this->report_id != 'VCOVERAGE' && $this->report_id != 'VSTATUSWASTAGE' && $this->report_id != 'VDROPOUTRATE' && $this->report_id != 'PVCOVERAGE') {
                                                     ?>
                                                     <option value="1" <?php
@@ -901,7 +904,6 @@ if (!empty($sel_month)) {
                                                 ?>><?php echo $this->translate("District"); ?></option>
 
                                                 <?php
-                                                // echo $this->report_id;
                                                 if ($this->report_id != 'REPORTEDBYUC' && $this->report_id != 'WASTAGESREPORTING' && $this->report_id != 'PVCOVERAGE') {
                                                     ?>
                                                     <option value="5" <?php

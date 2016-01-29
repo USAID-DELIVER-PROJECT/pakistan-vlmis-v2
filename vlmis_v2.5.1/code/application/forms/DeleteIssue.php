@@ -1,19 +1,56 @@
 <?php
 
-class Form_DeleteIssue extends Zend_Form {
+/**
+ * Form_DeleteIssue
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Delete Issue
+ */
+class Form_DeleteIssue extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * @asset_id: Location
+     * @non_ccm_location_id: Location
+     * @quantity: Quantity
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "asset_id" => "Location",
         "non_ccm_location_id" => "Location",
         "quantity" => "Quantity"
     );
+
+    /**
+     * $_list
+     * 
+     * Private Variable
+     * 
+     * List
+     * @non_ccm_location_id
+     * @asset_id
+     * 
+     * @var type 
+     */
     private $_list = array(
         'non_ccm_location_id' => array(),
         'asset_id' => array()
     );
-   
+
     /**
-     * 
+     * Initializes Form Fields
      */
     public function init() {
 
@@ -37,42 +74,16 @@ class Form_DeleteIssue extends Zend_Form {
             }
         }
 
-
+        //foreach loop
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "quantity":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "quantity") {
+                parent::createText($col);
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
     }
+
 }

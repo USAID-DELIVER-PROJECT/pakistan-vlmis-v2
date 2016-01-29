@@ -1,16 +1,57 @@
 <?php
 
-class Form_Iadmin_Roles extends Zend_Form {
+/**
+ * Form_Iadmin_Roles
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin Roles
+ */
+class Form_Iadmin_Roles extends Form_Base {
+
+    /**
+     * Fields for Form_Iadmin_Roles
+     * 
+     * 
+     * 
+     * role_name
+     * description
+     * category_id
+     * status
+     * 
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "role_name" => "UserName",
         "description" => "UserName",
         "category_id" => "Category",
         "status" => "Status"
     );
-    private $_hidden = array(
-        "pk_id" => "pkId"
-    );
+
+    /**
+     * Combo boxes 
+     * for Form_Iadmin_Roles
+     * 
+     * 
+     * 
+     * category_id
+     * status
+     * 
+     * 
+     * 
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'category_id' => array(),
         'status' => array(
@@ -19,6 +60,10 @@ class Form_Iadmin_Roles extends Zend_Form {
         )
     );
 
+    /**
+     * Initializes Form Fields
+     * for Form_Iadmin_Roles
+     */
     public function init() {
 
         $list_detail = new Model_ListDetail();
@@ -29,57 +74,32 @@ class Form_Iadmin_Roles extends Zend_Form {
             $this->_list["category_id"][$rs['pkId']] = $rs['listValue'];
         }
 
+        // Generate fields
+        // for Form_Iadmin_Roles
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
                 case "role_name":
                 case "description":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
             }
 
+            //Generate combo boxes
+            //for Form_Iadmin_Roles
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array()
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     * for Form_Iadmin_Roles
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

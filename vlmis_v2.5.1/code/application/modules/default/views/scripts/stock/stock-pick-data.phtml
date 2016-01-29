@@ -1,3 +1,8 @@
+<?php
+/**
+*  phtml for Stock Pick Data
+*/
+?>
 <!-- Content -->
 <div class="page-content-wrapper">
     <div class="page-content">
@@ -64,14 +69,12 @@
                                             if ($this->result && count($this->result) > 0) :
                                                 
                                                 foreach ($this->result as $row):
-                                                    //$available_qty = $row['Qty']*$row['quantity_per_pack'];
                                                     $available_qty = $row['Qty'];
                                                     ?>
                                                     <tr class="gradeX">
                                                         <td><?php echo $row['LocationName']; ?></td>
                                                         <td><?php echo number_format($available_qty); ?></td>
                                                         <td><?php echo number_format($this->uqty); ?></td>
-                                                        <!-- <td><input type="text" name="quantity[<?php //echo $this->detail;            ?>]" id="quantity" value=""></td>	-->
                                                         <td><input type="text" name="quantity[]" id="quantity" class="qty form-control input-sm" value="" max="<?php echo $available_qty; ?>"></td>
                                                 <input type="hidden" name="loc_id[]" id="loc_id"  value="<?php echo $row['plc_loc_id']; ?>">
 

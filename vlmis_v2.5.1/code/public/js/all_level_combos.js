@@ -7,6 +7,14 @@ $(function () {
 
     $('#office').change(function () {
 
+        $.ajax({
+            type: "POST",
+            url: appName + "/ajax/ajax-save-session-values",
+            data: {office: $(this).val()},
+            dataType: 'html',
+            success: ''
+        });
+
         $('#loader').show();
         $('#combo1').empty();
         $('#combo2').empty();
@@ -14,6 +22,7 @@ $(function () {
         $('#div_combo1').hide();
         $('#div_combo2').hide();
         $('#wh_combo').hide();
+
         $.ajax({
             type: "POST",
             url: appName + "/index/all-level-combos-one",
@@ -61,9 +70,13 @@ $(function () {
                 }
 
                 if (val1 == 1 || val1 == 60) {
-                    $("#warehouse").val(wh_id);
+                    if (typeof (wh_id) != "undefined") {
+                        $("#warehouse").val(wh_id);
+                    }                    
                 } else {
-                    $("#combo1").val(prov);
+                    if (typeof (prov) != "undefined") {
+                        $("#combo1").val(prov);                        
+                    }
                     $("#combo1").trigger("change");
                 }
 
@@ -72,6 +85,14 @@ $(function () {
     });
 
     $('#combo1').change(function () {
+        $.ajax({
+            type: "POST",
+            url: appName + "/ajax/ajax-save-session-values",
+            data: {combo1: $(this).val()},
+            dataType: 'html',
+            success: ''
+        });
+
         $('#loader').show();
         $('#combo2').empty();
 
@@ -123,7 +144,9 @@ $(function () {
                     $("#combo2").val(dist);
                     $("#combo2").trigger("change");
                 } else {
-                    $("#warehouse").val(wh_id);
+                    if (typeof (wh_id) != "undefined") {
+                        $("#warehouse").val(wh_id);                        
+                    }
                 }
 
             }
@@ -131,6 +154,14 @@ $(function () {
     });
 
     $('#combo2').change(function () {
+        $.ajax({
+            type: "POST",
+            url: appName + "/ajax/ajax-save-session-values",
+            data: {combo2: $(this).val()},
+            dataType: 'html',
+            success: ''
+        });
+
         $('#loader').show();
         $.ajax({
             type: "POST",
@@ -149,13 +180,34 @@ $(function () {
 
     populateAllLevelCombo();
 
+    $('#warehouse').change(function () {
+        $.ajax({
+            type: "POST",
+            url: appName + "/ajax/ajax-save-session-values",
+            data: {warehouse: $(this).val()},
+            dataType: 'html',
+            success: ''
+        });
+    });
+
 });
 
 function populateAllLevelCombo() {
     var level = $("#clevel").html();
 
-    if(typeof(level) != "undefined" && level !== null && level != 0) {
+    if (typeof (level) != "undefined" && level !== null && level != 0) {
         $("#office").val(level);
         $("#office").trigger("change");
     }
+
+    $.ajax({
+        type: "POST",
+        url: appName + "/ajax/ajax-get-office",
+        data: {},
+        dataType: 'html',
+        success: function (level) {
+            $("#office").val(level);
+            $("#office").trigger("change");
+        }
+    });
 }

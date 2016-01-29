@@ -87,12 +87,13 @@ class App_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract {
             $request->setModuleName('default');
             $request->setControllerName('error');
             $request->setActionName('forbidden');
-            
-            /* $this->_response->setHeader('Content-type', 'text/html');
-              $this->_response->setHttpResponseCode(403);
-              $this->_response->setBody('<h1>403 - Forbidden</h1>');
 
-              $this->_response->sendResponse(); */
+            /*
+             * $this->_response->setHeader('Content-type', 'text/html');
+             * $this->_response->setHttpResponseCode(403);
+             * $this->_response->setBody('<h1>403 - Forbidden</h1>');
+             * $this->_response->sendResponse();
+             */
         }
 
         Zend_Registry::set('Role', $role);

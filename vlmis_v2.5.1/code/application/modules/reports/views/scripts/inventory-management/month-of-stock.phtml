@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Month of Stock
+*/
+?>
+<?php
 $sel_month = $this->month_sel;
 $sel_year = $this->year_sel;
 $counter = 1;
@@ -52,7 +57,6 @@ foreach ($this->item_name as $row) {
     $query1 = $this->reports()->getStockOnHand2($str_date, $row['pkId']);
     foreach ($query1 as $row_cb) {
         $data_arr_cb[$row_cb['province_id']] = $row_cb['CB'];
-        //$count++;
     }
     $query2 = $this->reports()->getStockOnHand1();
     foreach ($query2 as $row2) {
@@ -71,7 +75,6 @@ foreach ($this->item_name as $row) {
     }
 }
 
-//App_Controller_Functions::pr($data_arr);
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 $xml_store .= "<rows>";
 

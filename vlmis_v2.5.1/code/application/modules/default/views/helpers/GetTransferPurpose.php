@@ -1,7 +1,29 @@
 <?php
 
+/**
+ * Zend_View_Helper_GetTransferPurpose
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+/**
+ *  Zend View Helper Get Transfer Purpose
+ */
 class Zend_View_Helper_GetTransferPurpose extends Zend_View_Helper_Abstract {
 
+    /**
+     * Get Transfer Purpose
+     * @param type $activity_id
+     * @param type $key
+     */
     public function getTransferPurpose($activity_id, $key) {
 
         $em = Zend_Registry::get("doctrine");

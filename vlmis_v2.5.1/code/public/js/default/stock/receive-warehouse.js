@@ -122,6 +122,13 @@ $(function () {
     });
 
     $('#save').click(function (e) {
+        
+        var btn = $(this);
+        btn.button('loading');
+        setTimeout(function() {
+            btn.button('reset');
+        }, 10000);
+        
         e.preventDefault();
         var flag = 'true';
 
@@ -198,12 +205,14 @@ $(function () {
                 var checkedAtLeastOne = false;
                 $('input[type="checkbox"]').each(function () {
                     if ($(this).is(":checked")) {
+                        $('#btn-loading').attr('disabled', 'disabled');
                         $('#receive_stock').submit();
                         return false;
                     }
                 });
             }
         }
+
     });
 
     $("input[id$='-missing']").keyup(function (e) {

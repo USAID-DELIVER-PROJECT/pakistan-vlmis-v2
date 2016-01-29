@@ -1,7 +1,45 @@
 <?php
 
-class Form_Campaigns_CampaignReadiness extends Zend_Form {
+/**
+ * Form_Campaigns_CampaignReadiness
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Campaigns
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Campaigns Campaign Readiness
+ */
+class Form_Campaigns_CampaignReadiness extends Form_Base {
+
+    /**
+     * Form Fields
+     * 
+     * Private Variable
+     * 
+     * @campaign_id: Campaigns
+     * @campaign_add_id: Campaigns
+     * @num_tally_sheets: num_tally_sheets
+     * @num_finger_markers: num finger markers
+     * @arrival_date_mobiliztion_material: arrival date mobiliztion material
+     * @dpec_meeting_date: dpec meeting date
+     * @remarks: remarks
+     * @dco_attended_meeting: dco attended meeting
+     * @edo_attended_meeting: edo attended meeting
+     * @all_members_attended_meeting: all members attended meeting
+     * @province_id: Province
+     * @district_id: District
+     * @province_edit_id: Province
+     * @district_edit_id: District
+     * @campaign_edit_id: Campaigns
+     * 
+     * @var type
+     *  
+     */
     private $_fields = array(
         "campaign_id" => "Campaigns",
         "campaign_add_id" => "Campaigns",
@@ -19,11 +57,32 @@ class Form_Campaigns_CampaignReadiness extends Zend_Form {
         "district_edit_id" => "District",
         "campaign_edit_id" => "Campaigns"
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     * readiness_id
+     * province_id_hidden
+     * district_id_hidden
+     */
     private $_hidden = array(
         "readiness_id" => "",
         "province_id_hidden" => "",
         "district_id_hidden" => ""
     );
+
+    /**
+     * $_list
+     * @var type 
+     * campaign_id
+     * campaign_add_id
+     * province_id
+     * district_id
+     * province_edit_id
+     * district_edit_id
+     * item_id
+     * day
+     */
     private $_list = array(
         'campaign_id' => array(),
         'campaign_add_id' => array(),
@@ -34,6 +93,14 @@ class Form_Campaigns_CampaignReadiness extends Zend_Form {
         "item_id" => array('0' => 'Select Campaign'),
         "day" => array('0' => 'Select Campaign')
     );
+
+    /**
+     * $_checkbox
+     * @var type 
+     * dco_attended_meeting
+     * edo_attended_meeting
+     * all_members_attended_meeting
+     */
     private $_checkbox = array(
         'dco_attended_meeting' => array(
             "dco_attended_meeting" => "Dco Attended Meeting"
@@ -47,7 +114,7 @@ class Form_Campaigns_CampaignReadiness extends Zend_Form {
     );
 
     /**
-     * 
+     * Initializes Form Fields
      */
     public function init() {
         $auth = App_Auth::getInstance();
@@ -61,6 +128,11 @@ class Form_Campaigns_CampaignReadiness extends Zend_Form {
 
         $campaign = new Model_Campaigns();
         if ($role_id == Model_Roles::CAMPAIGN && empty($warehouse_id)) {
+            /**
+             * All Campaigns
+             * @param null
+             * @return All Campaigns
+             */
             $result1 = $campaign->allCampaigns();
             $this->_list["campaign_id"][''] = 'Select';
             $this->_list["campaign_add_id"][''] = 'Select';
@@ -73,6 +145,11 @@ class Form_Campaigns_CampaignReadiness extends Zend_Form {
             }
         } else {
             $campaign->form_values['district_id'] = $district_id;
+            /**
+             * District Campaigns
+             * @param null
+             * @return District Campaigns
+             */
             $result1 = $campaign->districtCampaigns();
             $this->_list["campaign_id"][''] = 'Select';
             $this->_list["campaign_add_id"][''] = 'Select';
@@ -85,72 +162,60 @@ class Form_Campaigns_CampaignReadiness extends Zend_Form {
                 $this->_list["campaign_edit_id"][$row['pkId']] = $row['campaignName'];
             }
         }
-        
+        /**
+         * Initializes Form Fields
+         */
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
+                /**
+                 * num_tally_sheets
+                 * num_finger_markers
+                 * remarks
+                 */
                 case "num_tally_sheets":
                 case "num_finger_markers":
                 case "remarks" :
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
+                /**
+                 * arrival_date_mobiliztion_material
+                 * dpec_meeting_date
+                 */
                 case "arrival_date_mobiliztion_material":
                 case "dpec_meeting_date":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
                 default:
                     break;
             }
 
-            if ($col == "campaign_id") {
-                $attribute_class = "form-control";
-            } else {
-                $attribute_class = "form-control";
-            }
-
+            /**
+             * Initializes Select Boxes
+             */
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => $attribute_class),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
+            /**
+             * Initializes CheckBoxes
+             */
             if (in_array($col, array_keys($this->_checkbox))) {
-                $this->addElement("multiCheckbox", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_checkbox[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
+                parent::createMultiCheckbox($col, $this->_checkbox[$col]);
             }
         }
+        /**
+         * Initializes Hidden Fields
+         */
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
-
+                /**
+                 * readiness_id
+                 * province_id_hidden
+                 * district_id_hidden
+                 */
                 case "readiness_id":
                 case "province_id_hidden":
                 case "district_id_hidden":
-
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -159,27 +224,10 @@ class Form_Campaigns_CampaignReadiness extends Zend_Form {
     }
 
     /**
-     * 
+     * Add Hidden Fields
      */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
+
 }

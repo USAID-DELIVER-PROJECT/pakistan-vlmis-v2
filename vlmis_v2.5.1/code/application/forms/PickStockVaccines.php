@@ -1,78 +1,58 @@
 <?php
 
-class Form_PickStockVaccines extends Zend_Form {
+/**
+ * Form_PickStockVaccines
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Pick Stock Vaccines
+ */
+class Form_PickStockVaccines extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "stock_master_id" => "Issue No",
     );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'stock_master_id' => array(),
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         $identity = new App_Auth();
         $stock_master = new Model_StockMaster();
         $wh_id = $identity->getWarehouseId();
         $result1 = $stock_master->getUnpickedIssueNo($wh_id);
         $this->_list["stock_master_id"][''] = "Select Issue No";
-        if ($result1 != false) {
+        if ($result1) {
             foreach ($result1 as $row) {
                 $this->_list["stock_master_id"][$row['stc_master_pkid']] = $row['transaction_number'];
             }
         }
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "stock_master_id":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "stock_master_id") {
+                parent::createText($col);
             }
 
-            if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-            }
+
             if (in_array("stock_master_id", array_keys($this->_list))) {
-                $this->addElement("select", "stock_master_id", array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list["stock_master_id"],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement("stock_master_id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list["stock_master_id"]);
             }
         }
     }

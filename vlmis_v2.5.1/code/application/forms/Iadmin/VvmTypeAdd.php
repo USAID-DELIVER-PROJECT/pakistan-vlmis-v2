@@ -1,83 +1,91 @@
 <?php
 
-class Form_Iadmin_VvmTypeAdd extends Zend_Form {
+/**
+ * Form_Iadmin_VvmTypeAdd
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin VVM Type Add
+ */
+class Form_Iadmin_VvmTypeAdd extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Form Fields
+     * @vvm_type_name: VVM Type Name
+     * @status: Status
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "vvm_type_name" => "Vvm Type Name",
         "status" => "Status"
     );
 
+    /**
+     * $_radio
+     * 
+     * Private Variable
+     * 
+     * @status: Active,
+     *          Inactive
+     * 
+     * @var type 
+     */
     private $_radio = array(
         'status' => array(
             "1" => "Active",
             "0" => "In Active"
         )
     );
+
+    /**
+     * $_hidden
+     * 
+     * Hidden
+     * @vvm_type_id: Pk Id
+     * 
+     * @var type 
+     */
     private $_hidden = array(
         "vvm_type_id" => "pkId"
     );
-    
-    public function init() {  
-       
-           foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-                case "vvm_type_id":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+
+    /**
+     * Initializes Form Fields
+     */
+    public function init() {
+
+        foreach ($this->_hidden as $col => $name) {
+            if ($col == "vvm_type_id") {
+                parent::createHidden($col);
             }
         }
-        
+
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "vvm_type_name":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "vvm_type_name") {
+                parent::createText($col);
             }
-            
+
             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createRadio($col, $this->_radio[$col]);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
+
 }

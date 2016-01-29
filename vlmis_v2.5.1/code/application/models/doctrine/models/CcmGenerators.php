@@ -1,60 +1,72 @@
 <?php
 
-
+/**
+*  Model for CCM Generators
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmGenerators
+ *  CcmGenerators
  */
 class CcmGenerators
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $powerSource
      * @var integer $powerSource
      */
     private $powerSource;
 
     /**
+     * $powerRating
      * @var string $powerRating
      */
     private $powerRating;
 
     /**
+     * $automaticStartMechanism
      * @var boolean $automaticStartMechanism
      */
     private $automaticStartMechanism;
 
     /**
+     * $useFor
      * @var string $useFor
      */
     private $useFor;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $ccm
      * @var ColdChain
      */
     private $ccm;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

@@ -1,18 +1,46 @@
 <?php
 
-class Form_PurposeTransfer extends Zend_Form {
+/**
+ * Form_PurposeTransfer
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Purpose Transfer
+ */
+class Form_PurposeTransfer extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Form Fields
+     * @product: Product
+     * @batch: Batch
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "product" => "Product",
         "batch" => "Batch"
     );
-    private $_hidden = array(
-    );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'product' => array(),
         'batch' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         //Generate Products(items) Combo
@@ -26,17 +54,7 @@ class Form_PurposeTransfer extends Zend_Form {
 
         foreach ($this->_fields as $col => $name) {
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
     }

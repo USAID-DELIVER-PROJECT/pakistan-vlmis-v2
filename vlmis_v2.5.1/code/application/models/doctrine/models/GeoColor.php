@@ -1,40 +1,48 @@
 <?php
 
-
+/**
+*  Model for Geo Color
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GeoColor
+ *  GeoColor
  */
 class GeoColor
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $colorCode
      * @var string $colorCode
      */
     private $colorCode;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

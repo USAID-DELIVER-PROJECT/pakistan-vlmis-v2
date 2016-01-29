@@ -1,4 +1,14 @@
 <?php
+/**
+*  phtml for National Report
+*/
+
+/**
+* National Report
+*/
+
+?>
+<?php
 $xml_store = '<?xml version="1.0" encoding="UTF-8"?>';
 $xml_store .="<rows>";
 
@@ -14,7 +24,7 @@ $in_col = $this->in_col;
 $in_rg = $this->in_rg;
 $in_type = $this->in_type;
 $rpt_date = $sel_year . '-' . str_pad($sel_month, 2, "0", STR_PAD_LEFT) . '-01';
-
+var_dump($rpt_date);
 $result = $this->reports()->getReportData($in_type, $rpt_date, 0, 0, $in_stk);
 foreach ($result as $row) {
     $data_arr[$row['item_id']]['item'] = $row['item_name'];
@@ -23,7 +33,6 @@ foreach ($result as $row) {
     $data_arr[$row['item_id']]['cb'] = $row['SOH'];
     $data_arr[$row['item_id']]['mos'] = $row['MOS'];
 }
-//App_Controller_Functions::pr($data_arr);
 foreach ($data_arr as $item_id => $items) {
     $item_name = $items['item'];
     $xml_store .="<row>";
@@ -44,7 +53,6 @@ foreach ($data_arr as $item_id => $items) {
     unset($tmp);
 }
 $xml_store .="</rows>";
-//App_Controller_Functions::pr($xml_store);
 ?>
 <?php
 $report_title = $this->report_title;

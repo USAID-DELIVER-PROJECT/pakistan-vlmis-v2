@@ -265,6 +265,13 @@ class App_Auth extends Zend_Auth {
     }
 
     public function getWarehouseId() {
+
+        $session = new Zend_Session_Namespace('alllevel');
+        $wh_id = $session->warehouse;
+        if (!empty($wh_id)) {
+            return $wh_id;
+        }
+
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getIdentity();
         $user = Zend_Registry::get('doctrine')->getRepository('WarehouseUsers')->findOneBy(array("user" => $userId, "isDefault" => 1));
@@ -331,6 +338,13 @@ class App_Auth extends Zend_Auth {
     }
 
     public function getProvinceId() {
+
+        $session = new Zend_Session_Namespace('alllevel');
+        $province = $session->province;
+        if (!empty($province)) {
+            return $province;
+        }
+
         $auth = Zend_Auth::getInstance();
         $user_id = $auth->getIdentity();
         $em = Zend_Registry::get('doctrine');
@@ -394,7 +408,7 @@ class App_Auth extends Zend_Auth {
                 ->join("wh.stakeholderOffice", "sh")
                 ->where("u.pkId = $user_id ")
                 ->andWhere("wu.isDefault =  1 ");
-       // echo $db->getQuery()->getSql();
+        // echo $db->getQuery()->getSql();
         try {
             $row = $db->getQuery()->getResult();
         } catch (Exception $e) {
@@ -484,7 +498,8 @@ class App_Auth extends Zend_Auth {
             return false;
         }
     }
-     public function getTotalUsers() {
+
+    public function getTotalUsers() {
         $auth = Zend_Auth::getInstance();
         $user_id = $auth->getIdentity();
         $em = Zend_Registry::get('doctrine');
@@ -495,7 +510,7 @@ class App_Auth extends Zend_Auth {
                 ->join("wu.warehouse", "w")
                 ->where("u.role IN (3,4,5,6,7,8)")
                 ->andWhere("u.pkId NOT IN (343,751,1706)");
-        
+
         try {
             $row = $db->getQuery()->getResult();
         } catch (Exception $e) {
@@ -508,5 +523,4 @@ class App_Auth extends Zend_Auth {
             return false;
         }
     }
-
 }

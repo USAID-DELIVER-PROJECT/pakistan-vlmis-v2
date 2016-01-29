@@ -1,185 +1,222 @@
 <?php
 
-
+/**
+*  Model for Campaign Data
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CampaignData
+ *  CampaignData
  */
 class CampaignData
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $campaignDay
      * @var integer $campaignDay
      */
     private $campaignDay;
 
     /**
+     * $dailyTarget
      * @var integer $dailyTarget
      */
     private $dailyTarget;
 
     /**
+     * $targetAgeSixMonths
      * @var integer $targetAgeSixMonths
      */
     private $targetAgeSixMonths;
 
     /**
+     * $targetAgeSixtyMonths
      * @var integer $targetAgeSixtyMonths
      */
     private $targetAgeSixtyMonths;
 
     /**
+     * $householdVisited
      * @var integer $householdVisited
      */
     private $householdVisited;
 
     /**
+     * $multipleFamilyHousehold
      * @var integer $multipleFamilyHousehold
      */
     private $multipleFamilyHousehold;
 
     /**
+     * $totalCoverage
      * @var string $totalCoverage
      */
     private $totalCoverage;
 
     /**
+     * $refusalCovered
      * @var string $refusalCovered
      */
     private $refusalCovered;
 
     /**
+     * $recordReference
      * @var string $recordReference
      */
     private $recordReference;
 
     /**
+     * $coverageNotAccessible
      * @var string $coverageNotAccessible
      */
     private $coverageNotAccessible;
 
     /**
+     * $recordNotAccessible
      * @var string $recordNotAccessible
      */
     private $recordNotAccessible;
 
     /**
+     * $recordRefusal
      * @var string $recordRefusal
      */
     private $recordRefusal;
 
     /**
+     * $coverageMobileChildren
      * @var string $coverageMobileChildren
      */
     private $coverageMobileChildren;
 
     /**
+     * $reportedWithWeakness
      * @var string $reportedWithWeakness
      */
     private $reportedWithWeakness;
 
     /**
+     * $zeroDoses
      * @var string $zeroDoses
      */
     private $zeroDoses;
 
     /**
+     * $coverageReference
      * @var string $coverageReference
      */
     private $coverageReference;
 
     /**
+     * $inaccessibleCoverage
      * @var string $inaccessibleCoverage
      */
     private $inaccessibleCoverage;
 
     /**
+     * $teamsReported
      * @var integer $teamsReported
      */
     private $teamsReported;
 
     /**
+     * $vialsGiven
      * @var string $vialsGiven
      */
     private $vialsGiven;
 
     /**
+     * $vialsUsed
      * @var string $vialsUsed
      */
     private $vialsUsed;
 
     /**
+     * $vialsReturned
      * @var string $vialsReturned
      */
     private $vialsReturned;
 
     /**
+     * $vialsExpired
      * @var string $vialsExpired
      */
     private $vialsExpired;
 
     /**
+     * $reconSyrWasted
      * @var integer $reconSyrWasted
      */
     private $reconSyrWasted;
 
     /**
+     * $adSyrWasted
      * @var integer $adSyrWasted
      */
     private $adSyrWasted;
 
     /**
+     * $unionCouncilId
      * @var integer $unionCouncilId
      */
     private $unionCouncilId;
 
     /**
+     * $campaignTargetId
      * @var integer $campaignTargetId
      */
     private $campaignTargetId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $itemPackSize
      * @var ItemPackSizes
      */
     private $itemPackSize;
 
     /**
+     * $campaign
      * @var Campaigns
      */
     private $campaign;
 
     /**
+     * $district
      * @var Locations
      */
     private $district;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

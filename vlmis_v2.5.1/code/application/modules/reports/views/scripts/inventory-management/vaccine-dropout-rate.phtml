@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Vaccine Dropout Report
+*/
+?>
+<?php
 $sel_month = $this->month_sel;
 $sel_year = $this->year_sel;
 
@@ -38,10 +43,6 @@ $header = 'Tehsil,UC Name,'
 $cspan = '';
 $width = '160,160,*,*,*,*,*,*';
 $ro = 'ro,ro,ro,ro,ro,ro,ro,ro';
-
-
-
-//$query = $this->reports()->vaccineDropoutRate($wh_type, $sel_dist, $sel_tehsil, $year, $month, $item,$from_sel_month,$from_sel_year);
 
 $district = 'District:';
 $query = $this->reports()->vaccineDropoutRate($wh_type, $sel_dist, $sel_tehsil, $year, $month, $item, $from_sel_month, $from_sel_year, 7, 1);

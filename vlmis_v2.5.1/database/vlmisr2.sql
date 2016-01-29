@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50547
 File Encoding         : 65001
 
-Date: 2016-01-11 14:11:11
+Date: 2016-01-29 16:34:10
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -828,7 +828,7 @@ CREATE TABLE `distribution_plan` (
   CONSTRAINT `distribution_plan_ibfk_4` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
   CONSTRAINT `distribution_plan_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `distribution_plan_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9002 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9004 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for document_categories
@@ -1300,7 +1300,7 @@ CREATE TABLE `hf_data_detail` (
   CONSTRAINT `hf_data_detail_ibfk_2` FOREIGN KEY (`hf_data_master_id`) REFERENCES `hf_data_master` (`pk_id`),
   CONSTRAINT `hf_data_detail_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `hf_data_detail_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2317968 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2345471 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for hf_data_detail_draft
@@ -1337,7 +1337,7 @@ CREATE TABLE `hf_data_detail_draft` (
   CONSTRAINT `hf_data_detail_draft_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `hf_data_detail_draft_ibfk_4` FOREIGN KEY (`hf_data_master_id`) REFERENCES `hf_data_master_draft` (`pk_id`),
   CONSTRAINT `hf_data_detail_draft_ibfk_5` FOREIGN KEY (`age_group_id`) REFERENCES `list_detail` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11015294 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11539358 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for hf_data_master
@@ -1370,7 +1370,7 @@ CREATE TABLE `hf_data_master` (
   CONSTRAINT `hf_data_master_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `hf_data_master_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `hf_data_master_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2103608 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2414988 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for hf_data_master_draft
@@ -1403,7 +1403,7 @@ CREATE TABLE `hf_data_master_draft` (
   CONSTRAINT `hf_data_master_draft_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `hf_data_master_draft_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `hf_data_master_draft_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4741794 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4988589 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for hf_sessions
@@ -1431,7 +1431,7 @@ CREATE TABLE `hf_sessions` (
   CONSTRAINT `hf_sessions_ibfk_2` FOREIGN KEY (`warehouse_status`) REFERENCES `list_detail` (`pk_id`),
   CONSTRAINT `hf_sessions_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `hf_sessions_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1873 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2482 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for item_activities
@@ -1649,7 +1649,7 @@ CREATE TABLE `location_populations` (
   CONSTRAINT `location_populations_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `location_populations_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `location_populations_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9684 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14033 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for location_types
@@ -1706,7 +1706,7 @@ CREATE TABLE `locations` (
   CONSTRAINT `locations_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `locations_ibfk_6` FOREIGN KEY (`parent_id`) REFERENCES `locations` (`pk_id`),
   CONSTRAINT `locations_ibfk_7` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5005 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5006 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for log_book
@@ -1740,7 +1740,7 @@ CREATE TABLE `log_book` (
   CONSTRAINT `log_book_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `log_book_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `log_book_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28184 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=29186 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for log_book_item_doses
@@ -1764,7 +1764,7 @@ CREATE TABLE `log_book_item_doses` (
   CONSTRAINT `log_book_item_doses_ibfk_2` FOREIGN KEY (`log_book_id`) REFERENCES `log_book` (`pk_id`),
   CONSTRAINT `log_book_item_doses_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `log_book_item_doses_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=140946 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=145956 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for map_district_mapping
@@ -1896,7 +1896,7 @@ CREATE TABLE `pack_info` (
   CONSTRAINT `pack_info_ibfk_2` FOREIGN KEY (`stakeholder_item_pack_size_id`) REFERENCES `stakeholder_item_pack_sizes` (`pk_id`),
   CONSTRAINT `pack_info_ibfk_3` FOREIGN KEY (`packaging_level`) REFERENCES `list_detail` (`pk_id`),
   CONSTRAINT `pack_info_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=851 DEFAULT CHARSET=utf8 COMMENT='contains detail information of stakeholder and itm_info_tab';
+) ENGINE=InnoDB AUTO_INCREMENT=852 DEFAULT CHARSET=utf8 COMMENT='contains detail information of stakeholder and itm_info_tab';
 
 -- ----------------------------
 -- Table structure for period
@@ -2127,7 +2127,7 @@ CREATE TABLE `placement_summary` (
   CONSTRAINT `placement_summary_ibfk_3` FOREIGN KEY (`vvm_stage`) REFERENCES `vvm_stages` (`pk_id`),
   CONSTRAINT `placement_summary_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `placement_summary_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=126279 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=142899 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for placements
@@ -2159,7 +2159,7 @@ CREATE TABLE `placements` (
   CONSTRAINT `placements_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `placements_ibfk_5` FOREIGN KEY (`placement_location_id`) REFERENCES `placement_locations` (`pk_id`),
   CONSTRAINT `placements_ibfk_6` FOREIGN KEY (`vvm_stage`) REFERENCES `vvm_stages` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=119855 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=135843 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for purpose_transfer_history
@@ -2192,7 +2192,7 @@ CREATE TABLE `purpose_transfer_history` (
   CONSTRAINT `purpose_transfer_history_ibfk_5` FOREIGN KEY (`transaction_type_id`) REFERENCES `transaction_types` (`pk_id`),
   CONSTRAINT `purpose_transfer_history_ibfk_6` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `purpose_transfer_history_ibfk_7` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for rack_information
@@ -2333,7 +2333,7 @@ CREATE TABLE `role_resources` (
   KEY `role_resources_resources_fk2` (`resource_id`),
   CONSTRAINT `role_resources_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`pk_id`),
   CONSTRAINT `role_resources_ibfk_2` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12980 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12984 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for roles
@@ -2403,7 +2403,7 @@ CREATE TABLE `shipment_history` (
   CONSTRAINT `shipment_history_ibfk_1` FOREIGN KEY (`shipment_id`) REFERENCES `shipments` (`pk_id`),
   CONSTRAINT `shipment_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `shipment_history_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for shipments
@@ -2434,7 +2434,7 @@ CREATE TABLE `shipments` (
   CONSTRAINT `shipments_ibfk_3` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `shipments_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `shipments_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=154 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for stakeholder_activities
@@ -2475,7 +2475,7 @@ CREATE TABLE `stakeholder_item_pack_sizes` (
   CONSTRAINT `stakeholder_item_pack_sizes_ibfk_2` FOREIGN KEY (`stakeholder_id`) REFERENCES `stakeholders` (`pk_id`),
   CONSTRAINT `stakeholder_item_pack_sizes_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `stakeholder_item_pack_sizes_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=851 DEFAULT CHARSET=utf8 COMMENT='contains detail information of stakeholder and itm_info_tab';
+) ENGINE=InnoDB AUTO_INCREMENT=852 DEFAULT CHARSET=utf8 COMMENT='contains detail information of stakeholder and itm_info_tab';
 
 -- ----------------------------
 -- Table structure for stakeholder_sectors
@@ -2577,7 +2577,7 @@ CREATE TABLE `stock_batch` (
   CONSTRAINT `stock_batch_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `stock_batch_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `stock_batch_ibfk_4` FOREIGN KEY (`pack_info_id`) REFERENCES `pack_info` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5634 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6760 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for stock_batch_vvm
@@ -2651,7 +2651,7 @@ CREATE TABLE `stock_batch_warehouses` (
   CONSTRAINT `stock_batch_warehouses_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `stock_batch_warehouses_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `stock_batch_warehouses_ibfk_4` FOREIGN KEY (`stock_batch_id`) REFERENCES `stock_batch` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=67744 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=68870 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for stock_batch_warehouses_history
@@ -2689,7 +2689,7 @@ CREATE TABLE `stock_batch_warehouses_history` (
   CONSTRAINT `stock_batch_warehouses_history_ibfk_1` FOREIGN KEY (`stock_batch_warehouse_id`) REFERENCES `stock_batch_warehouses` (`pk_id`),
   CONSTRAINT `stock_batch_warehouses_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `stock_batch_warehouses_history_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48593 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=49719 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for stock_detail
@@ -2722,7 +2722,7 @@ CREATE TABLE `stock_detail` (
   CONSTRAINT `stock_detail_ibfk_4` FOREIGN KEY (`item_unit_id`) REFERENCES `item_units` (`pk_id`),
   CONSTRAINT `stock_detail_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `stock_detail_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=370938 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=387240 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for stock_detail_history
@@ -2757,7 +2757,7 @@ CREATE TABLE `stock_detail_history` (
   CONSTRAINT `stock_detail_history_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `stock_detail_history_ibfk_4` FOREIGN KEY (`vvm_stage`) REFERENCES `vvm_stages` (`pk_id`),
   CONSTRAINT `stock_detail_history_ibfk_5` FOREIGN KEY (`stock_master_id`) REFERENCES `stock_master_history` (`master_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=496554 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=529139 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for stock_master
@@ -2797,7 +2797,7 @@ CREATE TABLE `stock_master` (
   CONSTRAINT `stock_master_ibfk_4` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
   CONSTRAINT `stock_master_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `stock_master_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=105650 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=110435 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for stock_master_history
@@ -2837,7 +2837,7 @@ CREATE TABLE `stock_master_history` (
   CONSTRAINT `stock_master_history_ibfk_4` FOREIGN KEY (`stakeholder_activity_id`) REFERENCES `stakeholder_activities` (`pk_id`),
   CONSTRAINT `stock_master_history_ibfk_5` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `stock_master_history_ibfk_6` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=125598 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=134615 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for system
@@ -2878,6 +2878,23 @@ CREATE TABLE `transaction_types` (
   CONSTRAINT `transaction_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `transaction_types_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Table structure for user_click_paths
+-- ----------------------------
+DROP TABLE IF EXISTS `user_click_paths`;
+CREATE TABLE `user_click_paths` (
+  `pk_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `resource_id` int(11) NOT NULL,
+  `session_id` varchar(255) NOT NULL,
+  `created_date` datetime NOT NULL,
+  PRIMARY KEY (`pk_id`),
+  KEY `user_id` (`user_id`),
+  KEY `resource_id` (`resource_id`),
+  CONSTRAINT `user_click_paths_ibfk_2` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`pk_id`),
+  CONSTRAINT `user_click_paths_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`pk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=907 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for user_documents
@@ -2938,7 +2955,7 @@ CREATE TABLE `user_login_log` (
   CONSTRAINT `user_login_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `user_login_log_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `user_login_log_ibfk_3` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=137614 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=140811 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for users
@@ -2982,7 +2999,7 @@ CREATE TABLE `users` (
   CONSTRAINT `users_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`pk_id`),
   CONSTRAINT `users_ibfk_4` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `users_ibfk_5` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1751 DEFAULT CHARSET=utf8 COMMENT='contain user information';
+) ENGINE=InnoDB AUTO_INCREMENT=1753 DEFAULT CHARSET=utf8 COMMENT='contain user information';
 
 -- ----------------------------
 -- Table structure for vvm_groups
@@ -3225,7 +3242,7 @@ CREATE TABLE `warehouse_users` (
   CONSTRAINT `warehouse_users_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`),
   CONSTRAINT `warehouse_users_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `warehouse_users_ibfk_4` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18016 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18021 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for warehouse_vaccine_storage_types
@@ -3292,7 +3309,7 @@ CREATE TABLE `warehouses` (
   CONSTRAINT `warehouses_ibfk_6` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `warehouses_ibfk_7` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `warehouses_ibfk_8` FOREIGN KEY (`district_id`) REFERENCES `locations` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10371 DEFAULT CHARSET=utf8 COMMENT='contain information about warehouse';
+) ENGINE=InnoDB AUTO_INCREMENT=10374 DEFAULT CHARSET=utf8 COMMENT='contain information about warehouse';
 
 -- ----------------------------
 -- Table structure for warehouses_data
@@ -3389,7 +3406,7 @@ CREATE TABLE `warehouses_update_history` (
   CONSTRAINT `warehouses_update_history_ibfk_1` FOREIGN KEY (`modified_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `warehouses_update_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`pk_id`),
   CONSTRAINT `warehouses_update_history_ibfk_3` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=88328 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=90074 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Procedure structure for _test_copy

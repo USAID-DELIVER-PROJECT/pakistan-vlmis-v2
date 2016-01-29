@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for Stakeholder Types
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * StakeholderTypes
+ *  StakeholderTypes
  */
 class StakeholderTypes
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $stakeholderTypeName
      * @var string $stakeholderTypeName
      */
     private $stakeholderTypeName;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

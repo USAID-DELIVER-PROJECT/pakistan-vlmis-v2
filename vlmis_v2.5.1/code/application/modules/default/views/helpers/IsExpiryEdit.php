@@ -1,10 +1,33 @@
 <?php
 
+/**
+ * Zend_View_Helper_IsExpiryEdit
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+
+
+/**
+ *  Zend_View_Helper_IsExpiryEdit
+ */
 class Zend_View_Helper_IsExpiryEdit extends Zend_View_Helper_Abstract {
 
+    /**
+     * Is Expiry Edit
+     * @param type $batch_id
+     * @return boolean
+     */
     public function isExpiryEdit($batch_id) {
 
-        $result = 0;
         $auth = App_Auth::getInstance();
         $wh_id = $auth->getWarehouseId();
         $role_id = $auth->getRoleId();
@@ -26,9 +49,9 @@ class Zend_View_Helper_IsExpiryEdit extends Zend_View_Helper_Abstract {
 
             if (count($row) > 0) {
                 return false;
-            } else {
-                return true;
             }
+            return true;
+            
         } else {
             return false;
         }

@@ -1,11 +1,38 @@
 <?php
 
+/**
+ * Zend_View_Helper_ColdChain
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+/**
+ *  Zend View Helper ColdChain
+ */
+
 class Zend_View_Helper_ColdChain extends Zend_View_Helper_Abstract {
 
+    /**
+     * Cold Chain
+     * @return \Zend_View_Helper_ColdChain
+     */
     public function coldChain() {
         return $this;
     }
 
+    /**
+     * Get Voltage Regulator Detail By Id
+     * @param type $coldchain_id
+     * @return boolean
+     */
     public function getVoltageRegulatorDetailById($coldchain_id) {
         $em = Zend_Registry::get('doctrine');
         $str_sql = $em->createQueryBuilder()
@@ -31,6 +58,11 @@ class Zend_View_Helper_ColdChain extends Zend_View_Helper_Abstract {
         }
     }
 
+    /**
+     * Get Generator Detail By Id
+     * @param type $id
+     * @return boolean
+     */
     public function getGeneratorDetailById($id) {
         $em = Zend_Registry::get('doctrine');
         $str_sql = $em->createQueryBuilder()
@@ -58,6 +90,11 @@ class Zend_View_Helper_ColdChain extends Zend_View_Helper_Abstract {
         }
     }
 
+    /**
+     * Get Vaccine Carrier Detail By Id
+     * @param type $id
+     * @return boolean
+     */
     public function getVaccineCarrierDetailById($id) {
         $em = Zend_Registry::get('doctrine');
         $str_sql = $em->createQueryBuilder()
@@ -85,6 +122,11 @@ class Zend_View_Helper_ColdChain extends Zend_View_Helper_Abstract {
         }
     }
 
+    /**
+     * Get Ice Pack Detail By Id
+     * @param type $id
+     * @return boolean
+     */
     public function getIcePackDetailById($id) {
         $em = Zend_Registry::get('doctrine');
         $str_sql = $em->createQueryBuilder()
@@ -110,6 +152,11 @@ class Zend_View_Helper_ColdChain extends Zend_View_Helper_Abstract {
         }
     }
 
+    /**
+     * Get Cold Room Detail By Id
+     * @param type $id
+     * @return boolean
+     */
     public function getColdRoomDetailById($id) {
         $em = Zend_Registry::get('doctrine');
         $str_sql = $em->createQueryBuilder()
@@ -141,6 +188,11 @@ class Zend_View_Helper_ColdChain extends Zend_View_Helper_Abstract {
         }
     }
 
+    /**
+     * Get Transport Detail By Id
+     * @param type $id
+     * @return boolean
+     */
     public function getTransportDetailById($id) {
         $em = Zend_Registry::get('doctrine');
         $str_sql = $em->createQueryBuilder()
@@ -170,6 +222,11 @@ class Zend_View_Helper_ColdChain extends Zend_View_Helper_Abstract {
         }
     }
 
+    /**
+     * Get Refrigerator Detail By Id
+     * @param type $id
+     * @return boolean
+     */
     public function getRefrigeratorDetailById($id) {
         $em = Zend_Registry::get('doctrine');
         $str_sql = $em->createQueryBuilder()

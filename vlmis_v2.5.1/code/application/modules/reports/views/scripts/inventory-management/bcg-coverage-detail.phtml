@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for BCG Coverage Detail
+*/
+?>
+<?php
 $from_sel_month = $this->from_month_sel;
 $from_sel_year = $this->from_year_sel;
 $year = $this->year_sel;
@@ -30,6 +35,8 @@ $header1 .= ',<span>BCG</span>';
 $header1 .= ',<span>BCG</span>';
 $ro .= ',ro,ro,ro,ro,ro,ro,ro,ro';
 
+
+
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 $xml_store .= "<rows>";
 
@@ -54,6 +61,7 @@ foreach ($query as $row) {
     $data_arr[$location_id][] = $row['outreach_female'];
     $data_arr[$location_id][] = $row['consumption'];
     $data_arr[$location_id][] = $row['consumptionPercentage'];
+  
     $j++;
 }
 
@@ -70,7 +78,6 @@ foreach ($data_arr as $dis_id => $sub_arr) {
             $sum_arr[$key] = 0;
         }
         $sum_arr[$key] += $value;
-        //$accpLimit = '0';
         if ($key > 2) {
 
             $xml_store .= "<cell style=\"text-align:right;\">$value </cell>";
@@ -99,16 +106,13 @@ foreach ($sum_arr as $key => $value) {
     } else if ($key == 10) {
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val / $total_wh) * 100) . " %</cell>";
     }
+    
 }
 
 $xml_store .="</row>";
 
 $xml_store .="</rows>";
 
-/* $in_type = 'N';
-  $in_stk = 1;
-  $in_year = $sel_year;
- */
 ?>
 <?php
 $report_title = $this->report_title;
@@ -120,7 +124,7 @@ if (!empty($sel_month)) {
 ?>
 <div class="page-content-wrapper">
     <div class="page-content">
-        <h3 class="page-title"><?php echo $report_title . ' ' . $report_month . ' ' . $sel_year; ?></h3>
+        <h3 class="page-title"><?php echo $report_title;  ?></h3>
          <h5 style="color: red">
             Note: This report is under user testing.Please check and provide feedback at support@lmis.gov.pk
         </h5>

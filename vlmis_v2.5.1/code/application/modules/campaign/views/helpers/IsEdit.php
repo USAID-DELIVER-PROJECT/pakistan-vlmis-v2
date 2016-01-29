@@ -1,7 +1,30 @@
 <?php
 
+/**
+ * Zend_View_Helper_IsEdit
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage campaign
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+/**
+ *  Zend View Helper Is Edit
+ */
+
 class Zend_View_Helper_IsEdit extends Zend_View_Helper_Abstract {
 
+    /**
+     * isEdit
+     * @param type $campaign_id
+     * @param type $campaign_readiness_uc_id
+     * @return boolean
+     */
     public function isEdit($campaign_id, $campaign_readiness_uc_id) {
 
         $result = 0;
@@ -19,11 +42,7 @@ class Zend_View_Helper_IsEdit extends Zend_View_Helper_Abstract {
             $result = 1;
         }
 
-        if ($result == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return $result == 1;
     }
 
 }

@@ -1,7 +1,87 @@
 <?php
 
-class Form_AddRefrigerator extends Zend_Form {
+/**
+ * Form_AddRefrigerator
+ *
+ * 
+ *
+ * Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Add Refrigerator
+ */
+class Form_AddRefrigerator extends Form_Base {
+
+    /**
+     * 
+     * $_fields
+     * 
+     * @ catalogue_id: "Catalogue ID"
+     * 
+     * @ ccm_make_id: "Make"
+     * 
+     * @ ccm_model_id: "Model"
+     * 
+     * @ ccm_asset_type_id: "Asset Sub Type"
+     * 
+     * @ cfc_free: "CFC Free Sticker"
+     * 
+     * @ is_pis_pqs: "Is PIS/PQS"
+     * 
+     * @ asset_dimension_length: "Dimensions"
+     * 
+     * @ asset_dimension_width: "Dimensions"
+     * 
+     * @ asset_dimension_height: "Dimensions"
+     * 
+     * @ gross_capacity_4: "Capacity"
+     * 
+     * @ gross_capacity_20: "Capacity"
+     * 
+     * @ net_capacity_4: "Capacity"
+     * 
+     * @ net_capacity_20: "Capacity"
+     * 
+     * @ serial_number: "Serial Number"
+     * 
+     * @ working_since: "Working Since Year"
+     * 
+     * @ catalogue_id_popup: "Catalogue id"
+     * 
+     * @ ccm_make_popup: "Make"
+     * 
+     * @ ccm_model_popup: "Model"
+     * 
+     * @ ccm_asset_type_id_popup: "Asset Sub Type"
+     * 
+     * @ asset_dimension_length_popup: "Dimensions"
+     * 
+     * @ asset_dimension_width_popup: "Dimensions"
+     * 
+     * @ asset_dimension_height_popup: "Dimensions"
+     * 
+     * @ gross_capacity_4_popup: "Capacity"
+     * 
+     * @ gross_capacity_20_popup: "Capacity"
+     * 
+     * @ net_capacity_4_popup: "Capacity"
+     * 
+     * @ net_capacity_20_popup: "Capacity"
+     * 
+     * @ temperature_monitor: "temperature_monitor"
+     * 
+     * @ refrigerator_gas_type: "refrigerator_gas_type"
+     * 
+     * @ power_source: "power_source"
+     * 
+     * @ product_price: "product_price"
+     * 
+     * @var type 
+     * 
+     */
     private $_fields = array(
         "catalogue_id" => "Catalogue ID",
         "ccm_make_id" => "Make",
@@ -34,6 +114,24 @@ class Form_AddRefrigerator extends Zend_Form {
         "power_source" => "power_source",
         "product_price" => "product_price"
     );
+
+    /**
+     * $_list
+     * 
+     * @ccm_make_id: array()
+     * 
+     * @ccm_model_id: array()
+     * 
+     * @ccm_asset_type_id: array()
+     * 
+     * @temperature_monitor: array()
+     * 
+     * @refrigerator_gas_type: array()
+     * 
+     * @power_source: array()
+     * 
+     * @var type 
+     */
     private $_list = array(
         'ccm_make_id' => array(),
         'ccm_model_id' => array(),
@@ -42,6 +140,16 @@ class Form_AddRefrigerator extends Zend_Form {
         'refrigerator_gas_type' => array(),
         'power_source' => array()
     );
+
+    /**
+     * $_radio
+     * 
+     * @cfc_free: array()
+     * 
+     * @is_pis_pqs: array()
+     * 
+     * @var type 
+     */
     private $_radio = array(
         'cfc_free' => array(
             "2" => "Not Applicable",
@@ -53,12 +161,28 @@ class Form_AddRefrigerator extends Zend_Form {
             "0" => "No",
         )
     );
+
+    /**
+     * $_hidden
+     * 
+     * @ccm_id: "pkId"
+     * 
+     * @ccm_make_id_hidden: ""
+     * 
+     * @ccm_model_id_hidden: ""
+     * 
+     * 
+     * @var type 
+     */
     private $_hidden = array(
         "ccm_id" => "pkId",
         "ccm_make_id_hidden" => "",
-        "ccm_model_id_hidden" => "",
+        "ccm_model_id_hidden" => ""
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         //Generate Asset Id Equipment Code Combo
@@ -83,7 +207,7 @@ class Form_AddRefrigerator extends Zend_Form {
 
         //Generate Temperature Monitor  Combo
         $list_master = new Model_ListMaster();
-        $list_master->form_values = array('pk_id' => Model_ListMaster::Temperature_Monitor);
+        $list_master->form_values = array('pk_id' => Model_ListMaster::TEMPERATURE_MONITOR);
         $result5 = $list_master->getListDetailByType();
         $this->_list["temperature_monitor"][''] = "Select";
         foreach ($result5 as $rs) {
@@ -92,7 +216,7 @@ class Form_AddRefrigerator extends Zend_Form {
 
         //Generate Temperature Monitor  Combo
         $list_master = new Model_ListMaster();
-        $list_master->form_values = array('pk_id' => Model_ListMaster::refrigerant_gas_type);
+        $list_master->form_values = array('pk_id' => Model_ListMaster::REFRIGERANT_GAS_TYPE);
         $result5 = $list_master->getListDetailByType();
         $this->_list["refrigerator_gas_type"][''] = "Select";
         foreach ($result5 as $rs) {
@@ -101,7 +225,7 @@ class Form_AddRefrigerator extends Zend_Form {
 
         //Generate Temperature Monitor  Combo
         $list_master = new Model_ListMaster();
-        $list_master->form_values = array('pk_id' => Model_ListMaster::power_source);
+        $list_master->form_values = array('pk_id' => Model_ListMaster::POWER_SOURCE);
         $result5 = $list_master->getListDetailByType();
         $this->_list["power_source"][''] = "Select";
         foreach ($result5 as $rs) {
@@ -125,142 +249,178 @@ class Form_AddRefrigerator extends Zend_Form {
 
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * gross_capacity_4
+                 * 
+                 * gross_capacity_4_popup
+                 * 
+                 */
                 case "gross_capacity_4":
                 case "gross_capacity_4_popup":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Gross Cap 4"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Gross Cap 4");
                     break;
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * gross_capacity_20
+                 * 
+                 * gross_capacity_20_popup
+                 * 
+                 */
                 case "gross_capacity_20_popup":
                 case "gross_capacity_20":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Gross Cap -20"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Gross Cap -20");
                     break;
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * net_capacity_4
+                 * 
+                 * net_capacity_4_popup
+                 * 
+                 */
                 case "net_capacity_4_popup":
                 case "net_capacity_4":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Net Cap 4"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Net Cap 4");
                     break;
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * net_capacity_20
+                 * 
+                 * net_capacity_20_popup
+                 * 
+                 */
                 case "net_capacity_20":
                 case "net_capacity_20_popup":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Net Cap -20"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Net Cap -20");
                     break;
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * working_since
+                 * 
+                 */
                 case "working_since":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * serial_number
+                 * 
+                 * product_price
+                 * 
+                 * ccm_make_popup
+                 * 
+                 * ccm_model_popup
+                 * 
+                 * catalogue_id_popup
+                 * 
+                 */
                 case "serial_number":
                 case "product_price":
                 case "ccm_make_popup":
                 case "ccm_model_popup":
                 case "catalogue_id_popup":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * asset_dimension_length
+                 * 
+                 * asset_dimension_length_popup
+                 * 
+                 */
                 case "asset_dimension_length":
                 case "asset_dimension_length_popup":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Length"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Length");
                     break;
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * asset_dimension_width
+                 * 
+                 * asset_dimension_width_popup
+                 * 
+                 */
                 case "asset_dimension_width":
                 case "asset_dimension_width_popup":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Width"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Width");
                     break;
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * asset_dimension_height
+                 * 
+                 * asset_dimension_height_popup
+                 * 
+                 */
                 case "asset_dimension_height":
                 case "asset_dimension_height_popup":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Height"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Height");
                     break;
+                /**
+                 * 
+                 * Default Switch Statement
+                 * 
+                 */
                 default:
                     break;
             }
 
+            /**
+             * 
+             * Form Radio Fields population
+             * 
+             */
             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createRadio($col, $this->_radio[$col]);
             }
 
-            if ($col == "ccm_asset_type_id_popup") {
-                $attribute_class = "form-control form-group";
-            } elseif ($col == "catalogue_id") {
+            /**
+             * 
+             * Catalog_id check for field css classes
+             * 
+             */
+            if ($col == "catalogue_id") {
                 $attribute_class = "col-md-2 form-control input-small form-group";
             } else {
                 $attribute_class = "form-control form-group";
             }
 
+            /**
+             * 
+             * Populate form select fields
+             * 
+             */
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => $attribute_class),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
-
+        /**
+         * 
+         * Populate hidden fields
+         * 
+         */
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
                 case "ccm_id":
                 case "ccm_make_id_hidden":
                 case "ccm_model_id_hidden":
-
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -268,26 +428,11 @@ class Form_AddRefrigerator extends Zend_Form {
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

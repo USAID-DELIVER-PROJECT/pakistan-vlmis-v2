@@ -1,4 +1,9 @@
 <?php
+/**
+ *  phtml for tOPV Coverage Detail
+ */
+?>
+<?php
 $from_sel_month = $this->from_month_sel;
 $from_sel_year = $this->from_year_sel;
 $year = $this->year_sel;
@@ -22,6 +27,8 @@ $header .= ",<div style='text-align:center;'>less than 1 year</div>";
 $header .= ",<div style='text-align:center;'>Coverage tOPV-1(0-11 Months)</div>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan";
 $header .= ",<div style='text-align:center;'>Coverage tOPV-2(0-11 Months)</div>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan";
 $header .= ",<div style='text-align:center;'>Coverage tOPV-3(0-11 Months)</div>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan";
+$header .= ",<div style='text-align:center;'>Total less than 1 year</div>";
+$header .= ",<div style='text-align:center;'>Total % less than 1 year</div>";
 $header .= ",<div style='text-align:center;'>less than 2 year</div>";
 
 $header .= ",<div style='text-align:center;'>Coverage tOPV-1(12-23 Months)</div>,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan";
@@ -92,7 +99,13 @@ $header1 .= ',<span>M</span>,<span>F</span>';
 $header1 .= ',<span>tOPV-3</span>';
 $header1 .= ',<span>tOPV-3</span>';
 $ro .= ',ro,ro,ro,ro,ro,ro,ro,ro';
-
+// total less than 1 year
+$header0 .= ',#rspan,#rspan';
+$header1 .= ',#rspan,#rspan';
+$cspan .= ',#cspan,#cspan';
+$width .= ',60,60';
+$ro .= ',ro,ro';
+// target less than 2 year
 $cspan .= ',#cspan';
 $header0 .= ',#rspan';
 $header1 .= ',#rspan';
@@ -144,12 +157,26 @@ $header1 .= ',<span>tOPV-3</span>';
 $header1 .= ',<span>tOPV-3</span>';
 $ro .= ',ro,ro,ro,ro,ro,ro,ro,ro';
 
+$header .= ',Total less than 2 years,Total % less than 2 years';
+$header0 .= ',#rspan,#rspan';
+$header1 .= ',#rspan,#rspan';
+$cspan .= ',#cspan,#cspan';
+$width .= ',60,60';
+$ro .= ',ro,ro';
+
+$header .= ',Total Overall,Total Overall %';
+$header0 .= ',#rspan,#rspan';
+$header1 .= ',#rspan,#rspan';
+$cspan .= ',#cspan,#cspan';
+$width .= ',60,60';
+$ro .= ',ro,ro';
+
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 $xml_store .= "<rows>";
 
 $sum_arr = array();
 
-$query = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 0,0,23);
+$query = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 0, 0, 23);
 $j = 1;
 
 
@@ -169,12 +196,14 @@ foreach ($query as $row) {
     $data_arr[$location_id][] = $row['outreach_female_0'];
     $data_arr[$location_id][] = $row['consumption_0'];
     $data_arr[$location_id][] = $row['consumptionPercentage_0'];
+    $total_consumpiton[$location_id][] = $row['consumption_0'];
     // Target
+
     $data_arr[$location_id][] = $row['target'];
     $j++;
 // end
 }
-$query1 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 1,0,11);
+$query1 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 1, 0, 11);
 
 
 foreach ($query1 as $row) {
@@ -190,11 +219,12 @@ foreach ($query1 as $row) {
     $data_arr[$location_id][] = $row['outreach_female_0'];
     $data_arr[$location_id][] = $row['consumption_0'];
     $data_arr[$location_id][] = $row['consumptionPercentage_1'];
+    $total_consumpiton[$location_id][] = $row['consumption_0'];
     // Target
 // end
 }
 
-$query2 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 2,0,11);
+$query2 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 2, 0, 11);
 
 foreach ($query2 as $row) {
 
@@ -209,11 +239,12 @@ foreach ($query2 as $row) {
     $data_arr[$location_id][] = $row['outreach_female_0'];
     $data_arr[$location_id][] = $row['consumption_0'];
     $data_arr[$location_id][] = $row['consumptionPercentage_1'];
+    $total_consumpiton[$location_id][] = $row['consumption_0'];
     // Target
 // end
 }
 
-$query3 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 3,0,11);
+$query3 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_0_11, 3, 0, 11);
 
 
 foreach ($query3 as $row) {
@@ -229,20 +260,28 @@ foreach ($query3 as $row) {
     $data_arr[$location_id][] = $row['outreach_female_0'];
     $data_arr[$location_id][] = $row['consumption_0'];
     $data_arr[$location_id][] = $row['consumptionPercentage_1'];
+    $total_consumpiton[$location_id][] = $row['consumption_0'];
     // Target
-    $data_arr[$location_id][] = $row['l2bt'];
-
 // end
 }
+$query_less_1year = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 3, 12, 23);
 
-$query4 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 1,12,23);
+foreach ($query_less_1year as $row7_less_1year) {
+
+    $target_avg = ($row7_less_1year['lbt'] + $row7_less_1year['target']);
+    $location_id_less_1year = $row7_less_1year['location_id'];
+    $data_arr[$location_id_less_1year][] = array_sum($total_consumpiton[$location_id_less_1year]);
+    $data_arr[$location_id_less_1year][] = @Round((array_sum($total_consumpiton[$location_id_less_1year]) / $target_avg) * 100);
+}
+
+$query4 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 1, 12, 23);
 
 
 foreach ($query4 as $row) {
 
     $location_id = $row['location_id'];
 
-
+    $data_arr[$location_id][] = $row['l2bt'];
     $data_arr[$location_id][] = $row['fixed_inside_uc_male_0'];
     $data_arr[$location_id][] = $row['fixed_inside_uc_female_0'];
     $data_arr[$location_id][] = $row['male_doses'];
@@ -251,10 +290,13 @@ foreach ($query4 as $row) {
     $data_arr[$location_id][] = $row['outreach_female_0'];
     $data_arr[$location_id][] = $row['consumption_0'];
     $data_arr[$location_id][] = $row['consumptionPercentage_2'];
+    $total_consumpiton[$location_id][] = $row['consumption_0'];
+    $total_consumpiton2[$location_id][] = $row['consumption_0'];
+
     // Target
 // end
 }
-$query5 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 2,12,23);
+$query5 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 2, 12, 23);
 
 foreach ($query5 as $row) {
 
@@ -269,10 +311,12 @@ foreach ($query5 as $row) {
     $data_arr[$location_id][] = $row['outreach_female_0'];
     $data_arr[$location_id][] = $row['consumption_0'];
     $data_arr[$location_id][] = $row['consumptionPercentage_2'];
+    $total_consumpiton[$location_id][] = $row['consumption_0'];
+    $total_consumpiton2[$location_id][] = $row['consumption_0'];
     // Target
 // end
 }
-$query6 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 3,12,23);
+$query6 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 3, 12, 23);
 
 foreach ($query6 as $row) {
 
@@ -287,8 +331,30 @@ foreach ($query6 as $row) {
     $data_arr[$location_id][] = $row['outreach_female_0'];
     $data_arr[$location_id][] = $row['consumption_0'];
     $data_arr[$location_id][] = $row['consumptionPercentage_2'];
+    $total_consumpiton[$location_id][] = $row['consumption_0'];
+    $total_consumpiton2[$location_id][] = $row['consumption_0'];
     // Target
 // end
+}
+$query_less_2year = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 3, 12, 23);
+
+foreach ($query_less_2year as $row_less_2year) {
+
+    $target_avg = ($row_less_2year['l2bt']);
+    $location_id_less_2year = $row_less_2year['location_id'];
+    $data_arr[$location_id_less_2year][] = array_sum($total_consumpiton2[$location_id_less_2year]);
+    $data_arr[$location_id_less_2year][] = @Round((array_sum($total_consumpiton2[$location_id_less_2year]) / $target_avg) * 100);
+}
+
+
+$query7 = $this->reports()->tOPVCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, Model_ListDetail::AGE_12_23, 3, 12, 23);
+
+foreach ($query7 as $row7) {
+
+    $target_avg = ($row7['lbt'] + $row7['target'] + $row7['l2bt']);
+    $location_id7 = $row7['location_id'];
+    $data_arr[$location_id7][] = array_sum($total_consumpiton[$location_id7]);
+    $data_arr[$location_id7][] = @Round((array_sum($total_consumpiton[$location_id7]) / $target_avg) * 100);
 }
 
 foreach ($data_arr as $dis_id => $sub_arr) {
@@ -303,7 +369,6 @@ foreach ($data_arr as $dis_id => $sub_arr) {
             $sum_arr[$key] = 0;
         }
         $sum_arr[$key] += $value;
-        //$accpLimit = '0';
         if ($key > 2) {
 
             $xml_store .= "<cell style=\"text-align:right;\">$value </cell>";
@@ -359,30 +424,48 @@ foreach ($sum_arr as $key => $value) {
 
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val4 / $total_wh) * 100) . " %</cell>";
     } else if ($key == 36) {
+        $total_val4 = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 37) {
+
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val4 / $total_wh) * 100) . " %</cell>";
+    } else if ($key == 38) {
 
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . " </cell>";
-    } else if ($key > 36 && $key < 43) {
+    } else if ($key > 38 && $key < 45) {
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
-    } else if ($key == 43) {
+    } else if ($key == 45) {
         $total_val5 = $value;
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
-    } else if ($key == 44) {
+    } else if ($key == 46) {
         ;
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val5 / $total_wh) * 100) . " %</cell>";
-    } else if ($key > 44 && $key < 51) {
+    } else if ($key > 46 && $key < 53) {
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
-    } else if ($key == 51) {
+    } else if ($key == 53) {
         $total_val = $value;
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
-    } else if ($key == 52) {
+    } else if ($key == 54) {
 
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val / $total_wh) * 100) . " %</cell>";
-    } else if ($key > 52 && $key < 59) {
+    } else if ($key > 54 && $key < 61) {
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
-    } else if ($key == 59) {
+    } else if ($key == 61) {
         $total_val = $value;
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
-    } else if ($key == 60) {
+    } else if ($key == 62) {
+
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val / $total_wh) * 100) . " %</cell>";
+    } else if ($key == 63) {
+        $total_val = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 64) {
+
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val / $total_wh) * 100) . " %</cell>";
+    } else if ($key == 65) {
+        $total_val = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+    } else if ($key == 66) {
 
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val / $total_wh) * 100) . " %</cell>";
     }
@@ -390,14 +473,7 @@ foreach ($sum_arr as $key => $value) {
 
 $xml_store .="</row>";
 
-
-
 $xml_store .="</rows>";
-
-/* $in_type = 'N';
-  $in_stk = 1;
-  $in_year = $sel_year;
- */
 ?>
 <?php
 $report_title = $this->report_title;
@@ -410,7 +486,7 @@ if (!empty($sel_month)) {
 
 <div class="page-content-wrapper">
     <div class="page-content">
-        <h3 class="page-title"><?php echo $report_title . ' ' . $report_month . ' ' . $sel_year; ?></h3>
+        <h3 class="page-title"><?php echo $report_title; ?></h3>
         <h5 style="color: red">
             Note: This report is under user testing.Please check and provide feedback at support@lmis.gov.pk
         </h5>

@@ -1,110 +1,132 @@
 <?php
 
-
+/**
+*  Model for Stock Master
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * StockMaster
+ *  StockMaster
  */
 class StockMaster
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $transactionDate
      * @var datetime $transactionDate
      */
     private $transactionDate;
 
     /**
+     * $transactionNumber
      * @var string $transactionNumber
      */
     private $transactionNumber;
 
     /**
+     * $transactionCounter
      * @var integer $transactionCounter
      */
     private $transactionCounter;
 
     /**
+     * $transactionReference
      * @var string $transactionReference
      */
     private $transactionReference;
 
     /**
+     * $dispatchBy
      * @var string $dispatchBy
      */
     private $dispatchBy;
 
     /**
+     * $draft
      * @var boolean $draft
      */
     private $draft;
 
     /**
+     * $comments
      * @var text $comments
      */
     private $comments;
 
     /**
+     * $parentId
      * @var integer $parentId
      */
     private $parentId;
 
     /**
+     * $campaignId
      * @var integer $campaignId
      */
     private $campaignId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $issueFrom
      * @var date $issueFrom
      */
     private $issueFrom;
 
     /**
+     * $issueTo
      * @var date $issueTo
      */
     private $issueTo;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $transactionType
      * @var TransactionTypes
      */
     private $transactionType;
 
     /**
+     * $fromWarehouse
      * @var Warehouses
      */
     private $fromWarehouse;
 
     /**
+     * $toWarehouse
      * @var Warehouses
      */
     private $toWarehouse;
 
     /**
+     * $stakeholderActivity
      * @var StakeholderActivities
      */
     private $stakeholderActivity;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

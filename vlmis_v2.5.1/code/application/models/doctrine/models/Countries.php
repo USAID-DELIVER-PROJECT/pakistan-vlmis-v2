@@ -1,40 +1,49 @@
 <?php
 
+/**
+*  Model for Countries
+*/
 
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Countries
+ *  Countries
  */
 class Countries
 {
     /**
+     * $id
      * @var integer $id
      */
     private $id;
 
     /**
+     * $countryname
      * @var string $countryname
      */
     private $countryname;
 
     /**
+     * $createdBy
      * @var integer $createdBy
      */
     private $createdBy;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedBy
      * @var integer $modifiedBy
      */
     private $modifiedBy;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;

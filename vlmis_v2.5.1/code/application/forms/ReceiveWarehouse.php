@@ -1,26 +1,36 @@
 <?php
 
-class Form_ReceiveWarehouse extends Zend_Form {
+/**
+ * Form_ReceiveWarehouse
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Receive Warehouse
+ */
+class Form_ReceiveWarehouse extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "issue_no" => "Issue No",
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "issue_no":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "required" => "required"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
-            }
+            if ($col == "issue_no") {
+                parent::createText($col);
+                }
         }
     }
 

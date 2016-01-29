@@ -1,70 +1,84 @@
 <?php
 
-
+/**
+*  Model for Shipments
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Shipments
+ *  Shipments
  */
 class Shipments
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $referenceNumber
      * @var string $referenceNumber
      */
     private $referenceNumber;
 
     /**
+     * $shipmentDate
      * @var date $shipmentDate
      */
     private $shipmentDate;
 
     /**
+     * $shipmentQuantity
      * @var decimal $shipmentQuantity
      */
     private $shipmentQuantity;
 
     /**
-     * @var integer $fundingSourceId
+     * $fundingSource
+     * @var Warehouses $fundingSource
      */
-    private $fundingSourceId;
+    private $fundingSource;
 
     /**
+     * $createdDate
      * @var date $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $itemPackSize
      * @var ItemPackSizes
      */
     private $itemPackSize;
 
     /**
+     * $stakeholderActivity
      * @var StakeholderActivities
      */
     private $stakeholderActivity;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
@@ -143,11 +157,11 @@ class Shipments
     /**
      * Set fundingSourceId
      *
-     * @param integer $fundingSourceId
+     * @param Warehouses $fundingSource
      */
-    public function setFundingSourceId($fundingSourceId)
+    public function setFundingSource(\Warehouses $fundingSource)
     {
-        $this->fundingSourceId = $fundingSourceId;
+        $this->fundingSource = $fundingSource;
     }
 
     /**
@@ -155,9 +169,9 @@ class Shipments
      *
      * @return integer 
      */
-    public function getFundingSourceId()
+    public function getFundingSource()
     {
-        return $this->fundingSourceId;
+        return $this->fundingSource;
     }
 
     /**

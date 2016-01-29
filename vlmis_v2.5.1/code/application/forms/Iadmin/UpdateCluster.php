@@ -1,7 +1,37 @@
 <?php
 
-class Form_Iadmin_UpdateCluster extends Zend_Form {
+/**
+ * Form_Iadmin_UpdateCluster
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin Update Cluster
+ */
+class Form_Iadmin_UpdateCluster extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Form Fields
+     * @province: Product
+     * @district: District
+     * @user: User
+     * @warehouses: Warehouses
+     * @users: Users
+     * @starting_on: starting_on
+     * @working_uptil: working_uptil
+     * @from_edit: from_edit
+     * @status: Status
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "province" => "Product",
         "district" => "District",
@@ -13,6 +43,11 @@ class Form_Iadmin_UpdateCluster extends Zend_Form {
         "from_edit" => "from_edit",
         "status" => "Status"
     );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'province' => array(),
         'district' => array(),
@@ -20,21 +55,32 @@ class Form_Iadmin_UpdateCluster extends Zend_Form {
         'warehouses' => array(),
         'users' => array()
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "province_hidden" => "pkId",
         "district_hidden" => "pkId",
         "user_hidden" => "pkId",
     );
 
-     private $_radio = array(
+    /**
+     * $_radio
+     * @var type 
+     */
+    private $_radio = array(
         'status' => array(
             "0" => "Active",
             "1" => "In Active"
         )
     );
+
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
-
-
         $locations = new Model_Locations();
         $result2 = $locations->getAllProvinces();
 
@@ -49,45 +95,22 @@ class Form_Iadmin_UpdateCluster extends Zend_Form {
 
         foreach ($this->_fields as $col => $name) {
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
             switch ($col) {
 
                 case "starting_on":
                 case "working_uptil":
                 case "from_edit":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
                 default:
                     break;
             }
-            
-               if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-            } 
-            
+
+            if (in_array($col, array_keys($this->_radio))) {
+                parent::createRadio($col, $this->_radio[$col]);
+            }
         }
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
@@ -96,9 +119,7 @@ class Form_Iadmin_UpdateCluster extends Zend_Form {
                 case "user_hidden":
                 case "district_hidden":
                 case "province_hidden":
-
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -106,26 +127,12 @@ class Form_Iadmin_UpdateCluster extends Zend_Form {
         }
     }
 
+    
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

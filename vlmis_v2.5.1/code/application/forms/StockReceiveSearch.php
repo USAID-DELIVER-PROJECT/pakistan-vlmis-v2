@@ -1,9 +1,35 @@
 <?php
-/**
- * 
- */
-class Form_StockReceiveSearch extends Zend_Form {
 
+/**
+ * Form_StockReceiveSearch
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+*  Form for Stock Receive Search
+*/
+
+class Form_StockReceiveSearch extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Form Fields
+     * @searchby: Search By
+     * @number: Number
+     * @warehouses: Warehouse/Supplier
+     * @product: Product
+     * @date_from: Date From
+     * @activity_id: Purpose
+     * @date_to: Date To
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "searchby" => "Search By",
         "number" => "Number",
@@ -13,6 +39,17 @@ class Form_StockReceiveSearch extends Zend_Form {
         "activity_id" => "Purpose",
         "date_to" => "Date To",
     );
+    
+    /**
+     * $_list
+     * 
+     * List
+     * @searchby
+     * @product
+     * @warehouses
+     * 
+     * @var type 
+     */
     private $_list = array(
         'searchby' => array(
             "0" => "Select",
@@ -25,7 +62,7 @@ class Form_StockReceiveSearch extends Zend_Form {
     );
 
     /**
-     * 
+     * Initializes Form Fields
      */
     public function init() {
         //Generate Products(items) Combo
@@ -53,54 +90,25 @@ class Form_StockReceiveSearch extends Zend_Form {
 
             switch ($col) {
                 case "number":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 case "date_from":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                        "value" => $date_from
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyTextWithValue($col, $date_from);
                     break;
                 case "date_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                        "value" => $date_to
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyTextWithValue($col, $date_to);
                     break;
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
             //Generate Purpose(activity_id) combo 
             $stk_activities = new Model_StakeholderActivities();
             $result4 = $stk_activities->getAllStakeholderActivitiesIssues();
             if ($result4) {
-                $stakeholder_id = $result4[0]['pkId'];
                 foreach ($result4 as $stk_activity) {
                     $this->_list["activity_id"][''] = "Select";
                     $this->_list["activity_id"][$stk_activity['pkId']] = $stk_activity['activity'];

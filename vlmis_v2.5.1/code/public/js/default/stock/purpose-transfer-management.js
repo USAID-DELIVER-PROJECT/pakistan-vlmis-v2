@@ -21,13 +21,19 @@ $(function () {
     });
 
     if ($("#product").val() != '') {
-        $("#product").trigger("change");
+        $("#product").trigger("change");        
         $('#transfer-management-div').show();
+        $('#transfer-management-msg-div').show();
         $('#history-div').show();
+    }
+    else
+    {
+        $('#transfer-management-msg-div').hide();
     }
 
     $("#batch").change(function () {
         $('#transfer-management-div').hide();
+        $('#transfer-management-msg-div').hide();
         $('#history-div').hide();
     });
 
@@ -106,7 +112,7 @@ $(function () {
             }
         });
 
-        if (form == true) {
+        if (form) {
             $("#transfer-management").submit();
         }
 

@@ -1,7 +1,26 @@
 <?php
+/**
+ * Zend_View_Helper_AllLevelCombo
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage reports
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Zend View Helper All Level Combo
+ */
 class Zend_View_Helper_AllLevelCombo extends Zend_View_Helper_Abstract {
 
+    /**
+     * All Level Combo
+     * @param type $office_term
+     * @param type $postfix
+     * @return boolean
+     */
     public function allLevelCombo($office_term = "", $postfix = null) {
 
         $identity = App_Auth::getInstance();
@@ -13,13 +32,6 @@ class Zend_View_Helper_AllLevelCombo extends Zend_View_Helper_Abstract {
             case 1:
             case 2:
             case 3:
-                $arr_province = array(
-                    '1' => $translate->translate('Federal'),
-                    '2' => $translate->translate('Province'),
-                    '3' => $translate->translate('Division'),
-                    '4' => $translate->translate('District')
-                );
-                break;
             case 4:
                 $arr_province = array(
                     '1' => $translate->translate('Federal'),
@@ -56,35 +68,8 @@ class Zend_View_Helper_AllLevelCombo extends Zend_View_Helper_Abstract {
                 );
                 break;
             case 17:
-                $arr_province = array(
-                    '1' => $translate->translate('Federal'),
-                    '2' => $translate->translate('Province'),
-                    '3' => $translate->translate('Division'),
-                    '4' => $translate->translate('District'),
-                    '5' => $translate->translate('Tehsil-Taluka')
-                    
-                );
-                break; 
-               case 18:
-                $arr_province = array(
-                    '1' => $translate->translate('Federal'),
-                    '2' => $translate->translate('Province'),
-                    '3' => $translate->translate('Division'),
-                    '4' => $translate->translate('District'),
-                    '5' => $translate->translate('Tehsil-Taluka')
-                    
-                );
-                break; 
-               case 19:
-                $arr_province = array(
-                    '1' => $translate->translate('Federal'),
-                    '2' => $translate->translate('Province'),
-                    '3' => $translate->translate('Division'),
-                    '4' => $translate->translate('District'),
-                    '5' => $translate->translate('Tehsil-Taluka')
-                    
-                );
-                break; 
+            case 18:
+            case 19:
             case 20:
                 $arr_province = array(
                     '1' => $translate->translate('Federal'),
@@ -92,9 +77,9 @@ class Zend_View_Helper_AllLevelCombo extends Zend_View_Helper_Abstract {
                     '3' => $translate->translate('Division'),
                     '4' => $translate->translate('District'),
                     '5' => $translate->translate('Tehsil-Taluka')
-                    
                 );
-                break; 
+                break;
+
             default:
                 $arr_province = array(
                     '1' => $translate->translate('Federal'),
@@ -110,10 +95,11 @@ class Zend_View_Helper_AllLevelCombo extends Zend_View_Helper_Abstract {
         <div class="control-group span12" id="all_level_combo">
             <div class="col-md-3">
                 <label class="control-label" for="office" class="col-md-7"><?php
-                    if (empty($office_term))
+                    if (empty($office_term)) {
                         echo $translate->translate("Office");
-                    else
+                    } else {
                         echo $office_term;
+                    }
                     ?> <span class="red">*</span></label>
                 <div class="controls">
                     <select name="office" id="office<?php echo $postfix; ?>" class="form-control">
@@ -122,7 +108,7 @@ class Zend_View_Helper_AllLevelCombo extends Zend_View_Helper_Abstract {
                         foreach ($arr_province as $key => $value) {
                             ?>
                             <option value="<?php echo $key; ?>" ><?php echo $value; ?></option>
-        <?php } ?>
+                        <?php } ?>
                     </select>
                 </div>
             </div>
@@ -132,8 +118,8 @@ class Zend_View_Helper_AllLevelCombo extends Zend_View_Helper_Abstract {
                     <select name="combo1" id="combo1<?php echo $postfix; ?>" class="form-control">
                     </select>
                 </div>
-            </div>	
-            <div class="col-md-3" id="div_combo2<?php echo $postfix; ?>" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>		
+            </div>
+            <div class="col-md-3" id="div_combo2<?php echo $postfix; ?>" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>
                 <label class="control-label" id="lblcombo2"><?php echo $translate->translate("District"); ?> <span class="red">*</span></label>
                 <div class="controls">
                     <select name="combo2" id="combo2<?php echo $postfix; ?>" class="form-control">

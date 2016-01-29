@@ -1,7 +1,32 @@
 <?php
 
+/**
+ * Zend_View_Helper_GetBatchMasterId
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+/**
+ *  Zend View Helper Get Batch Master Id
+ */
+
 class Zend_View_Helper_GetBatchMasterId extends Zend_View_Helper_Abstract {
 
+    /**
+     * Get Batch Master Id
+     * @param type $number
+     * @param type $item_id
+     * @param type $current_level
+     * @return boolean
+     */
     public function getBatchMasterId($number, $item_id, $current_level) {
 
         $em = Zend_Registry::get("doctrine");

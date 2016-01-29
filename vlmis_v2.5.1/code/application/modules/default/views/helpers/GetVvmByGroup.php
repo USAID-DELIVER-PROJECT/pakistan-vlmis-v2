@@ -1,7 +1,31 @@
 <?php
 
+/**
+ * Zend_View_Helper_GetVvmByGroup
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+
+/**
+ *  Zend View Helper Get Vvm By Group
+ */
 class Zend_View_Helper_GetVvmByGroup extends Zend_View_Helper_Abstract {
 
+    /**
+     * Get Vvm By Group
+     * @param type $group_id
+     * @param type $current_vvm
+     * @param type $key
+     */
     public function getVvmByGroup($group_id, $current_vvm, $key) {
 
         $em = Zend_Registry::get("doctrine");

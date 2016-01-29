@@ -1,70 +1,84 @@
 <?php
 
-
+/**
+*  Model for Placement Summary
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PlacementSummary
+ *  PlacementSummary
  */
 class PlacementSummary
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $itemName
      * @var string $itemName
      */
     private $itemName;
 
     /**
+     * $batchNumber
      * @var string $batchNumber
      */
     private $batchNumber;
 
     /**
+     * $quantity
      * @var decimal $quantity
      */
     private $quantity;
 
     /**
+     * $cartons
      * @var integer $cartons
      */
     private $cartons;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $stockBatchWarehouse
      * @var StockBatchWarehouses
      */
     private $stockBatchWarehouse;
 
     /**
+     * $placementLocation
      * @var PlacementLocations
      */
     private $placementLocation;
 
     /**
+     * $vvmStage
      * @var VvmStages
      */
     private $vvmStage;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

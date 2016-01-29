@@ -1,17 +1,41 @@
 <?php
 
+/**
+ * Api_GeoController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Api
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+*  Controller for Api Geo
+*/
+
 class Api_GeoController extends App_Controller_Base {
 
+    /**
+     * Api_GeoController init
+     */
     public function init() {
         parent::init();
         $this->_helper->viewRenderer->setNoRender(TRUE);
         $this->_helper->layout()->disableLayout();
     }
 
+    /**
+     * Api_GeoController index
+     */
     public function indexAction() {
         echo "Hello";
     }
 
+    /**
+     * Get Mos Map Data
+     */
     public function getMosMapDataAction() {
 
         $year = $this->_request->getParam('year', '');
@@ -27,13 +51,16 @@ class Api_GeoController extends App_Controller_Base {
             $result = $geoModel->getDistrictMos($year, $month, $province, $product, $level);
         } else if ($type == 5) {
             $result = $geoModel->getTehsilMos($year, $month, $province, $district, $product);
-        }else{
+        } else {
             $result = $geoModel->getProvinceMos($year, $month, $province, $product, $level);
         }
 
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Amc Map Data
+     */
     public function getAmcMapDataAction() {
         $year = $this->_request->getParam('year', '');
         $month = $this->_request->getParam('month', '');
@@ -53,6 +80,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Reporting Rate
+     */
     public function getReportingRateAction() {
 
 
@@ -74,6 +104,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($return);
     }
 
+    /**
+     * Get Wastage Map Data
+     */
     public function getWastageMapDataAction() {
 
         $return = array();
@@ -96,6 +129,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($return);
     }
 
+    /**
+     * Get Wastages Vs Reporting
+     */
     public function getWastagesVsReportingAction() {
 
         $return = array();
@@ -112,6 +148,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($return);
     }
 
+    /**
+     * Get Expiry Alert
+     */
     public function getExpiryAlertAction() {
 
         $province = $this->_request->getParam('province', '');
@@ -130,6 +169,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($return);
     }
 
+    /**
+     * Get Vaccine Coverage
+     */
     public function getVaccineCoverageAction() {
 
 
@@ -149,6 +191,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($return);
     }
 
+    /**
+     * Get Coldchain Capacity
+     */
     public function getColdchainCapacityAction() {
 
         $province = $this->_request->getParam('province', '');
@@ -160,7 +205,7 @@ class Api_GeoController extends App_Controller_Base {
         $geoModel = new Model_Geo();
         if ($level == 1) {
             $return = $geoModel->getColdChainProvince($type);
-        }else if ($level == 4) {
+        } else if ($level == 4) {
             $return = $geoModel->getColdChainDistrict($province, $type);
         } else {
             $return = $geoModel->getColdchainTehsil($province, $district, $type);
@@ -171,6 +216,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($return);
     }
 
+    /**
+     * Get Color Classes
+     */
     public function getColorClassesAction() {
         $id = $this->_request->getParam('id', '');
 
@@ -180,6 +228,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Month Range
+     */
     public function getMonthRangeAction() {
         $id = $this->_request->getParam('month', '');
         $geoModel = new Model_Geo();
@@ -187,11 +238,13 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Reporting Rate Trend
+     */
     public function getReportingRateTrendAction() {
 
         $year = $this->_request->getParam('year', '');
         $month = $this->_request->getParam('month', '');
-        $province = $this->_request->getParam('province', '');
         $district = $this->_request->getParam('district', '');
 
         $geoModel = new Model_Geo();
@@ -200,6 +253,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($return);
     }
 
+    /**
+     * Get Wastages Ucs List
+     */
     public function getWastagesUcsListAction() {
 
         $year = $this->_request->getParam('year', '');
@@ -216,6 +272,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($return);
     }
 
+    /**
+     * Get Batch Map Data
+     */
     public function getBatchMapDataAction() {
         $batch = $this->_request->getParam('batch', '');
 
@@ -225,6 +284,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($result);
     }
 
+    /**
+     * Get Stock Batch Detail
+     */
     public function getStockBatchDetailAction() {
 
         $product = $this->_request->getParam('product', '');
@@ -242,6 +304,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($return);
     }
 
+    /**
+     * Get Cold Chain Asset Detail
+     */
     public function getColdChainAssetDetailAction() {
 
         $district = $this->_request->getParam('district', '');
@@ -259,6 +324,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($return);
     }
 
+    /**
+     * Get Demographic Map Data
+     */
     public function getDemographicMapDataAction() {
 
         $id = $this->_request->getParam('id', '');
@@ -278,6 +346,9 @@ class Api_GeoController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Get District List
+     */
     public function getDistrictListAction() {
 
         $province = $this->_request->getParam('province', '');
@@ -286,6 +357,9 @@ class Api_GeoController extends App_Controller_Base {
         echo $return;
     }
 
+    /**
+     * Get Non Reported Ucs
+     */
     public function getNonReportedUcsAction() {
 
         $year = $this->_request->getParam('year', '');
@@ -304,6 +378,9 @@ class Api_GeoController extends App_Controller_Base {
         echo Zend_Json::encode($return);
     }
 
+    /**
+     * Get Uc Wise Mos
+     */
     public function getUcWiseMosAction() {
 
         $year = $this->_request->getParam('year', '');

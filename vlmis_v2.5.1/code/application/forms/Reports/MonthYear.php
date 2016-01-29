@@ -1,16 +1,50 @@
 <?php
 
-class Form_Reports_MonthYear extends Zend_Form {
+/**
+ * Form_Reports_MonthYear
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Reports
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+*  Form for Reports Month Year
+*/
+
+class Form_Reports_MonthYear extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * @month: Select Month
+     * @year: Select Year
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "month" => "Select Month",
         "year" => "Select Year"
     );
+    
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'month' => array(),
         'year' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         $this->_list["month"][''] = "Select Month";
@@ -26,26 +60,8 @@ class Form_Reports_MonthYear extends Zend_Form {
         }
 
         foreach ($this->_fields as $col => $name) {
-
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control form-group"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => false,
-                    "required" => true,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
     }

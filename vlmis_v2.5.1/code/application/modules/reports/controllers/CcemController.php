@@ -1,27 +1,40 @@
 <?php
 
+/**
+ * Reports_CcemController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Reports
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Reports CCEM
+ */
 class Reports_CcemController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Reports_CcemController index
+     */
     public function indexAction() {
         // action body
     }
 
+    /**
+     * Total Population By Facility Type
+     */
     public function totalPopulationByFacilityTypeAction() {
         //ccem 4.4.1
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
         $ccm_warehouse = new Model_CcmWarehouses();
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                //$ccm_warehouse->form_values['office'] = (!empty($this->_request->combo1))?($this->_request->combo1):($this->_request->office);
-                $ccm_warehouse->form_values['office'] = (!empty($this->_request->combo1)) ? ($this->_request->combo1) : 0;
-                $data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $ccm_warehouse->form_values['office'] = (!empty($this->_request->combo1)) ? ($this->_request->combo1) : 0;
+            $data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -53,14 +66,15 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Refrigerator By Model Facility Type
+     */
     public function refrigeratorByModelFacilityTypeAction() {
         //ccem 4.4.15
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'FacilityType' => 'National Vaccine Store',
@@ -104,14 +118,16 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Annual CC Costs By Facility Type
+     */
     public function annualCCCostsByFacilityTypeAction() {
         //ccem 4.4.16
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
+
         $data_arr = array(
             0 => array(
                 'FacilityType' => 'National Vaccine Store',
@@ -154,6 +170,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Storage Capacity By Area 4c
+     */
     public function storageCapacityByArea4cAction() {
         //ccem 4.4.4
         $this->_helper->layout->setLayout('reports');
@@ -164,12 +183,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_warehouse->form_values = $form_values;
-                $data_arr = $ccm_warehouse->getStorageCapacityByArea4c();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_warehouse->form_values = $form_values;
+            $data_arr = $ccm_warehouse->getStorageCapacityByArea4c();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -210,6 +227,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Storage Capacity By Area 20c
+     */
     public function storageCapacityByArea20cAction() {
         //ccem 4.4.6
         $this->_helper->layout->setLayout('reports');
@@ -220,12 +240,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_warehouse->form_values = $form_values;
-                $data_arr = $ccm_warehouse->getStorageCapacityByArea20c();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_warehouse->form_values = $form_values;
+            $data_arr = $ccm_warehouse->getStorageCapacityByArea20c();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -264,14 +282,15 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Icepack Freezing Shortage Ri By Area
+     */
     public function icepackFreezingShortageRiByAreaAction() {
         //ccem 4.4.5
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'Area' => 'Federal',
@@ -315,14 +334,15 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Icepack Storage Shortage SIA By Area
+     */
     public function icepackStorageShortageSIAByAreaAction() {
         //ccem 4.4.7
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'Area' => 'Federal',
@@ -366,14 +386,15 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Facilities With Insufficient Cold Box By Area
+     */
     public function facilitiesWithInsufficientColdBoxByAreaAction() {
         //ccem 4.4.8
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'Area' => 'Federal',
@@ -417,14 +438,15 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Shortages Of Cold Box Transport Capacity By Area
+     */
     public function shortagesOfColdBoxTransportCapacityByAreaAction() {
         //ccem 4.4.9
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'Area' => 'Federal',
@@ -467,6 +489,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * RefrigeratorByWorkingStatusFTypeArea
+     */
     public function refrigeratorByWorkingStatusFTypeAreaAction() {
         //ccem 4.4.10
         $this->_helper->layout->setLayout('reports');
@@ -477,12 +502,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_warehouse->form_values = $form_values;
-                $data_arr = $ccm_warehouse->refrigeratorByWorkingStatusFTypeArea();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_warehouse->form_values = $form_values;
+            $data_arr = $ccm_warehouse->refrigeratorByWorkingStatusFTypeArea();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -519,6 +542,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Refrigerator Models By Working Status
+     */
     public function refrigeratorModelsByWorkingStatusAction() {
         //ccem 4.4.11
         $this->_helper->layout->setLayout('reports');
@@ -529,12 +555,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->refrigeratorModelsByWorkingStatusReport();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->refrigeratorModelsByWorkingStatusReport();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -568,6 +592,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Refrigerator Models By Age Group 
+     */
     public function refrigeratorModelsByAgeGroupAction() {
         //ccem 4.4.12
         $this->_helper->layout->setLayout('reports');
@@ -578,12 +605,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->getRefrigeratorModelsByAgeGroupReport();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->getRefrigeratorModelsByAgeGroupReport();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -621,6 +646,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Refrigerator Freezers Utilization
+     */
     public function refrigeratorFreezersUtilizationAction() {
         //ccem 4.4.13
         $this->_helper->layout->setLayout('reports');
@@ -631,18 +659,15 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->refrigeratorFreezersUtilizationReport();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->refrigeratorFreezersUtilizationReport();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
         $xmlstore .= "<rows>";
         foreach ($data_arr as $sub_arr) {
-            //App_Controller_Functions::pr($sub_arr);
             $xmlstore .= "<row>";
             $xmlstore .= "<cell><![CDATA[" . $sub_arr['ccm_model_name'] . "]]></cell>";
             $xmlstore .= "<cell>" . $sub_arr['Total'] . "</cell>";
@@ -672,12 +697,14 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Distribution Refrigerator By Model By Facility Type 
+     */
     public function distributionRefrigeratorByModelByFTypeAction() {
         ini_set('memory_limit', '128M');
         $this->_helper->layout->setLayout('reports');
         $header = '';
         $header .= 'Model';
-        //$header1 = '#rspan';
         $cspan = '#cspan';
         $width = '60';
         $ro = 'ro';
@@ -690,37 +717,33 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $cold_chain->form_values = $form_values;
-                $qry_res = $cold_chain->getColdchainModelsByFacilityType();
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $cold_chain->form_values = $form_values;
+            $qry_res = $cold_chain->getColdchainModelsByFacilityType();
 
-                $warehouse = new Model_Warehouses();
-                $warehouse_asset_types = $warehouse->getWarehouseByAssetType();
-                foreach ($qry_res as $row) {
-                    $data_arr[$row['pk_id']][] = $row['ccm_model_name'];
-                    $count = 1;
-                    foreach ($warehouse_asset_types as $warehouse_asset_type) {
-                        $data_arr[$row['pk_id']][$warehouse_asset_type['warehouse_type_id']] = 0;
-                    }
+            $warehouse = new Model_Warehouses();
+            $warehouse_asset_types = $warehouse->getWarehouseByAssetType();
+            foreach ($qry_res as $row) {
+                $data_arr[$row['pk_id']][] = $row['ccm_model_name'];
+                $count = 1;
+                foreach ($warehouse_asset_types as $warehouse_asset_type) {
+                    $data_arr[$row['pk_id']][$warehouse_asset_type['warehouse_type_id']] = 0;
                 }
+            }
 
-                foreach ($warehouse_asset_types as $row2) {
-                    $header .= ',' . $row2['warehouse_type_name'];
-                    //$header1 .= ',#rspan';
+            foreach ($warehouse_asset_types as $row2) {
+                $header .= ',' . $row2['warehouse_type_name'];
+                $cspan .= ',#cspan';
+                $width .= ',*';
+                $ro .= ',ro';
+                $align .= ',right';
 
-                    $cspan .= ',#cspan';
-                    $width .= ',*';
-                    $ro .= ',ro';
-                    $align .= ',right';
-
-                    $warehouse_warehouse_types = $cold_chain->getColdChainByWarehouseType($row2['warehouse_type_id']);
-                    $count = 1;
-                    foreach ($warehouse_warehouse_types as $warehouse_warehouse_type) {
-                        if ($data_arr[$warehouse_warehouse_type['pk_id']][0] && $data_arr[$warehouse_warehouse_type['pk_id']][0] != "") {
-                            $data_arr[$warehouse_warehouse_type['pk_id']][$row2['warehouse_type_id']] = $warehouse_warehouse_type['TotalAssets'];
-                        }
+                $warehouse_warehouse_types = $cold_chain->getColdChainByWarehouseType($row2['warehouse_type_id']);
+                $count = 1;
+                foreach ($warehouse_warehouse_types as $warehouse_warehouse_type) {
+                    if ($data_arr[$warehouse_warehouse_type['pk_id']][0] && $data_arr[$warehouse_warehouse_type['pk_id']][0] != "") {
+                        $data_arr[$warehouse_warehouse_type['pk_id']][$row2['warehouse_type_id']] = $warehouse_warehouse_type['TotalAssets'];
                     }
                 }
             }
@@ -729,7 +752,7 @@ class Reports_CcemController extends App_Controller_Base {
             $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
             $xmlstore .= "<rows>";
 
-            foreach ($data_arr as $item => $sub_arr) {
+            foreach ($data_arr as $sub_arr) {
                 $xmlstore .= "<row>";
                 if (array_key_exists('0', $sub_arr)) {
                     $xmlstore .= "<cell>" . $sub_arr[0] . "</cell>";
@@ -762,6 +785,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Distribution Cfc Free Equipment By Facility Type 
+     */
     public function distributionCfcFreeEquipmentByFTypeAction() {
         //ccem 4.4.15
         $this->_helper->layout->setLayout('reports');
@@ -771,12 +797,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->distributionCFCFreeEquipmentByFType();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->distributionCFCFreeEquipmentByFType();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -811,18 +835,22 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Equipment By Availability Of Electricity
+     */
     public function equipmentByAvailabilityOfElectricityAction() {
         // action body
     }
 
+    /**
+     * Annual Cold Chain Running Costs By Facility Type
+     */
     public function annualColdChainRunningCostsByFTypeAction() {
         //ccem 4.4.16
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'FacilityType' => 'National Vaccine Store',
@@ -866,14 +894,15 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Summary Of Absorption Refrigerators Exist Facilities
+     */
     public function summaryOfAbsorptionRefrigeratorsExistFacilitiesAction() {
         //ccem 4.4.17
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'FacilityType' => 'National Vaccine Store',
@@ -909,14 +938,15 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Annual Energy Costs For Refrigerator Energy Types
+     */
     public function annualEnergyCostsForRefrigeratorEnergyTypesAction() {
         //ccem 4.4.18
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'FacilityType' => 'National Vaccine Store',
@@ -960,14 +990,15 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Energy Availability At Facilities
+     */
     public function energyAvailabilityAtFacilitiesAction() {
         //ccem 4.4.19
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'FacilityType' => 'National Vaccine Store',
@@ -1023,14 +1054,15 @@ class Reports_CcemController extends App_Controller_Base {
      * ********************************************* *///////////////
     /*     * */
 
+    /**
+     * Vaccine Resupply Intervals And Reserve Stocks By Facility Type
+     */
     public function vaccineResupplyIntervalsAndReserveStocksByFacilityTypeAction() {
         //ccem proposed list 1.6 (3)
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'FacilityType' => 'National Vaccine Store',
@@ -1074,14 +1106,15 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Electricity Availability
+     */
     public function electricityAvailabilityAction() {
         //ccem proposed list 1.7 (4)
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'FacilityType' => 'National Vaccine Store',
@@ -1125,6 +1158,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Facilities Suitable For Solar Equipment By Area
+     */
     public function facilitiesSuitableForSolarEquipmentByAreaAction() {
         //ccem proposed list 1.11 (6)
         $this->_helper->layout->setLayout('reports');
@@ -1135,12 +1171,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_warehouse->form_values = $form_values;
-                $data_arr = $ccm_warehouse->facilitiesSuitableForSolarEquipmentByAreaReport();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_warehouse->form_values = $form_values;
+            $data_arr = $ccm_warehouse->facilitiesSuitableForSolarEquipmentByAreaReport();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -1173,14 +1207,15 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Average Population Per Vaccinator
+     */
     public function averagePopulationPerVaccinatorAction() {
         //ccem proposed list 1.21 (7)
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'FacilityType' => 'National Vaccine Store',
@@ -1224,6 +1259,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Vaccine Storage Capacity At 2 to 8
+     */
     public function vaccineStorageCapacityAt2to8Action() {
         //ccem proposed list 2.1b (11)
         $this->_helper->layout->setLayout('reports');
@@ -1234,12 +1272,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_warehouse->form_values = $form_values;
-                $data_arr = $ccm_warehouse->vaccineStorageCapacityAt2to8Report();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_warehouse->form_values = $form_values;
+            $data_arr = $ccm_warehouse->vaccineStorageCapacityAt2to8Report();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -1279,6 +1315,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Vaccine Storage Capacity At 20 
+     */
     public function vaccineStorageCapacityAt20Action() {
         //ccem proposed list 2.1b (11)
         $this->_helper->layout->setLayout('reports');
@@ -1289,12 +1328,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_warehouse->form_values = $form_values;
-                $data_arr = $ccm_warehouse->vaccineStorageCapacityAt20Report();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_warehouse->form_values = $form_values;
+            $data_arr = $ccm_warehouse->vaccineStorageCapacityAt20Report();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -1334,6 +1371,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Icepack Freezing Capacity Against Routine And SIA
+     */
     public function icepackFreezingCapacityAgainstRoutineAndSIAAction() {
         //ccem proposed list 2.3c (16)
 
@@ -1345,13 +1385,12 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->icepackFreezingCapacityAgainstRoutineAndSIA();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->icepackFreezingCapacityAgainstRoutineAndSIA();
         }
+
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
         $xmlstore .= "<rows>";
@@ -1386,6 +1425,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Coldbox And Vaccine Carrier Capacity By Facility
+     */
     public function coldboxAndVaccineCarrierCapacityByFacilityAction() {
         //ccem proposed list 2.3c (16)
         $this->_helper->layout->setLayout('reports');
@@ -1396,12 +1438,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->coldboxAndVaccineCarrierCapacityByFacility();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->coldboxAndVaccineCarrierCapacityByFacility();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -1431,20 +1471,20 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->aligns = 'left,left,left,left,right,right,right';
         $this->view->xmlstore = $xmlstore;
         $this->view->search_form = $search_form;
-        //$this->view->data = $data_arr;
         $search_form->facility_type->setValue($form_values['facility_type']);
         $this->view->form_values = $form_values;
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Non PQS Refrigerators By Model And Facility Type
+     */
     public function nonPQSRefrigeratorsByModelAndFacilityTypeAction() {
         //ccem proposed list 3.9 (31)
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'FacilityType' => 'National Vaccine Store',
@@ -1488,6 +1528,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Line List Of Equipment With Working Status
+     */
     public function lineListOfEquipmentWithWorkingStatusAction() {
         //ccem proposed list 3.22 (32)
         $this->_helper->layout->setLayout('reports');
@@ -1498,12 +1541,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->lineListOfEquipmentWithWorkingStatus();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->lineListOfEquipmentWithWorkingStatus();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -1513,8 +1554,6 @@ class Reports_CcemController extends App_Controller_Base {
             $xmlstore .= "<row>";
             $xmlstore .= "<cell>" . $sub_arr['Province'] . "</cell>";
             $xmlstore .= "<cell>" . $sub_arr['Distirct'] . "</cell>";
-//            $xmlstore .= "<cell>" . $sub_arr['Tehsil'] . "</cell>";
-//            $xmlstore .= "<cell><![CDATA[" . $sub_arr['UC'] . "]]></cell>";
             $xmlstore .= "<cell><![CDATA[" . $sub_arr['FacilityName'] . "]]></cell>";
             $xmlstore .= "<cell>" . $sub_arr['FacilityType'] . "</cell>";
             $xmlstore .= "<cell>" . $sub_arr['LibraryID'] . "</cell>";
@@ -1546,6 +1585,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * line List Of Equipment With Equipment Utilization
+     */
     public function lineListOfEquipmentWithEquipmentUtilizationAction() {
         //ccem proposed list 3.23 (33)
 
@@ -1556,12 +1598,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->lineListOfEquipmentWithEquipmentUtilization();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->lineListOfEquipmentWithEquipmentUtilization();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -1571,8 +1611,6 @@ class Reports_CcemController extends App_Controller_Base {
             $xmlstore .= "<row>";
             $xmlstore .= "<cell>" . $sub_arr['Province'] . "</cell>";
             $xmlstore .= "<cell>" . $sub_arr['Distirct'] . "</cell>";
-            // $xmlstore .= "<cell>" . $sub_arr['Tehsil'] . "</cell>";
-            // $xmlstore .= "<cell><![CDATA[" . $sub_arr['UC'] . "]]></cell>";
             $xmlstore .= "<cell><![CDATA[" . $sub_arr['FacilityName'] . "]]></cell>";
             $xmlstore .= "<cell>" . $sub_arr['FacilityType'] . "</cell>";
             $xmlstore .= "<cell>" . $sub_arr['LibraryID'] . "</cell>";
@@ -1603,6 +1641,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * cold Rooms 4 to 20 By Model And Working Status
+     */
     public function coldRooms4to20ByModelAndWorkingStatusAction() {
         //ccem proposed list 3.10 (34)
         $this->_helper->layout->setLayout('reports');
@@ -1613,12 +1654,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->coldRooms4to20ByModelAndWorkingStatus();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->coldRooms4to20ByModelAndWorkingStatus();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -1656,6 +1695,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Listing Of Cold Room Facilities And Working Status
+     */
     public function listingOfColdRoomFacilitiesAndWorkingStatusAction() {
         //ccem proposed list 3.11 (35)
         $this->_helper->layout->setLayout('reports');
@@ -1666,12 +1708,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->listingOfColdRoomFacilitiesAndWorkingStatus();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->listingOfColdRoomFacilitiesAndWorkingStatus();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -1710,14 +1750,15 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Cold Room Quality Attributes
+     */
     public function coldRoomQualityAttributesAction() {
         //ccem proposed list 3.12 (36)
 
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
-        //$ccm_warehouse = new Model_CcmWarehouses();
-        //$data_arr = $ccm_warehouse->getTotalPopulationByFacilityType();
         $data_arr = array(
             0 => array(
                 'FacilityType' => 'National Vaccine Store',
@@ -1761,6 +1802,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->data = $data_arr;
     }
 
+    /**
+     * Coldbox And Vaccine Carriers By Working Status
+     */
     public function coldboxAndVaccineCarriersByWorkingStatusAction() {
         //ccem proposed list 3.13b (38)
 
@@ -1772,12 +1816,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->coldboxAndVaccineCarriersByWorkingStatusReport();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->coldboxAndVaccineCarriersByWorkingStatusReport();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -1812,6 +1854,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Quantity Of Cold Boxes Carriers
+     */
     public function quantityOfColdBoxesCarriersAction() {
         //ccem proposed list 3.14 (40)
 
@@ -1823,12 +1868,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->quantityOfColdBoxesCarriersReport();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->quantityOfColdBoxesCarriersReport();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -1859,6 +1902,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Standby Generators By Facility Type And Working Status
+     */
     public function standbyGeneratorsByFacilityTypeAndWorkingStatusAction() {
         //ccem proposed list 3.15 (41)
 
@@ -1870,12 +1916,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->standbyGeneratorsByFacilityTypeAndWorkingStatusReport();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->standbyGeneratorsByFacilityTypeAndWorkingStatusReport();
         }
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
         $xmlstore .= "<rows>";
@@ -1909,6 +1953,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Voltage Stabilizers And Regulators Working Status
+     */
     public function voltageStabilizersAndRegulatorsWorkingStatusAction() {
         //ccem proposed list 3.15 (41)
 
@@ -1920,12 +1967,10 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['office'] = $this->_request->getParam('office', '');
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $ccm_models->form_values = $form_values;
-                $data_arr = $ccm_models->voltageStabilizersAndRegulatorsWorkingStatus();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $ccm_models->form_values = $form_values;
+            $data_arr = $ccm_models->voltageStabilizersAndRegulatorsWorkingStatus();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -1963,6 +2008,9 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Inventory List Of All Cold Chain Equipment By Facility
+     */
     public function inventoryListOfAllColdChainEquipmentByFacilityAction() {
         //ccem proposed list 3.21 (46)
 
@@ -1980,17 +2028,15 @@ class Reports_CcemController extends App_Controller_Base {
         $form_values['combo1'] = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
         $form_values['warehouse'] = $this->_request->getParam('warehouse', '');
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $cold_chain->form_values = $form_values;
-                $refrigerator_list = $cold_chain->getAllNonQuantityRefAsets();
-                $coldroom_list = $cold_chain->getAllNonQuantityColdRoomAsets();
-                $coldbox_list = $cold_chain->getAllNonQuantityColdBoxAsets();
-                $icepack_list = $cold_chain->getAllNonQuantityIcePackAsets();
-                $voltageregulator_list = $cold_chain->getAllNonQuantityVoltageRegulatorAsets();
-                $generator_list = $cold_chain->getAllNonQuantityGeneratorAsets();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $cold_chain->form_values = $form_values;
+            $refrigerator_list = $cold_chain->getAllNonQuantityRefAsets();
+            $coldroom_list = $cold_chain->getAllNonQuantityColdRoomAsets();
+            $coldbox_list = $cold_chain->getAllNonQuantityColdBoxAsets();
+            $icepack_list = $cold_chain->getAllNonQuantityIcePackAsets();
+            $voltageregulator_list = $cold_chain->getAllNonQuantityVoltageRegulatorAsets();
+            $generator_list = $cold_chain->getAllNonQuantityGeneratorAsets();
         }
 
         $this->view->main_heading = "CCEM Reports";
@@ -2002,17 +2048,6 @@ class Reports_CcemController extends App_Controller_Base {
         $this->view->voltageregulator_list = $voltageregulator_list;
         $this->view->generator_list = $generator_list;
         $this->view->form_values = $form_values;
-
-        /* switch ($this->_user_level) {
-          case 1:
-          case 2:
-          case 3:
-          case 4:
-          case 5:
-          case 6:
-          $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_all_coldchain_equipment.js');
-          break;
-          } */
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_all_coldchain_equipment.js');
     }
 

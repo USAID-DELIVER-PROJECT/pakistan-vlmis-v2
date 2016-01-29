@@ -1,3 +1,8 @@
+<?php
+/**
+*  phtml for Ajax Detail Data Issue No.
+*/
+?>
 <table class="gatepass table table-striped table-bordered table-hover dataTable no-footer"  >
     <!-- Table heading -->
     <thead>
@@ -15,7 +20,6 @@
     <tbody>				
         <!-- Table row -->
         <?php
-        //  $i = 1;
         $remianing_qty = "";
         if ($this->data && count($this->data) > 0) :
             foreach ($this->data as $row):
@@ -32,7 +36,6 @@
                     <td><a class="btn btn-primary input-sm" href="<?php echo $this->baseUrl(); ?>/stock/stock-pick-data?qry=<?php echo $qry_strng; ?>"><?php echo $this->translate("Pick");?></a></td>
                 </tr>
                 <?php
-                //$i++;
             endforeach;
         endif;
         ?>

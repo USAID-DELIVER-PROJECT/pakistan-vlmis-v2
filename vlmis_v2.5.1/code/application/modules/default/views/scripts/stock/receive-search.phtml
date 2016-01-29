@@ -1,3 +1,8 @@
+<?php
+/**
+*  phtml for Receive Search
+*/
+?>
 <!-- Content -->
 <div class="page-content-wrapper">
     <div class="page-content">
@@ -10,16 +15,13 @@
                             <?php echo $this->translate("Filters") ?>
                         </div>
                         <div class="tools">
-                            <a href="javascript:;" class="collapse">
-                            </a>
+                            <a href="javascript:;" class="collapse"></a>
                         </div>
                     </div>
-                    <div class="portlet-body">
+                    <div class="portlet-body">                        
                         <div class="row">
                             <div class="col-md-12">
-                                <?php
-                                echo App_Controller_Functions::getPageNarrative(Zend_Registry::get('resource'));
-                                ?>
+                                <?php echo App_Controller_Functions::getPageNarrative(Zend_Registry::get('resource')); ?>
                             </div>
                         </div>
                         <div class="row">
@@ -155,15 +157,21 @@
                                                     <td><?php echo $row['itemUnitName']; ?></td>                                                    
                                                     <td><?php echo date("d/m/Y", strtotime($row['expiryDate'])); ?></td>
                                                     <td style="text-align:center;">
-                                                        <?php if ($this->role_id != 23) { ?>
-                                                          <!-- <a itemid="<?php //echo $row['detailId'] ?>" class="btn stock-placement btn-link btn-success btn-mini" data-toggle="modal" href="#modal-stock-placement"><?php //echo $this->translate("Placement") ?></a>&nbsp; -->
-                                                          <?php if ($this->isReceiveDelete($row['detailId'], $row['fromWarehouseId'])) { ?>   <a data-toggle="notyfy" id="<?php echo $row['detailId']; ?>" data-type="confirm" data-layout="top" class="fa fa-times cursor-hand"></a> <?php } ?>
-                                                          <!-- <?php //if ($this->isReceiveEdit($row['detailId'],$this->wh_id)) {            ?>| <a id="<?php //echo $row['detailId'];            ?>-stockedit" class="fa fa-edit cursor-hand"></a> <?php //}            ?> -->
-                                                          <!--<a id="<?php echo $row['detailId']; ?>-stockedit" class="fa fa-edit cursor-hand"></a> -->
-                                                          <?php } ?>
-                                                        <!-- <a id="<?php //echo $row['detailId']; ?>" pkid="<?php //echo $placement_detail; ?>" class="placement-detail"  data-toggle="modal" title="Placement Info" href="#modal-placement-detail">
-                                                            <i class="fa fa-times cursor-hand">  </i>   
-                                                        </a> -->
+                                                        <?php
+                                                        if ($this->role_id != 23) {
+                                                            $is_rec_delete = $this->isReceiveDelete($row['detailId']);
+                                                            ?>
+                                                                      <!-- <a itemid="<?php //echo $row['detailId']   ?>" class="btn stock-placement btn-link btn-success btn-mini" data-toggle="modal" href="#modal-stock-placement"><?php //echo $this->translate("Placement")   ?></a>&nbsp; -->
+                                                            <?php if ($is_rec_delete == 'DIRECT_DELETE') { ?>   <a data-toggle="notyfy" id="<?php echo $row['detailId']; ?>" data-type="confirm" data-layout="top" class="fa fa-times cursor-hand"></a> <?php } ?>
+                                                                      <!-- <?php //if ($this->isReceiveEdit($row['detailId'],$this->wh_id)) {               ?>| <a id="<?php //echo $row['detailId'];               ?>-stockedit" class="fa fa-edit cursor-hand"></a> <?php //}               ?> -->
+                                                                      <!--<a id="<?php echo $row['detailId']; ?>-stockedit" class="fa fa-edit cursor-hand"></a> -->
+
+                                                            <?php if ($is_rec_delete == 'CUSTOME_DELETE') { ?> 
+                                                                <a id="<?php echo $row['detailId']; ?>" pkid="<?php echo $placement_detail; ?>" class="placement-detail"  data-toggle="modal" title="Placement Info" href="#modal-placement-detail">
+                                                                    <i class="fa fa-times cursor-hand">  </i>   
+                                                                </a>
+                                                            <?php } ?>
+                                                        <?php } ?>
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -207,8 +215,7 @@
 <!-- // Content END -->
 
 <!-- Modal -->
-<!-- /stock/delete-batch-placement  -->
-<form method="post" action="<?php echo $this->baseUrl(); ?>/stock/delete" id="form-delete-placement">
+<form method="post" action="<?php echo $this->baseUrl(); ?>/stock/delete-batch-placement" id="form-delete-placement">
     <div class="modal fade" id="modal-placement-detail" tabindex="-1" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

@@ -1,18 +1,48 @@
 <?php
 
+/**
+ * Zend_View_Helper_MonthlyConsumtion2
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+
+/**
+ *  Zend View Helper Monthly Consumtion 2
+ */
 class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
 
-public function monthlyConsumtion2() {
-return $this;
-}
+    /**
+     * Monthly Consumtion 2
+     * @return \Zend_View_Helper_MonthlyConsumtion2
+     */
+    public function monthlyConsumtion2() {
+        return $this;
+    }
 
-public function monthlyConsumtion2Vaccines($wh_id, $prev_month_date, $pk_id, $age_group_id) {
+    /**
+     * Monthly Consumtion 2 Vaccines
+     * @param type $wh_id
+     * @param type $prev_month_date
+     * @param type $pk_id
+     * @param type $age_group_id
+     * @return type
+     */
+    public function monthlyConsumtion2Vaccines($wh_id, $prev_month_date, $pk_id, $age_group_id) {
 
-$this->_em = Zend_Registry::get('doctrine');
-$rows = $this->_em->getRepository('HfDataMasterDraft')->findBy(array('warehouse' => $wh_id, 'reportingStartDate' => $prev_month_date));
+        $this->_em = Zend_Registry::get('doctrine');
+        $rows = $this->_em->getRepository('HfDataMasterDraft')->findBy(array('warehouse' => $wh_id, 'reportingStartDate' => $prev_month_date));
 
-if (count($rows) > 0) {
-$querypro = " SELECT 
+        if (count($rows) > 0) {
+            $querypro = " SELECT 
                         w0_.pk_id AS pkId,
                         w0_.opening_balance AS openingBalance,
                         w0_.received_balance AS receivedBalance,
@@ -30,8 +60,8 @@ $querypro = " SELECT
                         hf_data_detail_draft.fixed_outside_uc_female,
                         hf_data_detail_draft.outreach_male,
                         hf_data_detail_draft.outreach_female,
-                       	IFNULL(hf_data_detail_draft.outreach_outside_male,0) as outreach_outside_male,
-	                IFNULL(hf_data_detail_draft.outreach_outside_female,0) as outreach_outside_female,
+                       IFNULL(hf_data_detail_draft.outreach_outside_male,0) as outreach_outside_male,
+                    IFNULL(hf_data_detail_draft.outreach_outside_female,0) as outreach_outside_female,
                         hf_data_detail_draft.age_group_id,
                         hf_data_detail_draft.vaccine_schedule_id
                        
@@ -46,8 +76,8 @@ $querypro = " SELECT
            AND 
            DATE_FORMAT(w0_.reporting_start_date,'%Y-%m-%d') = '$prev_month_date'
            AND w0_.item_pack_size_id = $pk_id";
-} else {
- $querypro = " SELECT w0_.pk_id AS pkId,
+        } else {
+            $querypro = " SELECT w0_.pk_id AS pkId,
                         w0_.opening_balance AS openingBalance,
                         w0_.received_balance AS receivedBalance,
                         w0_.issue_balance AS issueBalance,
@@ -66,7 +96,7 @@ $querypro = " SELECT
                         hf_data_detail.outreach_male,
                         hf_data_detail.outreach_female,
                         IFNULL(hf_data_detail.outreach_outside_male,0) as outreach_outside_male,
-	                IFNULL(hf_data_detail.outreach_outside_female,0) as outreach_outside_female,
+                        IFNULL(hf_data_detail.outreach_outside_female,0) as outreach_outside_female,
                         hf_data_detail.age_group_id,
                         hf_data_detail.vaccine_schedule_id
                         FROM
@@ -78,24 +108,27 @@ $querypro = " SELECT
            AND 
            DATE_FORMAT(w0_.reporting_start_date,'%Y-%m-%d') = '$prev_month_date'
            AND w0_.item_pack_size_id = '$pk_id' ";
-}
-// echo $querypro;
-$row = $this->_em->getConnection()->prepare($querypro);
+        }
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+        $row->execute();
+        return $row->fetchAll();
+    }
 
+    /**
+     * Monthly Consumtion 2 Vaccines Tt
+     * @param type $wh_id
+     * @param type $prev_month_date
+     * @param type $pk_id
+     * @return type
+     */
+    public function monthlyConsumtion2VaccinesTt($wh_id, $prev_month_date, $pk_id) {
 
-return $result;
-}
+        $this->_em = Zend_Registry::get('doctrine');
+        $rows = $this->_em->getRepository('HfDataMasterDraft')->findBy(array('warehouse' => $wh_id, 'reportingStartDate' => $prev_month_date));
 
-public function monthlyConsumtion2VaccinesTt($wh_id, $prev_month_date, $pk_id) {
-
-$this->_em = Zend_Registry::get('doctrine');
-$rows = $this->_em->getRepository('HfDataMasterDraft')->findBy(array('warehouse' => $wh_id, 'reportingStartDate' => $prev_month_date));
-
-if (count($rows) > 0) {
-$querypro = " SELECT 
+        if (count($rows) > 0) {
+            $querypro = " SELECT 
                         w0_.pk_id AS pkId,
                         w0_.opening_balance AS openingBalance,
                         w0_.received_balance AS receivedBalance,
@@ -119,8 +152,8 @@ $querypro = " SELECT
            AND 
            DATE_FORMAT(w0_.reporting_start_date,'%Y-%m-%d') = '$prev_month_date'
            AND w0_.item_pack_size_id = $pk_id";
-} else {
-$querypro = " SELECT w0_.pk_id AS pkId,
+        } else {
+            $querypro = " SELECT w0_.pk_id AS pkId,
                         w0_.opening_balance AS openingBalance,
                         w0_.received_balance AS receivedBalance,
                         w0_.issue_balance AS issueBalance,
@@ -144,24 +177,29 @@ $querypro = " SELECT w0_.pk_id AS pkId,
            AND 
            DATE_FORMAT(w0_.reporting_start_date,'%Y-%m-%d') = '$prev_month_date'
            AND w0_.item_pack_size_id = '$pk_id' ";
-}
+        }
 
 
-$row = $this->_em->getConnection()->prepare($querypro);
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+        $row->execute();
+        return $row->fetchAll();
+    }
 
-return $result;
-}
+    /**
+     * Monthly Consumption Non Vaccinces
+     * @param type $wh_id
+     * @param type $prev_month_date
+     * @param type $pk_id
+     * @return type
+     */
+    public function monthlyConsumptionNonVaccinces($wh_id, $prev_month_date, $pk_id) {
 
-public function monthlyConsumptionNonVaccinces($wh_id, $prev_month_date, $pk_id) {
+        $this->_em = Zend_Registry::get('doctrine');
+        $rows = $this->_em->getRepository('HfDataMasterDraft')->findBy(array('warehouse' => $wh_id, 'reportingStartDate' => $prev_month_date));
 
-$this->_em = Zend_Registry::get('doctrine');
-$rows = $this->_em->getRepository('HfDataMasterDraft')->findBy(array('warehouse' => $wh_id, 'reportingStartDate' => $prev_month_date));
-
-if (count($rows) > 0) {
-$querypro = " SELECT 
+        if (count($rows) > 0) {
+            $querypro = " SELECT 
                         w0_.pk_id AS pkId,
                         w0_.opening_balance AS openingBalance,
                         w0_.received_balance AS receivedBalance,
@@ -179,8 +217,8 @@ $querypro = " SELECT
            AND 
            DATE_FORMAT(w0_.reporting_start_date,'%Y-%m-%d') = '$prev_month_date'
            AND w0_.item_pack_size_id = $pk_id";
-} else {
-$querypro = " SELECT w0_.pk_id AS pkId,
+        } else {
+            $querypro = " SELECT w0_.pk_id AS pkId,
                         w0_.opening_balance AS openingBalance,
                         w0_.received_balance AS receivedBalance,
                         w0_.issue_balance AS issueBalance,
@@ -199,23 +237,29 @@ $querypro = " SELECT w0_.pk_id AS pkId,
            AND 
            DATE_FORMAT(w0_.reporting_start_date,'%Y-%m-%d') = '$prev_month_date'
            AND w0_.item_pack_size_id = '$pk_id' ";
-}
+        }
 
-$row = $this->_em->getConnection()->prepare($querypro);
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+        $row->execute();
+        $result = $row->fetchAll();
 
-return $result[0];
-}
+        return $result[0];
+    }
 
-public function monthlyConsumtion2Targets($wh_id, $prev_month_date) {
+    /**
+     * Monthly Consumtion 2 Targets
+     * @param type $wh_id
+     * @param type $prev_month_date
+     * @return type
+     */
+    public function monthlyConsumtion2Targets($wh_id, $prev_month_date) {
 
-$pov = explode('-', $prev_month_date);
+        $pov = explode('-', $prev_month_date);
 
-$this->_em = Zend_Registry::get('doctrine');
+        $this->_em = Zend_Registry::get('doctrine');
 
- $querypro = " SELECT w0_.pk_id AS pkId,
+        $querypro = " SELECT w0_.pk_id AS pkId,
                         w0_.live_births_per_year as children_live_birth,
                         w0_.surviving_children_0_11 as surviving_children_0_11,
                         w0_.children_aged_12_23 as children_aged_12_23,
@@ -231,21 +275,25 @@ $this->_em = Zend_Registry::get('doctrine');
                         AND 
                        DATE_FORMAT(w0_.estimation_year,'%Y') = '$pov[0]' LIMIT 1 ";
 
-$row = $this->_em->getConnection()->prepare($querypro);
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+        $row->execute();
+        $result = $row->fetchAll();
 
-return $result[0];
-}
+        return $result[0];
+    }
 
-public function monthlyConsumtion2HfSessions($wh_id, $prev_month_date) {
+    /**
+     * Monthly Consumtion 2 Hf Sessions
+     * @param type $wh_id
+     * @param type $prev_month_date
+     * @return type
+     */
+    public function monthlyConsumtion2HfSessions($wh_id, $prev_month_date) {
 
-$pov = explode('-', $prev_month_date);
+        $this->_em = Zend_Registry::get('doctrine');
 
-$this->_em = Zend_Registry::get('doctrine');
-
- $querypro = "SELECT
+        $querypro = "SELECT
         hf_sessions.fixed_planned_sessions,
         hf_sessions.fixed_actually_held_sessions,
         hf_sessions.outreach_planned_sessions,
@@ -257,38 +305,47 @@ $this->_em = Zend_Registry::get('doctrine');
         hf_sessions.warehouse_id = '$wh_id'";
 
 
-$row = $this->_em->getConnection()->prepare($querypro);
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+        $row->execute();
+        $result = $row->fetchAll();
 
-return $result[0];
-}
+        return $result[0];
+    }
 
-public function logBook($data_id) {
+    /**
+     * Log Book
+     * @param type $data_id
+     * @return type
+     */
+    public function logBook($data_id) {
 
-$this->_em = Zend_Registry::get('doctrine');
+        $this->_em = Zend_Registry::get('doctrine');
 
-$querypro = " SELECT w0_.pk_id AS pkId,
+        $querypro = " SELECT w0_.pk_id AS pkId,
                         w0_.doses
                       FROM
                         log_book_item_doses AS w0_
              
                         WHERE
                          w0_.log_book_id =$data_id ";
-$row = $this->_em->getConnection()->prepare($querypro);
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+        $row->execute();
+        return $row->fetchAll();
+    }
 
-return $result;
-}
+    /**
+     * Log Book Edit
+     * @param type $wh_id
+     * @param type $rpt_date
+     * @return boolean
+     */
+    public function logBookEdit($wh_id, $rpt_date) {
 
-public function logBookEdit($wh_id, $rpt_date) {
+        $this->_em = Zend_Registry::get('doctrine');
 
-$this->_em = Zend_Registry::get('doctrine');
-
-$querypro = "SELECT
+        $querypro = "SELECT
                     log_book.pk_id,
                     log_book.`name`,
                     log_book.father_name,
@@ -311,22 +368,28 @@ $querypro = "SELECT
                     log_book.warehouse_id='$wh_id' AND
                      DATE_FORMAT(log_book.vaccination_date,'%Y-%m')= '$rpt_date' ";
 
-$row = $this->_em->getConnection()->prepare($querypro);
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
-if ($count($result) > 0){
-return $result;
-}else {
-return false;
-}
-}
+        $row->execute();
+        $result = $row->fetchAll();
+        if (count($result) > 0) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
 
-public function logBookItemDosesEdit($log_book_data_id, $item_id) {
+    /**
+     * Log Book Item Doses Edit
+     * @param type $log_book_data_id
+     * @param type $item_id
+     * @return type
+     */
+    public function logBookItemDosesEdit($log_book_data_id, $item_id) {
 
-$this->_em = Zend_Registry::get('doctrine');
+        $this->_em = Zend_Registry::get('doctrine');
 
-$querypro = "SELECT
+        $querypro = "SELECT
                 log_book_item_doses.item_pack_size_id,
                 log_book_item_doses.log_book_id,
                 log_book_item_doses.doses,
@@ -337,19 +400,22 @@ $querypro = "SELECT
                 log_book_item_doses.log_book_id = '$log_book_data_id' AND
                 log_book_item_doses.item_pack_size_id = '$item_id' ";
 
-$row = $this->_em->getConnection()->prepare($querypro);
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+        $row->execute();
+        return $row->fetchAll();
+    }
 
-return $result;
-}
+    /**
+     * Log Book Item Ucs
+     * @param type $district_id
+     * @return type
+     */
+    public function logBookItemUcs($district_id) {
 
-public function logBookItemUcs($district_id) {
+        $this->_em = Zend_Registry::get('doctrine');
 
-$this->_em = Zend_Registry::get('doctrine');
-
-$querypro = "SELECT
+        $querypro = "SELECT
                 locations.pk_id,
                 locations.location_name,
                 locations.geo_level_id,
@@ -365,19 +431,22 @@ $querypro = "SELECT
                 locations.district_id = $district_id AND
                 locations.geo_level_id = 6";
 
-$row = $this->_em->getConnection()->prepare($querypro);
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+        $row->execute();
+        return $row->fetchAll();
+    }
 
-return $result;
-}
+    /**
+     * Get Location Name
+     * @param type $location_id
+     * @return type
+     */
+    public function getLocationName($location_id) {
 
-public function getLocationName($location_id) {
+        $this->_em = Zend_Registry::get('doctrine');
 
-$this->_em = Zend_Registry::get('doctrine');
-
-$querypro = "SELECT
+        $querypro = "SELECT
                 locations.pk_id,
                 locations.location_name
                
@@ -386,18 +455,24 @@ $querypro = "SELECT
                 WHERE
                 locations.pk_id = '$location_id' ";
 
-$row = $this->_em->getConnection()->prepare($querypro);
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+        $row->execute();
+        return $row->fetchAll();
+    }
 
-return $result;
-}
+    /**
+     * Monthly Consumtion Refferal
+     * @param type $wh_id
+     * @param type $date_in
+     * @param type $item_id
+     * @param type $gender
+     * @return type
+     */
+    public function monthlyConsumtionRefferal($wh_id, $date_in, $item_id, $gender) {
+        $this->_em = Zend_Registry::get('doctrine');
 
-public function monthlyConsumtionRefferal($wh_id, $date_in, $item_id, $gender) {
-$this->_em = Zend_Registry::get('doctrine');
-
-$querypro = "SELECT
+        $querypro = "SELECT
               count(log_book.pk_id) as total
               FROM
                  log_book
@@ -408,37 +483,46 @@ $querypro = "SELECT
               DATE_FORMAT(log_book.vaccination_date,'%Y-%m') = '$date_in'
               AND log_book.gender = '$gender'";
 
-$row = $this->_em->getConnection()->prepare($querypro);
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+        $row->execute();
+        return $row->fetchAll();
+    }
 
-return $result;
-}
+    /**
+     * Get Item Name
+     * @param type $item_id
+     * @return type
+     */
+    public function getItemName($item_id) {
+        $this->_em = Zend_Registry::get('doctrine');
 
-public function getItemName($item_id) {
-$this->_em = Zend_Registry::get('doctrine');
-
-$querypro = "SELECT
+        $querypro = "SELECT
             item_pack_sizes.item_name
             FROM
             item_pack_sizes
             WHERE
             item_pack_sizes.pk_id = '$item_id'";
 
-$row = $this->_em->getConnection()->prepare($querypro);
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+        $row->execute();
+        $result = $row->fetchAll();
 
-return $result[0]['item_name'];
-}
+        return $result[0]['item_name'];
+    }
 
-public function getIssueVoucher($warehouse_id, $str_date) {
-$this->_em = Zend_Registry::get('doctrine');
-$pov = explode('-', $str_date);
+    /**
+     * Get Issue Voucher
+     * @param type $warehouse_id
+     * @param type $str_date
+     * @return type
+     */
+    public function getIssueVoucher($warehouse_id, $str_date) {
+        $this->_em = Zend_Registry::get('doctrine');
+        $pov = explode('-', $str_date);
 
-$querypro = "SELECT DISTINCT stock_master.pk_id
+        $querypro = "SELECT DISTINCT stock_master.pk_id
             FROM
             stock_detail
             INNER JOIN stock_master ON stock_master.pk_id = stock_detail.stock_master_id
@@ -446,108 +530,112 @@ $querypro = "SELECT DISTINCT stock_master.pk_id
             stock_master.to_warehouse_id = '$warehouse_id'
             AND  DATE_FORMAT(stock_master.transaction_date, '%Y-%m') = '$pov[0]-$pov[1]'";
 
-$row = $this->_em->getConnection()->prepare($querypro);
+        $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+        $row->execute();
+        return $row->fetchAll();
+    }
 
-return $result;
-}
-
-public function getStockOnHand($warehouse_id, $str_date) {
-$this->_em = Zend_Registry::get('doctrine');
-$pov = explode('-', $str_date);
-$rows = "Select warehouses.location_id from warehouses where warehouses.pk_id = '$warehouse_id'";
-$row_result = $this->_em->getConnection()->prepare($rows);
-$row_result->execute();
-$result_row = $row_result->fetchAll();
-$location_id = $result_row[0]['location_id'];
-$item_id = array(6, 26, 9);
-foreach ($item_id as $val) {
-$querypro = "SELECT
-	A.pk_id,
-	A.location_name,
+    /**
+     * Get Stock On Hand
+     * @param type $warehouse_id
+     * @param type $str_date
+     * @return int
+     */
+    public function getStockOnHand($warehouse_id, $str_date) {
+        $this->_em = Zend_Registry::get('doctrine');
+        $pov = explode('-', $str_date);
+        $rows = "Select warehouses.location_id from warehouses where warehouses.pk_id = '$warehouse_id'";
+        $row_result = $this->_em->getConnection()->prepare($rows);
+        $row_result->execute();
+        $result_row = $row_result->fetchAll();
+        $location_id = $result_row[0]['location_id'];
+        $item_id = array(6, 26, 9);
+        foreach ($item_id as $val) {
+            $querypro = "SELECT
+        A.pk_id,
+        A.location_name,
         A.MonthlyTarget,
         IFNULL(B.consumption, 0) AS closing_balance,
-	ROUND(IFNULL(
-		(
-			IFNULL(B.consumption, 0) / A.MonthlyTarget
-		) * 100,0)
-	) AS reportingPercentage
+        ROUND(IFNULL(
+                (
+                        IFNULL(B.consumption, 0) / A.MonthlyTarget
+                ) * 100,0)
+        ) AS reportingPercentage
         FROM
-	(
-		SELECT
+        (
+                SELECT
          A.pk_id,
 
-	A.location_name,
+        A.location_name,
 
-	ROUND(
-		(
-			(
-				(
-					(A.population / 100) * B.population_percent_increase_per_year
-				) / 100 * B.child_surviving_percent_per_year
-			) * B.doses_per_year
-		) / 12
-	) AS MonthlyTarget
+        ROUND(
+                (
+                        (
+                                (
+                                        (A.population / 100) * B.population_percent_increase_per_year
+                                ) / 100 * B.child_surviving_percent_per_year
+                        ) * B.doses_per_year
+                ) / 12
+        ) AS MonthlyTarget
         FROM
-	(
-	SELECT DISTINCT
-	locations.pk_id,
-	locations.location_name,
-	(
-		SELECT
-			IFNULL(
-				location_populations.population,
-				0
-			)
-		FROM
-			location_populations
-		WHERE
-			location_populations.location_id = locations.pk_id
-		AND DATE_FORMAT(
-			location_populations.estimation_date,
-			'%Y'
-		) = '$pov[0]'
-	) AS population
+        (
+        SELECT DISTINCT
+        locations.pk_id,
+        locations.location_name,
+        (
+                SELECT
+                        IFNULL(
+                                location_populations.population,
+                                0
+                        )
+                FROM
+                        location_populations
+                WHERE
+                        location_populations.location_id = locations.pk_id
+                AND DATE_FORMAT(
+                        location_populations.estimation_date,
+                        '%Y'
+                ) = '$pov[0]'
+        ) AS population
         FROM
-	locations
+        locations
 
         WHERE
-	locations.geo_level_id = 6
+        locations.geo_level_id = 6
         AND locations.pk_id = '$location_id'
         ) A,
        (
-	SELECT
-		item_pack_sizes.pk_id,
-		item_pack_sizes.item_name,
-		items.population_percent_increase_per_year,
-		items.child_surviving_percent_per_year,
-		items.doses_per_year
-	FROM
-		item_pack_sizes
-	INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
-	WHERE
-		item_pack_sizes.pk_id = '$val'
+        SELECT
+                item_pack_sizes.pk_id,
+                item_pack_sizes.item_name,
+                items.population_percent_increase_per_year,
+                items.child_surviving_percent_per_year,
+                items.doses_per_year
+        FROM
+                item_pack_sizes
+        INNER JOIN items ON item_pack_sizes.item_id = items.pk_id
+        WHERE
+                item_pack_sizes.pk_id = '$val'
        ) B
        ) A
        LEFT JOIN (
-	SELECT
-	sum(
-		hf_data_master.closing_balance
-	) AS consumption,
-	warehouses.location_id AS pk_id
+        SELECT
+        sum(
+                hf_data_master.closing_balance
+        ) AS consumption,
+        warehouses.location_id AS pk_id
         FROM
-	warehouses
+        warehouses
         INNER JOIN hf_data_master ON warehouses.pk_id = hf_data_master.warehouse_id
         INNER JOIN stakeholders ON warehouses.stakeholder_office_id = stakeholders.pk_id
         WHERE
-	hf_data_master.item_pack_size_id = '$val'
+        hf_data_master.item_pack_size_id = '$val'
         AND MONTH (
-	hf_data_master.reporting_start_date
+        hf_data_master.reporting_start_date
         ) = '$pov[1]'
         AND YEAR (
-	hf_data_master.reporting_start_date
+        hf_data_master.reporting_start_date
         ) = '$pov[0]'
         AND warehouses.pk_id = hf_data_master.warehouse_id
         AND warehouses.location_id = '$location_id'
@@ -555,19 +643,19 @@ $querypro = "SELECT
 
         ) B ON A.pk_id = B.pk_id";
 
-$row = $this->_em->getConnection()->prepare($querypro);
+            $row = $this->_em->getConnection()->prepare($querypro);
 
-$rs = $row->execute();
-$result = $row->fetchAll();
+            $row->execute();
+            $result = $row->fetchAll();
 
+            if ($result[0]['reportingPercentage'] > '0') {
+                $total[] = 1;
+            }
+        }
 
-if ($result[0]['reportingPercentage'] > '0') {
-$total[] = 1;
+        return $total;
+    }
+
 }
-}
 
-return $total;
-}
-
-}
 ?>

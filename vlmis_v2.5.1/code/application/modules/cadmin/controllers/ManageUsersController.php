@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Cadmin_ManageUsersController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Cadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Cadmin Manage Users
+ */
 class Cadmin_ManageUsersController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Cadmin_ManageUsersController index
+     */
     public function indexAction() {
         $form = new Form_Cadmin_UserSearch();
         $form_add = new Form_Cadmin_User();
@@ -69,49 +82,53 @@ class Cadmin_ManageUsersController extends App_Controller_Base {
         $this->view->headLink()->appendStylesheet($base_url . '/common/bootstrap/extend/jasny-bootstrap/css/jasny-bootstrap-responsive.min.css');
     }
 
+    /**
+     * add
+     */
     public function addAction() {
         $form = new Form_Cadmin_User();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $user = new Users();
-                $user->setLoginId($form->login_id->getValue());
-                $user->setUserName($form->login_id->getValue());
-                $role_id = $this->_em->find('Roles', $form->role->getValue());
-                $user->setRole($role_id);
-                $user->setEmail($form->email->getValue());
-                $user->setCellNumber($form->phone->getValue());
-                $user->setPassword(base64_encode($form->password->getValue()));
-                $created_by = $this->_em->find('Users', $this->_userid);
-                $user->setCreatedBy($created_by);
-                $user->setCreatedDate(App_Tools_Time::now());
-                $user->setModifiedBy($created_by);
-                $user->setModifiedDate(App_Tools_Time::now());
-                $user->setLoggedAt(new \DateTime(date("0000-00-00")));
-                $stakeholder = $this->_em->find('Stakeholders', 1);
-                $user->setStakeholder($stakeholder);
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $user = new Users();
+            $user->setLoginId($form->login_id->getValue());
+            $user->setUserName($form->login_id->getValue());
+            $role_id = $this->_em->find('Roles', $form->role->getValue());
+            $user->setRole($role_id);
+            $user->setEmail($form->email->getValue());
+            $user->setCellNumber($form->phone->getValue());
+            $user->setPassword(base64_encode($form->password->getValue()));
+            $created_by = $this->_em->find('Users', $this->_userid);
+            $user->setCreatedBy($created_by);
+            $user->setCreatedDate(App_Tools_Time::now());
+            $user->setModifiedBy($created_by);
+            $user->setModifiedDate(App_Tools_Time::now());
+            $user->setLoggedAt(new \DateTime(date("0000-00-00")));
+            $stakeholder = $this->_em->find('Stakeholders', 1);
+            $user->setStakeholder($stakeholder);
 
-                $this->_em->persist($user);
-                $this->_em->flush();
+            $this->_em->persist($user);
+            $this->_em->flush();
 
-                $user_wh = new WarehouseUsers();
-                $user_wh->setUser($user);
-                $warehouse_id = $this->_em->find('Warehouses', $this->_request->getPost('warehouse'));
-                $user_wh->setWarehouse($warehouse_id);
-                $user_wh->setIsDefault(1);
+            $user_wh = new WarehouseUsers();
+            $user_wh->setUser($user);
+            $warehouse_id = $this->_em->find('Warehouses', $this->_request->getPost('warehouse'));
+            $user_wh->setWarehouse($warehouse_id);
+            $user_wh->setIsDefault(1);
 
-                $user_wh->setCreatedBy($created_by);
-                $user_wh->setCreatedDate(App_Tools_Time::now());
-                $user_wh->setModifiedBy($created_by);
-                $user_wh->setModifiedDate(App_Tools_Time::now());
+            $user_wh->setCreatedBy($created_by);
+            $user_wh->setCreatedDate(App_Tools_Time::now());
+            $user_wh->setModifiedBy($created_by);
+            $user_wh->setModifiedDate(App_Tools_Time::now());
 
-                $this->_em->persist($user_wh);
-                $this->_em->flush();
-            }
+            $this->_em->persist($user_wh);
+            $this->_em->flush();
         }
         $this->_redirect("/cadmin/manage-users");
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->setLayout("ajax");
         $user_id = $this->_request->getParam('user_id', '');
@@ -138,62 +155,66 @@ class Cadmin_ManageUsersController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/manage-health-facility/ajax-edit.js');
     }
 
+    /**
+     * update
+     */
     public function updateAction() {
         $form = new Form_Cadmin_User();
         $form->addFields();
         $form->addHidden();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
 
-                $user_id = $form->id->getValue();
+            $user_id = $form->id->getValue();
 
-                // File Upload Start
-                $file_path = $form->photo->getFileName();
-                $file_ext = substr($file_path, -3);
-                $file_name = $user_id . "." . $file_ext;
-                $form->photo->addFilter('Rename', array(
-                    'target' => UPLOAD_PATH . "/" . $file_name,
-                    'overwrite' => true
-                ));
-                $form->photo->receive();
-                // File Upload End       
+            // File Upload Start
+            $file_path = $form->photo->getFileName();
+            $file_ext = substr($file_path, -3);
+            $file_name = $user_id . "." . $file_ext;
+            $form->photo->addFilter('Rename', array(
+                'target' => UPLOAD_PATH . "/" . $file_name,
+                'overwrite' => true
+            ));
+            $form->photo->receive();
+            // File Upload End       
 
-                $user = $this->_em->getRepository("Users")->find($user_id);
-                $role_id = $this->_em->find('Roles', $form->role->getValue());
-                $user->setRole($role_id);
-                $user->setCellNumber($form->phone->getValue());
-                if ($user->getPassword() == base64_encode($form->old_password->getValue())) {
-                    $user->setPassword(base64_encode($form->new_password->getValue()));
-                }
-                $user->setDesignation($form->designation->getValue());
-                $user->setDepartment($form->department->getValue());
-                $user->setAddress($form->address->getValue());
-                $user->setPhoto($file_name);
+            $user = $this->_em->getRepository("Users")->find($user_id);
+            $role_id = $this->_em->find('Roles', $form->role->getValue());
+            $user->setRole($role_id);
+            $user->setCellNumber($form->phone->getValue());
+            if ($user->getPassword() == base64_encode($form->old_password->getValue())) {
+                $user->setPassword(base64_encode($form->new_password->getValue()));
+            }
+            $user->setDesignation($form->designation->getValue());
+            $user->setDepartment($form->department->getValue());
+            $user->setAddress($form->address->getValue());
+            $user->setPhoto($file_name);
 
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $user->setModifiedBy($created_by);
-                $user->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($user);
-                $this->_em->flush();
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $user->setModifiedBy($created_by);
+            $user->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($user);
+            $this->_em->flush();
 
-                $warehouse = $this->_request->getPost('warehouse2');
-                if (!empty($warehouse)) {
-                    $user_wh = $this->_em->getRepository("WarehouseUsers")->findOneBy(array("user" => $user->getPkId()));
-                    if (count($user_wh) > 0) {
-                        $warehouse_id = $this->_em->find('Warehouses', $warehouse);
-                        $user_wh->setWarehouse($warehouse_id);
-                        $user_wh->setModifiedBy($created_by);
-                        $user_wh->setModifiedDate(App_Tools_Time::now());
-                        $this->_em->persist($user_wh);
-                        $this->_em->flush();
-                    }
+            $warehouse = $this->_request->getPost('warehouse2');
+            if (!empty($warehouse)) {
+                $user_wh = $this->_em->getRepository("WarehouseUsers")->findOneBy(array("user" => $user->getPkId()));
+                if (count($user_wh) > 0) {
+                    $warehouse_id = $this->_em->find('Warehouses', $warehouse);
+                    $user_wh->setWarehouse($warehouse_id);
+                    $user_wh->setModifiedBy($created_by);
+                    $user_wh->setModifiedDate(App_Tools_Time::now());
+                    $this->_em->persist($user_wh);
+                    $this->_em->flush();
                 }
             }
         }
         $this->_redirect("/cadmin/manage-users");
     }
 
+    /**
+     * delete
+     */
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -210,6 +231,9 @@ class Cadmin_ManageUsersController extends App_Controller_Base {
         return $this->_em->flush();
     }
 
+    /**
+     * checkUser
+     */
     public function checkUserAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);

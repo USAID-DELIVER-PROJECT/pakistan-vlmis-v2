@@ -1,21 +1,34 @@
 <?php
 
+/**
+ * Reports_CampaignController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Reports
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Reports Campaign
+ */
 class Reports_CampaignController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Reports_CampaignController index
+     */
     public function indexAction() {
         // action body
     }
 
+    /**
+     * Summary Report
+     */
     public function summaryAction() {
         //campaigns 4.3.1
         $this->_helper->layout->setLayout('reports');
-        $data_arr = array();
-        //$xml_file_name = 'campaigns-summary-history.xml';
-        $campaign_data = new Model_CampaignData();
         $search_form = new Form_ReportsSearch();
 
         $this->view->main_heading = "Consumption Reports (Campaign)";
@@ -25,23 +38,22 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->cspan = '#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan';
         $this->view->width = '*';
         $this->view->ro = 'ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro';
-        //$this->view->xml_file_name = $xml_file_name;
-        //$this->view->data = $data_arr;
         $this->view->search_form = $search_form;
         $base_url = Zend_Registry::get('baseurl');
         $this->view->inlineScript()->appendFile($base_url . '/js/reports-search.js');
     }
 
+    /**
+     * Coverage Report
+     */
     public function coverageReportAction() {
         //campaigns 4.3.2
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
         $campaign_data = new Model_CampaignData();
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $campaign_data->form_values = $search_form->getValues();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $campaign_data->form_values = $search_form->getValues();
         }
 
         $data_arr = $campaign_data->getCoverageReport();
@@ -78,6 +90,9 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->search_form = $search_form;
     }
 
+    /**
+     * Campaign Detail Report
+     */
     public function campaignDetailAction() {
         //campaigns 4.3.3
         $this->_helper->layout->setLayout('reports');
@@ -85,17 +100,16 @@ class Reports_CampaignController extends App_Controller_Base {
         $search_form = new Form_ReportsSearch();
         $campaign_data1 = new Model_CampaignData();
         $campaigns = new Model_Campaigns();
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $campaign_data1->form_values = $search_form->getValues();
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $campaign_data1->form_values = $search_form->getValues();
+            $form_values = $this->_request->getPost();
 
-                $search_form->district_id_hidden->setValue($form_values['combo2_add']);
-                $campaigns->form_values['district_id'] = $form_values['combo2_add'];
-                $campaign = $form_values['campaign'];
-                $campaign_data = $campaigns->getCampaignsByDistrictReport();
-            }
+            $search_form->district_id_hidden->setValue($form_values['combo2_add']);
+            $campaigns->form_values['district_id'] = $form_values['combo2_add'];
+            $campaign = $form_values['campaign'];
+            $campaign_data = $campaigns->getCampaignsByDistrictReport();
         }
+
 
         $this->view->campaign_data = $campaign_data;
         $this->view->campaign = $campaign;
@@ -127,7 +141,6 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->main_heading = "Consumption Reports (Campaign)";
         $this->view->report_title = "Coverage Report – Campaign Detail";
         $this->view->headers = 'Tehsil,UC,Daily Target,No. of Teams Reported in the evening,0-5 Months,5-59 Months,Recorded NA,Recorded Refusal,Covered NA, Covered Refusal,Number of Mobile-Migratory children covered, Total Coverage';
-        //$this->view->rspan = '';
         $this->view->cspan = '#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan';
         $this->view->width = '*,*,*,*,*,*,*,*,*,*,100,*';
         $this->view->ro = 'ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro';
@@ -138,6 +151,9 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/reports-search.js');
     }
 
+    /**
+     * Coverage Catch Up Report
+     */
     public function coverageCatchUpAction() {
         //campaigns 4.3.4
         $this->_helper->layout->setLayout('reports');
@@ -145,16 +161,13 @@ class Reports_CampaignController extends App_Controller_Base {
         $search_form = new Form_ReportsSearch();
         $campaign_data1 = new Model_CampaignData();
         $campaigns = new Model_Campaigns();
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
 
-                $campaign_data1->form_values = $search_form->getValues();
-                $form_values = $this->_request->getPost();
-                // App_Controller_Functions::pr($form_values);
-                $search_form->district_id_hidden->setValue($form_values['combo2_add']);
-                $campaign = $form_values['campaign'];
-                $campaign_data = $campaigns->getCampaignsByDistrictReport();
-            }
+            $campaign_data1->form_values = $search_form->getValues();
+            $form_values = $this->_request->getPost();
+            $search_form->district_id_hidden->setValue($form_values['combo2_add']);
+            $campaign = $form_values['campaign'];
+            $campaign_data = $campaigns->getCampaignsByDistrictReport();
         }
 
         $this->view->campaign_data = $campaign_data;
@@ -199,6 +212,9 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/reports-search.js');
     }
 
+    /**
+     * lqas
+     */
     public function lqasAction() {
         //campaigns 4.3.5
         $this->_helper->layout->setLayout('reports');
@@ -278,16 +294,17 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_area_combo.js');
     }
 
+    /**
+     * Vaccine Utilization Wastage Report
+     */
     public function vaccineUtilizationWastageAction() {
         //campaigns 4.3.5
         $this->_helper->layout->setLayout('reports');
         $data_arr = array();
         $search_form = new Form_ReportsSearch();
         $campaign_data = new Model_CampaignData();
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $campaign_data->form_values = $search_form->getValues();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $campaign_data->form_values = $search_form->getValues();
         }
         $data_arr = $campaign_data->getLQASReport();
 
@@ -319,6 +336,9 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/reports-search.js');
     }
 
+    /**
+     * Coverage Missed Children
+     */
     public function coverageMissedChildrenAction() {
         //campaigns 4.3.2
         $this->_helper->layout->setLayout('reports');
@@ -330,12 +350,10 @@ class Reports_CampaignController extends App_Controller_Base {
         $form_values['combo1'] = $province = $this->_request->getParam('combo1', '');
         $form_values['combo2'] = $district = $this->_request->getParam('combo2', '');
 
-        if ($this->_request->isPost()) {
-            if ($search_form->isValid($this->_request->getPost())) {
-                $form_values = array_merge($form_values, $search_form->getValues());
-                $campaign_data->form_values = $form_values;
-                $data_arr = $campaign_data->getCoverageMissedChildren();
-            }
+        if ($this->_request->isPost() && $search_form->isValid($this->_request->getPost())) {
+            $form_values = array_merge($form_values, $search_form->getValues());
+            $campaign_data->form_values = $form_values;
+            $data_arr = $campaign_data->getCoverageMissedChildren();
         }
 
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -387,6 +405,9 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Status Nids
+     */
     public function statusNidsAction() {
         //campaigns 4.3.2
         $this->_helper->layout->setLayout('reports');
@@ -398,18 +419,14 @@ class Reports_CampaignController extends App_Controller_Base {
         $form_values['combo2'] = $this->_request->getParam('combo2', '');
         $campaign = $form_values['campaign_id'] = $this->_request->getParam('campaign', '');
         if ($this->_request->isPost()) {
-
-            // $form_values = array_merge($form_values, $search_form->getValues());
             $province = $this->_request->getParam('combo1', '');
             $campaign_data->form_values = $form_values;
-            // $search_form->campaign->setValue($this->_request->getParam('campaign', ''));
         } else {
             $office = $form_values['office'] = 1;
             $campaign = '';
             $province = '';
         }
         $data_arr = $campaign_data->getStatusNidsReport();
-        //  App_Controller_Functions::pr($data_arr);
         $campaigns = new Model_Campaigns();
         if ($office == 1) {
             $campaign_data = $campaigns->getAllCampaignsNational();
@@ -441,7 +458,6 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->headers = 'Location,Target Population,Reported Coverage number,Reported Coverage %,No. of UCs,< 90% Coverage, < 70% Coverage,<50% Coverage,< 30% Coverage';
         $this->view->rspan = '';
         $this->view->cspan = '#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan,#cspan';
-        // $this->view->width = '*';
         $this->view->width = '*,110,120,90,90,90,90,90,90';
         $this->view->ro = 'ro,ro,ro,ro,ro,ro,ro,ro,ro';
         $this->view->xmlstore = $xmlstore;
@@ -453,6 +469,9 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Vaccine Utilization And Wastage
+     */
     public function vaccineUtilizationAndWastageAction() {
         //campaigns 4.3.2
         $this->_helper->layout->setLayout('reports');
@@ -467,7 +486,6 @@ class Reports_CampaignController extends App_Controller_Base {
             $data_arr = $campaign_data->getVaccineUtilizationAndWastage();
         }
 
-        //  App_Controller_Functions::pr($data_arr);
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
         $xmlstore .= "<rows>";
 
@@ -500,6 +518,9 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * ajaxGetCampaigns
+     */
     public function ajaxGetCampaignsAction() {
         $this->_helper->layout->disableLayout();
         $province = $this->_request->province;
@@ -523,6 +544,9 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->campaign_data = $campaign_data;
     }
 
+    /**
+     * Under Performing Uc
+     */
     public function underPerformingUcsAction() {
         //campaigns 4.3.2
         $this->_helper->layout->setLayout('reports');
@@ -576,6 +600,9 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Under Performing Districts
+     */
     public function underPerformingDistrictsAction() {
         //campaigns 4.3.2
         $this->_helper->layout->setLayout('reports');
@@ -627,6 +654,9 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * Under Performing Districts Summary
+     */
     public function underPerformingDistrictsSummaryAction() {
         //campaigns 4.3.2
         $this->_helper->layout->setLayout('reports');
@@ -640,8 +670,6 @@ class Reports_CampaignController extends App_Controller_Base {
             $search_form->campaign_id->setValue($this->_request->getParam('campaign_id', ''));
             $data_arr = $campaign_data->getUnderPerformingDistrictsSummary();
         }
-
-        //   App_Controller_Functions::pr($data_arr);
         $xmlstore = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
         $xmlstore .= "<rows>";
 
@@ -671,6 +699,9 @@ class Reports_CampaignController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile(Zend_Registry::get('baseurl') . '/js/all_level_area_combo_report_graph.js');
     }
 
+    /**
+     * ajaxGetCampaignsByDistrict
+     */
     public function ajaxGetCampaignsByDistrictAction() {
         $this->_helper->layout->disableLayout();
 

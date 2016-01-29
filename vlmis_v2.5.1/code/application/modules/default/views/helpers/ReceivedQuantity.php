@@ -1,7 +1,30 @@
 <?php
 
+/**
+ * Zend_View_Helper_ReceivedQuantity
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+
+/**
+ *  Zend View Helper Received Quantity
+ */
 class Zend_View_Helper_ReceivedQuantity extends Zend_View_Helper_Abstract {
 
+    /**
+     * Received Quantity
+     * @param type $detail_id
+     * @return type
+     */
     public function receivedQuantity($detail_id) {
 
         $data = array(1 => 0, 2 => 0, 3 => 0, 4 => 0);

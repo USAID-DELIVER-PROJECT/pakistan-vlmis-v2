@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Store Issuance Report
+*/
+?>
+<?php
 $sel_month = $this->month_sel;
 $sel_year = $this->year_sel;
 $counter = 1;
@@ -123,7 +128,6 @@ foreach ($period as $date) {
     }
     $count++;
 }
-//App_Controller_Functions::pr($data_arr);
 $s_date = $this->start_date;
 $e_date = $this->end_date;
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -142,24 +146,17 @@ foreach ($data_arr as $dis_id => $sub_arr) {
     $remaining = $sub_arr[1] - $totalqty;
 
     $xml_store .= "<row>";
-
-    //$param1 = base64_encode($wh_type . '|' . $sub_arr[0] . '|' . $s_date . '|' . $e_date . '|' . $dis_id . '|' . $sub_arr[1] . '|' . '3');
-
-
     $xml_store .= "<cell>$sub_arr[0]</cell>";
-
     $xml_store .= "<cell style=\"text-align:right\">" . number_format($sub_arr[1]) . "</cell>";
     $xml_store .= "<cell style=\"text-align:right\">" . number_format($sub_arr[2]) . "</cell>";
 
     foreach ($sub_arr as $key => $value) {
         if ($key > 2) {
-            //$param = base64_encode($wh_type . '-' . $dis_id . '-' . $monthArr[$key - 2]);
             $xml_store .= "<cell style=\"text-align:right\">$value</cell>";
         }
     }
 
     $xml_store .= "<cell style=\"text-align:right\">" . number_format($remaining) . "</cell>";
-
     $xml_store .="</row>";
 }
 

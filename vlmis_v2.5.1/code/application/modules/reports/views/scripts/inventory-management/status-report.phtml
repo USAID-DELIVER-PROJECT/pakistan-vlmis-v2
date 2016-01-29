@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Status Report
+*/
+?>
+<?php
 $sel_month = $this->month_sel;
 $sel_year = $this->year_sel;
 $counter = 1;
@@ -144,11 +149,6 @@ foreach ($data_arr as $dis_id => $sub_arr) {
     $xml_store .="</row>";
 }
 $xml_store .="</rows>";
-//print_r($xml_store);
-/* $in_type = 'N';
-  $in_stk = 1;
-  $in_year = $sel_year;
- */
 
 $report_title = $this->report_title;
 if (!empty($sel_month)) {

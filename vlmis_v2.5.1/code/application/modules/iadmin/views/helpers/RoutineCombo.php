@@ -1,19 +1,37 @@
 <?php
 
+/**
+ * Zend_View_Helper_RoutineCombo
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+/**
+ *  Zend View Helper Routine Combo
+ */
 class Zend_View_Helper_RoutineCombo extends Zend_View_Helper_Abstract {
 
+    /**
+     * Routine Combo
+     * @param type $office_term
+     */
     public function routineCombo($office_term) {
-
-
-        $identity = App_Auth::getInstance();
         $translate = Zend_Registry::get('Zend_Translate');
+        // Get base URL.
         $base_url = Zend_Registry::get('baseurl');
-        $user_lvl = $identity->getRoleId();
         $em = Zend_Registry::get('doctrine');
+        // prepare query.
         $str_sql = $em->createQueryBuilder()
                 ->select("l.pkId,l.locationName")
                 ->from('Locations', 'l')
                 ->where("l.parent = 10");
+        // Execute and get result.
         $result = $str_sql->getQuery()->getResult();
         ?>
 
@@ -27,14 +45,18 @@ class Zend_View_Helper_RoutineCombo extends Zend_View_Helper_Abstract {
                     <?php
                     foreach ($result as $row) {
                         ?>
-                        <option value="<?php echo $row['pkId']; ?>" <?php if (!empty($office_term['combo1']) && $row['pkId'] == $office_term['combo1']) echo 'selected'; ?> ><?php echo $row['locationName']; ?></option>";
-                    <?php } ?>
+                        <option value="<?php echo $row['pkId']; ?>" <?php
+                        if (!empty($office_term['combo1']) && $row['pkId'] == $office_term['combo1']) {
+                            echo 'selected';
+                        }
+                        ?> ><?php echo $row['locationName']; ?></option>";
+                            <?php } ?>
 
                 </select>
             </div>
         </div>
 
-        <div class="col-md-3" id="div_combo2" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>		
+        <div class="col-md-3" id="div_combo2" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>
             <label class="control-label" id="lblcombo2"><?php echo $translate->translate("District"); ?> <span class="red">*</span></label>
             <div class="controls">
                 <select name="combo2" id="combo2" class="form-control">
@@ -59,7 +81,6 @@ class Zend_View_Helper_RoutineCombo extends Zend_View_Helper_Abstract {
 
         <div class="col-md-1" id="loader" style="display:none;"><img src="<?php echo $base_url; ?>/images/loader.gif" style="margin-top:8px; float:left" alt="" /></div>
         <?php
-        // return true;
     }
 
 }

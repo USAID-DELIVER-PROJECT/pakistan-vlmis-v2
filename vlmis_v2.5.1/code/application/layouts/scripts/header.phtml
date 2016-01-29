@@ -1,3 +1,9 @@
+<?php
+/**
+*  Layout for Header.
+*/
+
+?>
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="ie lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>    <html class="ie lt-ie9 lt-ie8"> <![endif]-->
@@ -46,19 +52,19 @@
         <!-- END PAGE LEVEL STYLES -->
 
         <link href="<?php echo $this->baseUrl(); ?>/common/theme/css/style-light.css?1369414385" rel="stylesheet" />
-        <!--        <link href="--><?php ////echo $this->baseUrl();                   ?><!--<!--/common/theme/css/style-green.css" rel="stylesheet" />-->
+        <!--        <link href="--><?php ////echo $this->baseUrl();                         ?><!--<!--/common/theme/css/style-green.css" rel="stylesheet" />-->
         <!-- LESS.js Library
         <script src="<?php echo $this->baseUrl(); ?>/common/theme/scripts/plugins/system/less.min.js"></script>-->
         <!--[if !IE]>
         <link href="<?php echo $this->baseUrl(); ?>/common/theme/css/google-fonts.css" rel="stylesheet" />
 
         <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
-        <!--        <link href="--><?php //echo $this->baseUrl();                  ?><!--/common/assets/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>-->
+        <!--        <link href="--><?php //echo $this->baseUrl();                        ?><!--/common/assets/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>-->
         <!--[endif]>
         <link href="<?php echo $this->baseUrl(); ?>/common/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css"/>
         <link href="<?php echo $this->baseUrl(); ?>/common/assets/plugins/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" type="text/css"/>
-        <!--        <link href="--><?php //echo $this->baseUrl();                  ?><!--/common/assets/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css"/>-->
-        <!--        <link href="--><?php //echo $this->baseUrl();                  ?><!--/common/assets/plugins/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css"/>-->
+        <!--        <link href="--><?php //echo $this->baseUrl();                        ?><!--/common/assets/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css"/>-->
+        <!--        <link href="--><?php //echo $this->baseUrl();                        ?><!--/common/assets/plugins/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css"/>-->
         <!-- END PAGE LEVEL PLUGIN STYLES -->
 
         <!-- BEGIN THEME STYLES -->
@@ -93,7 +99,9 @@
         <script type="text/javascript" language="Javascript" src="<?php echo $this->baseUrl(); ?>/FusionCharts/Code/assets/ui/js/lib.js"></script>
 
         <link href="<?php echo $this->baseUrl(); ?>/js/OpenLayers-2.13/theme/default/style.css" rel="stylesheet" />
-        <!--<script src="<?php echo $this->baseUrl(); ?>/js/OpenLayers-2.13/OpenLayers.js"></script>-->
+        <?php if ($this->layout()->user_role == 34) { ?>
+            <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/all_level_combos.js"></script>
+        <?php } ?>
 
         <?php echo $this->headLink(); ?>
         <?php echo $this->headScript(); ?>
@@ -130,7 +138,7 @@
                             <img src="<?php echo $this->baseUrl(); ?>/common/assets/img/header-icon/epi_directory.png" alt=""/>
                         </a>
                     </li>
-                    <!-- <?php //echo $this->baseUrl(); ?>/index/training-manuals  -->
+                    <!-- <?php //echo $this->baseUrl();       ?>/index/training-manuals  -->
                     <li>
                         <a href="<?php echo $this->baseUrl(); ?>/index/training-manuals" class="ul-header">
                             <img src="<?php echo $this->baseUrl(); ?>/common/assets/img/header-icon/training_manuals.png" alt=""/>
@@ -212,7 +220,7 @@
                                     ?>
                                 </ul>
                             </li>
-                        <?php } ?>
+                        <?php } ?>                        
                     </ul>
                 </div>
             </div>
@@ -221,3 +229,9 @@
         <div class="page-container">
             <!-- Sidebar menu & content wrapper -->
             <div class="page-sidebar-wrapper">
+                <?php if ($this->layout()->user_role == 34) { ?>
+                    <div style="position:absolute; width: 868px; margin-left: 264px; margin-top: -65px; ">
+                        <?php $this->allLevelCombo(); ?>
+                        <a onclick="javascript:location.reload(true);" style="position:relative; margin-top: -84px; margin-left: 870px; " class="btn btn-success">GO</a>
+                    </div>
+                <?php } ?>

@@ -1,65 +1,78 @@
 <?php
 
-
+/**
+*  Model for List Detail
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ListDetail
+ *  ListDetail
  */
 class ListDetail
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $listValue
      * @var string $listValue
      */
     private $listValue;
 
     /**
+     * $description
      * @var text $description
      */
     private $description;
 
     /**
+     * $rank
      * @var integer $rank
      */
     private $rank;
 
     /**
+     * $referenceId
      * @var integer $referenceId
      */
     private $referenceId;
 
     /**
+     * $parentId
      * @var integer $parentId
      */
     private $parentId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $listMaster
      * @var ListMaster
      */
     private $listMaster;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

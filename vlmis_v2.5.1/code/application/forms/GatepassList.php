@@ -1,21 +1,70 @@
 <?php
 
-class Form_GatepassList extends Zend_Form {
+/**
+ * Form_GatepassList
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Gatepass List
+ * used for gatepasses
+ */
+class Form_GatepassList extends Form_Base {
+
+    /**
+     * Fields for Form_GatepassList
+     * 
+     * 
+     * 
+     * date_from
+     * date_to
+     * vehicle_type_id
+     * item_pack_size_id
+     * stock_batch_id
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "date_from" => "Date From",
         "date_to" => "Date To",
         "vehicle_type_id" => "Vehicle Type",
         "item_pack_size_id" => "Item",
-        "stock_batch_id" => "Batch",     
+        "stock_batch_id" => "Batch",
     );
+
+    /**
+     * Combo boxes for 
+     * Form_GatepassList
+     * 
+     * 
+     * vehicle_type_id
+     * item_pack_size_id
+     * stock_batch_id
+     * 
+     * 
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'vehicle_type_id' => array(),
         'item_pack_size_id' => array(),
         'stock_batch_id' => array(),
     );
+
+    /**
+     * Initializes Form Fields
+     * for Form_GatepassList
+     */
     public function init() {
         //Generate Vehicle Type Combo
+        // for Form_GatepassList
         $list = new Model_ListDetail();
         $list->form_values = array('listMaster' => Model_ListMaster::VEHICLE_TYPE);
         $result1 = $list->getListDetail();
@@ -25,7 +74,8 @@ class Form_GatepassList extends Zend_Form {
                 $this->_list["vehicle_type_id"][$row->getPkId()] = $row->getListValue();
             }
         }
-         //Generate Item Combo
+        //Generate Item Combo
+        // for Form_GatepassList
         $item_pack_size = new Model_ItemPackSizes();
         $result = $item_pack_size->getItemsAll();
         $this->_list["item_pack_size_id"][''] = "Select Product";
@@ -34,59 +84,32 @@ class Form_GatepassList extends Zend_Form {
                 $this->_list["item_pack_size_id"][$row->getPkId()] = $row->getItemName();
             }
         }
-        
-         //Generate Batch Number Combo  
+
+        //Generate Batch Number Combo  
+        // for Form_GatepassList
         $this->_list["stock_batch_id"][''] = "Select Item First";
 
-       
+        // Generate fields 
+        // for Form_GatepassList
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
                 case "vehicle_type_id":
                 case "item_pack_size_id":
-                  case "stock_batch_id":   
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                case "stock_batch_id":
+                    parent::createText($col);
                     break;
                 case "date_from":
                 case "date_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => true,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;  
-                
-           
+                    parent::createReadOnlyText($col);
+                    break;
                 default:
                     break;
             }
 
+            // Generate combo boxes 
+            // for Form_GatepassList
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
     }

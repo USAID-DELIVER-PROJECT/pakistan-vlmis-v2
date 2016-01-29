@@ -1,60 +1,72 @@
 <?php
 
-
+/**
+*  Model for Pipeline Consignments Placement
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PipelineConsignmentsPlacements
+ *  PipelineConsignmentsPlacements
  */
 class PipelineConsignmentsPlacements
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $batchNumber
      * @var string $batchNumber
      */
     private $batchNumber;
 
     /**
+     * $quantity
      * @var decimal $quantity
      */
     private $quantity;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $pipelineConsignment
      * @var PipelineConsignments
      */
     private $pipelineConsignment;
 
     /**
+     * $placementLocation
      * @var PlacementLocations
      */
     private $placementLocation;
 
     /**
+     * $vvmStage
      * @var VvmStages
      */
     private $vvmStage;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

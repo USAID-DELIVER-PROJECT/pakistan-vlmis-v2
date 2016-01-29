@@ -1,70 +1,84 @@
 <?php
 
-
+/**
+*  Model for Placements
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Placements
+ *  Placements
  */
 class Placements
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $quantity
      * @var integer $quantity
      */
     private $quantity;
 
     /**
+     * $isPlaced
      * @var integer $isPlaced
      */
     private $isPlaced;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $stockBatchWarehouse
      * @var StockBatchWarehouses
      */
     private $stockBatchWarehouse;
 
     /**
+     * $stockDetail
      * @var StockDetail
      */
     private $stockDetail;
 
     /**
+     * $placementTransactionType
      * @var ListDetail
      */
     private $placementTransactionType;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $placementLocation
      * @var PlacementLocations
      */
     private $placementLocation;
 
     /**
+     * $vvmStage
      * @var VvmStages
      */
     private $vvmStage;

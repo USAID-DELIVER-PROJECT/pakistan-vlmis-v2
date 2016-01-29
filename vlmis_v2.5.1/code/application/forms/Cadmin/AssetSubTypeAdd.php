@@ -1,95 +1,119 @@
 <?php
 
-class Form_Cadmin_AssetSubTypeAdd extends Zend_Form {
+/**
+ * Form_Cadmin_AssetSubTypeAdd
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Cadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Cadmin Asset Subtype Add
+ */
+class Form_Cadmin_AssetSubTypeAdd extends Form_Base {
+
+    /**
+     * Fields for Form_Cadmin_AssetSubTypeAdd
+     * 
+     * 
+     * 
+     * asset_type
+     * asset_sub_type
+     * assetSubType
+     * 
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "asset_type" => "Asset Type",
         "asset_sub_type" => "Asset Sub Type",
         "assetSubType" => "Asset Sub Type"
     );
+
+    /**
+     * Combo boxes fo Form_Cadmin_AssetSubTypeAdd
+     * 
+     * 
+     * asset_type
+     * 
+     * 
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'asset_type' => array()
     );
+
+    /**
+     * Hidden filds for Form_Cadmin_AssetSubTypeAdd
+     * 
+     * 
+     * asset_id
+     * 
+     * 
+     * 
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "asset_id" => "pkId"
     );
 
+    /**
+     * Initializes Form Fields
+     * for Form_Cadmin_AssetSubTypeAdd
+     */
     public function init() {
 
         //Generate Asset Type Combo
         $asset_types = new Model_CcmAssetTypes();
 
         $result = $asset_types->getAssetSubTypes();
-        
+
         $this->_list["asset_type"][''] = "Select";
         foreach ($result as $rs) {
             $this->_list["asset_type"][$rs['pkId']] = $rs['assetTypeName'];
         }
 
-
+        //Generate fields
+        //for Form_Cadmin_AssetSubTypeAdd
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
                 case "asset_sub_type":
                 case "assetSubType":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
             }
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array()
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);                
             }
         }
 
+        //Generate Hidden Fields
+        //for Form_Cadmin_AssetSubTypeAdd
         foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-
-
-                case "asset_id":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "asset_id") {
+                parent::createHidden($col);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields 
+     * for Form_Cadmin_AssetSubTypeAdd
+     * Validate
+     * Filter
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

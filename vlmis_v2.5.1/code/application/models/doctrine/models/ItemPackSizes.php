@@ -1,95 +1,114 @@
 <?php
 
-
+/**
+*  Model for Item Pack Sizes
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ItemPackSizes
+ *  ItemPackSizes
  */
 class ItemPackSizes
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $itemName
      * @var string $itemName
      */
     private $itemName;
 
     /**
+     * $description
      * @var text $description
      */
     private $description;
 
     /**
+     * $numberOfDoses
      * @var integer $numberOfDoses
      */
     private $numberOfDoses;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $listRank
      * @var integer $listRank
      */
     private $listRank;
 
     /**
+     * $multiplier
      * @var integer $multiplier
      */
     private $multiplier;
 
     /**
+     * $wastageRateAllowed
      * @var float $wastageRateAllowed
      */
     private $wastageRateAllowed;
 
     /**
+     * $color
      * @var string $color
      */
     private $color;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $itemCategory
      * @var ItemCategories
      */
     private $itemCategory;
 
     /**
+     * $itemUnit
      * @var ItemUnits
      */
     private $itemUnit;
 
     /**
+     * $item
      * @var Items
      */
     private $item;
 
     /**
+     * $vvmGroup
      * @var VvmGroups
      */
     private $vvmGroup;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

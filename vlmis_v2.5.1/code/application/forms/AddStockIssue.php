@@ -1,7 +1,39 @@
 <?php
 
-class Form_AddStockIssue extends Zend_Form {
+/**
+ * Form_AddStockIssue
+ *
+ * Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Add Stock Issue
+ */
+class Form_AddStockIssue extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * 
+     * @status: "Status"
+     * 
+     * @transaction_date: "Transaction Date"
+     * 
+     * @comments: "Comments"
+     * 
+     * @transaction_reference: "Transaction Reference"
+     * 
+     * @hdn_available_quantity: "hdn_available_quantity"
+     * 
+     * @hdn_vvm_stage: "hdn_vvm_stage"
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "status" => "Status",
         "transaction_date" => "Transaction Date",
@@ -10,22 +42,63 @@ class Form_AddStockIssue extends Zend_Form {
         "hdn_available_quantity" => "hdn_available_quantity",
         "hdn_vvm_stage" => "hdn_vvm_stage"
     );
+
+    /**
+     * $_hidden
+     * 
+     * Private Variable
+     * 
+     * Hidden
+     * 
+     * @id: "ID"
+     * 
+     * @hdn_activity_id: ""
+     * 
+     * @hdn_receive_warehouse_id: ""
+     * 
+     * @hdn_stock_master_id: ""
+     * 
+     * @var type 
+     */
     private $_hidden = array(
         "id" => "ID",
         "hdn_activity_id" => "",
         "hdn_receive_warehouse_id" => "",
         "hdn_stock_master_id" => "",
     );
+
+    /**
+     * $_list
+     * 
+     * Private Variable
+     * 
+     * List
+     * 
+     * @var type 
+     */
     private $_list = array(
     );
+
+    /**
+     * $_childlist
+     * 
+     * item_pack_size_id: array()
+     * 
+     * number: array()
+     * 
+     * @var type 
+     */
     private $_childlist = array(
         'item_pack_size_id' => array(),
         'number' => array("Select")
     );
 
+    /**
+     * init
+     * 
+     * Initializes Form Fields
+     */
     public function init() {
-
-
         //Generate Item Combo
         $sips = new Model_StakeholderItemPackSizes();
         $sips->form_values['stakeholder_id'] = '1';
@@ -34,87 +107,86 @@ class Form_AddStockIssue extends Zend_Form {
 
         $this->_childlist["item_pack_size_id"][''] = "Select";
 
-
         foreach ($result as $row) {
             $this->_childlist["item_pack_size_id"][$row['item_pack_size_id']] = $row['item_name'];
         }
 
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
-
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * transaction_reference
+                 * 
+                 */
                 case "transaction_reference":
-
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
-
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * transaction_number
+                 * 
+                 */
                 case "transaction_number":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * transaction_date
+                 * 
+                 */
                 case "transaction_date":
-
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "readonly" => "true"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * comments
+                 * 
+                 */
                 case "comments":
-                    $this->addElement("textarea", $col, array(
-                        "attribs" => array("class" => "form-control", "rows" => "2"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-
+                    parent::createMultiLineText($col,2);
                 default:
                     break;
             }
 
+            /**
+             * 
+             * Form Select Fields for
+             * 
+             */
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
+        /**
+         * 
+         * Form Hidden Fields for loop
+         * 
+         */
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
-
-
+                /**
+                 * 
+                 * Form Hidden Fields for 
+                 * 
+                 * hdn_activity_id
+                 * 
+                 * hdn_receive_warehouse_id
+                 * 
+                 * hdn_stock_master_id
+                 * 
+                 */
                 case "hdn_activity_id":
                 case "hdn_receive_warehouse_id":
                 case "hdn_stock_master_id":
-
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -122,26 +194,13 @@ class Form_AddStockIssue extends Zend_Form {
         }
     }
 
+    /**
+     * addHidden
+     * 
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
     /**
@@ -198,9 +257,7 @@ class Form_AddStockIssue extends Zend_Form {
                         break;
                 }
             }
-
-
-
+            
             $rows->addElement("text", "expiry_date", array(
                 "attribs" => array("class" => "form-control", 'readonly' => 'true'),
                 "allowEmpty" => false,
@@ -240,6 +297,11 @@ class Form_AddStockIssue extends Zend_Form {
         }
     }
 
+    /**
+     * Populate Manufacturer
+     * @param type $item_id
+     * @param type $rows
+     */
     public function populateManufacturer($item_id, $rows) {
 
         $batch = array();

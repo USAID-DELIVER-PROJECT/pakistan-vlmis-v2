@@ -66,18 +66,6 @@ class CcmAssetTypesProxy extends \CcmAssetTypes implements \Doctrine\ORM\Proxy\P
         return parent::getStatus();
     }
 
-    public function setParentId($parentId)
-    {
-        $this->__load();
-        return parent::setParentId($parentId);
-    }
-
-    public function getParentId()
-    {
-        $this->__load();
-        return parent::getParentId();
-    }
-
     public function setCcmEquipmentTypeId($ccmEquipmentTypeId)
     {
         $this->__load();
@@ -114,6 +102,18 @@ class CcmAssetTypesProxy extends \CcmAssetTypes implements \Doctrine\ORM\Proxy\P
         return parent::getModifiedDate();
     }
 
+    public function setParent(\CcmAssetTypes $parent)
+    {
+        $this->__load();
+        return parent::setParent($parent);
+    }
+
+    public function getParent()
+    {
+        $this->__load();
+        return parent::getParent();
+    }
+
     public function setModifiedBy(\Users $modifiedBy)
     {
         $this->__load();
@@ -141,7 +141,7 @@ class CcmAssetTypesProxy extends \CcmAssetTypes implements \Doctrine\ORM\Proxy\P
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'assetTypeName', 'status', 'parentId', 'ccmEquipmentTypeId', 'createdDate', 'modifiedDate', 'modifiedBy', 'createdBy');
+        return array('__isInitialized__', 'pkId', 'assetTypeName', 'status', 'ccmEquipmentTypeId', 'createdDate', 'modifiedDate', 'parent', 'modifiedBy', 'createdBy');
     }
 
     public function __clone()

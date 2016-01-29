@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Reported Wastage
+*/
+?>
+<?php
 if ($this->level == 2) {
     FC_SetRenderer('javascript');
     echo renderChart($this->baseUrl() . "/FusionCharts/Charts/MSColumn2D.swf", "", $this->xmlstore1, "reportedvsWastages", '100%', 350, false, false);

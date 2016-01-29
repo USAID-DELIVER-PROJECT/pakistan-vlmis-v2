@@ -1,65 +1,78 @@
 <?php
 
-
+/**
+*  Model for Period
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Period
+ *  Period
  */
 class Period
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $periodName
      * @var text $periodName
      */
     private $periodName;
 
     /**
+     * $periodCode
      * @var integer $periodCode
      */
     private $periodCode;
 
     /**
+     * $isMonth
      * @var text $isMonth
      */
     private $isMonth;
 
     /**
+     * $beginMonth
      * @var integer $beginMonth
      */
     private $beginMonth;
 
     /**
+     * $endMonth
      * @var integer $endMonth
      */
     private $endMonth;
 
     /**
+     * $monthCount
      * @var integer $monthCount
      */
     private $monthCount;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

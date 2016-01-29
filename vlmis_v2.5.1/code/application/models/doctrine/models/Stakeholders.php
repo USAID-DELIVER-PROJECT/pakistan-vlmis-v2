@@ -1,75 +1,90 @@
 <?php
 
-
+/**
+*  Model for Stakeholders
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Stakeholders
+ *  Stakeholders
  */
 class Stakeholders
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $stakeholderName
      * @var string $stakeholderName
      */
     private $stakeholderName;
 
     /**
+     * $listRank
      * @var integer $listRank
      */
     private $listRank;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $mainStakeholder
      * @var Stakeholders
      */
     private $mainStakeholder;
 
     /**
+     * $stakeholderType
      * @var StakeholderTypes
      */
     private $stakeholderType;
 
     /**
+     * $stakeholderSector
      * @var StakeholderSectors
      */
     private $stakeholderSector;
 
     /**
+     * $geoLevel
      * @var GeoLevels
      */
     private $geoLevel;
 
     /**
+     * $stakeholderActivity
      * @var StakeholderActivities
      */
     private $stakeholderActivity;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $parent
      * @var Stakeholders
      */
     private $parent;

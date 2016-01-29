@@ -1,6 +1,10 @@
+<?php
+/**
+*  phtml for Reports Header
+*/
+?>
 <!--  BEGIN: REPORT Header -->
 <?php
-//echo $this->month_sel;
 $report_id = $this->report_id;
 
 $report_title = $this->report_title;
@@ -151,8 +155,6 @@ if (!empty($sel_month)) {
                                             $paramTsel = 0;
                                             $paramTall = 1;
                                         }
-                                        //echo  $posT11.'*'.$posT10.'*'.$posT01.'*'.$paramTsel.'*'.$paramTall;
-                                        //echo  $paramTsel.'*'.$paramTall;
                                         ?>
                                         <?php
                                         if ($report_id == "PROVINCIALWAREHOUSE" ||
@@ -191,7 +193,7 @@ if (!empty($sel_month)) {
                                         }
                                         ?>
                                         <?php
-                                        if ($report_id == "VDROPOUTRATE" || $report_id == "VSTATUSWASTAGE" || $report_id == "SNONREPDIST") {
+                                        if ($report_id == "VDROPOUTRATE" || $report_id == "VSTATUSWASTAGE" ) {
                                             ?>
                                             <td style="width:65px; padding-right: 5px;">
                                                 <label>From Month:</label>
@@ -223,7 +225,7 @@ if (!empty($sel_month)) {
                                         </td>   
                                         <?php
                                         if (
-                                                $report_id == "VDROPOUTRATE" || $report_id == "VSTATUSWASTAGE" || $report_id == "SNONREPDIST"
+                                                $report_id == "VDROPOUTRATE" || $report_id == "VSTATUSWASTAGE" 
                                         ) {
                                             ?>
                                             <td style="width:80px; padding-right: 5px;">
@@ -274,7 +276,7 @@ if (!empty($sel_month)) {
                                         ) {
                                             ?>
                                             <td style="width:65px; padding-right: 5px;">
-                                                <?php if ($report_id == 'VDROPOUTRATE' || $report_id == "VSTATUSWASTAGE" || $report_id == "SNONREPDIST") {
+                                                <?php if ($report_id == 'VDROPOUTRATE' || $report_id == "VSTATUSWASTAGE" ) {
                                                     ?>        <label>To Month:</label>
 
                                                     <?php
@@ -318,7 +320,7 @@ if (!empty($sel_month)) {
                                         ) {
                                             ?>
                                             <td style="width:80px; padding-right: 5px;">
-                                                <?php if ($report_id == 'VDROPOUTRATE' || $report_id == "VSTATUSWASTAGE" || $report_id == "SNONREPDIST") {
+                                                <?php if ($report_id == 'VDROPOUTRATE' || $report_id == "VSTATUSWASTAGE" ) {
                                                     ?>        <label>To Year:</label>
                                                 <?php } else { ?>
                                                     <label>Year:</label>
@@ -392,7 +394,6 @@ if (!empty($sel_month)) {
                                     }
 
                                     if ($report_id == "SNASUM" || $report_id == "STOCKOUTRPT") {
-                                        //|| $report_id == "SDISTRICTREPORT"
                                         ?>
                                         <!--<td>
                                                <div class="sb1NormalFont">Sector</div>

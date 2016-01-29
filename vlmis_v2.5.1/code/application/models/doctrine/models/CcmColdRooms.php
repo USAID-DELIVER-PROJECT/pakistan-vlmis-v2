@@ -1,75 +1,90 @@
 <?php
 
-
+/**
+*  Model for CCM Cold Rooms
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmColdRooms
+ *  CcmColdRooms
  */
 class CcmColdRooms
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $coolingSystem
      * @var integer $coolingSystem
      */
     private $coolingSystem;
 
     /**
+     * $hasVoltage
      * @var boolean $hasVoltage
      */
     private $hasVoltage;
 
     /**
+     * $temperatureRecordingSystem
      * @var integer $temperatureRecordingSystem
      */
     private $temperatureRecordingSystem;
 
     /**
+     * $typeRecordingSystem
      * @var integer $typeRecordingSystem
      */
     private $typeRecordingSystem;
 
     /**
+     * $refrigeratorGasType
      * @var integer $refrigeratorGasType
      */
     private $refrigeratorGasType;
 
     /**
+     * $backupGenerator
      * @var integer $backupGenerator
      */
     private $backupGenerator;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $ccmAssetSubType
      * @var CcmAssetTypes
      */
     private $ccmAssetSubType;
 
     /**
+     * $ccm
      * @var ColdChain
      */
     private $ccm;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

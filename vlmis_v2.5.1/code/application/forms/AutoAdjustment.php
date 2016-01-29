@@ -1,8 +1,39 @@
+<?php
+
+/**
+ *  php for Auto Adjustment
+ */
+?>
 
 <?php
 
-class Form_AutoAdjustment extends Zend_Form {
+/**
+ * Form_AutoAdjustment
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+class Form_AutoAdjustment extends Form_Base {
 
+    /**
+     * Form Fields
+     * 
+     * @adjustment_date: Adjustment Date
+     * @adjustment_type: Adjustment Type
+     * @ref_no: Reference Number
+     * @comments: Comments
+     * @transaction_date: Issue Date
+     * @reference_number: Reference No.
+     * @stakeholder_activity_id: Purpose
+     * @description: Description
+     * @catalogue_id_popup: Catalogue id
+     * 
+     * @var type
+     *  
+     */
     private $_fields = array(
         "adjustment_date" => "Adjustment Date",
         "adjustment_type" => "Adjustment Type",
@@ -12,10 +43,24 @@ class Form_AutoAdjustment extends Zend_Form {
         "reference_number" => "Reference No.",
         "stakeholder_activity_id" => "Purpose",
         "description" => "Description"
-    );   
+    );
+
+    /**
+     * $_list
+     * @var type 
+     * stakeholder_activity_id
+     */
     private $_list = array(
         'stakeholder_activity_id' => array()
     );
+
+    /**
+     * $_childlist
+     * @var type 
+     * item_id
+     * vvm_stage
+     * number
+     */
     private $_childlist = array(
         'item_id' => array(),
         'vvm_stage' => array(
@@ -28,18 +73,35 @@ class Form_AutoAdjustment extends Zend_Form {
         'number' => array("Select")
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
+        /**
+         * Generate Adjustment Type Combo
+         */
         $transaction_types = new Model_TransactionTypes();
+        /**
+         * Adjustment Types
+         * @param null
+         * @return Adjustment Types
+         */
         $result = $transaction_types->getAdjusmentTypes();
 
         foreach ($result as $trans) {
             $this->_list["adjustment_type"][''] = 'Select';
             $this->_list["adjustment_type"][$trans['pkId']] = $trans['transactionTypeName'];
         }
-
-        //Generate Item Combo
+        /**
+         * Generate Item Combo
+         */
         $item_pack_size = new Model_ItemPackSizes();
+        /**
+         * ALL Items
+         * @param null
+         * @return All Items
+         */
         $result = $item_pack_size->getItemsAll();
         $this->_childlist["item_id"][''] = "Select";
         if ($result) {
@@ -47,107 +109,72 @@ class Form_AutoAdjustment extends Zend_Form {
                 $this->_childlist["item_id"][$row->getPkId()] = $row->getItemName();
             }
         }
-
-        //Generate Purpose(activity_id) combo 
+        /**
+         * Generate Purpose(activity_id) combo 
+         */
         $stk_activities = new Model_StakeholderActivities();
+        /**
+         * ALL Stakeholder Activities
+         * @param null
+         * @return All Items
+         */
         $result4 = $stk_activities->getAllStakeholderActivitiesIssues();
         if ($result4) {
             foreach ($result4 as $stk_activity) {
                 $this->_list["stakeholder_activity_id"][$stk_activity['pkId']] = $stk_activity['activity'];
             }
         }
-
+        /**
+         * Generate Text Boxes
+         */
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
+                /**
+                 * adjustment_date
+                 */
                 case "adjustment_date":
-
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                        "value" => date("d/m/Y")
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-
+                    parent::createText($col);
                     break;
+                /**
+                 * ref_no
+                 * transaction_reference
+                 * comments
+                 * reference_number
+                 * description
+                 */
                 case "ref_no":
                 case "transaction_reference":
                 case "comments":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
                 case "reference_number":
                 case "description":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
+                /**
+                 * transaction_date
+                 */
                 case "transaction_date":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
                 default:
                     break;
             }
-
+            /**
+             * Generate Select Boxes
+             */
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     * @access public
+     * @default: null
+     * @return void
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
     /**
@@ -166,6 +193,9 @@ class Form_AutoAdjustment extends Zend_Form {
 
             foreach ($this->_childlist as $col => $name) {
                 switch ($col) {
+                    /**
+                     * item_id
+                     */
                     case "item_id":
                         $rows->addElement("select", $col, array(
                             "attribs" => array("class" => "form-control products"),
@@ -178,6 +208,9 @@ class Form_AutoAdjustment extends Zend_Form {
                             "belongsTo" => "rows$i"
                         ));
                         break;
+                    /**
+                     * number
+                     */
                     case "number":
                         $rows->addElement("select", $col, array(
                             "attribs" => array("class" => "form-control batches"),
@@ -190,6 +223,9 @@ class Form_AutoAdjustment extends Zend_Form {
                             "belongsTo" => "rows$i"
                         ));
                         break;
+                    /**
+                     * Default
+                     */
                     default:
                         $rows->addElement("select", $col, array(
                             "attribs" => array("class" => "form-control"),
@@ -204,7 +240,10 @@ class Form_AutoAdjustment extends Zend_Form {
                         break;
                 }
             }
-
+            /**
+             * Readonly Fields
+             * @Average Qty
+             */
             $rows->addElement("text", "ava_qty", array(
                 "attribs" => array("class" => "form-control", "readonly" => "readonly"),
                 "allowEmpty" => false,
@@ -212,6 +251,9 @@ class Form_AutoAdjustment extends Zend_Form {
                 "validators" => array(),
                 "belongsTo" => "rows$i"
             ));
+            /**
+             * @Expiry Date
+             */
             $rows->addElement("text", "expiry_date", array(
                 "attribs" => array("class" => "form-control", "readonly" => "readonly"),
                 "allowEmpty" => false,
@@ -219,6 +261,9 @@ class Form_AutoAdjustment extends Zend_Form {
                 "validators" => array(),
                 "belongsTo" => "rows$i"
             ));
+            /**
+             * @Quantity
+             */
             $rows->addElement("text", "quantity", array(
                 "attribs" => array("class" => "form-control"),
                 "allowEmpty" => false,
@@ -236,6 +281,11 @@ class Form_AutoAdjustment extends Zend_Form {
         }
     }
 
+    /**
+     * Populate Batches
+     * @param type $item_id
+     * @param type $rows
+     */
     public function populateBatches($item_id, $rows) {
 
         $manufacturer = array();

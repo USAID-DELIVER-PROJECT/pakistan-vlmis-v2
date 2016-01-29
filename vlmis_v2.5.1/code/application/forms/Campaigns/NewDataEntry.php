@@ -1,7 +1,57 @@
 <?php
 
-class Form_Campaigns_NewDataEntry extends Zend_Form {
+/**
+ * Form_Campaigns_NewDataEntry
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Campaigns
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Campaigns New Data Entry
+ */
+class Form_Campaigns_NewDataEntry extends Form_Base {
+
+    /**
+     * Fields 
+     * for Form_Campaigns_NewDataEntry
+     * 
+     * 
+     * campaign_id
+     * item_id
+     * campaign_day
+     * wh_id
+     * wh_name
+     * daily_target
+     * household_visited
+     * multiple_family_household
+     * target_age_six_months
+     * target_age_sixty_months
+     * total_coverage
+     * refusal_covered
+     * coverage_mobile_children
+     * coverage_not_accessible
+     * record_not_accessible
+     * record_refusal
+     * reported_with_weakness
+     * zero_dose
+     * teams_reported
+     * inaccessible_coverage
+     * vials_given
+     * vials_used
+     * vials_expired
+     * vials_returned
+     * recon_syr_wasted
+     * ad_syr_wasted
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "campaign_id" => "Campaigns",
         "item_id" => "Product",
@@ -29,7 +79,22 @@ class Form_Campaigns_NewDataEntry extends Zend_Form {
         "vials_returned" => "vials_returned",
         "recon_syr_wasted" => "recon_syr_wasted",
         "ad_syr_wasted" => "ad_syr_wasted"
-    );    
+    );
+
+    /**
+     * Combo boxes
+     * for Form_Campaigns_NewDataEntry
+     * 
+     * 
+     * campaign_id
+     * item_id
+     * campaign_day
+     * wh_id
+     * 
+     * 
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'campaign_id' => array(),
         "item_id" => array(),
@@ -38,18 +103,18 @@ class Form_Campaigns_NewDataEntry extends Zend_Form {
     );
 
     /**
-     * 
+     * Initializes Form Fields
      */
     public function init() {
         $auth = App_Auth::getInstance();
         $role_id = $auth->getRoleId();
         if ($auth->getStakeholderId() != 10) {
-           $warehouse_id = $auth->getWarehouseId();
+            $warehouse_id = $auth->getWarehouseId();
         } else {
             $warehouse_id = "";
         }
-        
-      $district_id = $auth->getDistrictId($auth->getIdentity()); 
+
+        $district_id = $auth->getDistrictId($auth->getIdentity());
         $campaign = new Model_Campaigns();
         if ($role_id == Model_Roles::CAMPAIGN && empty($warehouse_id)) {
             $result1 = $campaign->allCampaigns();
@@ -97,36 +162,14 @@ class Form_Campaigns_NewDataEntry extends Zend_Form {
                 case "vials_returned":
                 case "recon_syr_wasted":
                 case "ad_syr_wasted":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'value' => '0'),
-                        "allowEmpty" => true,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    $this->getElement($col)->setValue(0);
+                    parent::createTextWithValue($col, 0);
                     break;
                 default:
                     break;
             }
 
-            if ($col == "campaign_id") {
-                $attribute_class = "form-control";
-            } else {
-                $attribute_class = "form-control";
-            }
-
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => $attribute_class),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
     }

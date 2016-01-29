@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for Campaign Targets
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CampaignTargets
+ *  CampaignTargets
  */
 class CampaignTargets
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $dailyTarget
      * @var integer $dailyTarget
      */
     private $dailyTarget;
 
     /**
+     * $createdBy
      * @var integer $createdBy
      */
     private $createdBy;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedBy
      * @var integer $modifiedBy
      */
     private $modifiedBy;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $itemPackSize
      * @var ItemPackSizes
      */
     private $itemPackSize;
 
     /**
+     * $campaign
      * @var Campaigns
      */
     private $campaign;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;

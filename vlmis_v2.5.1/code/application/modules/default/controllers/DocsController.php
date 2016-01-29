@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * DocsController
+ *
+ * 
+ *
+ * @subpackage Default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+* Controller for Docs
+*/
+
 class DocsController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Project Documentaion
+     */
     public function projectDocAction() {
 
         $this->_helper->layout->setLayout('doc');
@@ -44,6 +57,9 @@ class DocsController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Docementation User Log
+     */
     public function docUserLogAction() {
         $users = new Model_Users();
         $doc_user_log = $users->getDocUserLog();

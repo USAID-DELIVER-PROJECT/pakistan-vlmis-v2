@@ -1,120 +1,144 @@
 <?php
 
-
+/**
+*  Model for Future Arrivals
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * FutureArrivals
+ *  FutureArrivals
  */
 class FutureArrivals
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $voucherNumber
      * @var string $voucherNumber
      */
     private $voucherNumber;
 
     /**
+     * $transactionCounter
      * @var integer $transactionCounter
      */
     private $transactionCounter;
 
     /**
+     * $expectedArrivalDate
      * @var datetime $expectedArrivalDate
      */
     private $expectedArrivalDate;
 
     /**
+     * $referenceNumber
      * @var string $referenceNumber
      */
     private $referenceNumber;
 
     /**
+     * $description
      * @var text $description
      */
     private $description;
 
     /**
+     * $batchNumber
      * @var string $batchNumber
      */
     private $batchNumber;
 
     /**
+     * $productionDate
      * @var datetime $productionDate
      */
     private $productionDate;
 
     /**
+     * $expiryDate
      * @var datetime $expiryDate
      */
     private $expiryDate;
 
     /**
+     * $unitPrice
      * @var float $unitPrice
      */
     private $unitPrice;
 
     /**
+     * $quantity
      * @var integer $quantity
      */
     private $quantity;
 
     /**
+     * $receivedQuantity
      * @var integer $receivedQuantity
      */
     private $receivedQuantity;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $stakeholderActivity
      * @var StakeholderActivities
      */
     private $stakeholderActivity;
 
     /**
+     * $itemPackSize
      * @var ItemPackSizes
      */
     private $itemPackSize;
 
     /**
+     * $manufacturer
      * @var Stakeholders
      */
     private $manufacturer;
 
     /**
+     * $vvmType
      * @var VvmTypes
      */
     private $vvmType;
 
     /**
+     * $fromWarehouse
      * @var Warehouses
      */
     private $fromWarehouse;
 
     /**
+     * $toWarehouse
      * @var Warehouses
      */
     private $toWarehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

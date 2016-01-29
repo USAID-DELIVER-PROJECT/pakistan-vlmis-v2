@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * StockBatchController
+ *
+ * 
+ *
+ * @subpackage Default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+* Controller for Stock Batch
+*/
+
 class StockBatchController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * StockBatchController index
+     */
     public function indexAction() {
         $form = new Form_StockBatch();
         $stock_batch = new Model_StockBatch();
@@ -29,6 +42,9 @@ class StockBatchController extends App_Controller_Base {
         $this->view->role_id = $this->_identity->getRoleId();
     }
 
+    /**
+     * mergeStakeholderItemPackSizeAction
+     */
     public function mergeStakeholderItemPackSizeAction() {
         $item_pack_sizes = new Model_ItemPackSizes();
         $items = $item_pack_sizes->getAllManageItems();
@@ -37,6 +53,9 @@ class StockBatchController extends App_Controller_Base {
         $this->view->role_id = $this->_identity->getRoleId();
     }
 
+    /**
+     * ajaxMergeStakeholderItemPackSizeAction
+     */
     public function ajaxMergeStakeholderItemPackSizeAction() {
 
         $this->_helper->layout->disableLayout();
@@ -51,6 +70,9 @@ class StockBatchController extends App_Controller_Base {
         $this->view->role_id = $this->_identity->getRoleId();
     }
 
+    /**
+     * ajaxValidateMergeStakeholdersAction
+     */
     public function ajaxValidateMergeStakeholdersAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -76,6 +98,9 @@ class StockBatchController extends App_Controller_Base {
         echo $counter;
     }
 
+    /**
+     * ajaxMergeStakeholderItemPackSizeId
+     */
     public function ajaxMergeStakeholderItemPackSizeIdAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -189,25 +214,34 @@ class StockBatchController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Merge Manufacturers
+     */
     public function mergeManufacturersAction() {
         $stakeholders = new Model_Stakeholders();
         $data = $stakeholders->getAllManufacturers();
         $this->view->result = $data;
     }
 
+    /**
+     * ajaxProductBatches
+     */
     public function ajaxProductBatchesAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->item_id) && !empty($this->_request->item_id)) {
             $item_units = new Model_ItemUnits();
             $item_units->form_values['item_pack_size_id'] = $this->_request->item_id;
             $array = $item_units->getUnitByItemId();
-            if ($array != FALSE) {
+            if ($array) {
                 $this->view->type = $array['type'];
                 $this->view->id = $array['id'];
             }
         }
     }
 
+    /**
+     * ajaxGetBatchColdchain
+     */
     public function ajaxGetBatchColdchainAction() {
         $this->_helper->layout->disableLayout();
 
@@ -220,6 +254,9 @@ class StockBatchController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxProductCategory
+     */
     public function ajaxProductCategoryAction() {
         $this->_helper->layout->disableLayout();
         $item_pack_sizes = new Model_ItemPackSizes();
@@ -236,6 +273,9 @@ class StockBatchController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxBatchDetail
+     */
     public function ajaxBatchDetailAction() {
         $this->_helper->layout->disableLayout();
 
@@ -254,6 +294,9 @@ class StockBatchController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxChangeStatus
+     */
     public function ajaxChangeStatusAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -289,6 +332,9 @@ class StockBatchController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Batch Summary
+     */
     public function batchSummaryAction() {
         $this->_helper->layout->setLayout('print');
         $stock_batch = new Model_StockBatch();
@@ -315,6 +361,38 @@ class StockBatchController extends App_Controller_Base {
         $this->view->username = $this->_identity->getUserName();
     }
 
+    /**
+     * Non Vaccine Batch Summary
+     */
+    public function nonVaccineBatchSummaryAction() {
+        $this->_helper->layout->setLayout('print');
+        $stock_batch = new Model_StockBatch();
+
+        if (!empty($this->_request->type)) {
+            $stock_batch->form_values = $this->_request->getParams();
+            $data = $stock_batch->searchStockBatch();
+            $this->view->data = $data;
+            $this->view->print_title = "Batch Management";
+            $this->view->status = $this->_request->getParam('status');
+        } else {
+            $stock_batch->form_values['adjustment_no'] = $this->_request->adjustment_no;
+            $stock_batch->form_values['adjustment_type'] = $this->_request->adjustment_type;
+            $stock_batch->form_values['product'] = $this->_request->product;
+            $stock_batch->form_values['date_from'] = $this->_request->date_from;
+            $stock_batch->form_values['date_to'] = $this->_request->date_to;
+            $summary = $stock_batch->nonVaccineBatchSummary();
+            $expired_summary = $stock_batch->nonVaccineExpiredBatchSummary();
+            $this->view->summary = $summary;
+            $this->view->expired_summary = $expired_summary;
+            $this->view->print_title = "Batch Management Summary";
+        }
+        $this->view->warehousename = $this->_identity->getWarehouseName();
+        $this->view->username = $this->_identity->getUserName();
+    }
+
+    /**
+     * Stock Placement Comparison Report
+     */
     public function stockPlacementComparisonAction() {
 
         if ($this->_request->isPost()) {
@@ -355,6 +433,9 @@ class StockBatchController extends App_Controller_Base {
         $this->view->headScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Stock Placement Comparison Report Print
+     */
     public function stockPlacementComparisonPrintAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Stock Placement Comparison");
@@ -377,6 +458,9 @@ class StockBatchController extends App_Controller_Base {
         $this->view->warehouseid = $wh_id;
     }
 
+    /**
+     * Dry Store Stock Placement Comparison Report
+     */
     public function dsStockPlacementComparisonAction() {
 
         if ($this->_request->isPost()) {
@@ -415,6 +499,9 @@ class StockBatchController extends App_Controller_Base {
         $this->view->headScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * Dry Store Stock Placement Comparison Report Print
+     */
     public function dsStockPlacementComparisonPrintAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Dry Store Stock Placement Comparison");
@@ -437,6 +524,9 @@ class StockBatchController extends App_Controller_Base {
         $this->view->warehouseid = $wh_id;
     }
 
+    /**
+     * Batch Summary 2
+     */
     public function batchSummary2Action() {
         $stock_batch = new Model_StockBatch();
         $summary = $stock_batch->batchSummary2();
@@ -454,6 +544,9 @@ class StockBatchController extends App_Controller_Base {
         $this->view->headTitle("Batch Summary");
     }
 
+    /**
+     * Batch Summary 2 Print
+     */
     public function batchSummary2PrintAction() {
         $this->_helper->layout->setLayout('print');
 
@@ -473,6 +566,9 @@ class StockBatchController extends App_Controller_Base {
         $this->view->warehousename = $this->_identity->getWarehouseName();
     }
 
+    /**
+     * Stakeholder Summary
+     */
     public function stakeholderSummaryAction() {
         $this->_helper->layout->setLayout('print');
         $this->view->headTitle("Manufacturer wise stock summary");
@@ -493,6 +589,9 @@ class StockBatchController extends App_Controller_Base {
         $this->view->username = $this->_identity->getUserName();
     }
 
+    /**
+     * ajaxRunningBatches
+     */
     public function ajaxRunningBatchesAction() {
         $this->_helper->layout->disableLayout();
         $stock_batch = new Model_StockBatch();
@@ -512,8 +611,6 @@ class StockBatchController extends App_Controller_Base {
                 $stock_batch->form_values['item_pack_size_id'] = $this->_request->item_id;
                 $stock_batch->form_values['transaction_date'] = $this->_request->transaction_date;
 
-                $wh_id = $this->_identity->getWarehouseId();
-                $wh = $this->_em->getRepository("Warehouses")->find($wh_id);
                 $itm = $this->_em->getRepository("ItemPackSizes")->find($this->_request->item_id);
 
                 if ($itm->getItemCategory()->getPkId() == 1 || $itm->getItemCategory()->getPkId() == 4) {
@@ -535,13 +632,16 @@ class StockBatchController extends App_Controller_Base {
         $this->view->page = $page;
     }
 
+    /**
+     * ajaxAvailableBatchQuantity
+     */
     public function ajaxAvailableBatchQuantityAction() {
         $this->_helper->layout->disableLayout();
 
         $page = $this->_request->page;
         $batch_id = $this->_request->batch;
         if (!empty($page) && $page == 'issue') {
-            list($batch_id, $priority) = explode("|", $this->_request->batch);
+            list($batch_id) = explode("|", $this->_request->batch);
         }
 
         $stock_batch = new Model_StockBatch();
@@ -559,6 +659,9 @@ class StockBatchController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxCheckAdjustmentType
+     */
     public function ajaxCheckAdjustmentTypeAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -574,6 +677,9 @@ class StockBatchController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Detail Batch
+     */
     public function detailBatchAction() {
         $this->_helper->layout->disableLayout();
         if (isset($this->_request->batch_detail_id) && !empty($this->_request->batch_detail_id)) {
@@ -584,6 +690,9 @@ class StockBatchController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxExpiryEditAction
+     */
     public function ajaxExpiryEditAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -596,6 +705,9 @@ class StockBatchController extends App_Controller_Base {
         echo "done";
     }
 
+    /**
+     * ajaxGetPlacementHistory
+     */
     public function ajaxGetPlacementHistoryAction() {
         $this->_helper->layout->disableLayout();
         $stock_batch = new Model_StockBatch();
@@ -606,6 +718,9 @@ class StockBatchController extends App_Controller_Base {
         $this->view->data1 = $stock_batch->getPlacementVvmStage();
     }
 
+    /**
+     * ajaxGetBatchLocations
+     */
     public function ajaxGetBatchLocationsAction() {
         $this->_helper->layout->disableLayout();
 
@@ -624,10 +739,11 @@ class StockBatchController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxAvailableVvmStages
+     */
     public function ajaxAvailableVvmStagesAction() {
         $this->_helper->layout->disableLayout();
-        $wh_id = $this->_identity->getWarehouseId();
-
         $placements = new Model_Placements();
         $batch_id = $this->_request->getParam('batch');
         $page = $this->_request->getParam('page');
@@ -642,10 +758,12 @@ class StockBatchController extends App_Controller_Base {
         $this->view->vvmstages = $placements->getAvailableVvmStages($batch_id, $item_cat);
         $this->view->role = $this->_identity->getRoleId();
         $this->view->item_cat = $item_cat;
-        $wh = $this->_em->getRepository("Warehouses")->find($wh_id);
-        $this->view->is_placement_enable = 1; //$wh->getIsPlacementEnable();
+        $this->view->is_placement_enable = 1;
     }
 
+    /**
+     * ajaxGetExistingBatches
+     */
     public function ajaxGetExistingBatchesAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -657,6 +775,9 @@ class StockBatchController extends App_Controller_Base {
         echo $batches;
     }
 
+    /**
+     * ajaxProductVvmStages
+     */
     public function ajaxProductVvmStagesAction() {
         $this->_helper->layout->disableLayout();
         $product = $this->_request->getParam('product');
@@ -667,6 +788,32 @@ class StockBatchController extends App_Controller_Base {
         $this->view->item_vvm = $vvm_stages;
     }
 
+    /**
+     * ajaxPlacementLocations
+     */
+    public function ajaxPlacementLocationsAction() {
+        $this->_helper->layout->disableLayout();
+        $product = $this->_request->getParam('product');
+        $item = $this->_em->getRepository("ItemPackSizes")->find($product);
+
+        $result = '';
+        if ($item->getItemCategory()->getPkId() == 1) {
+            //Generate Asset Sub Type Combo
+            $cold_chain = new Model_ColdChain();
+            $cold_chain->form_values = array('type_id' => '1,3');
+            $result = $cold_chain->getColdchainByAssetType();
+            $this->view->placement_locations = $result;
+        } else {
+            $non_ccm_loc = new Model_NonCcmLocations();
+            $result = $non_ccm_loc->getDryStoreLocationsName();
+        }
+
+        $this->view->placement_locations = $result;
+    }
+
+    /**
+     * ajaxAvailableBatchQuantityExpiry
+     */
     public function ajaxAvailableBatchQuantityExpiryAction() {
         $this->_helper->layout->disableLayout();
 
@@ -685,6 +832,9 @@ class StockBatchController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxAvailableIssueBatchQuantity
+     */
     public function ajaxAvailableIssueBatchQuantityAction() {
         $this->_helper->layout->disableLayout();
 
@@ -703,6 +853,9 @@ class StockBatchController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxIssueRunningBatches
+     */
     public function ajaxIssueRunningBatchesAction() {
         $this->_helper->layout->disableLayout();
         $stock_batch = new Model_StockBatch();
@@ -719,8 +872,6 @@ class StockBatchController extends App_Controller_Base {
                 $stock_batch->form_values['transaction_date'] = $this->_request->transaction_date;
                 $stock_batch->form_values['batch_no'] = $this->_request->batch_no;
 
-                $wh_id = $this->_identity->getWarehouseId();
-                $wh = $this->_em->getRepository("Warehouses")->find($wh_id);
                 $itm = $this->_em->getRepository("ItemPackSizes")->find($this->_request->item_id);
 
                 if ($itm->getItemCategory()->getPkId() == 1 || $itm->getItemCategory()->getPkId() == 4) {
@@ -741,9 +892,11 @@ class StockBatchController extends App_Controller_Base {
         }
     }
 
+    /**
+     * ajaxIssueAvailableVvmStages
+     */
     public function ajaxIssueAvailableVvmStagesAction() {
         $this->_helper->layout->disableLayout();
-        $wh_id = $this->_identity->getWarehouseId();
 
         $placements = new Model_Placements();
         $batch_id = $this->_request->getParam('batch');
@@ -756,8 +909,7 @@ class StockBatchController extends App_Controller_Base {
         $this->view->vvmstages = $placements->getAvailableVvmStages($batch_id, $item_cat);
         $this->view->role = $this->_identity->getRoleId();
         $this->view->item_cat = $item_cat;
-        $wh = $this->_em->getRepository("Warehouses")->find($wh_id);
-        $this->view->is_placement_enable = 1; //$wh->getIsPlacementEnable();
+        $this->view->is_placement_enable = 1;
     }
 
 }

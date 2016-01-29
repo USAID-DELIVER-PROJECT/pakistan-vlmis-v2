@@ -161,5 +161,4 @@ class App_Controller_Plugin_Helper_Init extends Zend_Controller_Action_Helper_Ab
     }
 
 }
-
 ?>

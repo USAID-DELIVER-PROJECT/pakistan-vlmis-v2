@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Iadmin_ManageLocationsController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Iadmin Manage Locations
+ */
 class Iadmin_ManageLocationsController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Iadmin_ManageLocationsController index
+     */
     public function indexAction() {
 
         $form = new Form_Iadmin_Locations();
@@ -76,9 +89,11 @@ class Iadmin_ManageLocationsController extends App_Controller_Base {
         $this->view->headLink()->appendStylesheet($base_url . '/common/theme/scripts/plugins/tables/DataTables/media/css/DT_bootstrap.css');
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->setLayout("ajax");
-        // $this->_helper->layout->disableLayout();
         $location_id = $this->_request->getParam('location_id', '');
 
         $locations = $this->_em->find('Locations', $location_id);
@@ -102,98 +117,103 @@ class Iadmin_ManageLocationsController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/locations_edit_combos.js');
     }
 
+    /**
+     * add
+     */
     public function addAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $locations = new Locations();
-                if ($form_values['location_level_add'] == 3) {
+            $locations = new Locations();
+            if ($form_values['location_level_add'] == 3) {
 
-                    $parentId = $form_values['combo1_add'];
-                }
-                if ($form_values['location_level_add'] == 4) {
-
-                    $parentId = $form_values['combo1_add'];
-                }
-                if ($form_values['location_level_add'] == 5) {
-
-                    $parentId = $form_values['combo2_add'];
-                }
-                if ($form_values['location_level_add'] == 6) {
-
-                    $parentId = $form_values['combo3_add'];
-                }
-                $province_id = $this->_em->find('Locations', $form_values['combo1_add']);
-                $locations->setProvince($province_id);
-                $locations->setLocationName($form_values['location_name_add']);
-                $geo_level_id = $this->_em->find('GeoLevels', $form_values['location_level_add']);
-                $locations->setGeoLevel($geo_level_id);
-                $location_types = $this->_em->find('LocationTypes', $form_values['location_type_id']);
-                $locations->setLocationType($location_types);
-                $parent_id = $this->_em->find('Locations', $parentId);
-                $locations->setParent($parent_id);
-                if ($form_values['location_level_add'] == 5 || $form_values['location_level_add'] == 6) {
-                    $district_id = $this->_em->find('Locations', $form_values['combo2_add']);
-                    $locations->setDistrict($district_id);
-                }
-                $locations->setCcmLocationId($form_values['ccm_location_id']);
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $locations->setCreatedBy($created_by);
-                $locations->setCreatedDate(App_Tools_Time::now());
-                $locations->setModifiedBy($created_by);
-                $locations->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($locations);
-                $this->_em->flush();
+                $parentId = $form_values['combo1_add'];
             }
+            if ($form_values['location_level_add'] == 4) {
+
+                $parentId = $form_values['combo1_add'];
+            }
+            if ($form_values['location_level_add'] == 5) {
+
+                $parentId = $form_values['combo2_add'];
+            }
+            if ($form_values['location_level_add'] == 6) {
+
+                $parentId = $form_values['combo3_add'];
+            }
+            $province_id = $this->_em->find('Locations', $form_values['combo1_add']);
+            $locations->setProvince($province_id);
+            $locations->setLocationName($form_values['location_name_add']);
+            $geo_level_id = $this->_em->find('GeoLevels', $form_values['location_level_add']);
+            $locations->setGeoLevel($geo_level_id);
+            $location_types = $this->_em->find('LocationTypes', $form_values['location_type_id']);
+            $locations->setLocationType($location_types);
+            $parent_id = $this->_em->find('Locations', $parentId);
+            $locations->setParent($parent_id);
+            if ($form_values['location_level_add'] == 5 || $form_values['location_level_add'] == 6) {
+                $district_id = $this->_em->find('Locations', $form_values['combo2_add']);
+                $locations->setDistrict($district_id);
+            }
+            $locations->setCcmLocationId($form_values['ccm_location_id']);
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $locations->setCreatedBy($created_by);
+            $locations->setCreatedDate(App_Tools_Time::now());
+            $locations->setModifiedBy($created_by);
+            $locations->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($locations);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-locations");
     }
 
+    /**
+     * update
+     */
     public function updateAction() {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-                $form_values = $this->_request->getPost();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
+            $form_values = $this->_request->getPost();
 
-                $locations = $this->_em->find('Locations', $form_values['location_id']);
-                if ($form_values['location_level_edit'] == 3 || $form_values['location_level_edit'] == 4) {
+            $locations = $this->_em->find('Locations', $form_values['location_id']);
+            if ($form_values['location_level_edit'] == 3 || $form_values['location_level_edit'] == 4) {
 
-                    $parentId = $form_values['combo1_edit'];
-                }
-                if ($form_values['location_level_edit'] == 5) {
-
-                    $parentId = $form_values['combo2_edit'];
-                }
-                if ($form_values['location_level_edit'] == 6) {
-
-                    $parentId = $form_values['combo3_edit'];
-                }
-                $province_id = $this->_em->find('Locations', $form_values['combo1_edit']);
-                $locations->setProvince($province_id);
-                $locations->setLocationName($form_values['location_name_update']);
-                $geo_level_id = $this->_em->find('GeoLevels', $form_values['location_level_edit']);
-                $locations->setGeoLevel($geo_level_id);
-
-                $parent_id = $this->_em->find('Locations', $parentId);
-                $locations->setParent($parent_id);
-                if ($form_values['location_level_edit'] == 5 || $form_values['location_level_edit'] == 6) {
-                    $district_id = $this->_em->find('Locations', $form_values['combo2_edit']);
-                    $locations->setDistrict($district_id);
-                }
-
-                $locations->setCcmLocationId($form_values['ccm_location_id_update']);
-                $created_by = $this->_em->find('Users', $this->_user_id);
-                $locations->setModifiedBy($created_by);
-                $locations->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($locations);
-                $this->_em->flush();
+                $parentId = $form_values['combo1_edit'];
             }
+            if ($form_values['location_level_edit'] == 5) {
+
+                $parentId = $form_values['combo2_edit'];
+            }
+            if ($form_values['location_level_edit'] == 6) {
+
+                $parentId = $form_values['combo3_edit'];
+            }
+            $province_id = $this->_em->find('Locations', $form_values['combo1_edit']);
+            $locations->setProvince($province_id);
+            $locations->setLocationName($form_values['location_name_update']);
+            $geo_level_id = $this->_em->find('GeoLevels', $form_values['location_level_edit']);
+            $locations->setGeoLevel($geo_level_id);
+
+            $parent_id = $this->_em->find('Locations', $parentId);
+            $locations->setParent($parent_id);
+            if ($form_values['location_level_edit'] == 5 || $form_values['location_level_edit'] == 6) {
+                $district_id = $this->_em->find('Locations', $form_values['combo2_edit']);
+                $locations->setDistrict($district_id);
+            }
+
+            $locations->setCcmLocationId($form_values['ccm_location_id_update']);
+            $created_by = $this->_em->find('Users', $this->_user_id);
+            $locations->setModifiedBy($created_by);
+            $locations->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($locations);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-locations");
     }
 
+    /**
+     * Check Location
+     */
     public function checkLocationAction() {
         $this->_helper->layout->disableLayout();
 
@@ -205,6 +225,9 @@ class Iadmin_ManageLocationsController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Check Location Update
+     */
     public function checkLocationUpdateAction() {
         $this->_helper->layout->disableLayout();
         $form_values = $this->_request->getPost();
@@ -215,6 +238,9 @@ class Iadmin_ManageLocationsController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * GetLocationTypes
+     */
     public function getLocationTypesAction() {
         $this->_helper->layout->disableLayout();
 
@@ -225,6 +251,9 @@ class Iadmin_ManageLocationsController extends App_Controller_Base {
         $this->view->data = $result;
     }
 
+    /**
+     * Check Ccm Location
+     */
     public function checkCcmLocationAction() {
         $this->_helper->layout->disableLayout();
 
@@ -235,6 +264,9 @@ class Iadmin_ManageLocationsController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * Check Ccm Location Update
+     */
     public function checkCcmLocationUpdateAction() {
         $this->_helper->layout->disableLayout();
 
@@ -245,6 +277,9 @@ class Iadmin_ManageLocationsController extends App_Controller_Base {
         $this->view->result = $result;
     }
 
+    /**
+     * delete
+     */
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -259,6 +294,9 @@ class Iadmin_ManageLocationsController extends App_Controller_Base {
         return $this->_em->flush();
     }
 
+    /**
+     * Location Type
+     */
     public function locationTypeAction() {
         $form = new Form_Iadmin_LocationTypeSearch();
         $form_add = new Form_Iadmin_LocationTypeAdd();
@@ -267,7 +305,6 @@ class Iadmin_ManageLocationsController extends App_Controller_Base {
 
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_request->getPost())) {
-                //App_Controller_Functions::pr($this->_request->getPost());
                 $location_type_name = $form->getValue('location_type_name');
                 $status = $form->getValue('status');
 
@@ -305,6 +342,9 @@ class Iadmin_ManageLocationsController extends App_Controller_Base {
         $this->view->inlineScript()->appendFile($base_url . '/js/all_level_combos.js');
     }
 
+    /**
+     * ajaxChangeStatus
+     */
     public function ajaxChangeStatusAction() {
         $this->_helper->layout->disableLayout();
         $row = $this->_em->getRepository("LocationTypes")->find($this->_request->getParam('id'));
@@ -321,36 +361,38 @@ class Iadmin_ManageLocationsController extends App_Controller_Base {
         $this->view->ajaxaction = $this->_request->getParam('ajaxaction');
     }
 
+    /**
+     * Add Location Type
+     */
     public function addLocationTypeAction() {
-        $form = new Form_Iadmin_LocationTypeAdd();
+        if ($this->_request->isPost() && $this->_request->getPost()) {
 
-        if ($this->_request->isPost()) {
-            if ($this->_request->getPost()) {
-
-                $form_values = $this->_request->getPost();
+            $form_values = $this->_request->getPost();
 
 
-                $location_type = new LocationTypes();
-                $location_type->setLocationTypeName($form_values['location_type_name']);
+            $location_type = new LocationTypes();
+            $location_type->setLocationTypeName($form_values['location_type_name']);
 
 
-                $geo_level = $this->_em->getRepository('GeoLevels')->find($form_values['geo_level_id']);
-                $location_type->setGeoLevel($geo_level);
+            $geo_level = $this->_em->getRepository('GeoLevels')->find($form_values['geo_level_id']);
+            $location_type->setGeoLevel($geo_level);
 
 
-                $location_type->setStatus($form_values['status']);
-                $created_by = $this->_em->find('Users', $this->_userid);
-                $location_type->setCreatedBy($created_by);
-                $location_type->setCreatedDate(App_Tools_Time::now());
-                $location_type->setModifiedBy($created_by);
-                $location_type->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($location_type);
-                $this->_em->flush();
-            }
+            $location_type->setStatus($form_values['status']);
+            $created_by = $this->_em->find('Users', $this->_userid);
+            $location_type->setCreatedBy($created_by);
+            $location_type->setCreatedDate(App_Tools_Time::now());
+            $location_type->setModifiedBy($created_by);
+            $location_type->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($location_type);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-locations/location-type?success=1");
     }
 
+    /**
+     * ajaxEditLocType
+     */
     public function ajaxEditLocTypeAction() {
         $this->_helper->layout->disableLayout();
         $location_type_id = $this->_request->getParam('location_type_id', '');
@@ -365,6 +407,9 @@ class Iadmin_ManageLocationsController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * Update Location Type
+     */
     public function updateLocationTypeAction() {
 
         if ($this->_request->getPost()) {

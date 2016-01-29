@@ -1,85 +1,102 @@
 <?php
 
-
+/**
+*  Model for Stock Detail History
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * StockDetailHistory
+ *  StockDetailHistory
  */
 class StockDetailHistory
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $detailId
      * @var integer $detailId
      */
     private $detailId;
 
     /**
+     * $quantity
      * @var bigint $quantity
      */
     private $quantity;
 
     /**
+     * $temporary
      * @var boolean $temporary
      */
     private $temporary;
 
     /**
+     * $isReceived
      * @var integer $isReceived
      */
     private $isReceived;
 
     /**
+     * $adjustmentType
      * @var boolean $adjustmentType
      */
     private $adjustmentType;
 
     /**
+     * $itemUnitId
      * @var integer $itemUnitId
      */
     private $itemUnitId;
 
     /**
+     * $actionType
      * @var boolean $actionType
      */
     private $actionType;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $stockMaster
      * @var StockMasterHistory
      */
     private $stockMaster;
 
     /**
+     * $stockBatchWarehouse
      * @var StockBatchWarehouses
      */
     private $stockBatchWarehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $vvmStage
      * @var VvmStages
      */
     private $vvmStage;

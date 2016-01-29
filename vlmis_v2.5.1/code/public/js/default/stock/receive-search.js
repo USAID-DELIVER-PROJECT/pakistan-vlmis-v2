@@ -243,7 +243,7 @@ $(".placement-detail").click(function () {
     $.ajax({
         type: "POST",
         url: appName + "/stock/ajax-get-placement-detail",
-        data: {id: $(this).attr('pkid')},
+        data: {id: $(this).attr('pkid'), detail_id: $(this).attr('id')},
         dataType: 'html',
         success: function (data) {
             $('#modal-body-contents').html(data);

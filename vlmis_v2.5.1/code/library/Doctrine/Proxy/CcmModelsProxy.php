@@ -150,18 +150,6 @@ class CcmModelsProxy extends \CcmModels implements \Doctrine\ORM\Proxy\Proxy
         return parent::getCfcFree();
     }
 
-    public function setGasType($gasType)
-    {
-        $this->__load();
-        return parent::setGasType($gasType);
-    }
-
-    public function getGasType()
-    {
-        $this->__load();
-        return parent::getGasType();
-    }
-
     public function setNoOfPhases($noOfPhases)
     {
         $this->__load();
@@ -232,18 +220,6 @@ class CcmModelsProxy extends \CcmModels implements \Doctrine\ORM\Proxy\Proxy
     {
         $this->__load();
         return parent::getCatalogueId();
-    }
-
-    public function setCcmMakeId($ccmMakeId)
-    {
-        $this->__load();
-        return parent::setCcmMakeId($ccmMakeId);
-    }
-
-    public function getCcmMakeId()
-    {
-        $this->__load();
-        return parent::getCcmMakeId();
     }
 
     public function setCreatedDate($createdDate)
@@ -390,16 +366,16 @@ class CcmModelsProxy extends \CcmModels implements \Doctrine\ORM\Proxy\Proxy
         return parent::getIsPqs();
     }
 
-    public function setModifiedBy(\Users $modifiedBy)
+    public function setGasType(\ListDetail $gasType)
     {
         $this->__load();
-        return parent::setModifiedBy($modifiedBy);
+        return parent::setGasType($gasType);
     }
 
-    public function getModifiedBy()
+    public function getGasType()
     {
         $this->__load();
-        return parent::getModifiedBy();
+        return parent::getGasType();
     }
 
     public function setCcmAssetType(\CcmAssetTypes $ccmAssetType)
@@ -426,10 +402,34 @@ class CcmModelsProxy extends \CcmModels implements \Doctrine\ORM\Proxy\Proxy
         return parent::getCreatedBy();
     }
 
+    public function setModifiedBy(\Users $modifiedBy)
+    {
+        $this->__load();
+        return parent::setModifiedBy($modifiedBy);
+    }
+
+    public function getModifiedBy()
+    {
+        $this->__load();
+        return parent::getModifiedBy();
+    }
+
+    public function setCcmMake(\CcmMakes $ccmMake)
+    {
+        $this->__load();
+        return parent::setCcmMake($ccmMake);
+    }
+
+    public function getCcmMake()
+    {
+        $this->__load();
+        return parent::getCcmMake();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'ccmModelName', 'assetDimensionLength', 'assetDimensionWidth', 'assetDimensionHeight', 'grossCapacity20', 'grossCapacity4', 'netCapacity20', 'netCapacity4', 'cfcFree', 'gasType', 'noOfPhases', 'status', 'reasons', 'utilizations', 'temperatureType', 'catalogueId', 'ccmMakeId', 'createdDate', 'modifiedDate', 'coldLife', 'productPrice', 'powerSource', 'internalDimensionLength', 'internalDimensionWidth', 'internalDimensionHeight', 'storageDimensionLength', 'storageDimensionWidth', 'storageDimensionHeight', 'isPqs', 'modifiedBy', 'ccmAssetType', 'createdBy');
+        return array('__isInitialized__', 'pkId', 'ccmModelName', 'assetDimensionLength', 'assetDimensionWidth', 'assetDimensionHeight', 'grossCapacity20', 'grossCapacity4', 'netCapacity20', 'netCapacity4', 'cfcFree', 'noOfPhases', 'status', 'reasons', 'utilizations', 'temperatureType', 'catalogueId', 'createdDate', 'modifiedDate', 'coldLife', 'productPrice', 'powerSource', 'internalDimensionLength', 'internalDimensionWidth', 'internalDimensionHeight', 'storageDimensionLength', 'storageDimensionWidth', 'storageDimensionHeight', 'isPqs', 'gasType', 'ccmAssetType', 'createdBy', 'modifiedBy', 'ccmMake');
     }
 
     public function __clone()

@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for Transaction Types
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * TransactionTypes
+ *  TransactionTypes
  */
 class TransactionTypes
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $transactionTypeName
      * @var string $transactionTypeName
      */
     private $transactionTypeName;
 
     /**
+     * $nature
      * @var string $nature
      */
     private $nature;
 
     /**
+     * $isAdjustment
      * @var boolean $isAdjustment
      */
     private $isAdjustment;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

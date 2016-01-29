@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for Gatepass Deatil
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GatepassDetail
+ *  GatepassDetail
  */
 class GatepassDetail
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $quantity
      * @var string $quantity
      */
     private $quantity;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $stockDetail
      * @var StockDetail
      */
     private $stockDetail;
 
     /**
+     * $gatepassMaster
      * @var GatepassMaster
      */
     private $gatepassMaster;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

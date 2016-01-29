@@ -1,7 +1,37 @@
 <?php
 
+/**
+ * Form_Login
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+*  Form for Login
+* 
+* Inherits:
+* Zend Form
+*
+* Function:
+* To Login to vLMIS
+*/
+
 class Form_Login extends Zend_Form {
 
+    /**
+     * Initializes Form Fields
+     * 
+     * Form Fields
+     * @login_id: Login Id
+     * placeholder: Username...
+     * 
+     * @password: Password
+     * Placeholder: Password...
+     */
     public function init() {
         $this->addElement("text", "login_id", array(
             "attribs" => array("class" => "text form-control", "placeholder" => "Username...", "autocomplete" => "off"),

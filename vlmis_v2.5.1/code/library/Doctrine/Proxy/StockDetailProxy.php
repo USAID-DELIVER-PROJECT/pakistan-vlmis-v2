@@ -114,16 +114,16 @@ class StockDetailProxy extends \StockDetail implements \Doctrine\ORM\Proxy\Proxy
         return parent::getModifiedDate();
     }
 
-    public function setStockBatchWarehouse(\StockBatchWarehouses $stockBatchWarehouse)
+    public function setModifiedBy(\Users $modifiedBy)
     {
         $this->__load();
-        return parent::setStockBatchWarehouse($stockBatchWarehouse);
+        return parent::setModifiedBy($modifiedBy);
     }
 
-    public function getStockBatchWarehouse()
+    public function getModifiedBy()
     {
         $this->__load();
-        return parent::getStockBatchWarehouse();
+        return parent::getModifiedBy();
     }
 
     public function setVvmStage(\VvmStages $vvmStage)
@@ -150,6 +150,18 @@ class StockDetailProxy extends \StockDetail implements \Doctrine\ORM\Proxy\Proxy
         return parent::getStockMaster();
     }
 
+    public function setStockBatchWarehouse(\StockBatchWarehouses $stockBatchWarehouse)
+    {
+        $this->__load();
+        return parent::setStockBatchWarehouse($stockBatchWarehouse);
+    }
+
+    public function getStockBatchWarehouse()
+    {
+        $this->__load();
+        return parent::getStockBatchWarehouse();
+    }
+
     public function setItemUnit(\ItemUnits $itemUnit)
     {
         $this->__load();
@@ -174,22 +186,10 @@ class StockDetailProxy extends \StockDetail implements \Doctrine\ORM\Proxy\Proxy
         return parent::getCreatedBy();
     }
 
-    public function setModifiedBy(\Users $modifiedBy)
-    {
-        $this->__load();
-        return parent::setModifiedBy($modifiedBy);
-    }
-
-    public function getModifiedBy()
-    {
-        $this->__load();
-        return parent::getModifiedBy();
-    }
-
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'pkId', 'quantity', 'temporary', 'isReceived', 'adjustmentType', 'createdDate', 'modifiedDate', 'stockBatchWarehouse', 'vvmStage', 'stockMaster', 'itemUnit', 'createdBy', 'modifiedBy');
+        return array('__isInitialized__', 'pkId', 'quantity', 'temporary', 'isReceived', 'adjustmentType', 'createdDate', 'modifiedDate', 'modifiedBy', 'vvmStage', 'stockMaster', 'stockBatchWarehouse', 'itemUnit', 'createdBy');
     }
 
     public function __clone()

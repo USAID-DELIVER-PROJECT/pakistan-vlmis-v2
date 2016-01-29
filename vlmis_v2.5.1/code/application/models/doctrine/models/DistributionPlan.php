@@ -1,60 +1,72 @@
 <?php
 
-
+/**
+*  Model for Distribution Plan
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * DistributionPlan
+ *  DistributionPlan
  */
 class DistributionPlan
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $senderWarehouse
      * @var Warehouses
      */
     private $senderWarehouse;
 
     /**
+     * $receiverWarehouse
      * @var Warehouses
      */
     private $receiverWarehouse;
 
     /**
+     * $geoLevel
      * @var GeoLevels
      */
     private $geoLevel;
 
     /**
+     * $stakeholderActivity
      * @var StakeholderActivities
      */
     private $stakeholderActivity;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

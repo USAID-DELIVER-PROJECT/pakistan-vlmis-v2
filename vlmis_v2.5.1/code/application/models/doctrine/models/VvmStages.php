@@ -1,40 +1,48 @@
 <?php
 
-
+/**
+*  Model for VVM Stages
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * VvmStages
+ *  VvmStages
  */
 class VvmStages
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $vvmStageValue
      * @var string $vvmStageValue
      */
     private $vvmStageValue;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

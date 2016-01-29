@@ -1,3 +1,8 @@
+<?php
+/**
+*  phtml for Vaccine Placemnt Issue
+*/
+?>
 <!-- Content -->
 <style>
     #content_print {
@@ -58,7 +63,6 @@ endif;
 <?php
 if ($this->val != 'none') {
     if ($this->result && count($this->result) > 0 && $this->val == 'prod') {
-        //echo "<pre>";
         foreach ($productArr as $key => $data) {
             // create a simple 2-dimensional array            
             ?>
@@ -116,7 +120,6 @@ if ($this->val != 'none') {
         }
     }
     if ($this->result && count($this->result) > 0 && $this->val == 'loc') {
-        //echo "<pre>";
         foreach ($locationArr as $key => $data) {
             ?>
             <b><?php echo $key; ?></b>

@@ -4,7 +4,7 @@ $('#add-rows').hide();
 var form_clean;
 var interval = null;
 
-$("input[id$='-quantity']").each(function() {
+$("input[id$='-quantity']").each(function () {
     var str = $(this).attr("id");
     var row = str.replace("-quantity", "");
     if ($(this).val() > 0 && $(this).val().length != '') {
@@ -15,10 +15,7 @@ $("input[id$='-quantity']").each(function() {
     }
 });
 
-
-
-
-$(function() {
+$(function () {
 
     // Auto Save function call
     interval = setInterval(autoSave, 20000);
@@ -38,7 +35,7 @@ $(function() {
 
 
 
-    $("select[id$='-number']").change(function() {
+    $("select[id$='-number']").change(function () {
 
 
         var str = $(this).attr("id");
@@ -59,7 +56,7 @@ $(function() {
             url: appName + "/stock-batch/ajax-available-batch-quantity-expiry",
             data: {batch: $(this).val(), tr_date: $("#transaction_date").val()},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
 
                 $('#' + row + '-expiry_date').val(data);
 
@@ -70,7 +67,7 @@ $(function() {
             url: appName + "/stock-batch/ajax-issue-available-vvm-stages",
             data: {batch: $(this).val(), tr_date: $("#transaction_date").val()},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 var result = data.split('|');
                 $('#' + row + '-hdn_available_quantity').val(result[2]);
             }
@@ -80,7 +77,7 @@ $(function() {
             url: appName + "/stock-batch/ajax-issue-available-vvm-stages",
             data: {batch: $(this).val()},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 $('#' + row + '-hdn_vvm_stage').val(data);
             }
         });
@@ -89,7 +86,7 @@ $(function() {
 
 
 
-    $("#add_more").click(function() {
+    $("#add_more").click(function () {
         Metronic.startPageLoading('Please wait...');
 
         var start = 0;
@@ -105,10 +102,10 @@ $(function() {
             url: appName + "/stock/ajax-add-issue-more-rows",
             data: {start: start, end: end},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 $('tbody').append(data);
                 $("#counter").val(end);
-                $("select[id$='-number']").change(function() {
+                $("select[id$='-number']").change(function () {
 
 
                     var str = $(this).attr("id");
@@ -129,7 +126,7 @@ $(function() {
                         url: appName + "/stock-batch/ajax-available-batch-quantity-expiry",
                         data: {batch: $(this).val(), tr_date: $("#transaction_date").val()},
                         dataType: 'html',
-                        success: function(data) {
+                        success: function (data) {
 
                             $('#' + row + '-expiry_date').val(data);
 
@@ -140,7 +137,7 @@ $(function() {
                         url: appName + "/stock-batch/ajax-issue-available-vvm-stages",
                         data: {batch: $(this).val(), tr_date: $("#transaction_date").val()},
                         dataType: 'html',
-                        success: function(data) {
+                        success: function (data) {
                             var result = data.split('|');
                             $('#' + row + '-hdn_available_quantity').val(result[2]);
                         }
@@ -150,7 +147,7 @@ $(function() {
                         url: appName + "/stock-batch/ajax-issue-available-vvm-stages",
                         data: {batch: $(this).val()},
                         dataType: 'html',
-                        success: function(data) {
+                        success: function (data) {
                             $('#' + row + '-hdn_vvm_stage').val(data);
                         }
                     });
@@ -179,36 +176,36 @@ $('#transaction_date').datetimepicker({
 });
 function refreshDateFields() {
 
-   $("select[id$='-item_pack_size_id']").change(function() {
-    var str = $(this).attr("id");
-    var row = str.replace("-item_pack_size_id", "");
+    $("select[id$='-item_pack_size_id']").change(function () {
+        var str = $(this).attr("id");
+        var row = str.replace("-item_pack_size_id", "");
 
-    var data = [];
-    var res;
-    $("select[id$='-number']").each(function() {
-        if ($.trim($(this).val()) == "") {
-            res = 0;
-        } else {
-            res = $(this).val();
-        }
+        var data = [];
+        var res;
+        $("select[id$='-number']").each(function () {
+            if ($.trim($(this).val()) == "") {
+                res = 0;
+            } else {
+                res = $(this).val();
+            }
 
-        data.push(res);
+            data.push(res);
 
 
+        });
+
+        $.ajax({
+            type: "POST",
+            url: appName + "/stock-batch/ajax-issue-running-batches",
+            data: {
+                item_id: $(this).val(), transaction_date: $('#transaction_date').val(), batch_no: data
+            },
+            dataType: 'html',
+            success: function (data) {
+                $('#' + row + '-number').html(data);
+            }
+        });
     });
-
-    $.ajax({
-        type: "POST",
-        url: appName + "/stock-batch/ajax-issue-running-batches",
-        data: {
-            item_id: $(this).val(), transaction_date: $('#transaction_date').val(), batch_no: data
-        },
-        dataType: 'html',
-        success: function(data) {
-            $('#' + row + '-number').html(data);
-        }
-    });
-});
 
     $("input[id$='-quantity']").priceFormat({
         prefix: '',
@@ -218,11 +215,11 @@ function refreshDateFields() {
         limit: 10
     });
 
-    $.validator.addMethod("custom_alphanumeric", function(value, element) {
+    $.validator.addMethod("custom_alphanumeric", function (value, element) {
         return this.optional(element) || value === "NA" || value.match(/^[a-zA-Z0-9-_]+$/);
     }, "Letters, numbers, hyphen and underscores only please");
 
-    $('.number').keyup(function() {
+    $('.number').keyup(function () {
         $(this).val($(this).val().toUpperCase());
     });
 
@@ -231,7 +228,7 @@ function refreshDateFields() {
         custom_alphanumeric: true
     });
 
-    $("#add_stock").click(function() {
+    $("#add_stock").click(function () {
         if ($("#add_stock").valid()) {
             clearInterval(interval);
         }
@@ -271,9 +268,9 @@ function autoSave() {
             url: appName + "/stock/ajax-stock-issue-temp",
             data: $('#add-stock-issue').serialize(),
             cache: false,
-            success: function(data) {
-
-                if (data == true) {
+            success: function (data) {
+               
+                if (data == 1) {
                     $('#notific8_heading').html('Your Data');
                     $('#notific8_text').html('has been saved as draft.');
                     $('#notific8_show').trigger('click');
@@ -289,14 +286,14 @@ function autoSave() {
     }
 }
 
-$("#add_stock_issue").click(function(e) {
+$("#add_stock_issue").click(function (e) {
 
     Metronic.startPageLoading('Please wait...');
     e.preventDefault();
     var flag = true;
 
     var q = 0;
-    $("input[id$='-quantity']").each(function() {
+    $("input[id$='-quantity']").each(function () {
 
         var str = $(this).attr("id");
         var row = str.replace("-quantity", "");
@@ -323,7 +320,7 @@ $("#add_stock_issue").click(function(e) {
 
     if (q == 0) {
         alert('Please enter at least one quantity to issue');
-         Metronic.stopPageLoading();
+        Metronic.stopPageLoading();
         return false;
     }
     if (flag == true) {
@@ -335,13 +332,13 @@ $("#add_stock_issue").click(function(e) {
 
 });
 
-$("select[id$='-item_pack_size_id']").change(function() {
+$("select[id$='-item_pack_size_id']").change(function () {
     var str = $(this).attr("id");
     var row = str.replace("-item_pack_size_id", "");
 
     var data = [];
     var res;
-    $("select[id$='-number']").each(function() {
+    $("select[id$='-number']").each(function () {
         if ($.trim($(this).val()) == "") {
             res = 0;
         } else {
@@ -360,7 +357,7 @@ $("select[id$='-item_pack_size_id']").change(function() {
             item_id: $(this).val(), transaction_date: $('#transaction_date').val(), batch_no: data
         },
         dataType: 'html',
-        success: function(data) {
+        success: function (data) {
             $('#' + row + '-number').html(data);
         }
     });

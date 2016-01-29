@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Non Reported Districts by UC
+*/
+?>
+<?php
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 $xml_store .="<rows>";
 
@@ -26,8 +31,6 @@ foreach ($period as $date) {
 
 $query_0 = $this->reports()->getTotalByUc($wh_type, $str_date, $sel_prov, $sel_dist, $sel_tehsil);
 $total = $query_0;
-//echo $total[0];
-
 
 $query_1 = $this->reports()->getNonReportedTotalByUc($wh_type, $str_date, $sel_prov, $sel_dist, $sel_tehsil);
 $reported = $query_1;

@@ -1,7 +1,29 @@
 <?php
 
+/**
+ * Zend_View_Helper_RecordsPerPage
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+
+/**
+ *  Zend View Helper Records Per Page
+ */
 class Zend_View_Helper_RecordsPerPage extends Zend_View_Helper_Abstract {
 
+    /**
+     * Records Per Page
+     * @param type $counter
+     */
     public function recordsPerPage($counter) {
         ?>
         <div class="dataTables_length">

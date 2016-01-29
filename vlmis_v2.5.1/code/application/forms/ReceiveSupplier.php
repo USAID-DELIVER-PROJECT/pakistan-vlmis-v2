@@ -1,7 +1,24 @@
 <?php
 
-class Form_ReceiveSupplier extends Zend_Form {
+/**
+ * Form_ReceiveSupplier
+ *
+ * 
+ *
+ * Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Receive Supplier
+ */
+class Form_ReceiveSupplier extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "transaction_date" => "Transaction Date",
         "transaction_number" => "Transaction Number",
@@ -22,10 +39,20 @@ class Form_ReceiveSupplier extends Zend_Form {
         'manufacturer_id' => 'Manufacturer ID',
         'cold_chain' => 'Cold Chain'
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "pk_id" => "ID",
         "hdn_transaction_date" => "hdn_transaction_date"
     );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'from_warehouse_id' => array(),
         'item_id' => array(),
@@ -37,6 +64,9 @@ class Form_ReceiveSupplier extends Zend_Form {
         'cold_chain' => array('' => 'Select')
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         //Generate WareHouses Combo
         $warehouse = new Model_Warehouses();
@@ -68,7 +98,7 @@ class Form_ReceiveSupplier extends Zend_Form {
 
         $this->_list["vvm_stage"][""] = "NA";
         $this->_list["manufacturer_id"][""] = "Select";
-        
+
         //Generate VVM Type Combo
         $vvmtypes = new Model_VvmTypes();
         $result3 = $vvmtypes->getAll();
@@ -77,124 +107,51 @@ class Form_ReceiveSupplier extends Zend_Form {
             $this->_list["vvm_type_id"][$vvmtype['pk_id']] = $vvmtype['vvm_type_name'];
         }
 
-        //Generate Asset Sub Type Combo
-        $cold_chain = new Model_ColdChain();
-        $cold_chain->form_values = array('type_id' => '1,3');
-        $result3 = $cold_chain->getColdchainByAssetType();
-        $this->_list["cold_chain"][''] = "Select Cold Chain";
-        foreach ($result3 as $assetsubtype) {
-            $this->_list["cold_chain"][$assetsubtype['pk_id']] = $assetsubtype['asset_name'] . " - " . $assetsubtype['make_name'];
-        }
-
-
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
                 case "transaction_reference":
                 case "number":
                 case "unit_price":
                 case "quantity":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 case "comments":
-                    $this->addElement("textarea", $col, array(
-                        "attribs" => array("class" => "form-control", "rows" => "2"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createMultiLineText($col,2);
                     break;
                 case "transaction_date":
                 case "production_date":
                 case "expiry_date":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-
-
-
                 case "transaction_number":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
                 default:
                     break;
             }
 
-            $attribute_class = "form-control";
-
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "$attribute_class"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col,$name,$this->_list[$col]);
             }
         }
 
         foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-                case "hdn_transaction_date":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "hdn_transaction_date") {
+                $this->addElement("hidden", $col);
+                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
+    /**
+     * Get Products By Activity
+     * @param type $type
+     */
     public function getProductsByActivity($type) {
         //Generate Products(items) Combo
         $items = array();
@@ -212,6 +169,11 @@ class Form_ReceiveSupplier extends Zend_Form {
         $this->getElement("manufacturer_id")->setMultiOptions(array("" => "Select"));
     }
 
+    /**
+     * Get Manufacturer By Product Id
+     * 
+     * @param type $item_id
+     */
     public function getManufacturerByProductId($item_id) {
         $stakeholder_items = new Model_Stakeholders();
         $stakeholder_items->form_values['item_id'] = $item_id;

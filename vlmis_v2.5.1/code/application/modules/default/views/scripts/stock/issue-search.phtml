@@ -1,6 +1,11 @@
+<?php
+/**
+*  phtml for Issue Search
+*/
+?>
 <!-- Content -->
 <div class="page-content-wrapper">
-    <div class="page-content">
+    <div class="page-content">        
         <?php
         if ($this->issueedit) {
             $label = "Update Stock Issue";
@@ -19,7 +24,7 @@
                 echo App_Controller_Functions::getPageNarrative(Zend_Registry::get('resource'));
                 ?>
             </div>
-        </div>
+        </div>        
         <?php if ($this->issueedit) { ?>
             <div class="row">
                 <div class="col-md-12">
@@ -335,7 +340,6 @@
                                         $i = 1;
                                         if ($this->result && count($this->result) > 0) :
                                             foreach ($this->result as $row):
-                                                
                                                 ?>
                                                 <tr class="gradeX">
                                                     <td><?php echo date("d/m/Y", strtotime($row['transactionDate'])); ?></td>
@@ -355,14 +359,20 @@
                                                     <td><?php echo date("d/m/Y", strtotime($row['expiryDate'])); ?></td>
                                                     <td><?php echo $row['createdDate']; ?></td>
                                                     <td class="nonprint">                                                     
-                                                        <?php if ($this->isIssueDelete($row['detailId'])) { ?>
-                                                          <a data-toggle="notyfy" id="<?php echo $row['detailId']; ?>" data-type="confirm" data-layout="top" class="fa fa-times cursor-hand"></a>
-                                                          <?php } ?>
-
-                                                        <!-- <a id="<?php echo $row['detailId']; ?>" class="delete-issue"  data-toggle="modal" title="Delete Issue" href="#modal-delete-issue">
-                                                            <i class="fa fa-times cursor-hand">  </i>   
-                                                        </a> -->
-
+                                                        <?php
+                                                        $is_issue_delete = $this->isIssueDelete($row['detailId']);
+                                                        
+                                                        if ($is_issue_delete == 'DIRECT_DELETE') {
+                                                            ?>
+                                                            <a data-toggle="notyfy" id="<?php echo $row['detailId']; ?>" data-type="confirm" data-layout="top" class="fa fa-times cursor-hand"></a>
+                                                        <?php
+                                                        }
+                                                        if ($is_issue_delete == 'CUSTOM_DELETE') {
+                                                            ?>
+                                                            <a id="<?php echo $row['detailId']; ?>" class="delete-issue"  data-toggle="modal" title="Delete Issue" href="#modal-delete-issue">
+                                                                <i class="fa fa-times cursor-hand">  </i>   
+                                                            </a>
+                                                <?php } ?>
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -373,7 +383,7 @@
                                     </tbody>
                                     <!-- // Table body END -->
                                 </table>
-                                <?php if (count($this->result) > 0 && $this->vouchertype != 2) { ?>
+<?php if (count($this->result) > 0 && $this->vouchertype != 2) { ?>
                                     <div class="right" style="float:right;">
                                         <b><?php echo $this->translate("Detail"); ?>: </b>
                                         <input type="radio" name="groupBy" id="none" value="none" checked="checked" /> <?php echo $this->translate("None"); ?>
@@ -387,7 +397,7 @@
                                         <input type="radio" name="summary" id="loc" value="loc" /> <?php echo $this->translate("Location wise"); ?>
                                         <button id="print_vaccine_summary" type="button" class="btn btn-warning"><?php echo $this->translate("Print"); ?></button>
                                     </div>
-                                <?php } ?>
+<?php } ?>
                                 <!-- // Table END -->
                                 <div class="right" style=" visibility: hidden;" ><button id="print_vaccine_issue" type="button" class="btn btn-warning input-sm"><?php echo $this->translate("Print"); ?></button></div>
                             </div>
@@ -399,9 +409,7 @@
     </div>
 </div>
 <!-- // Content END -->
-
-<!-- Modal --> <!-- /stock/delete-stock-issue     -->
-<form method="post" action="<?php echo $this->baseUrl(); ?>/stock/delete-issue" id="form_delete_issue">
+<form method="post" action="<?php echo $this->baseUrl(); ?>/stock/delete-stock-issue " id="form_delete_issue">
     <div class="modal fade" id="modal-delete-issue" tabindex="-1" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

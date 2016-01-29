@@ -1,13 +1,32 @@
 <?php
+/**
+ * Zend_View_Helper_LocationsEditCombo
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Zend View Helper Locations Edit Combo
+ */
 class Zend_View_Helper_LocationsEditCombo extends Zend_View_Helper_Abstract {
 
+    /**
+     * Locations Edit Combo
+     * Used to load locations combo for edit.
+     * @param type $office_term
+     * @param type $postfix
+     */
     public function locationsEditCombo($office_term = "", $postfix = null) {
-
-        $identity = App_Auth::getInstance();
+        // Get translater instance.
         $translate = Zend_Registry::get('Zend_Translate');
+        // Get base URL.
         $base_url = Zend_Registry::get('baseurl');
-        $user_lvl = $identity->getRoleId();
+        // Init array.
         $arr_location_level_edit = array(
             '3' => $translate->translate('Division'),
             '4' => $translate->translate('District'),
@@ -17,11 +36,12 @@ class Zend_View_Helper_LocationsEditCombo extends Zend_View_Helper_Abstract {
         ?>
         <div class="col-md-4">
             <label class="control-label" for="location_level_edit" class="col-md-7"><?php
-                if (empty($office_term))
-                    echo $translate->translate("Location Level");
-                else
-                    echo $office_term;
-                ?> <span class="red">*</span></label>
+        if (empty($office_term)) {
+            echo $translate->translate("Location Level");
+        } else {
+            echo $office_term;
+        }
+        ?> <span class="red">*</span></label>
             <div class="controls">
                 <select name="location_level_edit" id="location_level_edit" class="form-control">
                     <option value=""><?php echo $translate->translate("Select"); ?></option>
@@ -29,7 +49,7 @@ class Zend_View_Helper_LocationsEditCombo extends Zend_View_Helper_Abstract {
                     foreach ($arr_location_level_edit as $key => $value) {
                         ?>
                         <option value="<?php echo $key; ?>" ><?php echo $value; ?></option>
-        <?php } ?>
+                    <?php } ?>
                 </select>
             </div>
         </div>
@@ -39,8 +59,8 @@ class Zend_View_Helper_LocationsEditCombo extends Zend_View_Helper_Abstract {
                 <select name="combo1_edit" id="combo1_edit" class="form-control">
                 </select>
             </div>
-        </div>	
-        <div class="col-md-4" id="div_combo2_edit" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>		
+        </div>
+        <div class="col-md-4" id="div_combo2_edit" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>
             <label class="control-label" id="lblcombo2_edit"><?php echo $translate->translate("District"); ?> <span class="red">*</span></label>
             <div class="controls">
                 <select name="combo2_edit" id="combo2_edit" class="form-control">

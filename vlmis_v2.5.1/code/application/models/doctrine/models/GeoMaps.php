@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for Geo Maps
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GeoMaps
+ *  GeoMaps
  */
 class GeoMaps
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $classification
      * @var string $classification
      */
     private $classification;
 
     /**
+     * $title
      * @var string $title
      */
     private $title;
 
     /**
+     * $noOfClasses
      * @var integer $noOfClasses
      */
     private $noOfClasses;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $resource
      * @var Resources
      */
     private $resource;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

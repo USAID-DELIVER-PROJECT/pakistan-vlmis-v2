@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for User Documents
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UserDocuments
+ *  UserDocuments
  */
 class UserDocuments
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $systemIp
      * @var string $systemIp
      */
     private $systemIp;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $user
      * @var Users
      */
     private $user;
 
     /**
+     * $doc
      * @var Documents
      */
     private $doc;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

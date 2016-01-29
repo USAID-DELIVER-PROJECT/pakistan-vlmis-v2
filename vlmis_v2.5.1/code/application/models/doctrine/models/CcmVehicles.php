@@ -1,65 +1,78 @@
 <?php
 
-
+/**
+*  Model for CCM Transfer History
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmVehicles
+ *  CcmVehicles
  */
 class CcmVehicles
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $registrationNo
      * @var string $registrationNo
      */
     private $registrationNo;
 
     /**
+     * $usedForEpi
      * @var integer $usedForEpi
      */
     private $usedForEpi;
 
     /**
+     * $comments
      * @var text $comments
      */
     private $comments;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $fuelType
      * @var ListDetail
      */
     private $fuelType;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $ccmAssetSubType
      * @var CcmAssetTypes
      */
     private $ccmAssetSubType;
 
     /**
+     * $ccm
      * @var ColdChain
      */
     private $ccm;

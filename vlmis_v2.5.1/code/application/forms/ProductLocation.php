@@ -1,7 +1,24 @@
 <?php
 
-class Form_ProductLocation extends Zend_Form {
+/**
+ * Form_ProductLocation
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Product Location
+ */
+class Form_ProductLocation extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "item_pack_size_id" => "Product",
         "stock_batch_id" => "Batch No",
@@ -12,15 +29,28 @@ class Form_ProductLocation extends Zend_Form {
         "quantity1" => "Quantity",
         "location" => "Location",
     );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'location' => array()
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "placement_location_id" => "",
         "itemId" => "",
         "batchId" => "",
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         //Generate Item Combo
         $item_pack_size = new Model_ItemPackSizes();
@@ -61,23 +91,9 @@ class Form_ProductLocation extends Zend_Form {
                 case "total_quantity":
                 case "quantity":
                 case "estimated_pallet_filled":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
                 case "location":
                 case "quantity1":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
@@ -89,36 +105,21 @@ class Form_ProductLocation extends Zend_Form {
                     case "placement_location_id":
                     case "itemId":
                     case "batchId" :
-                        $this->addElement("hidden", $col);
-                        $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                        parent::createHidden($col);
                         break;
                     default:
                         break;
                 }
             }
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
     }
 
+    /**
+     * Read Fields
+     */
     public function readFields() {
         $this->getElement('item_pack_size_id')->setAttrib("readonly", "true");
         $this->getElement('stock_batch_id')->setAttrib("readonly", "true");
@@ -126,14 +127,11 @@ class Form_ProductLocation extends Zend_Form {
         $this->getElement('total_quantity')->setAttrib("disabled", "true");
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "placement_location_id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array()
-        ));
-        $this->getElement("placement_location_id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHidden($col);
     }
 
 }

@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for CBA Coverage Detail
+*/
+?>
+<?php
 $from_sel_month = $this->from_month_sel;
 $from_sel_year = $this->from_year_sel;
 $year = $this->year_sel;
@@ -93,6 +98,12 @@ $header1 .= ',<span>CBA-5</span>';
 $header1 .= ',<span>CBA-5</span>';
 $ro .= ',ro,ro,ro,ro';
 
+$header .= ',Total,Total %';
+$header0 .= ',#rspan,#rspan';
+$header1 .= ',#rspan,#rspan';
+$cspan .= ',#cspan,#cspan';
+$width .= ',60,60';
+$ro .= ',ro,ro';
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 $xml_store .= "<rows>";
 $sum_arr = array();
@@ -111,6 +122,7 @@ foreach ($query as $row) {
 
    
     $data_arr[$location_id][] = $row['consumptionPercentage'];
+     $total_consumpiton[$location_id][] = $row['non_pregnant_women'];
     $j++;
 }
 
@@ -123,6 +135,7 @@ foreach ($query1 as $row) {
 
 
     $data_arr[$location_id][] = $row['consumptionPercentage'];
+     $total_consumpiton[$location_id][] = $row['non_pregnant_women'];
 }
 
 $query3 = $this->reports()->cbaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 3);
@@ -134,6 +147,7 @@ foreach ($query3 as $row) {
 
    
     $data_arr[$location_id][] = $row['consumptionPercentage'];
+   $total_consumpiton[$location_id][] = $row['non_pregnant_women'];
 }
 
 $query4 = $this->reports()->cbaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 4);
@@ -145,6 +159,7 @@ foreach ($query4 as $row) {
 
    
     $data_arr[$location_id][] = $row['consumptionPercentage'];
+     $total_consumpiton[$location_id][] = $row['non_pregnant_women'];
 }
 $query5 = $this->reports()->cbaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 5);
 
@@ -155,6 +170,16 @@ foreach ($query5 as $row) {
 
    
     $data_arr[$location_id][] = $row['consumptionPercentage'];
+    $total_consumpiton[$location_id][] = $row['non_pregnant_women'];
+}
+$query6 = $this->reports()->cbaCoverageReport($wh_type, $year, $month, $from_sel_month, $from_sel_year, $sel_dist, $sel_tehsil, 5);
+
+foreach ($query6 as $row6) {
+
+
+    $location_id6 = $row6['location_id'];
+    $data_arr[$location_id6][] = array_sum($total_consumpiton[$location_id6]);
+    $data_arr[$location_id6][] = @Round((array_sum($total_consumpiton[$location_id6]) / $row6['lbt']) * 100);
 }
 
 foreach ($data_arr as $dis_id => $sub_arr) {
@@ -169,7 +194,6 @@ foreach ($data_arr as $dis_id => $sub_arr) {
             $sum_arr[$key] = 0;
         }
         $sum_arr[$key] += $value;
-        //$accpLimit = '0';
         if ($key > 2) {
 
             $xml_store .= "<cell style=\"text-align:right;\">$value </cell>";
@@ -220,6 +244,11 @@ foreach ($sum_arr as $key => $value) {
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
         $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val5 / $total_wh) * 100) . " %</cell>";
     }
+    else if ($key == 22) {
+        $total_val6 = $value;
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . number_format($value) . "</cell>";
+        $xml_store .= "<cell style=\"text-align:right;font-weight:bold;\">" . @round(($total_val6 / $total_wh) * 100) . " %</cell>";
+    }
 }
 
 $xml_store .="</row>";
@@ -239,7 +268,7 @@ if (!empty($sel_month)) {
 
 <div class="page-content-wrapper">
     <div class="page-content">
-        <h3 class="page-title">    <?php echo $report_title . ' ' . $report_month . ' ' . $sel_year; ?></h3>
+        <h3 class="page-title">    <?php echo $report_title; ?></h3>
         <h5 style="color: red">
             Note: This report is under user testing.Please check and provide feedback at support@lmis.gov.pk
         </h5>

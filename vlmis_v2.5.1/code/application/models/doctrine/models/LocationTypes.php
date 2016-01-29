@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for Location Types
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * LocationTypes
+ *  LocationTypes
  */
 class LocationTypes
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $locationTypeName
      * @var string $locationTypeName
      */
     private $locationTypeName;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $geoLevel
      * @var GeoLevels
      */
     private $geoLevel;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

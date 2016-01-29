@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for Placement Locations
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PlacementLocations
+ *  PlacementLocations
  */
 class PlacementLocations
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $locationBarcode
      * @var string $locationBarcode
      */
     private $locationBarcode;
 
     /**
+     * $locationId
      * @var integer $locationId
      */
     private $locationId;
 
     /**
+     * $capacityPercentage
      * @var decimal $capacityPercentage
      */
     private $capacityPercentage;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $locationType
      * @var ListDetail
      */
     private $locationType;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

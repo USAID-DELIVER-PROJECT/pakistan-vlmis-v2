@@ -1,85 +1,102 @@
 <?php
 
-
+/**
+*  Model for Resources
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Resources
+ *  Resources
  */
 class Resources
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $resourceName
      * @var string $resourceName
      */
     private $resourceName;
 
     /**
+     * $description
      * @var text $description
      */
     private $description;
 
     /**
+     * $pageTitle
      * @var string $pageTitle
      */
     private $pageTitle;
 
     /**
+     * $metaTitle
      * @var string $metaTitle
      */
     private $metaTitle;
 
     /**
+     * $metaDescription
      * @var text $metaDescription
      */
     private $metaDescription;
 
     /**
+     * $rank
      * @var integer $rank
      */
     private $rank;
 
     /**
+     * $level
      * @var integer $level
      */
     private $level;
 
     /**
+     * $parentId
      * @var integer $parentId
      */
     private $parentId;
 
     /**
+     * $iconClass
      * @var string $iconClass
      */
     private $iconClass;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $resourceType
      * @var ResourceTypes
      */
     private $resourceType;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

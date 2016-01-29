@@ -1,114 +1,122 @@
 <?php
 
-class Form_Iadmin_TransactionTypeAdd extends Zend_Form {
+/**
+ * Form_Iadmin_TransactionTypeAdd
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin Trannsaction Type Add
+ */
+class Form_Iadmin_TransactionTypeAdd extends Form_Base {
+
+    /**
+     * Fields 
+     * for Form_Iadmin_TransactionTypeAdd
+     * 
+     * 
+     * 
+     * transaction_type_name
+     * nature
+     * is_adjustment
+     * status
+     * 
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "transaction_type_name" => "Transaction Type Name",
         "nature" => "Nature",
         "is_adjustment" => "Adjustment",
-         "status" => "Status"
+        "status" => "Status"
     );
+
+    /**
+     * Radio buttons 
+     * for Form_Iadmin_TransactionTypeAdd
+     * 
+     * 
+     * nature
+     * 
+     * $_radio
+     * @var type 
+     */
     private $_radio = array(
         'nature' => array(
             "+" => "Positive",
             "-" => "Negative"
         ),
-         'status' => array(
+        'status' => array(
             "1" => "Active",
             "0" => "In Active"
         )
     );
-        private $_checkbox = array(
-        'is_adjustment' => array(
-            "1" => "Status recieve from warehouse adjustment.",
-            "0" => "Status not recieve from warehouse adjustment."
-        )
-    );
+
+    /**
+     * Hidden fields 
+     * for Form_Iadmin_TransactionTypeAdd
+     * 
+     * 
+     * transaction_type_id
+     * 
+     * 
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "transaction_type_id" => "pkId"
     );
-    
-    public function init() {  
-           foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-                case "transaction_type_id":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+
+    /**
+     * Initializes Form Fields
+     * for Form_Iadmin_TransactionTypeAdd
+     */
+    public function init() {
+        foreach ($this->_hidden as $col => $name) {
+            if ($col == "transaction_type_id") {
+                parent::createHidden($col);
             }
         }
-        
+
+        // Generating fields 
+        // for Form_Iadmin_TransactionTypeAdd
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
                 case "transaction_type_name":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 case "nature":
-                    $this->addElement("radio", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createRadioWithoutMultioptions($col);
                     break;
-                 case "is_adjustment":
-                    $this->addElement("checkbox", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                case "is_adjustment":
+                    parent::createCheckbox1($col);
                     break;
                 default:
                     break;
             }
-            
+
+            //Generating radio
+            // for Form_Iadmin_TransactionTypeAdd
             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createRadio($col, $this->_radio[$col]);
             }
-
         }
-
     }
 
+    /**
+     * Add Hidden Fields
+     * for Form_Iadmin_TransactionTypeAdd
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

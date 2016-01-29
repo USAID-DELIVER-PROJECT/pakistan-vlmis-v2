@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for Stock Batch Warehouses
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * StockBatchWarehouses
+ *  StockBatchWarehouses
  */
 class StockBatchWarehouses
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $quantity
      * @var bigint $quantity
      */
     private $quantity;
 
     /**
+     * $status
      * @var string $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $stockBatch
      * @var StockBatch
      */
     private $stockBatch;

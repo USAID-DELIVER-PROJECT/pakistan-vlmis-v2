@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for Item Schedule
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ItemSchedule
+ *  ItemSchedule
  */
 class ItemSchedule
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $numberOfDoses
      * @var integer $numberOfDoses
      */
     private $numberOfDoses;
 
     /**
+     * $startingNo
      * @var integer $startingNo
      */
     private $startingNo;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $stakeholderActivity
      * @var StakeholderActivities
      */
     private $stakeholderActivity;
 
     /**
+     * $itemPackSize
      * @var ItemPackSizes
      */
     private $itemPackSize;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

@@ -1,75 +1,90 @@
 <?php
 
-
+/**
+*  Model for Locations
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Locations
+ *  Locations
  */
 class Locations
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $locationName
      * @var string $locationName
      */
     private $locationName;
 
     /**
+     * $ccmLocationId
      * @var integer $ccmLocationId
      */
     private $ccmLocationId;
 
     /**
+     * $sdmsName
      * @var string $sdmsName
      */
     private $sdmsName;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $district
      * @var Locations
      */
     private $district;
 
     /**
+     * $geoLevel
      * @var GeoLevels
      */
     private $geoLevel;
 
     /**
+     * $locationType
      * @var LocationTypes
      */
     private $locationType;
 
     /**
+     * $province
      * @var Locations
      */
     private $province;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $parent
      * @var Locations
      */
     private $parent;

@@ -1,13 +1,13 @@
-$(function() {//
-    $(".transfer-stock").click(function() {
+$(function () {//
+        $(document).on("click", ".transfer-stock", function () {
+   
         $.ajax({
             type: "POST",
             url: appName + "/stock/transfer-stock",
-            data: {placement_id: $(this).attr('editid'), bin_id: $("#bin_id").val(),quantity_per_pack: $("#quantity_per_pack").val(),totqty: $(this).attr('dataid'),area: $("#area").val(),level: $("#level").val()},
-            
+            data: {placement_id: $(this).attr('editid'), bin_id: $("#bin_id").val(), quantity_per_pack: $("#quantity_per_pack").val(), totqty: $(this).attr('dataid'), area: $("#area").val(), level: $("#level").val()},
             //data: {barcode_type_id: bar_id, number: $('#item_pack_size_id').val()},
             dataType: 'html',
-            success: function(data) {
+            success: function (data) {
                 $('#modal-body-contents').html(data);
                 $('#transfer-stock').show();
             }
@@ -15,7 +15,7 @@ $(function() {//
     });
 
     // GRID Sorting Start
-    $('th.sorting, th.sorting_asc, th.sorting_desc').click(function(e) {
+    $('th.sorting, th.sorting_asc, th.sorting_desc').click(function (e) {
         e.preventDefault();
 
         var self = $(this);
@@ -37,7 +37,7 @@ $(function() {//
     // GRID Sorting End
 
     // GRID Counter Start
-    $('#records').change(function(e) {
+    $('#records').change(function (e) {
         e.preventDefault();
 
         var counter = $(this).val();
@@ -47,9 +47,9 @@ $(function() {//
         document.location = appName + '/stock/stock-in-bin/?counter=' + counter + '&page=' + page + '&id=' + id;
     });
     // GRID Counter End
-    
+
     // Added in 01 August 2015.
-    $("a[id$='-batchdetail']").click(function () {
+    $(document).on("click", "a[id$='-batchdetail']", function () {
         $('#batchdetailbody').html('');
         var batch_id = $(this).data("id");
 
@@ -63,7 +63,7 @@ $(function() {//
             }
         });
     });
-    
+
 });
 
 

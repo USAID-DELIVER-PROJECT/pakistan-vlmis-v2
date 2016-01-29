@@ -1,11 +1,35 @@
 <?php
 
+/**
+ * Zend_View_Helper_BatchVvmStage
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+/**
+ *  Zend View Helper Batch Vvm Stage
+ */
+
+
 class Zend_View_Helper_BatchVvmStage extends Zend_View_Helper_Abstract {
 
+    /**
+     * Batch Vvm Stage
+     * sets batch vvm stage.
+     * @param type $batch_id
+     */
     public function batchVvmStage($batch_id) {
 
         $em = Zend_Registry::get('doctrine');
 
+        // Create query.
         $str_sql = $em->createQueryBuilder()
                 ->select("IF(ips.vvmGroup = 1, MAX(vvm.pkId), vvm.vvmStageValue) as stage, COUNT(DISTINCT vvm.pkId) as total")
                 ->from('PlacementSummary', 'ps')
@@ -14,9 +38,9 @@ class Zend_View_Helper_BatchVvmStage extends Zend_View_Helper_Abstract {
                 ->join('sb.packInfo','pi')
                 ->join('pi.stakeholderItemPackSize','sip')   
                 ->join('sip.itemPackSize','ips')
-                ->join('ps.vvmStage', 'vvm')
-               
+                ->join('ps.vvmStage', 'vvm')               
                 ->where("ps.stockBatchWarehouse = $batch_id");
+        // Get query result.
         $row = $str_sql->getQuery()->getResult();
 
         if (isset($row) && count($row) > 0) {

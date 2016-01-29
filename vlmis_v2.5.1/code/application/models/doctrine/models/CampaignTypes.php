@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for Campaign Targets
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CampaignTypes
+ *  CampaignTypes
  */
 class CampaignTypes
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $camapignTypeName
      * @var string $camapignTypeName
      */
     private $camapignTypeName;
 
     /**
+     * $listRank
      * @var integer $listRank
      */
     private $listRank;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

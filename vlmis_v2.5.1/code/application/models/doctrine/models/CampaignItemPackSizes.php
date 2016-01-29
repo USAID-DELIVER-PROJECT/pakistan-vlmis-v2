@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for Campaign Item Pack Sizes
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CampaignItemPackSizes
+ *  CampaignItemPackSizes
  */
 class CampaignItemPackSizes
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $itemPackSize
      * @var ItemPackSizes
      */
     private $itemPackSize;
 
     /**
+     * $campaign
      * @var Campaigns
      */
     private $campaign;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

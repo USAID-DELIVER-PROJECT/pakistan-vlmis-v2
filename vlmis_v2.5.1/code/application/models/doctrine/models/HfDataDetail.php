@@ -1,110 +1,138 @@
 <?php
+/**
+*  php for HF Data Detail
+*/
+?>
+<?php
 
-
+/**
+*  HF Data Detail
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * HfDataDetail
- */
+*  Model for HF Data Detail
+*/
+
 class HfDataDetail
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $fixedInsideUcMale
      * @var decimal $fixedInsideUcMale
      */
     private $fixedInsideUcMale;
 
     /**
+     * $fixedInsideUcFemale
      * @var decimal $fixedInsideUcFemale
      */
     private $fixedInsideUcFemale;
 
     /**
+     * $fixedOutsideUcMale
      * @var decimal $fixedOutsideUcMale
      */
     private $fixedOutsideUcMale;
 
     /**
+     * $fixedOutsideUcFemale
      * @var decimal $fixedOutsideUcFemale
      */
     private $fixedOutsideUcFemale;
 
     /**
+     * $referalMale
      * @var decimal $referalMale
      */
     private $referalMale;
 
     /**
+     * $referalFemale
      * @var decimal $referalFemale
      */
     private $referalFemale;
 
     /**
+     * $outreachMale
      * @var decimal $outreachMale
      */
     private $outreachMale;
 
     /**
+     * $outreachFemale
      * @var decimal $outreachFemale
      */
     private $outreachFemale;
 
     /**
+     * $outreachOutsideMale
      * @var decimal $outreachOutsideMale
      */
     private $outreachOutsideMale;
 
     /**
+     * $outreachOutsideFemale
      * @var decimal $outreachOutsideFemale
      */
     private $outreachOutsideFemale;
 
     /**
+     * $pregnantWomen
      * @var decimal $pregnantWomen
      */
     private $pregnantWomen;
 
     /**
+     * $nonPregnantWomen
      * @var decimal $nonPregnantWomen
      */
     private $nonPregnantWomen;
 
     /**
+     * $vaccineScheduleId
      * @var integer $vaccineScheduleId
      */
     private $vaccineScheduleId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $ageGroup
      * @var ListDetail
      */
     private $ageGroup;
 
     /**
+     * $hfDataMaster
      * @var HfDataMaster
      */
     private $hfDataMaster;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

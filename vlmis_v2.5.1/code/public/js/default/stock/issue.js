@@ -136,7 +136,7 @@ $(function () {
         $('#vvm_stage').html("NA");
         $('#available_quantity').val("");
         $('#expiry_date').val("");
-        
+
         getProductsByStakeholder($("#activity_id").val());
     });
 
@@ -379,7 +379,7 @@ $("#new_issue_form").validate({
         activity_id: {
             required: true
         },
-        transaction_reference:{
+        transaction_reference: {
             refnum: true
         }
     },
@@ -408,7 +408,7 @@ $("#new_issue_form").validate({
         activity_id: {
             required: "Please select purpose"
         },
-        transaction_reference:{
+        transaction_reference: {
             refnum: "Only these characters are allowed: Alphanumeric space * , .-_=/# |()"
         }
     },
@@ -435,8 +435,8 @@ $("#new_issue_form").validate({
  */
 
 $.validator.addMethod("refnum", function (value, element) {
-        return this.optional(element) || value == value.match(/^[a-zA-Z0-9-\s\#\_/,/./=/|/(/)]+$/);
-    });
+    return this.optional(element) || value == value.match(/^[a-zA-Z0-9-\s\#\_/,/./=/|/(/)]+$/);
+});
 
 // validate signup form on keyup and submit
 $("#issue_stock").validate({

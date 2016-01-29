@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Vaccines Coverage
+*/
+?>
+<?php
 $sel_month = $this->month_sel;
 $sel_year = $this->year_sel;
 $counter = 1;
@@ -74,7 +79,6 @@ foreach ($period as $date) {
     }
     $count++;
 }
-//App_Controller_Functions::pr($data_arr);
 $s_date = $this->start_date;
 $e_date = $this->end_date;
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";

@@ -1,40 +1,48 @@
 <?php
 
-
+/**
+*  Model for Stakeholder Activities
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * StakeholderActivities
+ *  StakeholderActivities
  */
 class StakeholderActivities
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $activity
      * @var string $activity
      */
     private $activity;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

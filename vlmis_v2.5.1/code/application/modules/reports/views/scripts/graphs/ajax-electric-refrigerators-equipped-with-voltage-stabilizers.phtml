@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Ajax Electric Refigerators Equipped with Voltage Stabilizers
+*/
+?>
+<?php
 
 FC_SetRenderer('javascript');
 echo renderChart($this->baseUrl() . "/FusionCharts/Charts/" . $this->chart_type . ".swf", "", $this->xmlstore, 'chartContainer', $this->width, $this->height, false, false);

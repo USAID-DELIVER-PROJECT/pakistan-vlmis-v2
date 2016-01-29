@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for Stock Batch VVM History
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * StockBatchVvmHistory
+ *  StockBatchVvmHistory
  */
 class StockBatchVvmHistory
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $quantity
      * @var decimal $quantity
      */
     private $quantity;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $stockBatchVvm
      * @var StockBatchVvm
      */
     private $stockBatchVvm;
 
     /**
+     * $stockBatchWarehouse
      * @var StockBatchWarehouses
      */
     private $stockBatchWarehouse;
 
     /**
+     * $vvmStage
      * @var VvmStages
      */
     private $vvmStage;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

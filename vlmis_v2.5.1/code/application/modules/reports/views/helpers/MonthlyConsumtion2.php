@@ -1,7 +1,26 @@
 <?php
 
+/**
+ * Zend_View_Helper_MonthlyConsumtion2
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage reports
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Zend View Helper Monthly Consumtion 2
+ */
+
 class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
 
+    /**
+     * 
+     * @return \Zend_View_Helper_MonthlyConsumtion2
+     */
     public function monthlyConsumtion2() {
         return $this;
     }
@@ -80,10 +99,8 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
 
         $row = $this->_em->getConnection()->prepare($querypro);
 
-        $rs = $row->execute();
-        $result = $row->fetchAll();
-
-        return $result;
+        $row->execute();
+        return $row->fetchAll();
     }
 
     public function monthlyConsumtion2VaccinesTt($wh_id, $prev_month_date, $pk_id) {
@@ -143,10 +160,8 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
 
         $row = $this->_em->getConnection()->prepare($querypro);
 
-        $rs = $row->execute();
-        $result = $row->fetchAll();
-
-        return $result;
+        $row->execute();
+        return $row->fetchAll();
     }
 
     public function monthlyConsumptionNonVaccinces($wh_id, $prev_month_date, $pk_id, $age_group_id) {
@@ -193,12 +208,9 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
            AND w0_.item_pack_size_id = '$pk_id' ";
         }
 
-        // echo $querypro;
-
-
         $row = $this->_em->getConnection()->prepare($querypro);
 
-        $rs = $row->execute();
+        $row->execute();
         $result = $row->fetchAll();
 
         return $result[0];
@@ -228,7 +240,7 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
 
         $row = $this->_em->getConnection()->prepare($querypro);
 
-        $rs = $row->execute();
+        $row->execute();
         $result = $row->fetchAll();
 
         return $result[0];
@@ -247,10 +259,8 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
                          w0_.log_book_id =$data_id ";
         $row = $this->_em->getConnection()->prepare($querypro);
 
-        $rs = $row->execute();
-        $result = $row->fetchAll();
-
-        return $result;
+        $row->execute();
+        return $row->fetchAll();
     }
 
     public function logBookEdit($wh_id, $rpt_date) {
@@ -282,10 +292,8 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
 
         $row = $this->_em->getConnection()->prepare($querypro);
 
-        $rs = $row->execute();
-        $result = $row->fetchAll();
-
-        return $result;
+        $row->execute();
+        return $row->fetchAll();
     }
 
     public function logBookItemDosesEdit($log_book_data_id, $item_id) {
@@ -305,10 +313,8 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
 
         $row = $this->_em->getConnection()->prepare($querypro);
 
-        $rs = $row->execute();
-        $result = $row->fetchAll();
-
-        return $result;
+        $row->execute();
+        return $row->fetchAll();
     }
 
     public function logBookItemUcs($district_id) {
@@ -333,10 +339,8 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
 
         $row = $this->_em->getConnection()->prepare($querypro);
 
-        $rs = $row->execute();
-        $result = $row->fetchAll();
-
-        return $result;
+        $row->execute();
+        return $row->fetchAll();
     }
 
     public function getLocationName($location_id) {
@@ -354,10 +358,8 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
 
         $row = $this->_em->getConnection()->prepare($querypro);
 
-        $rs = $row->execute();
-        $result = $row->fetchAll();
-
-        return $result;
+        $row->execute();
+        return $row->fetchAll();
     }
 
     public function items() {
@@ -383,9 +385,7 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
         $row = $this->_em->getConnection()->prepare($querypro);
 
         $row->execute();
-        $result = $row->fetchAll();
-
-        return $result;
+        return $row->fetchAll();
     }
 
     public function items_tt() {
@@ -401,9 +401,7 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
         $row = $this->_em->getConnection()->prepare($querypro);
 
         $row->execute();
-        $result = $row->fetchAll();
-
-        return $result;
+        return $row->fetchAll();
     }
 
     public function items_non_vaccinces() {
@@ -422,9 +420,7 @@ class Zend_View_Helper_MonthlyConsumtion2 extends Zend_View_Helper_Abstract {
         $row = $this->_em->getConnection()->prepare($querypro);
 
         $row->execute();
-        $result = $row->fetchAll();
-
-        return $result;
+        return $row->fetchAll();
     }
 
 }

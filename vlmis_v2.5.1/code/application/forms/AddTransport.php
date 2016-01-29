@@ -1,7 +1,38 @@
 <?php
 
-class Form_AddTransport extends Zend_Form {
+/**
+ * Form_AddTransport
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Add Transport
+ */
+class Form_AddTransport extends Form_Base {
+
+    /**
+     * Fields 
+     * for Form_AddTransport
+     * 
+     * 
+     * ccm_asset_sub_type_id
+     * registration_no
+     * ccm_make_id
+     * manufacture_year
+     * used_for_epi
+     * fuel_type_id
+     * fuel_type_id
+     * comments
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "ccm_asset_sub_type_id" => "Transport Type",
         "registration_no" => "Registration No",
@@ -12,17 +43,48 @@ class Form_AddTransport extends Zend_Form {
         "fuel_type_id" => "Fuel Type",
         "comments" => "Comments",
     );
+
+    /**
+     * Combo boxes
+     * for Form_AddTransport
+     * 
+     * 
+     * ccm_asset_sub_type_id
+     * ccm_make_id
+     * ccm_model_id
+     * fuel_type_id
+     * 
+     * 
+     * $_list
+     * @var type $_list
+     */
     private $_list = array(
         'ccm_asset_sub_type_id' => array(),
         'ccm_make_id' => array(),
         'ccm_model_id' => array(),
         'fuel_type_id' => array()
     );
+
+    /**
+     * Hidden fields 
+     * for Form_AddTransport
+     * 
+     * 
+     * ccm_id
+     * model_hidden
+     * 
+     * 
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "ccm_id" => "pkId",
-        "model_hidden" => "pkId" 
+        "model_hidden" => "pkId"
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         //Generate Makes Combo
         $makes = new Model_CcmMakes();
@@ -63,61 +125,26 @@ class Form_AddTransport extends Zend_Form {
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
                 case "registration_no":
-                
                 case "used_for_epi":
                 case "comments":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 case "manufacture_year":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
                 default:
                     break;
             }
-
-
-
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
-        
+
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
-                   case "ccm_id":
-                   case "model_hidden":
-                
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                case "ccm_id":
+                case "model_hidden":
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -125,26 +152,11 @@ class Form_AddTransport extends Zend_Form {
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

@@ -1,65 +1,78 @@
 <?php
 
-
+/**
+*  Model for Purpose Transfer History
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PurposeTransferHistory
+ *  PurposeTransferHistory
  */
 class PurposeTransferHistory
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $quantity
      * @var decimal $quantity
      */
     private $quantity;
 
     /**
+     * $createdDate
      * @var date $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $fromActivity
      * @var StakeholderActivities
      */
     private $fromActivity;
 
     /**
+     * $toActivity
      * @var StakeholderActivities
      */
     private $toActivity;
 
     /**
+     * $fromStockBatchWarehouse
      * @var StockBatchWarehouses
      */
     private $fromStockBatchWarehouse;
 
     /**
+     * $toStockBatchWarehouse
      * @var StockBatchWarehouses
      */
     private $toStockBatchWarehouse;
 
     /**
+     * $transactionType
      * @var TransactionTypes
      */
     private $transactionType;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

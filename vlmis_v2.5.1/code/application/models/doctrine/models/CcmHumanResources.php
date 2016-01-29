@@ -1,65 +1,78 @@
 <?php
 
-
+/**
+*  Model for CCM Human Resources
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmHumanResources
+ *  CcmHumanResources
  */
 class CcmHumanResources
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $name
      * @var string $name
      */
     private $name;
 
     /**
+     * $designation
      * @var string $designation
      */
     private $designation;
 
     /**
+     * $mobileNumber
      * @var string $mobileNumber
      */
     private $mobileNumber;
 
     /**
+     * $email
      * @var string $email
      */
     private $email;
 
     /**
+     * $logDate
      * @var datetime $logDate
      */
     private $logDate;
 
     /**
+     * $ccmPersonType
      * @var integer $ccmPersonType
      */
     private $ccmPersonType;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

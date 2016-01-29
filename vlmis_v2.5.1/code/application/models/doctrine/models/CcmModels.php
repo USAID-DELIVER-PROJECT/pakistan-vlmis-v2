@@ -1,175 +1,210 @@
 <?php
 
-
+/**
+*  Model for CCM Models
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmModels
+ *  CcmModels
  */
 class CcmModels
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $ccmModelName
      * @var string $ccmModelName
      */
     private $ccmModelName;
 
     /**
+     * $assetDimensionLength
      * @var integer $assetDimensionLength
      */
     private $assetDimensionLength;
 
     /**
+     * $assetDimensionWidth
      * @var integer $assetDimensionWidth
      */
     private $assetDimensionWidth;
 
     /**
+     * $assetDimensionHeight
      * @var integer $assetDimensionHeight
      */
     private $assetDimensionHeight;
 
     /**
+     * $grossCapacity20
      * @var float $grossCapacity20
      */
     private $grossCapacity20;
 
     /**
+     * $grossCapacity4
      * @var float $grossCapacity4
      */
     private $grossCapacity4;
 
     /**
+     * $netCapacity20
      * @var float $netCapacity20
      */
     private $netCapacity20;
 
     /**
+     * $netCapacity4
      * @var float $netCapacity4
      */
     private $netCapacity4;
 
     /**
+     * $cfcFree
      * @var boolean $cfcFree
      */
     private $cfcFree;
 
     /**
+     * $noOfPhases
      * @var boolean $noOfPhases
      */
     private $noOfPhases;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $reasons
      * @var string $reasons
      */
     private $reasons;
 
     /**
+     * $utilizations
      * @var string $utilizations
      */
     private $utilizations;
 
     /**
+     * $temperatureType
      * @var boolean $temperatureType
      */
     private $temperatureType;
 
     /**
+     * $catalogueId
      * @var string $catalogueId
      */
     private $catalogueId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $coldLife
      * @var string $coldLife
      */
     private $coldLife;
 
     /**
+     * $productPrice
      * @var integer $productPrice
      */
     private $productPrice;
 
     /**
+     * $powerSource
      * @var integer $powerSource
      */
     private $powerSource;
 
     /**
+     * $internalDimensionLength
      * @var integer $internalDimensionLength
      */
     private $internalDimensionLength;
 
     /**
+     * $internalDimensionWidth
      * @var integer $internalDimensionWidth
      */
     private $internalDimensionWidth;
 
     /**
+     * $internalDimensionHeight
      * @var integer $internalDimensionHeight
      */
     private $internalDimensionHeight;
 
     /**
+     * $storageDimensionLength
      * @var integer $storageDimensionLength
      */
     private $storageDimensionLength;
 
     /**
+     * $storageDimensionWidth
      * @var integer $storageDimensionWidth
      */
     private $storageDimensionWidth;
 
     /**
+     * $storageDimensionHeight
      * @var integer $storageDimensionHeight
      */
     private $storageDimensionHeight;
 
     /**
+     * $isPqs
      * @var boolean $isPqs
      */
     private $isPqs;
 
     /**
+     * $gasType
      * @var ListDetail
      */
     private $gasType;
 
     /**
+     * $ccmAssetType
      * @var CcmAssetTypes
      */
     private $ccmAssetType;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $ccmMake
      * @var CcmMakes
      */
     private $ccmMake;

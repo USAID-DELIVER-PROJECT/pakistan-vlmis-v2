@@ -1,60 +1,72 @@
 <?php
 
-
+/**
+*  Model for Geo Locations
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GeoLocations
+ *  GeoLocations
  */
 class GeoLocations
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $gisId
      * @var integer $gisId
      */
     private $gisId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $location
      * @var Locations
      */
     private $location;
 
     /**
+     * $geoMap
      * @var GeoMaps
      */
     private $geoMap;
 
     /**
+     * $geoLevel
      * @var GeoLevels
      */
     private $geoLevel;
 
     /**
+     * $stakeholder
      * @var Stakeholders
      */
     private $stakeholder;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

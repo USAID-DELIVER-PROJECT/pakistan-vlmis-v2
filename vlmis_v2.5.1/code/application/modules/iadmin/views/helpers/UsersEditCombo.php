@@ -1,16 +1,34 @@
 <?php
+/**
+ * Zend_View_Helper_UsersEditCombo
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Zend View Helper Users Edit Combo
+ */
 class Zend_View_Helper_UsersEditCombo extends Zend_View_Helper_Abstract {
 
+    /**
+     * Users Edit Combo
+     * Used to load users combo
+     * for edit.
+     * @param type $page
+     */
     public function usersEditCombo($page) {
-        
-       
-
-        $identity = App_Auth::getInstance();
+        // Get translater instance.
         $translate = Zend_Registry::get('Zend_Translate');
+        // Get base URL.
         $base_url = Zend_Registry::get('baseurl');
-        $user_lvl = $identity->getRoleId();
-         if ($page == "routine") {
+        // Check Purpose.
+        if ($page == "routine") {
+            // Init locations levels array.
             $arr_location_level = array(
                 '1' => $translate->translate('National'),
                 '2' => $translate->translate('Provincial'),
@@ -20,7 +38,9 @@ class Zend_View_Helper_UsersEditCombo extends Zend_View_Helper_Abstract {
                 '6' => $translate->translate('EPI Center')
             );
         }
+        // Check purpose.
         if ($page == "im") {
+            // Init locations levels array.
             $arr_location_level = array(
                 '1' => $translate->translate('National'),
                 '2' => $translate->translate('Provincial'),
@@ -30,7 +50,9 @@ class Zend_View_Helper_UsersEditCombo extends Zend_View_Helper_Abstract {
             );
         }
 
+        // Check purpose.
         if ($page == "campaigns") {
+            // Init locations levels array.
             $arr_location_level = array(
                 '1' => $translate->translate('National'),
                 '2' => $translate->translate('Provincial'),
@@ -40,17 +62,20 @@ class Zend_View_Helper_UsersEditCombo extends Zend_View_Helper_Abstract {
         ?>
         <div class="col-md-4">
             <label class="control-label" for="office_type" class="col-md-7"><?php
-            echo $translate->translate("Office Type");
-       
-        ?> <span class="red">*</span></label>
+                echo $translate->translate("Office Type");
+                ?> <span class="red">*</span></label>
             <div class="controls">
                 <select name="office_type_edit" id="office_type_edit" class="form-control">
                     <option value=""><?php echo $translate->translate("Select"); ?></option>
                     <?php
                     foreach ($arr_location_level as $key => $value) {
                         ?>
-                        <option value="<?php echo $key; ?>" <?php if (!empty($office_term['office_type_add']) && $key== $office_term['office_type_add']) echo 'selected'; ?> ><?php echo $value; ?></option>
-        <?php } ?>
+                        <option value="<?php echo $key; ?>" <?php
+                        if (!empty($office_term['office_type_add']) && $key == $office_term['office_type_add']) {
+                            echo 'selected';
+                        }
+                        ?> ><?php echo $value; ?></option>
+                            <?php } ?>
                 </select>
             </div>
         </div>
@@ -60,8 +85,8 @@ class Zend_View_Helper_UsersEditCombo extends Zend_View_Helper_Abstract {
                 <select name="combo1_edit" id="combo1_edit" class="form-control">
                 </select>
             </div>
-        </div>	
-        <div class="col-md-4" id="div_combo2_edit" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>		
+        </div>
+        <div class="col-md-4" id="div_combo2_edit" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>
             <label class="control-label" id="lblcombo2_edit"><?php echo $translate->translate("District"); ?> <span class="red">*</span></label>
             <div class="controls">
                 <select name="combo2_edit" id="combo2_edit" class="form-control">
@@ -76,17 +101,16 @@ class Zend_View_Helper_UsersEditCombo extends Zend_View_Helper_Abstract {
             </div>
         </div>
 
-         <div class="col-md-4" id="div_combo4_edit" <?php if (empty($translate->uc_id)) { ?> style="display:none;" <?php } ?>>
+        <div class="col-md-4" id="div_combo4_edit" <?php if (empty($translate->uc_id)) { ?> style="display:none;" <?php } ?>>
             <label class="control-label" id="lblcombo4_edit"><?php echo $translate->translate("UC"); ?> <span class="red">*</span></label>
             <div class="controls">
                 <select name="combo4_edit" id="combo4_edit" class="form-control">
                 </select>
             </div>
         </div>
-        
+
         <div class="col-md-1" id="loader" style="display:none;"><img src="<?php echo $base_url; ?>/images/loader.gif" style="margin-top:8px; float:left" alt="" /></div>
         <?php
-        // return true;
     }
 
 }

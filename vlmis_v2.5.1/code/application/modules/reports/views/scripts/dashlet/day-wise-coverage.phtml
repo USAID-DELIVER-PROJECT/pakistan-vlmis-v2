@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Day Wise Coverage
+*/
+?>
+<?php
 
 FC_SetRenderer('javascript');
 echo renderChart($this->baseUrl() . "/FusionCharts/Charts/MSColumn3D.swf", "", $this->xmlstore, 'DayWiseCoverage', '100%', 350, false, false);

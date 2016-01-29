@@ -1,3 +1,8 @@
+<?php
+/**
+*  phtml for Location Status
+*/
+?>
 <div class="page-content-wrapper">
     <div class="page-content">
         <h3 class="page-title"><?php echo $this->translate("Location Status"); ?></h3>
@@ -86,7 +91,6 @@
                                                     $pallet = (int) $rowStatus['mypallet'];
                                                 }                                                
 
-                                                //print " Hit Pre=".$hit." RC=". $Rowcounter." | ". $rr ." | ". $row1 ." | ".  $cc ." | ". $rack ." | ". $pallet."<br>";
                                                 if ($rr == $row1 && $cc == $rack && $pallet == $pp) {
                                                     $locArray[$rr][$cc][$pp] = $locname . "|" . $plc_locid;
                                                    

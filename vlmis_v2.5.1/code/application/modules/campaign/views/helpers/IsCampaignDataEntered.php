@@ -1,7 +1,31 @@
 <?php
 
+/**
+ * Zend_View_Helper_IsCampaignDataEntered
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage campaign
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+/**
+ *  Zend View Helper Is Campaign Data Entered
+ */
+
 class Zend_View_Helper_IsCampaignDataEntered extends Zend_View_Helper_Abstract {
 
+    /**
+     * Is Campaign Data Entered
+     * @param type $campaign_id
+     * @param type $campaign_uc_id
+     * @return boolean
+     */
     public function isCampaignDataEntered($campaign_id, $campaign_uc_id) {
 
         $result = 0;
@@ -19,11 +43,11 @@ class Zend_View_Helper_IsCampaignDataEntered extends Zend_View_Helper_Abstract {
             $result = 1;
         }
 
-        if ($result == 1) {
+        if ($result == 1){
             return false;
-        } else {
-            return true;
         }
+        
+        return true;
     }
 
 }

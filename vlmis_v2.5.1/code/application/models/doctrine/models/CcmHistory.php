@@ -1,55 +1,66 @@
 <?php
 
-
+/**
+*  Model for CCM History
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CcmHistory
+ *  CcmHistory
  */
 class CcmHistory
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $quantity
      * @var integer $quantity
      */
     private $quantity;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $ccm
      * @var ColdChain
      */
     private $ccm;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $action
      * @var ListDetail
      */
     private $action;

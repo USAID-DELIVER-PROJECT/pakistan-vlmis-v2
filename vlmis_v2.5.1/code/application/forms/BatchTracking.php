@@ -1,20 +1,50 @@
 <?php
 
-class Form_BatchTracking extends Zend_Form {
+/**
+ * Form_BatchTracking
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Batch Tracking
+ */
+class Form_BatchTracking extends Form_Base {
+
+    /**
+     * 
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "product" => "Product",
         "from_wh" => "Comments",
         "to_wh" => "Adjustment type"
     );
-    private $_hidden = array(
-    );
+
+    /**
+     * $_list
+     * 
+     * Private Variable
+     * 
+     * @var type 
+     */
     private $_list = array(
         'from_wh' => array(),
         'to_wh' => array(),
         'product' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         $item_pack_sizes = new Model_ItemPackSizes();
@@ -29,15 +59,7 @@ class Form_BatchTracking extends Zend_Form {
         foreach ($this->_fields as $col => $name) {
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
     }

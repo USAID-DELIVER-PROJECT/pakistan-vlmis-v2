@@ -1,7 +1,29 @@
 <?php
 
+/**
+ * Zend_View_Helper_TableHeading
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage reports
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+/**
+ *  Zend View Helper TableHeading
+ */
+
 class Zend_View_Helper_TableHeading extends Zend_View_Helper_Abstract {
 
+    /**
+     * Table Heading
+     * @param type $order
+     * @param type $sort
+     * @param type $fields
+     */
     public function tableHeading($order, $sort, $fields = array()) {
         $translate = Zend_Registry::get('Zend_Translate');
         ?>

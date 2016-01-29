@@ -1,17 +1,66 @@
 <?php
 
-class Form_Iadmin_StakeholderItem extends Zend_Form {
+/**
+ * Form_Iadmin_StakeholderItem
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin Stakeholder Items
+ */
+class Form_Iadmin_StakeholderItem extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * @stakeholder: Item Name
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "stakeholder" => "item_name"
     );
+
+    /**
+     * $_hidden
+     * 
+     * Private Variable
+     * 
+     * @stakeholder_id: Stakeholder Id
+     * 
+     * @var type 
+     */
     private $_hidden = array(
         "stakeholder_id" => "stakeholder_id"
     );
+
+    /**
+     * $_list
+     * 
+     * Private Variable
+     * 
+     * List
+     * 
+     * @stakeholder
+     * 
+     * @var type 
+     */
     private $_list = array(
         'stakeholder' => array(),
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
 
@@ -27,67 +76,26 @@ class Form_Iadmin_StakeholderItem extends Zend_Form {
 
 
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "":
-
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "") {
+                parent::createText($col);
             }
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
 
         foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-
-                case "stakeholder_id":
-
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "stakeholder_id") {
+                parent::createHidden($col);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

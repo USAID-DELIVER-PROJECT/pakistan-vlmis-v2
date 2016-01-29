@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for VVM Groups
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * VvmGroups
+ *  VvmGroups
  */
 class VvmGroups
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $vvmGroup
      * @var VvmGroups
      */
     private $vvmGroup;
 
     /**
+     * $vvmStage
      * @var VvmStages
      */
     private $vvmStage;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

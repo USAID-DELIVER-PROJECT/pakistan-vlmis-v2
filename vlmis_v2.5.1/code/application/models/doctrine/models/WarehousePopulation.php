@@ -1,100 +1,121 @@
 <?php
 
+/**
+*  Model for Warehouse Population
+*/
 
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * WarehousePopulation
+ *  WarehousePopulation
  */
 class WarehousePopulation
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $facilityTotalPouplation
      * @var integer $facilityTotalPouplation
      */
     private $facilityTotalPouplation;
 
     /**
+     * $liveBirthsPerYear
      * @var integer $liveBirthsPerYear
      */
     private $liveBirthsPerYear;
 
     /**
+     * $pregnantWomenPerYear
      * @var integer $pregnantWomenPerYear
      */
     private $pregnantWomenPerYear;
 
     /**
+     * $womenOfChildBearingAge
      * @var integer $womenOfChildBearingAge
      */
     private $womenOfChildBearingAge;
 
     /**
+     * $survivingChildren011
      * @var integer $survivingChildren011
      */
     private $survivingChildren011;
 
     /**
+     * $childrenAged1223
      * @var integer $childrenAged1223
      */
     private $childrenAged1223;
 
     /**
+     * $above2Year
      * @var integer $above2Year
      */
     private $above2Year;
 
     /**
+     * $estimationYear
      * @var datetime $estimationYear
      */
     private $estimationYear;
 
     /**
+     * $requirments4degree
      * @var float $requirments4degree
      */
     private $requirments4degree;
 
     /**
+     * $requirments20degree
      * @var float $requirments20degree
      */
     private $requirments20degree;
 
     /**
+     * $capacity4degree
      * @var float $capacity4degree
      */
     private $capacity4degree;
 
     /**
+     * $capacity20degree
      * @var float $capacity20degree
      */
     private $capacity20degree;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

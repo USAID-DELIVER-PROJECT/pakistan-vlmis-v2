@@ -1,19 +1,53 @@
 <?php
 
-class Form_Campaigns_CampaignSearch extends Zend_Form {
+/**
+ * Form_Campaigns_CampaignSearch
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Campaigns
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Campaigns Campaign Search 
+ */
+class Form_Campaigns_CampaignSearch extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * @campaign_name: Campaign Name
+     * @campaign_type_id: Campaign Type
+     * @item_id: Product
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "campaign_name" => "Campaign Name",
         "campaign_type_id" => "Campaign Type",
         "item_id" => "Product"
     );
+
+    /**
+     * $_list
+     * 
+     * Private Variable
+     * 
+     * @var type 
+     */
     private $_list = array(
         "campaign_type_id" => array(),
         "item_id" => array()
     );
 
     /**
-     * 
+     * Initializes Form Fields
      */
     public function init() {
 
@@ -32,30 +66,12 @@ class Form_Campaigns_CampaignSearch extends Zend_Form {
         }
 
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "campaign_name":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "campaign_name") {
+                parent::createText($col);
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
     }

@@ -1,11 +1,39 @@
 <?php
 
-class Form_Iadmin_LocationTypeSearch extends Zend_Form {
+/**
+ * Form_Iadmin_LocationTypeSearch
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin Location Type Search
+ */
+class Form_Iadmin_LocationTypeSearch extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Form Fields
+     * @location_type_name: Location Type Name
+     * @status: Status
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "location_type_name" => "Location Type Name",
         "status" => "Status"
     );
+
+    /**
+     * $_radio
+     * @var type 
+     */
     private $_radio = array(
         'status' => array(
             "3" => "All",
@@ -14,33 +42,20 @@ class Form_Iadmin_LocationTypeSearch extends Zend_Form {
         )
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
+        // set css attributes and classes
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "location_type_name":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "location_type_name") {
+                parent::createText($col);
             }
 
+            // Set Attributes to forms elements.
             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
+                parent::createRadio($col, $this->_radio[$col]);
             }
         }
     }

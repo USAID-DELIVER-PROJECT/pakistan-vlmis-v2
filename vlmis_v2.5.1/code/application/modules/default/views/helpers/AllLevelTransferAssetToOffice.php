@@ -1,7 +1,31 @@
 <?php
 
+/**
+ * Zend_View_Helper_AllLevelTransferAssetToOffice
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage default
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+/**
+ *  Zend View Helper All Level Transfer Asset To Office
+ */
+
 class Zend_View_Helper_AllLevelTransferAssetToOffice extends Zend_View_Helper_Abstract {
 
+    /**
+     * All Level Transfer Asset To Office
+     * @param type $office_term
+     * @param type $postfix
+     * @param type $menu_type
+     * @return boolean
+     */
     public function allLevelTransferAssetToOffice($office_term = "", $postfix = null, $menu_type = 1) {
 
         $identity = App_Auth::getInstance();
@@ -128,10 +152,11 @@ class Zend_View_Helper_AllLevelTransferAssetToOffice extends Zend_View_Helper_Ab
                 <div class="col-md-3">
                     <div class="control-group">
                         <label class="control-label" for="office" class="col-md-7"><?php
-                            if (empty($office_term))
+                            if (empty($office_term)) {
                                 echo $translate->translate("Office");
-                            else
+                            } else {
                                 echo $office_term;
+                            }
                             ?> <span class="red">*</span></label>
                         <div class="controls">
                             <select name="office" id="office<?php echo $postfix; ?>" class="form-control">
@@ -151,8 +176,8 @@ class Zend_View_Helper_AllLevelTransferAssetToOffice extends Zend_View_Helper_Ab
                         <select name="combo1" id="combo1<?php echo $postfix; ?>" class="form-control">
                         </select>
                     </div>
-                </div>	
-                <div class="col-md-3" id="div_combo2<?php echo $postfix; ?>" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>		
+                </div>
+                <div class="col-md-3" id="div_combo2<?php echo $postfix; ?>" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>
                     <label class="control-label" id="lblcombo2"><?php echo $translate->translate("District"); ?> <span class="red">*</span></label>
                     <div class="controls">
                         <select name="combo2" id="combo2<?php echo $postfix; ?>" class="form-control">

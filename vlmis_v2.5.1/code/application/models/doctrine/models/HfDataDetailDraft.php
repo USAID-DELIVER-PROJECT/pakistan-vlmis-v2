@@ -1,110 +1,138 @@
 <?php
+/**
+*  php for HF Data Detail Draft
+*/
+?>
+<?php
 
-
+/**
+*  HF Data Detail Draft
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * HfDataDetailDraft
- */
+*  Model for HF Data Detail Draft
+*/
+
 class HfDataDetailDraft
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $fixedInsideUcMale
      * @var decimal $fixedInsideUcMale
      */
     private $fixedInsideUcMale;
 
     /**
+     * $fixedInsideUcFemale
      * @var decimal $fixedInsideUcFemale
      */
     private $fixedInsideUcFemale;
 
     /**
+     * $fixedOutsideUcMale
      * @var decimal $fixedOutsideUcMale
      */
     private $fixedOutsideUcMale;
 
     /**
+     * $fixedOutsideUcFemale
      * @var decimal $fixedOutsideUcFemale
      */
     private $fixedOutsideUcFemale;
 
     /**
+     * $referalMale
      * @var decimal $referalMale
      */
     private $referalMale;
 
     /**
+     * $referalFemale
      * @var decimal $referalFemale
      */
     private $referalFemale;
 
     /**
+     * $outreachMale
      * @var decimal $outreachMale
      */
     private $outreachMale;
 
     /**
+     * $outreachFemale
      * @var decimal $outreachFemale
      */
     private $outreachFemale;
 
     /**
+     * $pregnantWomen
      * @var decimal $pregnantWomen
      */
     private $pregnantWomen;
 
     /**
+     * $nonPregnantWomen
      * @var decimal $nonPregnantWomen
      */
     private $nonPregnantWomen;
 
     /**
+     * $vaccineScheduleId
      * @var integer $vaccineScheduleId
      */
     private $vaccineScheduleId;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $outreachOutsideMale
      * @var decimal $outreachOutsideMale
      */
     private $outreachOutsideMale;
 
     /**
+     * $outreachOutsideFemale
      * @var decimal $outreachOutsideFemale
      */
     private $outreachOutsideFemale;
 
     /**
+     * $hfDataMaster
      * @var HfDataMasterDraft
      */
     private $hfDataMaster;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $ageGroup
      * @var ListDetail
      */
     private $ageGroup;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

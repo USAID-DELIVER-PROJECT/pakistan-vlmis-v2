@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for User Login Log
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UserLoginLog
+ *  UserLoginLog
  */
 class UserLoginLog
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $ipAddress
      * @var string $ipAddress
      */
     private $ipAddress;
 
     /**
+     * $loginTime
      * @var datetime $loginTime
      */
     private $loginTime;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $user
      * @var Users
      */
     private $user;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

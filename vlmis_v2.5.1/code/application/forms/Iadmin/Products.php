@@ -1,7 +1,26 @@
 <?php
 
-class Form_Iadmin_Products extends Zend_Form {
+/**
+ * Form_Iadmin_Products
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+*  Form for Iadmin Products
+*/
+
+class Form_Iadmin_Products extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "item_name" => "item_name",
         "description" => "description",
@@ -15,12 +34,22 @@ class Form_Iadmin_Products extends Zend_Form {
         "item_description" => "item_description",
         "percent_population_covered" => "percent_population_covered"
     );
+    
+    /**
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "item_id" => "item_id",
         "item_category_id" => "item_category_id",
         "item_unit_id" => "item_unit_id",
         "item_group_id" => "item_group_id"
     );
+    
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'list_rank' => array(
         ),
@@ -29,6 +58,9 @@ class Form_Iadmin_Products extends Zend_Form {
         'item' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         $this->_list["list_rank"][''] = "Select";
@@ -73,28 +105,13 @@ class Form_Iadmin_Products extends Zend_Form {
                 case "item_unit_name":
                 case "item_description":
                 case "percent_population_covered";
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                       
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
             }
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
 
@@ -105,8 +122,7 @@ class Form_Iadmin_Products extends Zend_Form {
                 case "item_category_id":
                 case "item_unit_id":
                 case "item_group_id":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -114,6 +130,9 @@ class Form_Iadmin_Products extends Zend_Form {
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
         $this->addElement("hidden", "id", array(
             "attribs" => array("class" => "hidden"),

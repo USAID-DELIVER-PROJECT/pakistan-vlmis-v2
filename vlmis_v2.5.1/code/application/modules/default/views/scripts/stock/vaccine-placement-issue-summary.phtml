@@ -1,3 +1,8 @@
+<?php
+/**
+*  phtml for Vaccine Placement Issue Summary
+*/
+?>
 <!-- Content -->
 <style>
     #content_print {
@@ -47,7 +52,6 @@ endif;
 </table>
 <?php
 if ($this->result && count($this->result) > 0 && $this->val == 'prod') {
-    //echo "<pre>";
     foreach ($productArr as $key => $data) {
         ?>
         <b><?php echo $key; ?></b>
@@ -101,7 +105,6 @@ if ($this->result && count($this->result) > 0 && $this->val == 'prod') {
     }
 }
 if ($this->result && count($this->result) > 0 && $this->val == 'loc') {
-    //echo "<pre>";
     foreach ($locationArr as $key => $data) {
         ?>
         <b><?php echo $key; ?></b>

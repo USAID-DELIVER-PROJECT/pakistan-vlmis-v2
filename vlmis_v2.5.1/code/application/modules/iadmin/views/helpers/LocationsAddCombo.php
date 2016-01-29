@@ -1,13 +1,33 @@
 <?php
 
+/**
+ * Zend_View_Helper_LocationsAddCombo
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+/**
+ *  Zend View Helper Locations Add Combo
+ */
+
 class Zend_View_Helper_LocationsAddCombo extends Zend_View_Helper_Abstract {
 
+    /**
+     * Locations Add Combo
+     * @param type $office_term
+     * @param type $postfix
+     */
     public function locationsAddCombo($office_term = "", $postfix = null) {
 
-        $identity = App_Auth::getInstance();
         $translate = Zend_Registry::get('Zend_Translate');
         $base_url = Zend_Registry::get('baseurl');
-        $user_lvl = $identity->getRoleId();
+        // Set array key and values.
         $arr_location_level_add = array(
             '3' => $translate->translate('Division'),
             '4' => $translate->translate('District'),
@@ -17,10 +37,11 @@ class Zend_View_Helper_LocationsAddCombo extends Zend_View_Helper_Abstract {
         ?>
         <div class="col-md-4">
             <label class="control-label" for="location_level_add" class="col-md-7"><?php
-                if (empty($office_term))
+                if (empty($office_term)) {
                     echo $translate->translate("Location Level");
-                else
+                } else {
                     echo $office_term;
+                }
                 ?> <span class="red">*</span></label>
             <div class="controls">
                 <select name="location_level_add" id="location_level_add" class="form-control">
@@ -39,8 +60,8 @@ class Zend_View_Helper_LocationsAddCombo extends Zend_View_Helper_Abstract {
                 <select name="combo1_add" id="combo1_add" class="form-control">
                 </select>
             </div>
-        </div>	
-        <div class="col-md-4" id="div_combo2_add" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>		
+        </div>
+        <div class="col-md-4" id="div_combo2_add" <?php if (empty($translate->dist_id) || isset($translate->office_id) == 1 || empty($translate->office_id)) { ?> style="display:none;" <?php } ?>>
             <label class="control-label" id="lblcombo2_add"><?php echo $translate->translate("District"); ?> <span class="red">*</span></label>
             <div class="controls">
                 <select name="combo2_add" id="combo2_add" class="form-control">

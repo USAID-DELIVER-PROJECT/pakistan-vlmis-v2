@@ -1,12 +1,21 @@
 <?php
+/**
+ * Bootstrap
+ * used to initialize
+ *  code that executes before anything else gets executed, 
+ *  1 - autoloading, 
+ *  2 - initialize your plugins, 
+ *  3 - setting datetimezone
+ */
 
 /**
- * Class to initialize bootstrap related stuff.
+ * Bootstrap to initialize bootstrap related stuff.
  */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     /**
      * Initialize html doctype
+     * XHTML5
      */
     protected function _initDoctype() {
         $this->bootstrap('view');
@@ -22,10 +31,28 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $initHelper = new App_Controller_Plugin_Helper_Init();
         Zend_Controller_Action_HelperBroker::addHelper($initHelper);
         Zend_Controller_Action_HelperBroker::addPath(APPLICATION_PATH . '/controllers/helpers');
+        
+        $UserClickPathHelper = new App_Controller_Plugin_Helper_UserClickPaths();
+        Zend_Controller_Action_HelperBroker::addHelper($UserClickPathHelper);
+        Zend_Controller_Action_HelperBroker::addPath(APPLICATION_PATH . '/controllers/helpers');
     }
 
     /**
      * Initialize configuration values
+     * in zend registry
+     * memory_limit
+     * $configFile
+     * $config
+     * dbSetting
+     * cacheManager
+     * appName
+     * baseurl
+     * first_month
+     * lang_support
+     * api_from_date
+     * barcode_products
+     * smtpConfig
+     * report_month
      */
     protected function _initConfig() {
         ini_set('memory_limit', '-1');
@@ -47,6 +74,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     /**
      * Initialize application autoloader
+     * namespace
+     * basePath
      */
     protected function _initAutoload() {
         return new Zend_Application_Module_Autoloader(array(
@@ -56,7 +85,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
 
     /**
-     * 
+     * _initDoctrine
      * @return type
      */
     protected function _initDoctrine() {
@@ -94,7 +123,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
 
     /**
-     * 
+     * _initLog
      */
     protected function _initLog() {
         if ($this->hasPluginResource("log")) {

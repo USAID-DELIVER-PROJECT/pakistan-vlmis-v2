@@ -1,7 +1,24 @@
 <?php
 
-class Form_StockIssue extends Zend_Form {
+/**
+ * Form_StockIssue
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Stock Issue
+ */
+class Form_StockIssue extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "searchby" => "Search By",
         "transaction_date" => "Transaction Date",
@@ -22,6 +39,11 @@ class Form_StockIssue extends Zend_Form {
         'issue_from' => 'Issue From',
         'issue_to' => 'Issued To'
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "hdn_transaction_number" => "",
         "hdn_stock_id" => "",
@@ -35,6 +57,11 @@ class Form_StockIssue extends Zend_Form {
         "hdn_campaign_id" => "",
         "hdn_transaction_date" => "hdn_transaction_date"
     );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'searchby' => array(
             "0" => "Select",
@@ -52,6 +79,9 @@ class Form_StockIssue extends Zend_Form {
         'issue_period' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         $quarter = array(
             1 => '1st Quarter',
@@ -76,6 +106,8 @@ class Form_StockIssue extends Zend_Form {
                     case 4:
                         $key = "01/10/$y-01/12/$y";
                         break;
+                    default :
+                        break;
                 }
                 $this->_list["issue_period"][$key] = $quarter[$q] . " - " . $y;
             }
@@ -83,9 +115,9 @@ class Form_StockIssue extends Zend_Form {
         $this->_list["issue_period"]["custom"] = "Custom";
 
         //Generate Products(items) Combo
-        
+
         $this->_list["item_id"][''] = "Select";
-       
+
         //Generate Purpose(activity_id) combo 
         $stk_activities = new Model_StakeholderActivities();
         $result1 = $stk_activities->getAllStakeholderActivities();
@@ -107,8 +139,7 @@ class Form_StockIssue extends Zend_Form {
                 case "hdn_activity_id":
                 case "hdn_campaign_id":
                 case "hdn_transaction_date":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -122,64 +153,42 @@ class Form_StockIssue extends Zend_Form {
                 case "dispatch_by":
                 case "issue_from":
                 case "issue_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 case "expiry_date":
                 case "transaction_date":
                 case "available_quantity":
                 case "transaction_number":
                 case "warehouse_name":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "readonly" => "true"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
                 case "comments":
-                    $this->addElement("textarea", $col, array(
-                        "attribs" => array("class" => "form-control", "rows" => "2"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createMultiLineText($col, "2");             
                     break;
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
     }
 
+    /**
+     * Make Field Readonly
+     */
     public function makeFieldReadonly() {
         $this->getElement('activity_id')->setAttrib("disabled", "true");
     }
 
+    /**
+     * Fill Batch Combo
+     * @param type $item_id
+     */
     public function fillBatchCombo($item_id) {
         $auth = new App_Auth();
         $wh_id = $auth->getWarehouseId();
-        $em = Zend_Registry::get("doctrine");
         $str_sql = $this->_em->createQueryBuilder()
                 ->select("sbw.pkId,sb.number")
                 ->from('StockBatchWarehouses', 'sbw')
@@ -191,10 +200,10 @@ class Form_StockIssue extends Zend_Form {
                 ->andWhere("sbw.status = 'Running' ");
 
         $items = $str_sql->getQuery()->getResult();
-        
+
         $list_item[''] = "Select";
         foreach ($items as $item) {
-            $list_item[$item['pkId']] =$item['number'];
+            $list_item[$item['pkId']] = $item['number'];
         }
 
         $this->getElement('number')->setMultiOptions($list_item);

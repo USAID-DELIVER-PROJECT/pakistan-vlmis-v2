@@ -1,3 +1,8 @@
+<?php
+/**
+*  phtml for Issue
+*/
+?>
 <!-- Content -->
 <div class="page-content-wrapper">
     <div class="page-content">
@@ -44,7 +49,6 @@
                             <?php } ?>
                             <div class="col-md-12">
                                 <?php
-                                //echo App_Controller_Functions::getPageNarrative(Zend_Registry::get('resource'));
                                 ?>
                             </div>
                         </div>
@@ -259,7 +263,6 @@
             </div>
         </div>
         <?php
-        //App_Controller_Functions::pr($this->arr_data);
 
         if (!empty($this->arr_data['tempstocks']) && count($this->arr_data['tempstocks']) > 0 && $type == 'issue') {
             ?>

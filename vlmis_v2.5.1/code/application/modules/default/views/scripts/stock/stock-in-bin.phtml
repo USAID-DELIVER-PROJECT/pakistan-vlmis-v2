@@ -1,3 +1,8 @@
+<?php
+/**
+*  phtml for Stock in Bin
+*/
+?>
 <!-- Content -->
 <div class="page-content-wrapper">
     <div class="page-content">
@@ -32,7 +37,6 @@
                                 <div class="dataTables_wrapper form-inline">
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <?php //$this->recordsPerPage($this->counter); ?>
                                         </div>
                                         <div class="col-md-9">
                                             <?php if($this->role_id == 3) { ?>
@@ -64,7 +68,6 @@
                                             if ($this->result && count($this->result) > 0) :
                                                 foreach ($this->result as $row):
                                                     $carton_quantity = round($row['Qty'] / $row['quantity_per_pack']);
-                                                    //if ($carton_quantity >= 1) {
                                                         ?>
                                                         <tr class="gradeX">
 
@@ -86,7 +89,6 @@
                                                     <input type="hidden" id="quantity_per_pack" name="quantity_per_pack[]" value="<?php echo $row['quantity_per_pack']; ?>"/>                                                 
                                                     </tr>
                                                     <?php
-                                                //}
                                             endforeach;
                                         endif;
                                         ?>

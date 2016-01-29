@@ -1,7 +1,72 @@
 <?php
 
-class Form_LogBook extends Zend_Form {
+/**
+ * Form_LogBook
+ *
+ * 
+ *
+ * Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Log Book
+ */
+class Form_LogBook extends Form_Base {
+
+    /**
+     * 
+     * Fields 
+     * for Form_LogBook
+     * 
+     * 
+     * 
+     * $_fields
+     * @name: "name"
+     *
+     * @father_name: "father_name"
+     *
+     * @age: "age"
+     *
+     * @contact: "contact"
+     *
+     * @address: "address"
+     *
+     * @contact: "contact"
+     *
+     * @province: "province"
+     *
+     * @entry_type: "Entry type"
+     *
+     * @district: "district"
+     *
+     * @tehsil: "tehsil"
+     *
+     * @uc: "uc"
+     *
+     * @wh: "wh"
+     *
+     * @vaccination_date_from: "vaccination_date_from"
+     *
+     * @vaccination_date_to: "vaccination_date_to"
+     *
+     * @item_1: "item_1"
+     *
+     * @item_2: "item_2"
+     *
+     * @item_3: "item_3"
+     *
+     * @item_4: "item_4"
+     *
+     * @item_5: "item_5"
+     *
+     * @reffers_to: "reffers_to"
+     *
+     * @remarks: "remarks"
+     *
+     * @var type 
+     */
     private $_fields = array(
         "name" => "name",
         "father_name" => "father_name",
@@ -25,9 +90,26 @@ class Form_LogBook extends Zend_Form {
         "reffers_to" => "reffers_to",
         "remarks" => "remarks"
     );
-    private $_hidden = array(
-        "id" => "ID"
-    );
+
+    /**
+     * 
+     * Combo boxes 
+     * for Form_LogBook
+     * 
+     * 
+     * $_list
+     * @province: array()
+     *
+     * @district: array()
+     *
+     * @tehsil: array()
+     *
+     * @uc: array()
+     *
+     * @wh: array()
+     *
+     * @var type 
+     */
     private $_list = array(
         'province' => array(),
         'district' => array(),
@@ -35,15 +117,41 @@ class Form_LogBook extends Zend_Form {
         'uc' => array(),
         'wh' => array()
     );
+
+    /**
+     * Radio buttons
+     * for Form_LogBook
+     * 
+     * $_radio
+     * 
+     * entry_type: array()
+     * 
+     * @var type 
+     */
     private $_radio = array(
         'entry_type' => array(
             "1" => "My Entries",
             "2" => "Referrals"
         )
     );
+
+    /**
+     * Child List
+     * fo Form_LogBook
+     * 
+     * 
+     * 
+     * $_childlist
+     * 
+     * @var type 
+     */
     private $_childlist = array(
     );
 
+    /**
+     * Initializes Form Fields
+     * for Form_LogBook
+     */
     public function init() {
 
         $locations = new Model_Locations();
@@ -56,7 +164,7 @@ class Form_LogBook extends Zend_Form {
             }
         }
 
-        //Generate 
+        //Generate Model
         $locations = new Model_Locations();
         $result = $locations->getSindhDistricts();
         $this->_list["district"][''] = "Select";
@@ -73,8 +181,35 @@ class Form_LogBook extends Zend_Form {
 
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
-
-
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * name
+                 * 
+                 * father_name
+                 * 
+                 * age
+                 * 
+                 * contact
+                 * 
+                 * address
+                 * 
+                 * item_1
+                 * 
+                 * item_2
+                 * 
+                 * item_3
+                 * 
+                 * item_4
+                 * 
+                 * item_5
+                 * 
+                 * reffers_to
+                 * 
+                 * remarks
+                 * 
+                 */
                 case "name":
                 case "father_name":
                 case "age":
@@ -87,103 +222,61 @@ class Form_LogBook extends Zend_Form {
                 case "item_5":
                 case "reffers_to":
                 case "remarks":
-
-
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * 
+                 * vaccination_date_from
+                 * 
+                 */
                 case "vaccination_date_from":
-
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true', 'style' => 'position: relative; z-index: 100000;'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                        "value" => $date_from
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyTextWithValue($col,$date_from);
                     break;
-
+                /**
+                 * 
+                 * Form Text Fields for 
+                 * Form_LogBook
+                 * 
+                 * vaccination_date_to
+                 * 
+                 */
                 case "vaccination_date_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true', 'style' => 'position: relative; z-index: 100000;'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                        "value" => $date_to
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyTextWithValue($col,$date_to);
                     break;
-
                 default:
                     break;
             }
 
+            /**
+             * 
+             * Form Select Fields for
+             * 
+             * Form_LogBook
+             * 
+             */
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
 
             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col],
-                    'value' => '1'
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
+                parent::createRadio($col, $this->_radio[$col]);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     * for Form_LogBook
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
     /**
      * Adds extra rows to the form
+     * Form_LogBook
      *
      * @access public
      * @param mixed $data. (default: null)
@@ -268,6 +361,11 @@ class Form_LogBook extends Zend_Form {
         }
     }
 
+    /**
+     * Populate Batches
+     * @param type $item_id
+     * @param type $rows
+     */
     public function populateBatches($item_id, $rows) {
 
         $manufacturer = array();

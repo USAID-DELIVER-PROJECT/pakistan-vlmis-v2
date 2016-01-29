@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for Warehouse Update History
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * WarehousesUpdateHistory
+ *  WarehousesUpdateHistory
  */
 class WarehousesUpdateHistory
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $reportDate
      * @var string $reportDate
      */
     private $reportDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $ipAddress
      * @var string $ipAddress
      */
     private $ipAddress;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

@@ -1,3 +1,8 @@
+<?php
+/**
+ *  phtml for Index
+ */
+?>
 <div class="page-content-wrapper">
     <div class="page-content">
         <div class="row">
@@ -62,51 +67,37 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-9">
+                                        <div class="col-md-12">
                                             <div class="control-group">
                                                 <label class="control-label">
                                                     &nbsp;
                                                 </label>
                                                 <div class="controls">
                                                     <button type="button" class="btn btn-primary" onclick="window.open('<?php echo $this->baseUrl(); ?>/stock-batch/batch-summary', '_blank', 'scrollbars=1,width=860,height=595');">
-                                                        <?php echo $this->translate("Summary"); ?>
+                                                        <?php echo $this->translate("Vaccine-Summary"); ?>
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary" onclick="window.open('<?php echo $this->baseUrl(); ?>/stock/priority-vaccines-distribution-detail-print', '_blank', 'scrollbars=1,width=860,height=595')">
+                                                        <?php echo $this->translate("Vaccines-Priority Distribution"); ?>
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary" onclick="window.open('<?php echo $this->baseUrl(); ?>/stock-batch/non-vaccine-batch-summary', '_blank', 'scrollbars=1,width=860,height=595');">
+                                                        <?php echo $this->translate("Non Vaccine-Summary"); ?>
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary" onclick="window.open('<?php echo $this->baseUrl(); ?>/stock/priority-non-vaccines-distribution-detail-print', '_blank', 'scrollbars=1,width=860,height=595')">
+                                                        <?php echo $this->translate("Non Vaccines-Priority Distribution"); ?>
                                                     </button>
                                                     <?php if ($this->role_id <= 4) { ?>
                                                         <button type="button" class="btn btn-primary" onclick="window.open('<?php echo $this->baseUrl(); ?>/stock-batch/stakeholder-summary', '_blank', 'scrollbars=1,width=860,height=595');">
                                                             <?php echo $this->translate("Manufacturers"); ?>
                                                         </button>
                                                     <?php } ?>
-                                                    <button type="button" class="btn btn-primary" onclick="window.open('<?php echo $this->baseUrl(); ?>/stock/priority-vaccines-distribution-detail-print', '_blank', 'scrollbars=1,width=860,height=595')">
-                                                        <?php echo $this->translate("Priority Vaccines Distribution"); ?>
-                                                    </button>
-                                                </div>
-                                            </div>                                                        
-                                        </div>  
-                                        <!--<div class="col-md-3">
-                                            <div class="control-group" style="<?php //echo (!empty($product)) ? 'display:block' : 'display:none';     ?>" id="priorityBatches">
-                                                <label class="control-label">
-                                                    &nbsp;
-                                                </label>
-                                                <div class="controls">
-                                                    <button type="button" class="btn btn-primary" >
-                                        <?php //echo $this->translate("Set Priority Batches"); ?>
-                                                    </button>
 
-                                                </div>
-                                            </div>                                                        
-                                        </div>-->
-                                        <div class="col-md-3 right">
-                                            <div class="control-group">
-                                                <label class="control-label" for="status">
-                                                    &nbsp;
-                                                </label>
-                                                <div class="controls">
-                                                    <button class="btn btn-success" id="search" name="search" type="submit" >
+                                                    <button class="btn btn-success pull-right" id="search" name="search" type="submit" >
                                                         <?php echo $this->translate("Search"); ?>
                                                     </button>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            </div>                                                        
+                                        </div>                                                                             
+
                                     </div>
                                 </div>
                                 <div style="clear:both;"></div>
@@ -225,12 +216,12 @@
                                                             echo '';
                                                         } else {
                                                             ?>
-                                                                                                                                                                        <!--<button class="btn <?php echo ($new_status == 'Stacked') ? "btn-success" : "btn-danger"; ?> input-sm" id="batch<?php echo $row['pkId']; ?>-makeit">
+                                                                                                                                                                                                                                                                                    <!--<button class="btn <?php echo ($new_status == 'Stacked') ? "btn-success" : "btn-danger"; ?> input-sm" id="batch<?php echo $row['pkId']; ?>-makeit">
                                                             <?php echo $this->translate("Make it"); ?>
-                                                                                                                                                                            <span id="batch<?php echo $row['pkId']; ?>-button">
+                                                                                                                                                                                                                                                                                        <span id="batch<?php echo $row['pkId']; ?>-button">
                                                             <?php echo ($new_status == 'Stacked') ? "Running" : "Stacked"; ?>
-                                                                                                                                                                            </span>
-                                                                                                                                                                        </button> -->
+                                                                                                                                                                                                                                                                                        </span>
+                                                                                                                                                                                                                                                                                    </button> -->
                                                             <?php
                                                         }
                                                         ?>
@@ -287,6 +278,9 @@
                     <tr>
                         <td class="bg-priority3"><b>Priority 3</b></td>
                         <td class="bg-priority3">If VVM stage is 1 and expiry is more the 12 months.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="red">Please ignore priority of dry store products.</td>                        
                     </tr>
                 </table>
             </div>

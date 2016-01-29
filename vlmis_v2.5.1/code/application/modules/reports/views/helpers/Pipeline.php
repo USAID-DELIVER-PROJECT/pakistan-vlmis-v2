@@ -1,13 +1,42 @@
 <?php
 
+/**
+ * Zend_View_Helper_Pipeline
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage reports
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+/**
+ *  Zend View Helper Pipeline
+ */
+
 class Zend_View_Helper_Pipeline extends Zend_View_Helper_Abstract {
 
+    /**
+     * pipeline
+     * @return \Zend_View_Helper_Pipeline
+     */
     public function pipeline() {
         return $this;
     }
 
+    /**
+     * Get SOH
+     * Used to get stock on hand (SOH).
+     * @param type $item_id
+     * @param type $wh_id
+     * @return type
+     */
     public function getSOH($item_id, $wh_id) {
+        // Get doctrine instance.
         $em = Zend_Registry::get('doctrine');
+        // Prepare query.
         $str_sql = "SELECT
                             Sum(stock_detail.quantity) AS qty,
                             stakeholder_item_pack_sizes.item_pack_size_id,
@@ -35,13 +64,24 @@ class Zend_View_Helper_Pipeline extends Zend_View_Helper_Abstract {
                             stock_batch_warehouses.warehouse_id = $wh_id
                     AND stakeholder_item_pack_sizes.item_pack_size_id = $item_id";
 
+        // Execute and get result.
         $row = $em->getConnection()->prepare($str_sql);
         $row->execute();
         return $row->fetchAll();
     }
 
+    /**
+     * Get Shipments
+     * Used to get shipments data.
+     * @param type $item_id
+     * @param type $wh_id
+     * @param type $date
+     * @return type
+     */
     public function getShipments($item_id, $wh_id, $date) {
+        // Get doctrine instance.
         $em = Zend_Registry::get('doctrine');
+        // Prepare query.
         $str_sql = "SELECT
                             SUM(
                                     shipments.shipment_quantity
@@ -62,13 +102,24 @@ class Zend_View_Helper_Pipeline extends Zend_View_Helper_Abstract {
                                     '%m/%Y'
                             )";
 
+        // Execute and get result.
         $row = $em->getConnection()->prepare($str_sql);
         $row->execute();
         return $row->fetchAll();
     }
 
+    /**
+     * Get AMC
+     * Used to get average monthly consumption.
+     * @param type $item_id
+     * @param type $wh_id
+     * @param type $year
+     * @return string
+     */
     public function getAMC($item_id, $wh_id, $year) {
+        // Get doctine instance.
         $em = Zend_Registry::get('doctrine');
+        // Prepare query.
         $str_sql = "SELECT
                             epi_amc.amc / 12 AS amc,
                             epi_amc.amc_year
@@ -81,6 +132,7 @@ class Zend_View_Helper_Pipeline extends Zend_View_Helper_Abstract {
                     GROUP BY
                             epi_amc.amc_year";
 
+        // Execute and get result.
         $row = $em->getConnection()->prepare($str_sql);
         $row->execute();
         $data = $row->fetchAll();
@@ -90,7 +142,6 @@ class Zend_View_Helper_Pipeline extends Zend_View_Helper_Abstract {
             return '0';
         }
     }
-
 }
 
 ?>

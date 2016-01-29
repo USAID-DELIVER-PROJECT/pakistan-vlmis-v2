@@ -1,45 +1,54 @@
 <?php
 
-
+/**
+*  Model for Item Categories
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ItemCategories
+ *  ItemCategories
  */
 class ItemCategories
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $itemCategoryName
      * @var string $itemCategoryName
      */
     private $itemCategoryName;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

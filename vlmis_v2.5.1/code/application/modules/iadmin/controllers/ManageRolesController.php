@@ -1,11 +1,24 @@
 <?php
 
+/**
+ * Iadmin_ManageRolesController
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+/**
+ *  Controller for Iadmin Manage Roles
+ */
 class Iadmin_ManageRolesController extends App_Controller_Base {
 
-    public function init() {
-        parent::init();
-    }
-
+    /**
+     * Iadmin_ManageRolesController index
+     */
     public function indexAction() {
         $form = new Form_Iadmin_RoleSearch();
         $form_add = new Form_Iadmin_Roles();
@@ -60,29 +73,33 @@ class Iadmin_ManageRolesController extends App_Controller_Base {
         $this->view->pagination_params = $params;
     }
 
+    /**
+     * add
+     */
     public function addAction() {
         $form = new Form_Iadmin_Roles();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $role = new Roles();
-                $role->setRoleName($form->role_name->getValue());
-                $role->setDescription($form->description->getValue());
-                $category_id = $this->_em->find('ListDetail', $form->category_id->getValue());
-                $role->setCategory($category_id);
-                $role->setStatus($form->status->getValue());
-                $user_id = $this->_em->find('Users', $this->_userid);
-                $role->setCreatedBy($user_id);
-                $role->setCreatedDate(App_Tools_Time::now());
-                $role->setModifiedBy($user_id);
-                $role->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($role);
-                $this->_em->flush();
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $role = new Roles();
+            $role->setRoleName($form->role_name->getValue());
+            $role->setDescription($form->description->getValue());
+            $category_id = $this->_em->find('ListDetail', $form->category_id->getValue());
+            $role->setCategory($category_id);
+            $role->setStatus($form->status->getValue());
+            $user_id = $this->_em->find('Users', $this->_userid);
+            $role->setCreatedBy($user_id);
+            $role->setCreatedDate(App_Tools_Time::now());
+            $role->setModifiedBy($user_id);
+            $role->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($role);
+            $this->_em->flush();
         }
         $this->_redirect("/iadmin/manage-roles");
     }
 
+    /**
+     * resources
+     */
     public function resourcesAction() {
         $form = new Form_Iadmin_RoleComboSearch();
         $form_add = new Form_Iadmin_RoleResource();
@@ -139,28 +156,32 @@ class Iadmin_ManageRolesController extends App_Controller_Base {
         $this->view->pagination_params = $params;
     }
 
+    /**
+     * Add Resource
+     */
     public function addResourceAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
 
         $form = new Form_Iadmin_RoleResource();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $rr = new RoleResources();
-                $role_id = $this->_em->find('Roles', $form->role->getValue());
-                $rr->setRole($role_id);
-                $resource_id = $this->_em->find('Resources', $form->resource->getValue());
-                $rr->setResource($resource_id);
-                $rr->setPermission($form->permission->getValue());
-                $this->_em->persist($rr);
-                $this->_em->flush();
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $rr = new RoleResources();
+            $role_id = $this->_em->find('Roles', $form->role->getValue());
+            $rr->setRole($role_id);
+            $resource_id = $this->_em->find('Resources', $form->resource->getValue());
+            $rr->setResource($resource_id);
+            $rr->setPermission($form->permission->getValue());
+            $this->_em->persist($rr);
+            $this->_em->flush();
         }
 
         $this->_redirect("/iadmin/manage-roles/resources?role=" . $form->role->getValue());
     }
 
+    /**
+     * ajaxEdit
+     */
     public function ajaxEditAction() {
         $this->_helper->layout->setLayout("ajax");
         $role_id = $this->_request->getParam('role_id', '');
@@ -179,29 +200,34 @@ class Iadmin_ManageRolesController extends App_Controller_Base {
         $this->view->form = $form;
     }
 
+    /**
+     * update
+     */
     public function updateAction() {
         $form = new Form_Iadmin_Roles();
         $form->addHidden();
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
-                $role_id = $form->id->getValue();
-                $role = $this->_em->getRepository("Roles")->find($role_id);
-                $role->setRoleName($form->role_name->getValue());
-                $role->setDescription($form->description->getValue());
-                $category_id = $this->_em->find('ListDetail', $form->category_id->getValue());
-                $role->setCategory($category_id);
-                $role->setStatus($form->status->getValue());
-                $user_id = $this->_em->find('Users', $this->_userid);
-                $role->setModifiedBy($user_id);
-                $role->setModifiedDate(App_Tools_Time::now());
-                $this->_em->persist($role);
-                $this->_em->flush();
-            }
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $role_id = $form->id->getValue();
+            $role = $this->_em->getRepository("Roles")->find($role_id);
+            $role->setRoleName($form->role_name->getValue());
+            $role->setDescription($form->description->getValue());
+            $category_id = $this->_em->find('ListDetail', $form->category_id->getValue());
+            $role->setCategory($category_id);
+            $role->setStatus($form->status->getValue());
+            $user_id = $this->_em->find('Users', $this->_userid);
+            $role->setModifiedBy($user_id);
+            $role->setModifiedDate(App_Tools_Time::now());
+            $this->_em->persist($role);
+            $this->_em->flush();
         }
+
         $this->_redirect("/iadmin/manage-roles");
     }
 
+    /**
+     * delete
+     */
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -213,6 +239,9 @@ class Iadmin_ManageRolesController extends App_Controller_Base {
         return $this->_em->flush();
     }
 
+    /**
+     * Delete Role Resource
+     */
     public function deleteRoleResourceAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -225,6 +254,9 @@ class Iadmin_ManageRolesController extends App_Controller_Base {
         return $this->_em->flush();
     }
 
+    /**
+     * Check Role
+     */
     public function checkRoleAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -239,6 +271,9 @@ class Iadmin_ManageRolesController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Check Role Resource
+     */
     public function checkRoleResourceAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
@@ -255,6 +290,9 @@ class Iadmin_ManageRolesController extends App_Controller_Base {
         }
     }
 
+    /**
+     * Role Resources
+     */
     public function roleResourcesAction() {
         $form = new Form_Iadmin_RoleComboSearch();
         $form_add = new Form_Iadmin_RoleResource();
@@ -319,32 +357,36 @@ class Iadmin_ManageRolesController extends App_Controller_Base {
         $this->view->pagination_params = $params;
     }
 
+    /**
+     * ajaxAddRoleResource
+     */
     public function ajaxAddRoleResourceAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
 
         $rr_id = $this->_request->getParam("role_resource_id");
         $role_resource_id = explode("-", $rr_id);
-        
+
         $rr = new RoleResources();
         $role_id = $this->_em->find('Roles', $role_resource_id[1]);
         $rr->setRole($role_id);
         $resource_id = $this->_em->find('Resources', $role_resource_id[0]);
         $rr->setResource($resource_id);
-        $rr->setPermission('ALLOW');        
+        $rr->setPermission('ALLOW');
         $this->_em->persist($rr);
         $this->_em->flush();
     }
 
+    /**
+     * ajaxDeleteRoleResource
+     */
     public function ajaxDeleteRoleResourceAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
 
         $rr_id = $this->_request->getParam("role_resource_id");
         $role_r_id = explode("-", $rr_id);
-        // echo $role_r_id[1];
-        // echo $role_r_id[0];
-        // exit;
+
         $role_resource_tbl = $this->_em->getRepository("RoleResources")->findBy(array('role' => $role_r_id[1], 'resource' => $role_r_id[0]));
 
         $role_resource = $this->_em->getRepository("RoleResources")->find($role_resource_tbl[0]->getPkId());

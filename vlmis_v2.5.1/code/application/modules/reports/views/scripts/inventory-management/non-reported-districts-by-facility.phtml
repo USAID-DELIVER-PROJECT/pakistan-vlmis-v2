@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for Non Reported Districts by Facility 
+*/
+?>
+<?php
 $xml_store = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 $xml_store .="<rows>";
 
@@ -46,7 +51,6 @@ $query_vals1 = $this->reports()->getNonReportedDistrictsByFacility1($wh_type,$st
 
 foreach ($query_vals1 as $row_vals) {
     $query = $this->reports()->getNonReportedDistrictsByFacility2($row_vals['pk_id']);
-    //if (count($query) > 0):
     $xml_store .="<row id=\"$counter\">";
     $xml_store .="<cell style=\"text-align:center;\">" . $i . "</cell>";
     foreach ($query as $row) {
@@ -55,15 +59,6 @@ foreach ($query_vals1 as $row_vals) {
         $d_name = htmlentities($row['d_name']);
          $teh_name = htmlentities($row['teh_name']);
         $UC = htmlentities($row['UC']);
-
-        //$prov_tittle = (empty($row[prov_tittle]))? "-" : $row[prov_tittle];
-        //$d_name = (empty($d_name))? "-" : $d_name;
-        //$UC = (empty($UC))? "-" : $UC;
-        //$wh_name = (empty($wh_name))? "-" : $wh_name;
-        //$xml_store .="<cell><![CDATA[$row[prov_tittle]]]></cell>";
-        //$xml_store .="<cell><![CDATA[$row[d_name]]]></cell>";
-        //$xml_store .="<cell><![CDATA[$row[UC]]]></cell>";
-
         $xml_store .="<cell><![CDATA[$prov_tittle]]></cell>";
         $xml_store .="<cell><![CDATA[$d_name]]></cell>";
          $xml_store .="<cell><![CDATA[$teh_name]]></cell>";
@@ -74,7 +69,6 @@ foreach ($query_vals1 as $row_vals) {
     }
     $counter++;
     $i++;
-    //endif;
 }
 
 $xml_store .="</rows>";

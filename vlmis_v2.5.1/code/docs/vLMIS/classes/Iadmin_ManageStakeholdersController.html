@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>    API Documentation &raquo; \Iadmin_ManageStakeholdersController
+</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+            <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+            <!--[if lt IE 9]>
+        <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+        <![endif]-->
+        <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
+        <script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
+        <script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script>
+        <script src="../js/bootstrap.js" type="text/javascript"></script>
+        <script src="../js/template.js" type="text/javascript"></script>
+        <script src="../js/prettify/prettify.min.js" type="text/javascript"></script>
+    
+            <link rel="shortcut icon" href="../img/favicon.ico"/>
+        <link rel="apple-touch-icon" href="../img/apple-touch-icon.png"/>
+        <link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png"/>
+        <link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png"/>
+    </head>
+<body>
+
+        <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    <span class="icon-bar"></span> </a>
+                <a class="brand" href="../index.html">API Documentation</a>
+
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="dropdown">
+                            <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                API Documentation <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                                                                            </ul>
+                        </li>
+                        <li class="dropdown" id="charts-menu">
+                            <a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                Charts <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="../graph_class.html">
+                                        <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown" id="reports-menu">
+                            <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                Reports <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="../errors.html">
+                                        <i class="icon-list-alt"></i>&#160;Errors
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="../markers.html">
+                                        <i class="icon-list-alt"></i>&#160;Markers
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="../deprecated.html">
+                                        <i class="icon-list-alt"></i>&#160;Deprecated
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="go_to_top">
+            <a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>
+        </div>
+    </div>
+    
+    <div id="___" class="container">
+        <noscript>
+            <div class="alert alert-warning">
+                Javascript is disabled; several features are only available if Javascript is enabled.
+            </div>
+        </noscript>
+
+        
+            <style>
+        .deprecated h2 {
+            text-decoration: line-through;
+        }
+    </style>
+    <div class="row">
+        <div class="span4">
+                    <div class="btn-group view pull-right" data-toggle="buttons-radio">
+        <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+        <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    </div>
+    <div class="btn-group visibility" data-toggle="buttons-checkbox">
+        <button class="btn public active" title="Show public elements">Public</button>
+        <button class="btn protected" title="Show protected elements">Protected</button>
+        <button class="btn private" title="Show private elements">Private</button>
+        <button class="btn inherited active" title="Show inherited elements">Inherited</button>
+    </div>
+
+        <ul class="side-nav nav nav-list">
+        <li class="nav-header">
+            <i class="icon-custom icon-method"></i> Methods
+            <ul>
+                                                                                                    <li class="method public">
+        <a href="#method_addManufacturerAction" title="addManufacturerAction :: Add Manufacturer">
+            <span class="description">Add Manufacturer</span><pre>addManufacturerAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addOfficeAction" title="addOfficeAction :: Add Office">
+            <span class="description">Add Office</span><pre>addOfficeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addStakeholderAction" title="addStakeholderAction :: Add Stakeholder">
+            <span class="description">Add Stakeholder</span><pre>addStakeholderAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addStakeholderActivityAction" title="addStakeholderActivityAction :: Add Stakeholder Activity">
+            <span class="description">Add Stakeholder Activity</span><pre>addStakeholderActivityAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addStakeholderSectorAction" title="addStakeholderSectorAction :: Add Stakeholder Sector">
+            <span class="description">Add Stakeholder Sector</span><pre>addStakeholderSectorAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addStakeholderTypeAction" title="addStakeholderTypeAction :: Add Stakeholder Type">
+            <span class="description">Add Stakeholder Type</span><pre>addStakeholderTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxChangeStatusAction" title="ajaxChangeStatusAction :: ajaxChangeStatus">
+            <span class="description">ajaxChangeStatus</span><pre>ajaxChangeStatusAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxGetItemsAction" title="ajaxGetItemsAction :: ajaxGetItems">
+            <span class="description">ajaxGetItems</span><pre>ajaxGetItemsAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxManufacturerEditAction" title="ajaxManufacturerEditAction :: ajaxManufacturerEdit">
+            <span class="description">ajaxManufacturerEdit</span><pre>ajaxManufacturerEditAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxOfficeEditAction" title="ajaxOfficeEditAction :: ajaxOfficeEdit">
+            <span class="description">ajaxOfficeEdit</span><pre>ajaxOfficeEditAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxStakeholderActivityEditAction" title="ajaxStakeholderActivityEditAction :: ajaxStakeholderActivityEdit">
+            <span class="description">ajaxStakeholderActivityEdit</span><pre>ajaxStakeholderActivityEditAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxStakeholderEditAction" title="ajaxStakeholderEditAction :: ajaxStakeholderEdit">
+            <span class="description">ajaxStakeholderEdit</span><pre>ajaxStakeholderEditAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxStakeholderSectorEditAction" title="ajaxStakeholderSectorEditAction :: ajaxStakeholderSectorEdit">
+            <span class="description">ajaxStakeholderSectorEdit</span><pre>ajaxStakeholderSectorEditAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxStakeholderTypeEditAction" title="ajaxStakeholderTypeEditAction :: ajaxStakeholderTypeEdit">
+            <span class="description">ajaxStakeholderTypeEdit</span><pre>ajaxStakeholderTypeEditAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_checkManufacturerAction" title="checkManufacturerAction :: Check Manufacturer">
+            <span class="description">Check Manufacturer</span><pre>checkManufacturerAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_checkOfficeAction" title="checkOfficeAction :: Check Office">
+            <span class="description">Check Office</span><pre>checkOfficeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_checkStakeholderAction" title="checkStakeholderAction :: Check Stakeholder">
+            <span class="description">Check Stakeholder</span><pre>checkStakeholderAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_checkStakeholderActivityAction" title="checkStakeholderActivityAction :: Check Stakeholder Activity">
+            <span class="description">Check Stakeholder Activity</span><pre>checkStakeholderActivityAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_checkStakeholderSectorAction" title="checkStakeholderSectorAction :: Check Stakeholder Sector">
+            <span class="description">Check Stakeholder Sector</span><pre>checkStakeholderSectorAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_checkStakeholderTypeAction" title="checkStakeholderTypeAction :: Check Stakeholder Activity">
+            <span class="description">Check Stakeholder Activity</span><pre>checkStakeholderTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_init" title="init :: Iadmin_ManageStakeholdersController init">
+            <span class="description">Iadmin_ManageStakeholdersController init</span><pre>init</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_manufacturerAction" title="manufacturerAction :: Manufacturer">
+            <span class="description">Manufacturer</span><pre>manufacturerAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_officeAction" title="officeAction :: Office">
+            <span class="description">Office</span><pre>officeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_stakeholderActivitiesAction" title="stakeholderActivitiesAction :: Stakeholder Activities">
+            <span class="description">Stakeholder Activities</span><pre>stakeholderActivitiesAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_stakeholderItemsAction" title="stakeholderItemsAction :: Stakeholder Items">
+            <span class="description">Stakeholder Items</span><pre>stakeholderItemsAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_stakeholdersAction" title="stakeholdersAction :: Stakeholders">
+            <span class="description">Stakeholders</span><pre>stakeholdersAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_stakeholderSectorsAction" title="stakeholderSectorsAction :: Stakeholder Sectors">
+            <span class="description">Stakeholder Sectors</span><pre>stakeholderSectorsAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_stakeholderTypesAction" title="stakeholderTypesAction :: Stakeholder Types">
+            <span class="description">Stakeholder Types</span><pre>stakeholderTypesAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_updateManufacturerAction" title="updateManufacturerAction :: Update Manufacturer">
+            <span class="description">Update Manufacturer</span><pre>updateManufacturerAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_updateOfficeAction" title="updateOfficeAction :: Update Office">
+            <span class="description">Update Office</span><pre>updateOfficeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_updateStakeholderAction" title="updateStakeholderAction :: Update Stakeholder">
+            <span class="description">Update Stakeholder</span><pre>updateStakeholderAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_updateStakeholderActivityAction" title="updateStakeholderActivityAction :: Update Stakeholder Activity">
+            <span class="description">Update Stakeholder Activity</span><pre>updateStakeholderActivityAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_updateStakeholderSectorAction" title="updateStakeholderSectorAction :: Update Stakeholder Sector">
+            <span class="description">Update Stakeholder Sector</span><pre>updateStakeholderSectorAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_updateStakeholderTypeAction" title="updateStakeholderTypeAction :: Update Stakeholder Type">
+            <span class="description">Update Stakeholder Type</span><pre>updateStakeholderTypeAction</pre>
+        </a>
+    </li>
+
+                                                </ul>
+        </li>
+        <li class="nav-header protected">» Protected
+            <ul>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </ul>
+        </li>
+        <li class="nav-header private">» Private
+            <ul>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </ul>
+        </li>
+        <li class="nav-header">
+            <i class="icon-custom icon-constant"></i> Constants
+            <ul>
+                            </ul>
+        </li>
+    </ul>
+
+
+        </div>
+
+        <div class="span8">
+            <div class="element class">
+                <h1>Iadmin_ManageStakeholdersController</h1>
+                <small style="display: block; text-align: right">
+                                            Extends \App_Controller_Base
+                                                        </small>
+                <p class="short_description">Controller for Iadmin Manage Stakeholders</p>
+                <div class="details">
+                    <div class="long_description">
+                        
+                    </div>
+                    <table class="table table-bordered">
+                                                                                    <tr>
+                                    <th>
+                                        package
+                                                                            </th>
+                                    <td>
+                                                                                    
+                                                                                <p>Default</p>
+                                    </td>
+                                </tr>
+                                                                                                                                                                                </table>
+
+                    <h3><i class="icon-custom icon-method"></i> Methods</h3>
+                                                                <a id="method_addManufacturerAction"></a>
+                        <div class="element clickable method public  method_addManufacturerAction" data-toggle="collapse" data-target=".method_addManufacturerAction .collapse">
+                            <h2>Add Manufacturer</h2>
+                            <pre>addManufacturerAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addOfficeAction"></a>
+                        <div class="element clickable method public  method_addOfficeAction" data-toggle="collapse" data-target=".method_addOfficeAction .collapse">
+                            <h2>Add Office</h2>
+                            <pre>addOfficeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addStakeholderAction"></a>
+                        <div class="element clickable method public  method_addStakeholderAction" data-toggle="collapse" data-target=".method_addStakeholderAction .collapse">
+                            <h2>Add Stakeholder</h2>
+                            <pre>addStakeholderAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addStakeholderActivityAction"></a>
+                        <div class="element clickable method public  method_addStakeholderActivityAction" data-toggle="collapse" data-target=".method_addStakeholderActivityAction .collapse">
+                            <h2>Add Stakeholder Activity</h2>
+                            <pre>addStakeholderActivityAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addStakeholderSectorAction"></a>
+                        <div class="element clickable method public  method_addStakeholderSectorAction" data-toggle="collapse" data-target=".method_addStakeholderSectorAction .collapse">
+                            <h2>Add Stakeholder Sector</h2>
+                            <pre>addStakeholderSectorAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addStakeholderTypeAction"></a>
+                        <div class="element clickable method public  method_addStakeholderTypeAction" data-toggle="collapse" data-target=".method_addStakeholderTypeAction .collapse">
+                            <h2>Add Stakeholder Type</h2>
+                            <pre>addStakeholderTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxChangeStatusAction"></a>
+                        <div class="element clickable method public  method_ajaxChangeStatusAction" data-toggle="collapse" data-target=".method_ajaxChangeStatusAction .collapse">
+                            <h2>ajaxChangeStatus</h2>
+                            <pre>ajaxChangeStatusAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxGetItemsAction"></a>
+                        <div class="element clickable method public  method_ajaxGetItemsAction" data-toggle="collapse" data-target=".method_ajaxGetItemsAction .collapse">
+                            <h2>ajaxGetItems</h2>
+                            <pre>ajaxGetItemsAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxManufacturerEditAction"></a>
+                        <div class="element clickable method public  method_ajaxManufacturerEditAction" data-toggle="collapse" data-target=".method_ajaxManufacturerEditAction .collapse">
+                            <h2>ajaxManufacturerEdit</h2>
+                            <pre>ajaxManufacturerEditAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxOfficeEditAction"></a>
+                        <div class="element clickable method public  method_ajaxOfficeEditAction" data-toggle="collapse" data-target=".method_ajaxOfficeEditAction .collapse">
+                            <h2>ajaxOfficeEdit</h2>
+                            <pre>ajaxOfficeEditAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxStakeholderActivityEditAction"></a>
+                        <div class="element clickable method public  method_ajaxStakeholderActivityEditAction" data-toggle="collapse" data-target=".method_ajaxStakeholderActivityEditAction .collapse">
+                            <h2>ajaxStakeholderActivityEdit</h2>
+                            <pre>ajaxStakeholderActivityEditAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxStakeholderEditAction"></a>
+                        <div class="element clickable method public  method_ajaxStakeholderEditAction" data-toggle="collapse" data-target=".method_ajaxStakeholderEditAction .collapse">
+                            <h2>ajaxStakeholderEdit</h2>
+                            <pre>ajaxStakeholderEditAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxStakeholderSectorEditAction"></a>
+                        <div class="element clickable method public  method_ajaxStakeholderSectorEditAction" data-toggle="collapse" data-target=".method_ajaxStakeholderSectorEditAction .collapse">
+                            <h2>ajaxStakeholderSectorEdit</h2>
+                            <pre>ajaxStakeholderSectorEditAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxStakeholderTypeEditAction"></a>
+                        <div class="element clickable method public  method_ajaxStakeholderTypeEditAction" data-toggle="collapse" data-target=".method_ajaxStakeholderTypeEditAction .collapse">
+                            <h2>ajaxStakeholderTypeEdit</h2>
+                            <pre>ajaxStakeholderTypeEditAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_checkManufacturerAction"></a>
+                        <div class="element clickable method public  method_checkManufacturerAction" data-toggle="collapse" data-target=".method_checkManufacturerAction .collapse">
+                            <h2>Check Manufacturer</h2>
+                            <pre>checkManufacturerAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_checkOfficeAction"></a>
+                        <div class="element clickable method public  method_checkOfficeAction" data-toggle="collapse" data-target=".method_checkOfficeAction .collapse">
+                            <h2>Check Office</h2>
+                            <pre>checkOfficeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_checkStakeholderAction"></a>
+                        <div class="element clickable method public  method_checkStakeholderAction" data-toggle="collapse" data-target=".method_checkStakeholderAction .collapse">
+                            <h2>Check Stakeholder</h2>
+                            <pre>checkStakeholderAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_checkStakeholderActivityAction"></a>
+                        <div class="element clickable method public  method_checkStakeholderActivityAction" data-toggle="collapse" data-target=".method_checkStakeholderActivityAction .collapse">
+                            <h2>Check Stakeholder Activity</h2>
+                            <pre>checkStakeholderActivityAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_checkStakeholderSectorAction"></a>
+                        <div class="element clickable method public  method_checkStakeholderSectorAction" data-toggle="collapse" data-target=".method_checkStakeholderSectorAction .collapse">
+                            <h2>Check Stakeholder Sector</h2>
+                            <pre>checkStakeholderSectorAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_checkStakeholderTypeAction"></a>
+                        <div class="element clickable method public  method_checkStakeholderTypeAction" data-toggle="collapse" data-target=".method_checkStakeholderTypeAction .collapse">
+                            <h2>Check Stakeholder Activity</h2>
+                            <pre>checkStakeholderTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_init"></a>
+                        <div class="element clickable method public  method_init" data-toggle="collapse" data-target=".method_init .collapse">
+                            <h2>Iadmin_ManageStakeholdersController init</h2>
+                            <pre>init() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_manufacturerAction"></a>
+                        <div class="element clickable method public  method_manufacturerAction" data-toggle="collapse" data-target=".method_manufacturerAction .collapse">
+                            <h2>Manufacturer</h2>
+                            <pre>manufacturerAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_officeAction"></a>
+                        <div class="element clickable method public  method_officeAction" data-toggle="collapse" data-target=".method_officeAction .collapse">
+                            <h2>Office</h2>
+                            <pre>officeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_stakeholderActivitiesAction"></a>
+                        <div class="element clickable method public  method_stakeholderActivitiesAction" data-toggle="collapse" data-target=".method_stakeholderActivitiesAction .collapse">
+                            <h2>Stakeholder Activities</h2>
+                            <pre>stakeholderActivitiesAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_stakeholderItemsAction"></a>
+                        <div class="element clickable method public  method_stakeholderItemsAction" data-toggle="collapse" data-target=".method_stakeholderItemsAction .collapse">
+                            <h2>Stakeholder Items</h2>
+                            <pre>stakeholderItemsAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_stakeholdersAction"></a>
+                        <div class="element clickable method public  method_stakeholdersAction" data-toggle="collapse" data-target=".method_stakeholdersAction .collapse">
+                            <h2>Stakeholders</h2>
+                            <pre>stakeholdersAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_stakeholderSectorsAction"></a>
+                        <div class="element clickable method public  method_stakeholderSectorsAction" data-toggle="collapse" data-target=".method_stakeholderSectorsAction .collapse">
+                            <h2>Stakeholder Sectors</h2>
+                            <pre>stakeholderSectorsAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_stakeholderTypesAction"></a>
+                        <div class="element clickable method public  method_stakeholderTypesAction" data-toggle="collapse" data-target=".method_stakeholderTypesAction .collapse">
+                            <h2>Stakeholder Types</h2>
+                            <pre>stakeholderTypesAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_updateManufacturerAction"></a>
+                        <div class="element clickable method public  method_updateManufacturerAction" data-toggle="collapse" data-target=".method_updateManufacturerAction .collapse">
+                            <h2>Update Manufacturer</h2>
+                            <pre>updateManufacturerAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_updateOfficeAction"></a>
+                        <div class="element clickable method public  method_updateOfficeAction" data-toggle="collapse" data-target=".method_updateOfficeAction .collapse">
+                            <h2>Update Office</h2>
+                            <pre>updateOfficeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_updateStakeholderAction"></a>
+                        <div class="element clickable method public  method_updateStakeholderAction" data-toggle="collapse" data-target=".method_updateStakeholderAction .collapse">
+                            <h2>Update Stakeholder</h2>
+                            <pre>updateStakeholderAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_updateStakeholderActivityAction"></a>
+                        <div class="element clickable method public  method_updateStakeholderActivityAction" data-toggle="collapse" data-target=".method_updateStakeholderActivityAction .collapse">
+                            <h2>Update Stakeholder Activity</h2>
+                            <pre>updateStakeholderActivityAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_updateStakeholderSectorAction"></a>
+                        <div class="element clickable method public  method_updateStakeholderSectorAction" data-toggle="collapse" data-target=".method_updateStakeholderSectorAction .collapse">
+                            <h2>Update Stakeholder Sector</h2>
+                            <pre>updateStakeholderSectorAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_updateStakeholderTypeAction"></a>
+                        <div class="element clickable method public  method_updateStakeholderTypeAction" data-toggle="collapse" data-target=".method_updateStakeholderTypeAction .collapse">
+                            <h2>Update Stakeholder Type</h2>
+                            <pre>updateStakeholderTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                    
+                    
+                                                        </div>
+            </div>
+            <a id="\Iadmin_ManageStakeholdersController"></a>
+            <ul class="breadcrumb">
+                <li><a href="../index.html"><i class="icon-custom icon-class"></i></a></li>
+                    
+    
+    <li><span class="divider">\</span><a href="../namespaces/default.html">\</a></li>
+
+                <li class="active"><span class="divider">\</span><a href="../classes/Iadmin_ManageStakeholdersController.html">Iadmin_ManageStakeholdersController</a></li>
+            </ul>
+        </div>
+    </div>
+
+    </div>
+
+        <footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by
+            <a href="http://glyphicons.com/">Glyphicons</a>.<br/>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and<br/>
+            generated on Thu, 21 Jan 2016 07:28:50 +0000.<br/>
+    </footer>
+    </body>
+</html>

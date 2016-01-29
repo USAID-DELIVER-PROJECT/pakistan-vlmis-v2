@@ -1,80 +1,96 @@
 <?php
 
-
+/**
+*  Model for Warehouses Data Draft
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * WarehousesDataDraft
+ *  WarehousesDataDraft
  */
 class WarehousesDataDraft
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $openingBalance
      * @var integer $openingBalance
      */
     private $openingBalance;
 
     /**
+     * $receivedBalance
      * @var integer $receivedBalance
      */
     private $receivedBalance;
 
     /**
+     * $issueBalance
      * @var integer $issueBalance
      */
     private $issueBalance;
 
     /**
+     * $closingBalance
      * @var integer $closingBalance
      */
     private $closingBalance;
 
     /**
+     * $wastages
      * @var integer $wastages
      */
     private $wastages;
 
     /**
+     * $vialsUsed
      * @var integer $vialsUsed
      */
     private $vialsUsed;
 
     /**
+     * $adjustments
      * @var integer $adjustments
      */
     private $adjustments;
 
     /**
+     * $reportingStartDate
      * @var datetime $reportingStartDate
      */
     private $reportingStartDate;
 
     /**
+     * $nearestExpiry
      * @var datetime $nearestExpiry
      */
     private $nearestExpiry;
 
     /**
+     * $itemPackSizeId
      * @var integer $itemPackSizeId
      */
     private $itemPackSizeId;
 
     /**
+     * $warehouseId
      * @var integer $warehouseId
      */
     private $warehouseId;
 
     /**
+     * $createdBy
      * @var integer $createdBy
      */
     private $createdBy;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;

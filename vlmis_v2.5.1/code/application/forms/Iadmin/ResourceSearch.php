@@ -1,54 +1,62 @@
 <?php
 
-class Form_Iadmin_ResourceSearch extends Zend_Form {
+/**
+ * Form_Iadmin_ResourceSearch
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin Resource Search
+ */
+class Form_Iadmin_ResourceSearch extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Form Fields
+     * @resource_name: Resource Name
+     * @resource_type: Resource Type
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "resource_name" => "Resource name",
         "resource_type" => "Resource type"
     );
-    
-    private $_hidden = array(
-        "pk_id" => "pkId"
-    );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'resource_type' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
-        
+
         $em = Zend_Registry::get("doctrine");
         $result = $em->getRepository("ResourceTypes")->findAll();
         $this->_list["resource_type"][''] = "Select";
         foreach ($result as $rs) {
             $this->_list["resource_type"][$rs->getPkId()] = $rs->getResourceType();
         }
-        
+
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "resource_name":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "resource_name") {
+                parent::createText($col);
             }
-            
+
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array()
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
     }

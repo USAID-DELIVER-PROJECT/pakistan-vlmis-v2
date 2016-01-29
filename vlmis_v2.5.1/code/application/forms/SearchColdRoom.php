@@ -1,7 +1,24 @@
 <?php
 
-class Form_SearchColdRoom extends Zend_Form {
+/**
+ * Form_SearchColdRoom
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Search Cold Room
+ */
+class Form_SearchColdRoom extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "asset_id" => "Asset Id",
         "serial_number" => "Serial Number",
@@ -35,6 +52,11 @@ class Form_SearchColdRoom extends Zend_Form {
         "year_supply_to" => "Year of Supply to",
         "report_type" => "Report Type"
     );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'ccm_model_id' => array('' => 'Select Make First'),
         'ccm_status_list_id' => array(),
@@ -47,12 +69,22 @@ class Form_SearchColdRoom extends Zend_Form {
         'make' => array(),
         'temperature_recording_system' => array()
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "office_id" => "",
         "combo1_id" => "",
         "warehouse_id" => "",
         "model_id" => ""
     );
+
+    /**
+     * $_radio
+     * @var type 
+     */
     private $_radio = array(
         'placed_at' => array(
             "1" => "Select Warehouse",
@@ -71,8 +103,16 @@ class Form_SearchColdRoom extends Zend_Form {
             "1" => "Summary View",
         )
     );
+
+    /**
+     * $_checkbox
+     * @var type 
+     */
     private $_checkbox = array();
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         //Generate working status Combo
         $ccm_status_list = new Model_CcmStatusList();
@@ -115,9 +155,7 @@ class Form_SearchColdRoom extends Zend_Form {
                 case "combo1_id":
                 case "warehouse_id":
                 case "model_id":
-
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -129,200 +167,57 @@ class Form_SearchColdRoom extends Zend_Form {
                 case "year_supply_from":
                 case "year_supply_to":
                 case "cooling_system":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 case "capacity_from":
-
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Gross Capacity"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-
                 case "capacity_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Gross Capacity"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Gross Capacity");
                     break;
                 case "asset_id":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 case "working_since_from":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "readonly" => "true"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-
                 case "working_since_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "readonly" => "true"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
                 case "gross_capacity":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Gross Capacity"),
-                        "allowEmpty" => true,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(
-                            array(
-                                "validator" => "Float",
-                                "breakChainOnFailure" => false,
-                                "options" => array(
-                                    "messages" => array("notFloat" => $name . " must be a valid option")
-                                )
-                            )
-                    )));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Gross Capacity");
                     break;
-
                 case "net_capacity":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Net Capacity"),
-                        "allowEmpty" => true,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(
-                            array(
-                                "validator" => "Float",
-                                "breakChainOnFailure" => false,
-                                "options" => array(
-                                    "messages" => array("notFloat" => $name . " must be a valid option")
-                                )
-                            )
-                    )));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Net Capacity");
                     break;
-
                 case "asset_dimension_length":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Length"),
-                        "allowEmpty" => false,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Length");
                     break;
-
                 case "asset_dimension_width":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Width"),
-                        "allowEmpty" => false,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Width");
                     break;
-
                 case "asset_dimension_height":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Height"),
-                        "allowEmpty" => false,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Height");
                     break;
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
 
             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
+                parent::createRadio($col, $this->_radio[$col]);
             }
 
             if (in_array($col, array_keys($this->_checkbox))) {
-                $this->addElement("multiCheckbox", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_checkbox[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
-            }
+                parent::createMultiCheckbox($col, $this->_checkbox[$col]);
+                }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

@@ -1,7 +1,46 @@
 <?php
 
-class Form_Iadmin_Users extends Zend_Form {
+/**
+ * Form_Iadmin_Users
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin Users
+ */
+class Form_Iadmin_Users extends Form_Base {
+
+    /**
+     * Form Fields
+     *
+     * Private Variable
+     *
+     * @user_name_add: UserName
+     * @user_name_update: UserName
+     * @email: Email
+     * @phone: Phone No
+     * @email_update: Email
+     * @phone_update: Phone No
+     * @old_password: Old Password
+     * @new_password: New Password
+     * @user_type: User Type
+     * @password: Password
+     * @confirm_password: Confirm_Password
+     * @search_policy_users; loginId
+     * @policy_users_add: loginId
+     * @role: role
+     * @default_warehouse: default_warehouse
+     * @default_warehouse_update: default_warehouse_update
+     *
+     * @var type
+     *
+     */
     private $_fields = array(
         "user_name_add" => "UserName",
         "user_name_update" => "UserName",
@@ -20,6 +59,25 @@ class Form_Iadmin_Users extends Zend_Form {
         "default_warehouse" => "default_warehouse",
         "default_warehouse_update" => "default_warehouse_update"
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     * user_id
+     * office_type
+     * province_id
+     * district_id
+     * tehsil_id
+     * parent_id
+     * office_id_edit
+     * province_id_edit
+     * district_id_edit
+     * district_id_edit
+     * tehsil_id_edit
+     * parent_id_edit
+     * warehouse_users_id_edit
+     * default_warehouse_update_hidden
+     */
     private $_hidden = array(
         "user_id" => "pkId",
         "office_type" => "pkId",
@@ -35,6 +93,15 @@ class Form_Iadmin_Users extends Zend_Form {
         "warehouse_users_id_edit" => "pkId",
         "default_warehouse_update_hidden" => "default_warehouse_update_hidden"
     );
+
+    /**
+     * $_list
+     * @var type
+     * user_type
+     * default_warehouse
+     * default_warehouse_update
+     * role
+     */
     private $_list = array(
         'user_type' => array(),
         'default_warehouse' => array(),
@@ -42,86 +109,85 @@ class Form_Iadmin_Users extends Zend_Form {
         'role' => array()
     );
 
-    
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
-        
-            $this->_list["role"]['6'] = 'Supplier';
-            $this->_list["role"]['21'] = 'Non-Supplier';
-        
+
+        $this->_list["role"]['6'] = 'Supplier';
+        $this->_list["role"]['21'] = 'Non-Supplier';
+        /**
+         * Generate Text Fields
+         */
         foreach ($this->_fields as $col => $name) {
+            /**
+             * email
+             * phone
+             * email_update
+             * phone_update
+             */
             switch ($col) {
                 case "email":
                 case "phone":
                 case "email_update":
                 case "phone_update":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
-
+                /**
+                 * user_name_add
+                 * user_name_update
+                 * search_policy_users
+                 * policy_users_add
+                 */
                 case "user_name_add":
                 case "user_name_update":
                 case "search_policy_users":
                 case "policy_users_add":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
+                /**
+                 * password
+                 * confirm_password
+                 * old_password
+                 * new_password
+                 */
                 case "password":
                 case "confirm_password":
-                    $this->addElement("password", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
                 case "old_password":
                 case "new_password":
-                    $this->addElement("password", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => true,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createPassword($col);
                     break;
-
                 default:
                     break;
             }
-
+            /**
+             * Generate Select Box
+             */
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array()
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
-
+        /**
+         * Generate Hidden Fields
+         */
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
-
-
+                /**
+                 * user_id
+                 * office_type
+                 * office_id_edit
+                 * province_id
+                 * district_id
+                 * tehsil_id
+                 * parent_id
+                 * province_id_edit
+                 * district_id_edit
+                 * tehsil_id_edit
+                 * parent_id_edit
+                 * warehouse_users_id_edit
+                 * default_warehouse_update_hidden
+                 */
                 case "user_id":
                 case "office_type":
                 case "office_id_edit":
@@ -135,8 +201,7 @@ class Form_Iadmin_Users extends Zend_Form {
                 case "parent_id_edit":
                 case "warehouse_users_id_edit":
                 case "default_warehouse_update_hidden":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -144,26 +209,11 @@ class Form_Iadmin_Users extends Zend_Form {
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

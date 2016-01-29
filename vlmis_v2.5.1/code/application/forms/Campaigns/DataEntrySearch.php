@@ -1,7 +1,35 @@
 <?php
 
-class Form_Campaigns_DataEntrySearch extends Zend_Form {
+/**
+ * Form_Campaigns_DataEntrySearch
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Campaigns
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Campaigns Data Entry Search
+ */
+class Form_Campaigns_DataEntrySearch extends Form_Base {
+
+    /**
+     * Fields for Form_Campaigns_DataEntrySearch
+     * 
+     * 
+     * campaign_id
+     * province_id
+     * district_id
+     * item_id
+     * day
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "campaign_id" => "Campaigns",
         "province_id" => "Province",
@@ -9,7 +37,21 @@ class Form_Campaigns_DataEntrySearch extends Zend_Form {
         "item_id" => "Product",
         "day" => "day"
     );
-  
+
+    /**
+     * Combo boxes for Form_Campaigns_DataEntrySearch
+     * 
+     * 
+     * campaign_id
+     * province_id
+     * district_id
+     * item_id
+     * day
+     * 
+     * 
+     *  $_list
+     * @var type 
+     */
     private $_list = array(
         'campaign_id' => array(),
         "province_id" => array('0' => 'Select Campaign'),
@@ -19,7 +61,8 @@ class Form_Campaigns_DataEntrySearch extends Zend_Form {
     );
 
     /**
-     * 
+     * Initializes Form Fields
+     * for Form_Campaigns_DataEntrySearch
      */
     public function init() {
         $auth = App_Auth::getInstance();
@@ -47,56 +90,23 @@ class Form_Campaigns_DataEntrySearch extends Zend_Form {
                 $this->_list["campaign_id"][$row['pkId']] = $row['campaignName'];
             }
         }
-      
-        foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                default:
-                    break;
-            }
 
-            if ($col == "campaign_id") {
-                $attribute_class = "form-control";
-            } else {
-                $attribute_class = "form-control";
-            }
+        //Generate fields for 
+        // form Form_Campaigns_DataEntrySearch
+        foreach ($this->_fields as $col => $name) {
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => $attribute_class),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
     }
 
     /**
-     * 
+     * Add Hidden Fields
+     * for Form_Campaigns_DataEntrySearch
      */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

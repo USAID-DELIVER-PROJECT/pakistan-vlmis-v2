@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for Warehouse Users
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * WarehouseUsers
+ *  WarehouseUsers
  */
 class WarehouseUsers
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $isDefault
      * @var boolean $isDefault
      */
     private $isDefault;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $user
      * @var Users
      */
     private $user;
 
     /**
+     * $warehouse
      * @var Warehouses
      */
     private $warehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

@@ -1,4 +1,9 @@
 <?php
+/**
+*  phtml for New Data Entry
+*/
+?>
+<?php
 $_fc = Zend_Controller_Front::getInstance()->getRequest();
 $notify = $_fc->getParam('notify');
 // If National user
@@ -40,9 +45,7 @@ if ($this->role_id == $this->campaign_user_type && empty($this->warehouse_id) ||
                                         <?php echo $this->translate($notify); ?>
                                     </div>
                                     <?php
-                                } /* else {
-                                  $style_display = "style='display: none;'";
-                                  } */
+                                } 
                                 ?>
                                 <form method="POST" name="campaign_form" id="campaign_form" action="">
                                     <!-- Row -->

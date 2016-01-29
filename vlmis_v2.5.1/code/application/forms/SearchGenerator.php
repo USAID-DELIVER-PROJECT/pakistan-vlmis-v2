@@ -1,7 +1,24 @@
 <?php
 
-class Form_SearchGenerator extends Zend_Form {
+/**
+ * Form_SearchGenerator
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Search Generator
+ */
+class Form_SearchGenerator extends Form_Base {
+
+    /**
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "ccm_status_list_id" => "Working Status",
         "serial_number" => "Serial Number",
@@ -14,16 +31,31 @@ class Form_SearchGenerator extends Zend_Form {
         "report_type" => "Report Type",
         "placed_at" => "Placed At"
     );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'ccm_make_id' => array(),
         'ccm_model_id' => array('' => 'Select Make First')
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "office_id" => "",
         "combo1_id" => "",
         "warehouse_id" => "",
         "model_id" => ""
     );
+
+    /**
+     * $_radio
+     * @var type 
+     */
     private $_radio = array(
         'placed_at' => array(
             "1" => "Select Warehouse",
@@ -34,8 +66,16 @@ class Form_SearchGenerator extends Zend_Form {
             "1" => "Summary View",
         )
     );
+
+    /**
+     * $_checkbox
+     * @var type 
+     */
     private $_checkbox = array();
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         //Generate working status Combo
         $ccm_status_list = new Model_CcmStatusList();
@@ -48,10 +88,10 @@ class Form_SearchGenerator extends Zend_Form {
         //Generate Make Combo
         $makes = new Model_CcmMakes();
         $makes->form_values = array('type_id' => Model_CcmAssetTypes::GENERATOR);
-      
+
         $result3 = $makes->getAllMakesByAssetType();
         $this->_list["ccm_make_id"][''] = "Select";
-        if ($result3 != false) {
+        if ($result3) {
             foreach ($result3 as $wh) {
                 $this->_list["ccm_make_id"][$wh['pkId']] = $wh['ccmMakeName'];
             }
@@ -59,7 +99,7 @@ class Form_SearchGenerator extends Zend_Form {
 
         //Generate source of supply Combo
         $stakeholder = new Model_Stakeholders();
-          $stakeholder->form_values['type'] = 1;
+        $stakeholder->form_values['type'] = 1;
         $result2 = $stakeholder->getAllStakeholders();
         $this->_list["source_id"][''] = "Select Source Of Supply";
         foreach ($result2 as $row2) {
@@ -73,9 +113,7 @@ class Form_SearchGenerator extends Zend_Form {
                 case "combo1_id":
                 case "warehouse_id":
                 case "model_id":
-
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -85,96 +123,35 @@ class Form_SearchGenerator extends Zend_Form {
             switch ($col) {
                 case "serial_number":
                 case "asset_id":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 case "working_since_from":
                 case "working_since_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
 
             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
+                parent::createRadio($col, $this->_radio[$col]);
             }
 
             if (in_array($col, array_keys($this->_checkbox))) {
-                $this->addElement("multiCheckbox", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_checkbox[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
+                parent::createMultiCheckbox($col, $this->_checkbox[$col]);
             }
         }
     }
 
-    public
-            function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+    /**
+     * Add Hidden Fields
+     */
+    public function addHidden() {
+        parent::createHiddenWithValidator("id");
     }
 
 }

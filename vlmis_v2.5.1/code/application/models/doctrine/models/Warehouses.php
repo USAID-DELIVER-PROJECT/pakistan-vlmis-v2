@@ -1,100 +1,120 @@
 <?php
 
-
+/**
+*  Model for Warehouses
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Warehouses
+ *  Warehouses
  */
 class Warehouses
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $warehouseName
      * @var string $warehouseName
      */
     private $warehouseName;
 
     /**
+     * $population
      * @var float $population
      */
     private $population;
 
     /**
+     * $ccemId
      * @var string $ccemId
      */
     private $ccemId;
 
     /**
+     * $startingOn
      * @var datetime $startingOn
      */
     private $startingOn;
 
     /**
+     * $fromEdit
      * @var datetime $fromEdit
      */
     private $fromEdit;
 
     /**
+     * $status
      * @var boolean $status
      */
     private $status;
 
     /**
+     * $isPlacementEnable
      * @var boolean $isPlacementEnable
      */
     private $isPlacementEnable;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $district
      * @var Locations
      */
     private $district;
 
     /**
+     * $province
      * @var Locations
      */
     private $province;
 
     /**
+     * $stakeholder
      * @var Stakeholders
      */
     private $stakeholder;
 
     /**
+     * $location
      * @var Locations
      */
     private $location;
 
     /**
+     * $stakeholderOffice
      * @var Stakeholders
      */
     private $stakeholderOffice;
 
     /**
+     * $warehouseType
      * @var WarehouseTypes
      */
     private $warehouseType;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;

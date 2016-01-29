@@ -1,90 +1,108 @@
 <?php
 
-
+/**
+*  Model for Campaign LQAS Data
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CampaignReadiness
+ *  CampaignReadiness
  */
 class CampaignReadiness
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $vaccineArrivalDate
      * @var datetime $vaccineArrivalDate
      */
     private $vaccineArrivalDate;
 
     /**
+     * $dcoAttendedMeeting
      * @var boolean $dcoAttendedMeeting
      */
     private $dcoAttendedMeeting;
 
     /**
+     * $edoAttendedMeeting
      * @var boolean $edoAttendedMeeting
      */
     private $edoAttendedMeeting;
 
     /**
+     * $allMembersAttendedMeeting
      * @var boolean $allMembersAttendedMeeting
      */
     private $allMembersAttendedMeeting;
 
     /**
+     * $numTallySheets
      * @var integer $numTallySheets
      */
     private $numTallySheets;
 
     /**
+     * $numFingerMarkers
      * @var integer $numFingerMarkers
      */
     private $numFingerMarkers;
 
     /**
+     * $arrivalDateMobilizationMaterial
      * @var datetime $arrivalDateMobilizationMaterial
      */
     private $arrivalDateMobilizationMaterial;
 
     /**
+     * $dpecMeetingDate
      * @var datetime $dpecMeetingDate
      */
     private $dpecMeetingDate;
 
     /**
+     * $remarks
      * @var text $remarks
      */
     private $remarks;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $campaign
      * @var Campaigns
      */
     private $campaign;
 
     /**
+     * $district
      * @var Locations
      */
     private $district;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

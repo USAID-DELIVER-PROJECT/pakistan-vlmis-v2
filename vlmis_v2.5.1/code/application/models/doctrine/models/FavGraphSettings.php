@@ -1,205 +1,246 @@
 <?php
 
-
+/**
+*  Model for Fav Graph Settings
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * FavGraphSettings
+ *  FavGraphSettings
  */
 class FavGraphSettings
 {
     /**
+     * $id
      * @var integer $id
      */
     private $id;
 
     /**
+     * $user
      * @var string $user
      */
     private $user;
 
     /**
+     * $selUser
      * @var string $selUser
      */
     private $selUser;
 
     /**
+     * $period
      * @var string $period
      */
     private $period;
 
     /**
+     * $selStakeholder
      * @var string $selStakeholder
      */
     private $selStakeholder;
 
     /**
+     * $year
      * @var string $year
      */
     private $year;
 
     /**
+     * $arrproducts
      * @var text $arrproducts
      */
     private $arrproducts;
 
     /**
+     * $compareOpt
      * @var string $compareOpt
      */
     private $compareOpt;
 
     /**
+     * $optvals
      * @var string $optvals
      */
     private $optvals;
 
     /**
+     * $arryearcomp
      * @var text $arryearcomp
      */
     private $arryearcomp;
 
     /**
+     * $arrstakecomp
      * @var text $arrstakecomp
      */
     private $arrstakecomp;
 
     /**
+     * $titles
      * @var text $titles
      */
     private $titles;
 
     /**
+     * $allfiles
      * @var text $allfiles
      */
     private $allfiles;
 
     /**
+     * $col
      * @var string $col
      */
     private $col;
 
     /**
+     * $unit
      * @var string $unit
      */
     private $unit;
 
     /**
+     * $xaxis
      * @var string $xaxis
      */
     private $xaxis;
 
     /**
+     * $ctype
      * @var string $ctype
      */
     private $ctype;
 
     /**
+     * $repTitle1
      * @var string $repTitle1
      */
     private $repTitle1;
 
     /**
+     * $repTitle2
      * @var string $repTitle2
      */
     private $repTitle2;
 
     /**
+     * $repTitle3
      * @var string $repTitle3
      */
     private $repTitle3;
 
     /**
+     * $repLogo
      * @var string $repLogo
      */
     private $repLogo;
 
     /**
+     * $periodLable
      * @var string $periodLable
      */
     private $periodLable;
 
     /**
+     * $comparisonTitle
      * @var string $comparisonTitle
      */
     private $comparisonTitle;
 
     /**
+     * $arrgroupcomp
      * @var text $arrgroupcomp
      */
     private $arrgroupcomp;
 
     /**
+     * $count1
      * @var integer $count1
      */
     private $count1;
 
     /**
+     * $logType
      * @var string $logType
      */
     private $logType;
 
     /**
+     * $arrparam
      * @var text $arrparam
      */
     private $arrparam;
 
     /**
+     * $arrleftcol
      * @var text $arrleftcol
      */
     private $arrleftcol;
 
     /**
+     * $leftcol
      * @var string $leftcol
      */
     private $leftcol;
 
     /**
+     * $arrprovinces
      * @var text $arrprovinces
      */
     private $arrprovinces;
 
     /**
+     * $arrdistricts
      * @var text $arrdistricts
      */
     private $arrdistricts;
 
     /**
+     * $provinces
      * @var text $provinces
      */
     private $provinces;
 
     /**
+     * $districts
      * @var text $districts
      */
     private $districts;
 
     /**
+     * $selProv
      * @var integer $selProv
      */
     private $selProv;
 
     /**
+     * $repDesc
      * @var text $repDesc
      */
     private $repDesc;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

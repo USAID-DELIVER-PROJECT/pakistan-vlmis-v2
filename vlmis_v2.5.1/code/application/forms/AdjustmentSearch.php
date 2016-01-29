@@ -1,7 +1,34 @@
 <?php
 
-class Form_AdjustmentSearch extends Zend_Form {
+/**
+ * Form_AdjustmentSearch
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Adjustmment Search
+ */
+class Form_AdjustmentSearch extends Form_Base {
+
+    /**
+     * Form Fields
+     * @adjustment_date: Adjustment date
+     * @ref_no: Reference number
+     * @adjustment_no: Adjustment number
+     * @adjustment_type: Adjustment type
+     * @date_from: Date from
+     * @date_to: Date to
+     * @batch_no:Batch number
+     * @product:Product
+     * @expiry_date: Expiry date
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "adjustment_date" => "Adjustment Date",
         "ref_no" => "Reference number",
@@ -13,16 +40,29 @@ class Form_AdjustmentSearch extends Zend_Form {
         "product" => "Product",
         "expiry_date" => "Expiry Date"
     );
+
+    /**
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "pk_id" => "ID",
         "hdn_batch_no" => "hdn_batch_no"
     );
+
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'adjustment_type' => array(),
         'product' => array(),
         'batch_no' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         $transaction_types = new Model_TransactionTypes();
@@ -45,88 +85,33 @@ class Form_AdjustmentSearch extends Zend_Form {
 
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
-
                 case "adjustment_no":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-
-                case "adjustment_date":
-                case "expiry_date":
-
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "style" => "position: relative; z-index: 100000;"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
-                case "date_from":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "readonly" => "true", "style" => "position: relative; z-index: 100000;"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                        "value" => $date_from
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                case "date_to":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "readonly" => "true", "style" => "position: relative; z-index: 100000;"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array(),
-                        "value" => $date_to
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
                 case "ref_no":
                 case "transaction_reference":
                 case "comments":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
+                    break;
+                case "adjustment_date":
+                case "expiry_date":
+                    parent::createText($col);
+                    break;
+                case "date_from":
+                    parent::createReadOnlyTextWithValue($col, $date_from);
+                    break;
+                case "date_to":
+                    parent::createReadOnlyTextWithValue($col, $date_to);
                     break;
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
         foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-
-
-                case "hdn_batch_no":
-
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "hdn_batch_no") {
+                parent::createHidden($col);
             }
         }
     }

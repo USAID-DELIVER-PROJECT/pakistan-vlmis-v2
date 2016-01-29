@@ -1,18 +1,60 @@
 <?php
 
-class Form_ProductLedger extends Zend_Form {
+/**
+ * Form_ProductLedger
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Product Ledger
+ * 
+ * Inherits: Zend Form
+ */
+class Form_ProductLedger extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * @Product: Product
+     * @from_date: From Date
+     * @to_date: To Date
+     * @detail_summary: Detail Summary
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "product" => "Product",
         "from_date" => "From Date",
         "to_date" => "To Date",
         "detail_summary" => "detail_summary"
     );
-    private $_hidden = array(
-    );
+
+    /**
+     * $_list
+     * 
+     * Private Variable
+     * 
+     * List
+     * @product
+     * 
+     * @var type 
+     */
     private $_list = array(
         'product' => array()
     );
+
+    /**
+     * $_radio
+     * @var type 
+     */
     private $_radio = array(
         'detail_summary' => array(
             "1" => "Summary",
@@ -20,6 +62,9 @@ class Form_ProductLedger extends Zend_Form {
         )
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         $item_pack_sizes = new Model_ItemPackSizes();
@@ -36,41 +81,18 @@ class Form_ProductLedger extends Zend_Form {
             switch ($col) {
                 case "from_date":
                 case "to_date":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", 'readonly' => 'true'),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
-             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
-            } 
-            
+            if (in_array($col, array_keys($this->_radio))) {
+                parent::createRadio($col, $this->_radio[$col]);
+            }
         }
     }
 

@@ -1,7 +1,37 @@
 <?php
 
-class Form_Campaigns_ProductGroups extends Zend_Form {
+/**
+ * Form_Campaigns_ProductGroups
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Campaigns
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Campaigns Product Groups
+ */
+class Form_Campaigns_ProductGroups extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * @item_id: Product
+     * @item_ad_add: Product
+     * @item_id_edit: Product
+     * @age_group1_min: Age Group1 Min
+     * @age_group1_max: Age Group1 Max
+     * @age_group2_min: Age Group2 Min
+     * @age_group2_max: Age Group2 Max
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "item_id" => "Product",
         "item_id_add" => "Product",
@@ -11,15 +41,34 @@ class Form_Campaigns_ProductGroups extends Zend_Form {
         "age_group2_min" => "Age Group2 Min",
         "age_group2_max" => "Age Group2 Max"
     );
+
+    /**
+     * $_hidden
+     * 
+     * Private Variable
+     * 
+     * @var type 
+     */
     private $_hidden = array(
         "campaign_item_groups_id" => "campaign_item_groups_id"
     );
+
+    /**
+     * $_list
+     * 
+     * Private Variable
+     * 
+     * @var type 
+     */
     private $_list = array(
         "item_id" => array(),
         "item_id_add" => array(),
         "item_id_edit" => array(),
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
 
         $campaign = new Model_Campaigns();
@@ -40,41 +89,21 @@ class Form_Campaigns_ProductGroups extends Zend_Form {
                 case "age_group1_max":
                 case "age_group2_min":
                 case "age_group2_max":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control  input-xsmall",),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithAdditionalClass($col, "input-xsmall");
                     break;
                 default:
                     break;
             }
-           
+
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
-         foreach ($this->_hidden as $col => $name) {
-                switch ($col) {
-
-                    case "campaign_item_groups_id":
-                        $this->addElement("hidden", $col);
-                        $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                        break;
-                    default:
-                        break;
-                }
+        foreach ($this->_hidden as $col => $name) {
+            if ($col == "campaign_item_groups_id") {
+                parent::createHidden($col);
             }
+        }
     }
 
 }

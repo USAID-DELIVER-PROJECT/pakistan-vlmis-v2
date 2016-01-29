@@ -1,25 +1,49 @@
 <?php
 
 /**
+ * Form_TransferStockVaccines
+ *
  * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
  */
-class Form_TransferStockVaccines extends Zend_Form {
 
+/**
+*  Form for Transfer Stock Vaccines
+*/
+
+class Form_TransferStockVaccines extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Form Fields
+     * @item_pack_size_id: Product
+     * @stock_batch_id: Batch No
+     * @asset_id: Location
+     * @quantity: Quantity
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "item_pack_size_id" => "Product",
         "stock_batch_id" => "Batch No",
         "asset_id" => "Location",
         "quantity" => "Quantity"
     );
+    
+    /**
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'asset_id' => array()
     );
-    private $_hidden = array(
-        "id" => "",
-    );
-
+    
     /**
-     * 
+     * Initializes Form Fields
      */
     public function init() {
 
@@ -38,51 +62,20 @@ class Form_TransferStockVaccines extends Zend_Form {
                 case "item_pack_size_id":
                 case "stock_batch_id":
                 case "quantity":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
             }
 
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                        array(
-                            "validator" => "Float",
-                            "breakChainOnFailure" => false,
-                            "options" => array(
-                                "messages" => array("notFloat" => $name . " must be a valid option")
-                            )
-                        )
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-            }
-        }
-
-        foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-
-                default:
-                    break;
+                parent::createSelectWithValidator($col, $name, $this->_list[$col]);
             }
         }
     }
 
     /**
-     * 
+     * Read Fields
      */
     public function readFields() {
         $this->getElement('item_pack_size_id')->setAttrib("readonly", "true");
@@ -90,28 +83,10 @@ class Form_TransferStockVaccines extends Zend_Form {
     }
 
     /**
-     * 
+     * Add Hidden Fields
      */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+       parent::createHiddenWithValidator("id");
     }
 
 }

@@ -1,22 +1,78 @@
 <?php
 
-class Form_Iadmin_Office extends Zend_Form {
+/**
+ * Form_Iadmin_Office
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Iadmin Office
+ */
+class Form_Iadmin_Office extends Form_Base {
+
+    /**
+     * Fields for Form_Iadmin_Office
+     * 
+     * 
+     * office
+     * geo_level
+     * stakeholder
+     * 
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "office" => "office",
         "geo_level" => "geo_level",
         "stakeholder" => "stakeholder"
     );
+
+    /**
+     * Hidden fields for Form_Iadmin_Office
+     * 
+     * 
+     * stakeholder_id
+     * 
+     * 
+     * 
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "stakeholder_id" => "stakeholder_id"
     );
+
+    /**
+     * Combo boxes for Form_Iadmin_Office
+     * 
+     * 
+     * geo_level
+     * stakeholder
+     * 
+     * 
+     * 
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'geo_level' => array(),
         'stakeholder' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         //Generate Asset Type Combo
+        // for Form_Iadmin_Office
         $geo_level = new Model_Locations();
 
         $result1 = $geo_level->getOfficeGeoLevels();
@@ -32,68 +88,32 @@ class Form_Iadmin_Office extends Zend_Form {
             $this->_list["stakeholder"][$rs['pkId']] = $rs['stakeholderName'];
         }
 
-
+        // Generate fields
+        // for Form_Iadmin_Office
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "office":
-
-                    $this->addElement("text", $col, array(
-                       "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "office") {
+                parent::createText($col);
             }
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
 
+        // Generate hidden fields 
+        // for Form_Iadmin_Office
         foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-
-                case "stakeholder_id":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "stakeholder_id") {
+                parent::createHidden($col);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     * for Form_Iadmin_Office
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

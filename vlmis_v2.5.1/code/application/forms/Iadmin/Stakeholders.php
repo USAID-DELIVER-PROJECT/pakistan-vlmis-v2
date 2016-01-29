@@ -1,7 +1,41 @@
 <?php
 
-class Form_Iadmin_Stakeholders extends Zend_Form {
+/**
+ * Form_Iadmin_Stakeholders
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Iadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+*  Form for Iadmin Stakeholders
+*/
+
+class Form_Iadmin_Stakeholders extends Form_Base {
+
+    /**
+     * Fields 
+     * for Form_Iadmin_Stakeholders
+     * 
+     * 
+     * 
+     * stakeholder_name
+     * geo_level
+     * sector
+     * activity
+     * stakeholder_activity
+     * stakeholder_type
+     * stakeholder_sector
+     * 
+     * 
+     * 
+     * $_fields
+     * @var type 
+     */
     private $_fields = array(
         "stakeholder_name" => "stakeholder",
         "geo_level" => "geo_level",
@@ -11,18 +45,55 @@ class Form_Iadmin_Stakeholders extends Zend_Form {
         "stakeholder_type" => "stakeholder_type",
         "stakeholder_sector" => "stakeholder_sector"
     );
+    
+    /**
+     * Hidden fields
+     * for Form_Iadmin_Stakeholders
+     * 
+     * 
+     * 
+     * stakeholder_id
+     * stakeholder_activity_id
+     * stakeholder_type_id
+     * stakeholder_sector_id
+     * 
+     * 
+     * 
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "stakeholder_id" => "stakeholder_id",
         "stakeholder_activity_id" => "stakeholder_activity_id",
         "stakeholder_type_id" => "stakeholder_type_id",
         "stakeholder_sector_id" => "stakeholder_sector_id"
     );
+    
+    /**
+     * Combo boxes
+     * for Form_Iadmin_Stakeholders
+     * 
+     * 
+     * 
+     * geo_level
+     * sector
+     * activity
+     * 
+     * 
+     * 
+     * $_list
+     * @var type 
+     */
     private $_list = array(
         'geo_level' => array(),
         'sector' => array(),
         'activity' => array()
     );
 
+    /**
+     * Initializes Form Fields
+     * for Form_Iadmin_Stakeholders
+     */
     public function init() {
         //Generate Asset Type Combo
         $geo_level = new Model_Locations();
@@ -48,36 +119,27 @@ class Form_Iadmin_Stakeholders extends Zend_Form {
             $this->_list["activity"][$rs['pkId']] = $rs['activity'];
         }
 
+        
+        //Generate fields 
+        // for Form_Iadmin_Stakeholders
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
                 case "stakeholder_name":
                 case "stakeholder_activity":
                 case "stakeholder_type":
                 case "stakeholder_sector":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
                 default:
                     break;
             }
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
         }
 
+        // Generate Hidden fields 
+        // for Form_Iadmin_Stakeholders
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
 
@@ -85,8 +147,7 @@ class Form_Iadmin_Stakeholders extends Zend_Form {
                 case "stakeholder_activity_id":
                 case "stakeholder_type_id" :
                 case "stakeholder_sector_id":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -94,26 +155,12 @@ class Form_Iadmin_Stakeholders extends Zend_Form {
         }
     }
 
+    /**
+     * Add Hidden Fields
+     * for Form_Iadmin_Stakeholders
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

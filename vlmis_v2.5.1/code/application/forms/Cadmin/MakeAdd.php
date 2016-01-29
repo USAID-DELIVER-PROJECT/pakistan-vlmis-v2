@@ -1,82 +1,92 @@
 <?php
 
-class Form_Cadmin_MakeAdd extends Zend_Form {
+/**
+ * Form_Cadmin_MakeAdd
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage Cadmin
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
 
+/**
+ *  Form for Cadmin Make Add
+ */
+class Form_Cadmin_MakeAdd extends Form_Base {
+
+    /**
+     * $_fields
+     * 
+     * Private Variable
+     * 
+     * Form Fields
+     * @ccm_make_name: Make Name
+     * @status: Status
+     * 
+     * @var type 
+     */
     private $_fields = array(
         "ccm_make_name" => "Make Name",
         "status" => "Status"
     );
+
+    /**
+     * $_radio
+     * 
+     * Private Variable
+     * 
+     * @status: Active,Inactive
+     * 
+     * @var type 
+     */
     private $_radio = array(
         'status' => array(
             "1" => "Active",
             "0" => "In Active"
         )
     );
+
+    /**
+     * $_hidden
+     * 
+     * Private Variable
+     * 
+     * @make_id: pkId
+     * 
+     * @var type 
+     */
     private $_hidden = array(
         "make_id" => "pkId"
     );
 
+    /**
+     * Initializes Form Fields
+     */
     public function init() {
         foreach ($this->_fields as $col => $name) {
-            switch ($col) {
-                case "ccm_make_name":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "ccm_make_name") {
+                parent::createText($col);
             }
 
             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createRadio($col, $this->_radio[$col]);
             }
         }
 
         foreach ($this->_hidden as $col => $name) {
-            switch ($col) {
-                case "make_id":
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
-                    break;
-                default:
-                    break;
+            if ($col == "make_id") {
+                parent::createHidden($col);
             }
         }
     }
 
+    /**
+     * Add Hidden Fields
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array(
-                array(
-                    "validator" => "NotEmpty",
-                    "breakChainOnFailure" => true,
-                    "options" => array("messages" => array("isEmpty" => "ID cannot be blank"))
-                ),
-                array(
-                    "validator" => "Digits",
-                    "breakChainOnFailure" => false,
-                    "options" => array("messages" => array("notDigits" => "ID must be numeric")
-                    )
-                )
-            )
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHiddenWithValidator("id");
     }
 
 }

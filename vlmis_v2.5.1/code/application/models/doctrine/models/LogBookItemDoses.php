@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Model for Log Book Item Doses
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * LogBookItemDoses
+ *  LogBookItemDoses
  */
 class LogBookItemDoses
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $doses
      * @var integer $doses
      */
     private $doses;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $itemPackSize
      * @var ItemPackSizes
      */
     private $itemPackSize;
 
     /**
+     * $logBook
      * @var LogBook
      */
     private $logBook;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

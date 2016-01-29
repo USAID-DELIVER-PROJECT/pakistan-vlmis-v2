@@ -1,60 +1,72 @@
 <?php
 
-
+/**
+*  Model for Rack Information
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * RackInformation
+ *  RackInformation
  */
 class RackInformation
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $rackType
      * @var string $rackType
      */
     private $rackType;
 
     /**
+     * $noOfBins
      * @var smallint $noOfBins
      */
     private $noOfBins;
 
     /**
+     * $binNetCapacity
      * @var float $binNetCapacity
      */
     private $binNetCapacity;
 
     /**
+     * $grossCapacity
      * @var float $grossCapacity
      */
     private $grossCapacity;
 
     /**
+     * $capacityUnit
      * @var string $capacityUnit
      */
     private $capacityUnit;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

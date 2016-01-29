@@ -1,140 +1,168 @@
 <?php
 
-
+/**
+*  Model for Pipeline Consignments
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PipelineConsignments
+ *  PipelineConsignments
  */
 class PipelineConsignments
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $voucherNumber
      * @var string $voucherNumber
      */
     private $voucherNumber;
 
     /**
+     * $transactionCounter
      * @var integer $transactionCounter
      */
     private $transactionCounter;
 
     /**
+     * $expectedArrivalDate
      * @var datetime $expectedArrivalDate
      */
     private $expectedArrivalDate;
 
     /**
+     * $referenceNumber
      * @var string $referenceNumber
      */
     private $referenceNumber;
 
     /**
+     * $description
      * @var text $description
      */
     private $description;
 
     /**
+     * $batchNumber
      * @var string $batchNumber
      */
     private $batchNumber;
 
     /**
+     * $productionDate
      * @var datetime $productionDate
      */
     private $productionDate;
 
     /**
+     * $expiryDate
      * @var datetime $expiryDate
      */
     private $expiryDate;
 
     /**
+     * $unitPrice
      * @var float $unitPrice
      */
     private $unitPrice;
 
     /**
+     * $quantity
      * @var integer $quantity
      */
     private $quantity;
 
     /**
+     * $receivedQuantity
      * @var integer $receivedQuantity
      */
     private $receivedQuantity;
 
     /**
+     * $masterId
      * @var integer $masterId
      */
     private $masterId;
 
     /**
+     * $status
      * @var string $status
      */
     private $status;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $stakeholderActivity
      * @var StakeholderActivities
      */
     private $stakeholderActivity;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $itemPackSize
      * @var ItemPackSizes
      */
     private $itemPackSize;
 
     /**
+     * $manufacturer
      * @var PackInfo
      */
     private $manufacturer;
 
     /**
+     * $vvmType
      * @var VvmTypes
      */
     private $vvmType;
 
     /**
+     * $fromWarehouse
      * @var Warehouses
      */
     private $fromWarehouse;
 
     /**
+     * $toWarehouse
      * @var Warehouses
      */
     private $toWarehouse;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;
 
     /**
+     * $stockBatchWarehouse
      * @var StockBatchWarehouses
      */
     private $stockBatchWarehouse;
 
     /**
+     * $transactionType
      * @var TransactionTypes
      */
     private $transactionType;

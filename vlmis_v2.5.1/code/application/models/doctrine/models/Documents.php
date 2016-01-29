@@ -1,50 +1,60 @@
 <?php
 
-
+/**
+*  Models for Documents
+*/
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Documents
+ *  Documents
  */
 class Documents
 {
     /**
+     * $pkId
      * @var integer $pkId
      */
     private $pkId;
 
     /**
+     * $docTitle
      * @var string $docTitle
      */
     private $docTitle;
 
     /**
+     * $docPath
      * @var string $docPath
      */
     private $docPath;
 
     /**
+     * $createdDate
      * @var datetime $createdDate
      */
     private $createdDate;
 
     /**
+     * $modifiedDate
      * @var datetime $modifiedDate
      */
     private $modifiedDate;
 
     /**
+     * $modifiedBy
      * @var Users
      */
     private $modifiedBy;
 
     /**
+     * $docCategory
      * @var DocumentCategories
      */
     private $docCategory;
 
     /**
+     * $createdBy
      * @var Users
      */
     private $createdBy;

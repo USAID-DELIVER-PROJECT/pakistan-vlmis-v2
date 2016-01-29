@@ -1,11 +1,42 @@
 <?php
 
+/**
+ * Zend_View_Helper_ExplorerReport
+ *
+ * 
+ *
+ *     Logistics Management Information System for Vaccines
+ * @subpackage reports
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ */
+
+
+
+
+
+/**
+ *  Zend View Helper Explorer Report
+ */
+
 class Zend_View_Helper_ExplorerReport extends Zend_View_Helper_Abstract {
 
+    /**
+     * Explorer Report
+     * @return \Zend_View_Helper_ExplorerReport
+     */
     public function explorerReport() {
         return $this;
     }
 
+    /**
+     * ajaxExplorerReport
+     * @param type $stkid
+     * @param type $wh_id
+     * @param type $yy
+     * @param type $mm
+     * @return boolean
+     */
     public function ajaxExplorerReport($stkid, $wh_id, $yy, $mm) {
         $stakeholder_item_ids = "";
         $em = Zend_Registry::get('doctrine');
@@ -36,6 +67,14 @@ class Zend_View_Helper_ExplorerReport extends Zend_View_Helper_Abstract {
         }
     }
 
+    /**
+     * Get Monthly Receive Quantity Warehouse
+     * @param type $mm
+     * @param type $yy
+     * @param type $item_id
+     * @param type $wh_id
+     * @return type
+     */
     public function getMonthlyReceiveQuantityWarehouse($mm, $yy, $item_id, $wh_id) {
         $em = Zend_Registry::get('doctrine');
         $row = $em->getConnection()->prepare("SELECT getMonthlyRcvQtyWH($mm,$yy,$item_id,$wh_id) as rcv from DUAL");
@@ -43,6 +82,13 @@ class Zend_View_Helper_ExplorerReport extends Zend_View_Helper_Abstract {
         return $row->fetchAll();
     }
 
+    /**
+     * Get Warehouse Data By Item And Warehouse Id
+     * @param type $wh_id
+     * @param type $item_id
+     * @param type $previous_selected
+     * @return boolean
+     */
     public function getWarehouseDataByItemAndWarehouseId($wh_id, $item_id, $previous_selected) {
         $em = Zend_Registry::get('doctrine');
         $str_sql = $em->createQueryBuilder()

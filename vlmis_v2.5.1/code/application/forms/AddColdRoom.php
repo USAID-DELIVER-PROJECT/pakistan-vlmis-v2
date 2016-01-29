@@ -1,7 +1,54 @@
 <?php
+/**
+ * 
+ * Form_AddColdRoom
+ *
+ * Logistics Management Information System for Vaccines
+ * @author     Ajmal Hussain <ajmal@deliver-pk.org>
+ * @version    2.5.1
+ * 
+ */
 
-class Form_AddColdRoom extends Zend_Form {
+/**
+ * 
+ * Form for Add Cold Room
+ * 
+ * Function: To Add More Cold Rooms
+ * 
+ */
+class Form_AddColdRoom extends Form_Base {
 
+    /**
+     * Form Fields
+     * 
+     * Private Variable
+     * 
+     * @serial_number: Serial Number
+     * @working_since: Working Since Year
+     * @ccm_model_id: Model
+     * @stakeholder_id: Stakeholder
+     * @warehouse_id: Warehouse
+     * @cooling_system: Cooling System
+     * @has_voltage: Has Voltage Regulator
+     * @ccm_asset_sub_type_id: Asset Sub Type Id
+     * @temperature_recording_system: Temperature Recording System
+     * @type_recording_system: Type Recording System
+     * @refrigerator_gas_type: Refrigerator Gas Type
+     * @backup_generator: Backup Generator
+     * @ccm_model_name: Ccm Model Name
+     * @asset_dimension_length: Asset Dimension Length
+     * @asset_dimension_width: Asset Dimension Width
+     * @asset_dimension_height: Asset Dimension Height
+     * @gross_capacity: Gross Capacity
+     * @net_capacity: Net Capacity
+     * @placed_at: Placed at
+     * @no_of_phases: No of Phases
+     * @n: Number
+     * @make: Make
+     * 
+     * @var type
+     *  
+     */
     private $_fields = array(
         "serial_number" => "Serial Number",
         "working_since" => "Working Since Year",
@@ -26,6 +73,20 @@ class Form_AddColdRoom extends Zend_Form {
         "n" => "No",
         "make" => "make"
     );
+
+    /**
+     * 
+     * $_list
+     * @var type 
+     * @ccm_model_id: Model
+     * @ccm_asset_sub_type_id: Asset Sub Type Id
+     * @vvm_type_id: VVM Type id
+     * @type_recording_system: Type Recording System
+     * @refrigerator_gas_type: Refrigerator Gas Type
+     * @backup_generator: Backup Generator
+     * @make: Make
+     * @type_recording_system: Type Recording System
+     */
     private $_list = array(
         'ccm_model_id' => array('' => 'Select Make First'),
         'stakeholder_id' => array(),
@@ -36,6 +97,17 @@ class Form_AddColdRoom extends Zend_Form {
         'make' => array(),
         'temperature_recording_system' => array()
     );
+
+    /**
+     * Private Variable
+     * 
+     * Array
+     * 
+     * $_radio
+     * @var type 
+     * 
+     * 
+     */
     private $_radio = array(
         'placed_at' => array(
             "1" => "Unallocated",
@@ -50,14 +122,40 @@ class Form_AddColdRoom extends Zend_Form {
             "0" => "No",
         )
     );
+
+    /**
+     * Private Variable
+     * 
+     * Array
+     * 
+     * 
+     * $_checkbox
+     * @var type 
+     */
     private $_checkbox = array();
+
+    /**
+     * Private Variable
+     * 
+     * Array
+     * 
+     * $_hidden
+     * @var type 
+     */
     private $_hidden = array(
         "ccm_id" => "pkId",
         "model_hidden" => "pkId"
     );
 
+    /**
+     * Initializes Form fields
+     */
     public function init() {
-        //Generate Make Combo
+
+
+        /**
+         * Generate Makes Combo
+         */
         $makes = new Model_CcmMakes();
         $makes->form_values = array('type_id' => Model_CcmAssetTypes::COLDROOM);
         $result3 = $makes->getAllMakesByAssetType();
@@ -65,8 +163,9 @@ class Form_AddColdRoom extends Zend_Form {
         foreach ($result3 as $rs) {
             $this->_list["make"][$rs['pkId']] = $rs['ccmMakeName'];
         }
-
-        //Generate Asset Sub Type Combo
+        /**
+         * Generate Asset Sub Type Combo
+         */
         $asset_type = new Model_CcmAssetTypes();
         $asset_type->form_values = array('parent_id' => Model_CcmAssetTypes::COLDROOM);
         $result4 = $asset_type->getAssetSubTypes();
@@ -75,7 +174,9 @@ class Form_AddColdRoom extends Zend_Form {
             $this->_list["ccm_asset_sub_type_id"][$rs['pkId']] = $rs['assetTypeName'];
         }
 
-        //Generate Type Rrecording System Combo
+        /**
+         * Generate Type Rrecording System Combo
+         */
         $list_master = new Model_ListMaster();
         $list_master->form_values = array('pk_id' => Model_ListMaster::TYPE_OF_RECORDING_SYSTEM);
         $result5 = $list_master->getListDetailByType();
@@ -84,7 +185,9 @@ class Form_AddColdRoom extends Zend_Form {
             $this->_list["type_recording_system"][$rs['pkId']] = $rs['listValue'];
         }
 
-        //Generate Refrigerator Gas Type Combo
+        /**
+         * Generate Refrigerator Gas Type Combo
+         */
         $list_master->form_values = array('pk_id' => Model_ListMaster::REFRRIGERATOR_GAS_TYPE);
         $result6 = $list_master->getListDetailByType();
         $this->_list["refrigerator_gas_type"][''] = "Select";
@@ -92,7 +195,9 @@ class Form_AddColdRoom extends Zend_Form {
             $this->_list["refrigerator_gas_type"][$rs['pkId']] = $rs['listValue'];
         }
 
-        //Generate Backup Generator Combo
+        /**
+         * Generate Backup Generator Combo
+         */
         $list_master->form_values = array('pk_id' => Model_ListMaster::HAS_WORKING_BACKUP_GENERATOR);
         $result7 = $list_master->getListDetailByType();
         $this->_list["backup_generator"][''] = "Select";
@@ -100,136 +205,91 @@ class Form_AddColdRoom extends Zend_Form {
             $this->_list["backup_generator"][$rs['pkId']] = $rs['listValue'];
         }
 
-        //Generate Temperature Recording System Combo
+        /**
+         * Generate Temperature Recording System Combo
+         */
         $list_master->form_values = array('pk_id' => Model_ListMaster::TEMPERATURE_RECORDING_SYSTEM);
         $result8 = $list_master->getListDetailByType();
         $this->_list["temperature_recording_system"][''] = "Select";
         foreach ($result8 as $rs) {
             $this->_list["temperature_recording_system"][$rs['pkId']] = $rs['listValue'];
         }
-
+        /**
+         * Generate Text Fields
+         */
         foreach ($this->_fields as $col => $name) {
             switch ($col) {
+                /**
+                 * Cooling System Text Field
+                 */
                 case "cooling_system":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createText($col);
                     break;
+                /**
+                 * Working Since Text Field
+                 */
                 case "working_since":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "readonly" => "true"),
-                        "allowEmpty" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createReadOnlyText($col);
                     break;
+                /**
+                 * Gross Capacity Text Field
+                 */
                 case "gross_capacity":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Gross Capacity"),
-                        "allowEmpty" => true,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Gross Capacity");
                     break;
+                /**
+                 * Net Capacity Text Field
+                 */
                 case "net_capacity":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Net Capacity"),
-                        "allowEmpty" => true,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Net Capacity");
                     break;
-
+                /**
+                 * Asset Dimension Length Text Field
+                 */
                 case "asset_dimension_length":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Length"),
-                        "allowEmpty" => false,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Length");
                     break;
-
+                /**
+                 * Asset Dimension Width Text Field
+                 */
                 case "asset_dimension_width":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Width"),
-                        "allowEmpty" => false,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Width");
                     break;
-
+                /**
+                 * Asset Dimension Height Text Field
+                 */
                 case "asset_dimension_height":
-                    $this->addElement("text", $col, array(
-                        "attribs" => array("class" => "form-control", "placeholder" => "Height"),
-                        "allowEmpty" => false,
-                        "required" => false,
-                        "filters" => array("StringTrim", "StripTags"),
-                        "validators" => array()
-                    ));
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createTextWithPlaceholder($col, "Height");
                     break;
                 default:
                     break;
             }
-
+            /**
+             * Generate Select Boxes
+             */
             if (in_array($col, array_keys($this->_list))) {
-                $this->addElement("select", $col, array(
-                    "attribs" => array("class" => "form-control"),
-                    "filters" => array("StringTrim", "StripTags"),
-                    "allowEmpty" => true,
-                    "required" => false,
-                    "registerInArrayValidator" => false,
-                    "multiOptions" => $this->_list[$col],
-                    "validators" => array(
-                    )
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                parent::createSelect($col, $this->_list[$col]);
             }
-
+            /**
+             * Generate Radio Buttons
+             */
             if (in_array($col, array_keys($this->_radio))) {
-                $this->addElement("radio", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_radio[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
+                parent::createRadio($col, $this->_radio[$col]);
             }
 
+            /**
+             * Generate CheckBoxes
+             */
             if (in_array($col, array_keys($this->_checkbox))) {
-                $this->addElement("multiCheckbox", $col, array(
-                    "attribs" => array(),
-                    "allowEmpty" => true,
-                    'separator' => '',
-                    "filters" => array("StringTrim", "StripTags"),
-                    "validators" => array(),
-                    "multiOptions" => $this->_checkbox[$col]
-                ));
-                $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag")->removeDecorator("<br>");
+                parent::createMultiCheckbox($col, $this->_checkbox[$col]);
             }
         }
+        //foreach loop
         foreach ($this->_hidden as $col => $name) {
             switch ($col) {
                 case "ccm_id":
                 case "model_hidden":
-
-                    $this->addElement("hidden", $col);
-                    $this->getElement($col)->removeDecorator("Label")->removeDecorator("HtmlTag");
+                    parent::createHidden($col);
                     break;
                 default:
                     break;
@@ -237,14 +297,15 @@ class Form_AddColdRoom extends Zend_Form {
         }
     }
 
+    /**
+     *  Add Hidden Fields
+     * 
+     * Function: 
+     * 
+     * To Add hidden fields
+     * 
+     */
     public function addHidden() {
-        $this->addElement("hidden", "id", array(
-            "attribs" => array("class" => "hidden"),
-            "allowEmpty" => false,
-            "filters" => array("StringTrim"),
-            "validators" => array()
-        ));
-        $this->getElement("id")->removeDecorator("Label")->removeDecorator("HtmlTag");
+        parent::createHidden("id");
     }
-
 }
