@@ -1,0 +1,10 @@
+SET foreign_key_checks = 0;
+INSERT INTO `locations` VALUES (1, 'Punjab', 2, 10, 2, 1, 1, NULL, NULL, 1, NULL, 1, '0000-0-0 00:00:00');
+INSERT INTO `locations` VALUES (2, 'Sindh', 2, 10, 2, 2, 2, NULL, NULL, 1, NULL, 1, '0000-0-0 00:00:00');
+INSERT INTO `locations` VALUES (3, 'Khyber Pakhtunkhwa', 2, 10, 2, 3, 3, 33002063, NULL, 1, NULL, 1, '0000-0-0 00:00:00');
+INSERT INTO `locations` VALUES (4, 'Balochistan', 2, 10, 2, 4, 4, NULL, NULL, 1, NULL, 1, '0000-0-0 00:00:00');
+INSERT INTO `locations` VALUES (5, 'AJK', 2, 10, 3, 5, 5, NULL, NULL, 1, NULL, 1, '0000-0-0 00:00:00');
+INSERT INTO `locations` VALUES (6, 'FATA', 2, 10, 3, 6, 6, NULL, NULL, 1, NULL, 1, '0000-0-0 00:00:00');
+INSERT INTO `locations` VALUES (7, 'Gilgit Baltistan', 2, 10, 3, 7, 7, NULL, NULL, 1, NULL, 1, '0000-0-0 00:00:00');
+INSERT INTO `locations` VALUES (8, 'Islamabad', 2, 10, 3, 8, 78, NULL, NULL, 1, NULL, 1, '0000-0-0 00:00:00');
+INSERT INTO `locations` VALUES (10, 'National', 2, 10, 1, 10, 10, NULL, NULL, 1, NULL, 1, '0000-0-0 00:00:00');

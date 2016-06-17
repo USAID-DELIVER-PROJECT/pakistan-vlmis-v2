@@ -1,0 +1,15 @@
+SET foreign_key_checks = 0;
+INSERT INTO `location_types` VALUES (1, 'Country', 0, 1, 1, '2014-8-29 14:40:16', 1, '2016-4-7 14:07:38');
+INSERT INTO `location_types` VALUES (2, 'Province', 1, 2, 1, '2014-8-29 14:40:16', 1, '2016-4-7 14:50:24');
+INSERT INTO `location_types` VALUES (3, 'Region', 0, 2, 1, '2014-8-29 14:40:16', 1, '2016-4-7 14:50:41');
+INSERT INTO `location_types` VALUES (4, 'District', 0, 3, 1, '2014-8-29 14:40:16', 1, '2016-4-7 14:51:01');
+INSERT INTO `location_types` VALUES (5, 'Agency', 1, 3, 1, '2014-8-29 14:40:16', 1, '2014-8-29 14:40:16');
+INSERT INTO `location_types` VALUES (6, 'FR', 1, 3, 1, '2014-8-29 14:40:16', 1, '2016-4-7 14:47:56');
+INSERT INTO `location_types` VALUES (7, 'DHQ', 1, 4, 1, '2014-8-29 14:40:16', 1, '2014-8-29 14:40:16');
+INSERT INTO `location_types` VALUES (8, 'THQ', 1, 4, 1, '2014-8-29 14:40:16', 1, '2016-4-7 14:48:53');
+INSERT INTO `location_types` VALUES (9, 'Tertiary Hospital', 1, 4, 1, '2014-8-29 14:40:16', 1, '2016-4-7 14:48:39');
+INSERT INTO `location_types` VALUES (10, 'BMU', 0, 4, 1, '2014-8-29 14:40:16', 1, '2016-4-7 14:02:03');
+INSERT INTO `location_types` VALUES (11, 'Town', 1, 4, 1, '2014-8-29 14:40:16', 1, '2014-8-29 14:40:16');
+INSERT INTO `location_types` VALUES (12, 'Division', 1, 3, 1, '2014-8-29 14:40:16', 1, '2016-4-7 14:48:20');
+INSERT INTO `location_types` VALUES (13, 'UC', 1, 6, 1, '2014-8-29 14:40:16', 1, '2014-8-29 14:40:16');
+INSERT INTO `location_types` VALUES (14, 'Tehsil', 1, 5, 1, '2014-8-29 14:40:16', 1, '2016-4-7 14:04:58');

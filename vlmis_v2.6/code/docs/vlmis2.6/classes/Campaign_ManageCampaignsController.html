@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>    API Documentation &raquo; \Campaign_ManageCampaignsController
+</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+            <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+            <!--[if lt IE 9]>
+        <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+        <![endif]-->
+        <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
+        <script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
+        <script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script>
+        <script src="../js/bootstrap.js" type="text/javascript"></script>
+        <script src="../js/template.js" type="text/javascript"></script>
+        <script src="../js/prettify/prettify.min.js" type="text/javascript"></script>
+    
+            <link rel="shortcut icon" href="../img/favicon.ico"/>
+        <link rel="apple-touch-icon" href="../img/apple-touch-icon.png"/>
+        <link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png"/>
+        <link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png"/>
+    </head>
+<body>
+
+        <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    <span class="icon-bar"></span> </a>
+                <a class="brand" href="../index.html">API Documentation</a>
+
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="dropdown">
+                            <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                API Documentation <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                                                                            </ul>
+                        </li>
+                        <li class="dropdown" id="charts-menu">
+                            <a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                Charts <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="../graph_class.html">
+                                        <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown" id="reports-menu">
+                            <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                Reports <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="../errors.html">
+                                        <i class="icon-list-alt"></i>&#160;Errors
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="../markers.html">
+                                        <i class="icon-list-alt"></i>&#160;Markers
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="../deprecated.html">
+                                        <i class="icon-list-alt"></i>&#160;Deprecated
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="go_to_top">
+            <a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>
+        </div>
+    </div>
+    
+    <div id="___" class="container">
+        <noscript>
+            <div class="alert alert-warning">
+                Javascript is disabled; several features are only available if Javascript is enabled.
+            </div>
+        </noscript>
+
+        
+            <style>
+        .deprecated h2 {
+            text-decoration: line-through;
+        }
+    </style>
+    <div class="row">
+        <div class="span4">
+                    <div class="btn-group view pull-right" data-toggle="buttons-radio">
+        <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+        <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    </div>
+    <div class="btn-group visibility" data-toggle="buttons-checkbox">
+        <button class="btn public active" title="Show public elements">Public</button>
+        <button class="btn protected" title="Show protected elements">Protected</button>
+        <button class="btn private" title="Show private elements">Private</button>
+        <button class="btn inherited active" title="Show inherited elements">Inherited</button>
+    </div>
+
+        <ul class="side-nav nav nav-list">
+        <li class="nav-header">
+            <i class="icon-custom icon-method"></i> Methods
+            <ul>
+                                                                                                    <li class="method public">
+        <a href="#method_addCampaignAction" title="addCampaignAction :: Add Campaign">
+            <span class="description">Add Campaign</span><pre>addCampaignAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addCampaignLqasAction" title="addCampaignLqasAction :: Add Campaign Lqas">
+            <span class="description">Add Campaign Lqas</span><pre>addCampaignLqasAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addCampaignReadinessAction" title="addCampaignReadinessAction :: Add Campaign Readiness">
+            <span class="description">Add Campaign Readiness</span><pre>addCampaignReadinessAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addCampaignReadinessUcAction" title="addCampaignReadinessUcAction :: Add Campaign Readiness Uc">
+            <span class="description">Add Campaign Readiness Uc</span><pre>addCampaignReadinessUcAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addCampaignTargetAction" title="addCampaignTargetAction :: Add Campaign Target">
+            <span class="description">Add Campaign Target</span><pre>addCampaignTargetAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addCampaignTypeAction" title="addCampaignTypeAction :: Add Campaign Type">
+            <span class="description">Add Campaign Type</span><pre>addCampaignTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addProductGroupsAction" title="addProductGroupsAction :: Add Product Groups">
+            <span class="description">Add Product Groups</span><pre>addProductGroupsAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxAddReadinessUcAction" title="ajaxAddReadinessUcAction :: ajaxAddReadinessUc">
+            <span class="description">ajaxAddReadinessUc</span><pre>ajaxAddReadinessUcAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxCampaignItemGroupsEditAction" title="ajaxCampaignItemGroupsEditAction :: ajaxCampaignItemGroupsEdit">
+            <span class="description">ajaxCampaignItemGroupsEdit</span><pre>ajaxCampaignItemGroupsEditAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxCampaignsNameAction" title="ajaxCampaignsNameAction :: ajaxCampaignsName">
+            <span class="description">ajaxCampaignsName</span><pre>ajaxCampaignsNameAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxCampaignsTargetAction" title="ajaxCampaignsTargetAction :: ajaxCampaignsTarge">
+            <span class="description">ajaxCampaignsTarge</span><pre>ajaxCampaignsTargetAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxCampaignTargetUcAction" title="ajaxCampaignTargetUcAction :: ajaxCampaignTargetUc">
+            <span class="description">ajaxCampaignTargetUc</span><pre>ajaxCampaignTargetUcAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxCampaignTypeEditAction" title="ajaxCampaignTypeEditAction :: ajaxCampaignTypeEdit">
+            <span class="description">ajaxCampaignTypeEdit</span><pre>ajaxCampaignTypeEditAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxEditAction" title="ajaxEditAction :: ajaxEdit">
+            <span class="description">ajaxEdit</span><pre>ajaxEditAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxEditLqasAction" title="ajaxEditLqasAction :: ajaxEditLqas">
+            <span class="description">ajaxEditLqas</span><pre>ajaxEditLqasAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxEditReadinessAction" title="ajaxEditReadinessAction :: ajaxEditReadiness">
+            <span class="description">ajaxEditReadiness</span><pre>ajaxEditReadinessAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxEditReadinessUcAction" title="ajaxEditReadinessUcAction :: ajaxEditReadinessUc">
+            <span class="description">ajaxEditReadinessUc</span><pre>ajaxEditReadinessUcAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxForCampaignAction" title="ajaxForCampaignAction :: ajaxForCampaign">
+            <span class="description">ajaxForCampaign</span><pre>ajaxForCampaignAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxForCampaignUcAction" title="ajaxForCampaignUcAction :: ajaxForCampaignUc">
+            <span class="description">ajaxForCampaignUc</span><pre>ajaxForCampaignUcAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxGetCampaignVaccinceAction" title="ajaxGetCampaignVaccinceAction :: ajaxGetCampaignVaccince">
+            <span class="description">ajaxGetCampaignVaccince</span><pre>ajaxGetCampaignVaccinceAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxGetCampaignVialsAvailableAction" title="ajaxGetCampaignVialsAvailableAction :: ajaxGetCampaignVialsAvailable">
+            <span class="description">ajaxGetCampaignVialsAvailable</span><pre>ajaxGetCampaignVialsAvailableAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxGetCampaignVialsRequiredAction" title="ajaxGetCampaignVialsRequiredAction :: ajaxGetCampaignVialsRequired">
+            <span class="description">ajaxGetCampaignVialsRequired</span><pre>ajaxGetCampaignVialsRequiredAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxGetNumberDosesAction" title="ajaxGetNumberDosesAction :: ajaxGetNumberDoses">
+            <span class="description">ajaxGetNumberDoses</span><pre>ajaxGetNumberDosesAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxGetUcsAction" title="ajaxGetUcsAction :: ajaxGetUcs">
+            <span class="description">ajaxGetUcs</span><pre>ajaxGetUcsAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxGetUcTargetAction" title="ajaxGetUcTargetAction :: ajaxGetUcTarget">
+            <span class="description">ajaxGetUcTarget</span><pre>ajaxGetUcTargetAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_ajaxPreviousCampaignsNameAction" title="ajaxPreviousCampaignsNameAction :: ajaxPreviousCampaignsName">
+            <span class="description">ajaxPreviousCampaignsName</span><pre>ajaxPreviousCampaignsNameAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_campaignReadinessAction" title="campaignReadinessAction :: Campaign Readiness">
+            <span class="description">Campaign Readiness</span><pre>campaignReadinessAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_campaignReadinessUcAction" title="campaignReadinessUcAction :: Campaign Readiness Uc">
+            <span class="description">Campaign Readiness Uc</span><pre>campaignReadinessUcAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_campaignsTargetAction" title="campaignsTargetAction :: Campaigns Target">
+            <span class="description">Campaigns Target</span><pre>campaignsTargetAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_campaignTargetImportAction" title="campaignTargetImportAction :: Campaign Target Import">
+            <span class="description">Campaign Target Import</span><pre>campaignTargetImportAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_campaignTypesAction" title="campaignTypesAction :: Campaign Types">
+            <span class="description">Campaign Types</span><pre>campaignTypesAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_checkCampaignTypeAction" title="checkCampaignTypeAction :: Check Campaign Type">
+            <span class="description">Check Campaign Type</span><pre>checkCampaignTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_closeCampaignsTargetAction" title="closeCampaignsTargetAction :: Close Campaigns Target">
+            <span class="description">Close Campaigns Target</span><pre>closeCampaignsTargetAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_dataEntryHistoryAction" title="dataEntryHistoryAction :: Data Entry History">
+            <span class="description">Data Entry History</span><pre>dataEntryHistoryAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_editDataEntryAction" title="editDataEntryAction :: Edit Data Entry">
+            <span class="description">Edit Data Entry</span><pre>editDataEntryAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_indexAction" title="indexAction :: Campaign_ManageCampaignsController index">
+            <span class="description">Campaign_ManageCampaignsController index</span><pre>indexAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_lqasDataEntryAction" title="lqasDataEntryAction :: Lqas Data Entry">
+            <span class="description">Lqas Data Entry</span><pre>lqasDataEntryAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_newDataEntryAction" title="newDataEntryAction :: New Data Entry">
+            <span class="description">New Data Entry</span><pre>newDataEntryAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_openCampaignsTargetAction" title="openCampaignsTargetAction :: Open Campaigns Target">
+            <span class="description">Open Campaigns Target</span><pre>openCampaignsTargetAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_productGroupsAction" title="productGroupsAction :: Product Groups">
+            <span class="description">Product Groups</span><pre>productGroupsAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_reportedDistrictsAction" title="reportedDistrictsAction :: Reported Districts">
+            <span class="description">Reported Districts</span><pre>reportedDistrictsAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_reportedUcsAction" title="reportedUcsAction :: Reported Ucs">
+            <span class="description">Reported Ucs</span><pre>reportedUcsAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_updateCampaignAction" title="updateCampaignAction :: Update Campaign">
+            <span class="description">Update Campaign</span><pre>updateCampaignAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_updateCampaignLqasAction" title="updateCampaignLqasAction :: Update Campaign Lqas">
+            <span class="description">Update Campaign Lqas</span><pre>updateCampaignLqasAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_updateCampaignReadinessAction" title="updateCampaignReadinessAction :: Update Campaign Readiness">
+            <span class="description">Update Campaign Readiness</span><pre>updateCampaignReadinessAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_updateCampaignReadinessUcAction" title="updateCampaignReadinessUcAction :: Update Campaign Readiness Uc">
+            <span class="description">Update Campaign Readiness Uc</span><pre>updateCampaignReadinessUcAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_updateCampaignTypeAction" title="updateCampaignTypeAction :: Update Campaign Type">
+            <span class="description">Update Campaign Type</span><pre>updateCampaignTypeAction</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_updateProductGroupsAction" title="updateProductGroupsAction :: Update Product Groups">
+            <span class="description">Update Product Groups</span><pre>updateProductGroupsAction</pre>
+        </a>
+    </li>
+
+                                                </ul>
+        </li>
+        <li class="nav-header protected">» Protected
+            <ul>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </ul>
+        </li>
+        <li class="nav-header private">» Private
+            <ul>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </ul>
+        </li>
+        <li class="nav-header">
+            <i class="icon-custom icon-constant"></i> Constants
+            <ul>
+                            </ul>
+        </li>
+    </ul>
+
+
+        </div>
+
+        <div class="span8">
+            <div class="element class">
+                <h1>Campaign_ManageCampaignsController</h1>
+                <small style="display: block; text-align: right">
+                                            Extends \App_Controller_Base
+                                                        </small>
+                <p class="short_description">Controller for Campaign Manage Campaigns</p>
+                <div class="details">
+                    <div class="long_description">
+                        
+                    </div>
+                    <table class="table table-bordered">
+                                                                                    <tr>
+                                    <th>
+                                        package
+                                                                            </th>
+                                    <td>
+                                                                                    
+                                                                                <p>Default</p>
+                                    </td>
+                                </tr>
+                                                                                                                                                                                </table>
+
+                    <h3><i class="icon-custom icon-method"></i> Methods</h3>
+                                                                <a id="method_addCampaignAction"></a>
+                        <div class="element clickable method public  method_addCampaignAction" data-toggle="collapse" data-target=".method_addCampaignAction .collapse">
+                            <h2>Add Campaign</h2>
+                            <pre>addCampaignAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addCampaignLqasAction"></a>
+                        <div class="element clickable method public  method_addCampaignLqasAction" data-toggle="collapse" data-target=".method_addCampaignLqasAction .collapse">
+                            <h2>Add Campaign Lqas</h2>
+                            <pre>addCampaignLqasAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addCampaignReadinessAction"></a>
+                        <div class="element clickable method public  method_addCampaignReadinessAction" data-toggle="collapse" data-target=".method_addCampaignReadinessAction .collapse">
+                            <h2>Add Campaign Readiness</h2>
+                            <pre>addCampaignReadinessAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addCampaignReadinessUcAction"></a>
+                        <div class="element clickable method public  method_addCampaignReadinessUcAction" data-toggle="collapse" data-target=".method_addCampaignReadinessUcAction .collapse">
+                            <h2>Add Campaign Readiness Uc</h2>
+                            <pre>addCampaignReadinessUcAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addCampaignTargetAction"></a>
+                        <div class="element clickable method public  method_addCampaignTargetAction" data-toggle="collapse" data-target=".method_addCampaignTargetAction .collapse">
+                            <h2>Add Campaign Target</h2>
+                            <pre>addCampaignTargetAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addCampaignTypeAction"></a>
+                        <div class="element clickable method public  method_addCampaignTypeAction" data-toggle="collapse" data-target=".method_addCampaignTypeAction .collapse">
+                            <h2>Add Campaign Type</h2>
+                            <pre>addCampaignTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addProductGroupsAction"></a>
+                        <div class="element clickable method public  method_addProductGroupsAction" data-toggle="collapse" data-target=".method_addProductGroupsAction .collapse">
+                            <h2>Add Product Groups</h2>
+                            <pre>addProductGroupsAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxAddReadinessUcAction"></a>
+                        <div class="element clickable method public  method_ajaxAddReadinessUcAction" data-toggle="collapse" data-target=".method_ajaxAddReadinessUcAction .collapse">
+                            <h2>ajaxAddReadinessUc</h2>
+                            <pre>ajaxAddReadinessUcAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxCampaignItemGroupsEditAction"></a>
+                        <div class="element clickable method public  method_ajaxCampaignItemGroupsEditAction" data-toggle="collapse" data-target=".method_ajaxCampaignItemGroupsEditAction .collapse">
+                            <h2>ajaxCampaignItemGroupsEdit</h2>
+                            <pre>ajaxCampaignItemGroupsEditAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxCampaignsNameAction"></a>
+                        <div class="element clickable method public  method_ajaxCampaignsNameAction" data-toggle="collapse" data-target=".method_ajaxCampaignsNameAction .collapse">
+                            <h2>ajaxCampaignsName</h2>
+                            <pre>ajaxCampaignsNameAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxCampaignsTargetAction"></a>
+                        <div class="element clickable method public  method_ajaxCampaignsTargetAction" data-toggle="collapse" data-target=".method_ajaxCampaignsTargetAction .collapse">
+                            <h2>ajaxCampaignsTarge</h2>
+                            <pre>ajaxCampaignsTargetAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxCampaignTargetUcAction"></a>
+                        <div class="element clickable method public  method_ajaxCampaignTargetUcAction" data-toggle="collapse" data-target=".method_ajaxCampaignTargetUcAction .collapse">
+                            <h2>ajaxCampaignTargetUc</h2>
+                            <pre>ajaxCampaignTargetUcAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxCampaignTypeEditAction"></a>
+                        <div class="element clickable method public  method_ajaxCampaignTypeEditAction" data-toggle="collapse" data-target=".method_ajaxCampaignTypeEditAction .collapse">
+                            <h2>ajaxCampaignTypeEdit</h2>
+                            <pre>ajaxCampaignTypeEditAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxEditAction"></a>
+                        <div class="element clickable method public  method_ajaxEditAction" data-toggle="collapse" data-target=".method_ajaxEditAction .collapse">
+                            <h2>ajaxEdit</h2>
+                            <pre>ajaxEditAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxEditLqasAction"></a>
+                        <div class="element clickable method public  method_ajaxEditLqasAction" data-toggle="collapse" data-target=".method_ajaxEditLqasAction .collapse">
+                            <h2>ajaxEditLqas</h2>
+                            <pre>ajaxEditLqasAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxEditReadinessAction"></a>
+                        <div class="element clickable method public  method_ajaxEditReadinessAction" data-toggle="collapse" data-target=".method_ajaxEditReadinessAction .collapse">
+                            <h2>ajaxEditReadiness</h2>
+                            <pre>ajaxEditReadinessAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxEditReadinessUcAction"></a>
+                        <div class="element clickable method public  method_ajaxEditReadinessUcAction" data-toggle="collapse" data-target=".method_ajaxEditReadinessUcAction .collapse">
+                            <h2>ajaxEditReadinessUc</h2>
+                            <pre>ajaxEditReadinessUcAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxForCampaignAction"></a>
+                        <div class="element clickable method public  method_ajaxForCampaignAction" data-toggle="collapse" data-target=".method_ajaxForCampaignAction .collapse">
+                            <h2>ajaxForCampaign</h2>
+                            <pre>ajaxForCampaignAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxForCampaignUcAction"></a>
+                        <div class="element clickable method public  method_ajaxForCampaignUcAction" data-toggle="collapse" data-target=".method_ajaxForCampaignUcAction .collapse">
+                            <h2>ajaxForCampaignUc</h2>
+                            <pre>ajaxForCampaignUcAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxGetCampaignVaccinceAction"></a>
+                        <div class="element clickable method public  method_ajaxGetCampaignVaccinceAction" data-toggle="collapse" data-target=".method_ajaxGetCampaignVaccinceAction .collapse">
+                            <h2>ajaxGetCampaignVaccince</h2>
+                            <pre>ajaxGetCampaignVaccinceAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxGetCampaignVialsAvailableAction"></a>
+                        <div class="element clickable method public  method_ajaxGetCampaignVialsAvailableAction" data-toggle="collapse" data-target=".method_ajaxGetCampaignVialsAvailableAction .collapse">
+                            <h2>ajaxGetCampaignVialsAvailable</h2>
+                            <pre>ajaxGetCampaignVialsAvailableAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxGetCampaignVialsRequiredAction"></a>
+                        <div class="element clickable method public  method_ajaxGetCampaignVialsRequiredAction" data-toggle="collapse" data-target=".method_ajaxGetCampaignVialsRequiredAction .collapse">
+                            <h2>ajaxGetCampaignVialsRequired</h2>
+                            <pre>ajaxGetCampaignVialsRequiredAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxGetNumberDosesAction"></a>
+                        <div class="element clickable method public  method_ajaxGetNumberDosesAction" data-toggle="collapse" data-target=".method_ajaxGetNumberDosesAction .collapse">
+                            <h2>ajaxGetNumberDoses</h2>
+                            <pre>ajaxGetNumberDosesAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxGetUcsAction"></a>
+                        <div class="element clickable method public  method_ajaxGetUcsAction" data-toggle="collapse" data-target=".method_ajaxGetUcsAction .collapse">
+                            <h2>ajaxGetUcs</h2>
+                            <pre>ajaxGetUcsAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxGetUcTargetAction"></a>
+                        <div class="element clickable method public  method_ajaxGetUcTargetAction" data-toggle="collapse" data-target=".method_ajaxGetUcTargetAction .collapse">
+                            <h2>ajaxGetUcTarget</h2>
+                            <pre>ajaxGetUcTargetAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_ajaxPreviousCampaignsNameAction"></a>
+                        <div class="element clickable method public  method_ajaxPreviousCampaignsNameAction" data-toggle="collapse" data-target=".method_ajaxPreviousCampaignsNameAction .collapse">
+                            <h2>ajaxPreviousCampaignsName</h2>
+                            <pre>ajaxPreviousCampaignsNameAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_campaignReadinessAction"></a>
+                        <div class="element clickable method public  method_campaignReadinessAction" data-toggle="collapse" data-target=".method_campaignReadinessAction .collapse">
+                            <h2>Campaign Readiness</h2>
+                            <pre>campaignReadinessAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_campaignReadinessUcAction"></a>
+                        <div class="element clickable method public  method_campaignReadinessUcAction" data-toggle="collapse" data-target=".method_campaignReadinessUcAction .collapse">
+                            <h2>Campaign Readiness Uc</h2>
+                            <pre>campaignReadinessUcAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_campaignsTargetAction"></a>
+                        <div class="element clickable method public  method_campaignsTargetAction" data-toggle="collapse" data-target=".method_campaignsTargetAction .collapse">
+                            <h2>Campaigns Target</h2>
+                            <pre>campaignsTargetAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_campaignTargetImportAction"></a>
+                        <div class="element clickable method public  method_campaignTargetImportAction" data-toggle="collapse" data-target=".method_campaignTargetImportAction .collapse">
+                            <h2>Campaign Target Import</h2>
+                            <pre>campaignTargetImportAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_campaignTypesAction"></a>
+                        <div class="element clickable method public  method_campaignTypesAction" data-toggle="collapse" data-target=".method_campaignTypesAction .collapse">
+                            <h2>Campaign Types</h2>
+                            <pre>campaignTypesAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_checkCampaignTypeAction"></a>
+                        <div class="element clickable method public  method_checkCampaignTypeAction" data-toggle="collapse" data-target=".method_checkCampaignTypeAction .collapse">
+                            <h2>Check Campaign Type</h2>
+                            <pre>checkCampaignTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_closeCampaignsTargetAction"></a>
+                        <div class="element clickable method public  method_closeCampaignsTargetAction" data-toggle="collapse" data-target=".method_closeCampaignsTargetAction .collapse">
+                            <h2>Close Campaigns Target</h2>
+                            <pre>closeCampaignsTargetAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_dataEntryHistoryAction"></a>
+                        <div class="element clickable method public  method_dataEntryHistoryAction" data-toggle="collapse" data-target=".method_dataEntryHistoryAction .collapse">
+                            <h2>Data Entry History</h2>
+                            <pre>dataEntryHistoryAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_editDataEntryAction"></a>
+                        <div class="element clickable method public  method_editDataEntryAction" data-toggle="collapse" data-target=".method_editDataEntryAction .collapse">
+                            <h2>Edit Data Entry</h2>
+                            <pre>editDataEntryAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_indexAction"></a>
+                        <div class="element clickable method public  method_indexAction" data-toggle="collapse" data-target=".method_indexAction .collapse">
+                            <h2>Campaign_ManageCampaignsController index</h2>
+                            <pre>indexAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_lqasDataEntryAction"></a>
+                        <div class="element clickable method public  method_lqasDataEntryAction" data-toggle="collapse" data-target=".method_lqasDataEntryAction .collapse">
+                            <h2>Lqas Data Entry</h2>
+                            <pre>lqasDataEntryAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_newDataEntryAction"></a>
+                        <div class="element clickable method public  method_newDataEntryAction" data-toggle="collapse" data-target=".method_newDataEntryAction .collapse">
+                            <h2>New Data Entry</h2>
+                            <pre>newDataEntryAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_openCampaignsTargetAction"></a>
+                        <div class="element clickable method public  method_openCampaignsTargetAction" data-toggle="collapse" data-target=".method_openCampaignsTargetAction .collapse">
+                            <h2>Open Campaigns Target</h2>
+                            <pre>openCampaignsTargetAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_productGroupsAction"></a>
+                        <div class="element clickable method public  method_productGroupsAction" data-toggle="collapse" data-target=".method_productGroupsAction .collapse">
+                            <h2>Product Groups</h2>
+                            <pre>productGroupsAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_reportedDistrictsAction"></a>
+                        <div class="element clickable method public  method_reportedDistrictsAction" data-toggle="collapse" data-target=".method_reportedDistrictsAction .collapse">
+                            <h2>Reported Districts</h2>
+                            <pre>reportedDistrictsAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_reportedUcsAction"></a>
+                        <div class="element clickable method public  method_reportedUcsAction" data-toggle="collapse" data-target=".method_reportedUcsAction .collapse">
+                            <h2>Reported Ucs</h2>
+                            <pre>reportedUcsAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_updateCampaignAction"></a>
+                        <div class="element clickable method public  method_updateCampaignAction" data-toggle="collapse" data-target=".method_updateCampaignAction .collapse">
+                            <h2>Update Campaign</h2>
+                            <pre>updateCampaignAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_updateCampaignLqasAction"></a>
+                        <div class="element clickable method public  method_updateCampaignLqasAction" data-toggle="collapse" data-target=".method_updateCampaignLqasAction .collapse">
+                            <h2>Update Campaign Lqas</h2>
+                            <pre>updateCampaignLqasAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_updateCampaignReadinessAction"></a>
+                        <div class="element clickable method public  method_updateCampaignReadinessAction" data-toggle="collapse" data-target=".method_updateCampaignReadinessAction .collapse">
+                            <h2>Update Campaign Readiness</h2>
+                            <pre>updateCampaignReadinessAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_updateCampaignReadinessUcAction"></a>
+                        <div class="element clickable method public  method_updateCampaignReadinessUcAction" data-toggle="collapse" data-target=".method_updateCampaignReadinessUcAction .collapse">
+                            <h2>Update Campaign Readiness Uc</h2>
+                            <pre>updateCampaignReadinessUcAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_updateCampaignTypeAction"></a>
+                        <div class="element clickable method public  method_updateCampaignTypeAction" data-toggle="collapse" data-target=".method_updateCampaignTypeAction .collapse">
+                            <h2>Update Campaign Type</h2>
+                            <pre>updateCampaignTypeAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_updateProductGroupsAction"></a>
+                        <div class="element clickable method public  method_updateProductGroupsAction" data-toggle="collapse" data-target=".method_updateProductGroupsAction .collapse">
+                            <h2>Update Product Groups</h2>
+                            <pre>updateProductGroupsAction() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                    
+                    
+                                                        </div>
+            </div>
+            <a id="\Campaign_ManageCampaignsController"></a>
+            <ul class="breadcrumb">
+                <li><a href="../index.html"><i class="icon-custom icon-class"></i></a></li>
+                    
+    
+    <li><span class="divider">\</span><a href="../namespaces/default.html">\</a></li>
+
+                <li class="active"><span class="divider">\</span><a href="../classes/Campaign_ManageCampaignsController.html">Campaign_ManageCampaignsController</a></li>
+            </ul>
+        </div>
+    </div>
+
+    </div>
+
+        <footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by
+            <a href="http://glyphicons.com/">Glyphicons</a>.<br/>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and<br/>
+            generated on Tue, 24 May 2016 07:24:04 +0000.<br/>
+    </footer>
+    </body>
+</html>

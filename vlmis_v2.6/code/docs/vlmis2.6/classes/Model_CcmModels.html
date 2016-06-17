@@ -1,0 +1,2202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>    API Documentation &raquo; \Model_CcmModels
+</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+            <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+            <!--[if lt IE 9]>
+        <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+        <![endif]-->
+        <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
+        <script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
+        <script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script>
+        <script src="../js/bootstrap.js" type="text/javascript"></script>
+        <script src="../js/template.js" type="text/javascript"></script>
+        <script src="../js/prettify/prettify.min.js" type="text/javascript"></script>
+    
+            <link rel="shortcut icon" href="../img/favicon.ico"/>
+        <link rel="apple-touch-icon" href="../img/apple-touch-icon.png"/>
+        <link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png"/>
+        <link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png"/>
+    </head>
+<body>
+
+        <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    <span class="icon-bar"></span> </a>
+                <a class="brand" href="../index.html">API Documentation</a>
+
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="dropdown">
+                            <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                API Documentation <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                                                                            </ul>
+                        </li>
+                        <li class="dropdown" id="charts-menu">
+                            <a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                Charts <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="../graph_class.html">
+                                        <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown" id="reports-menu">
+                            <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                Reports <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="../errors.html">
+                                        <i class="icon-list-alt"></i>&#160;Errors
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="../markers.html">
+                                        <i class="icon-list-alt"></i>&#160;Markers
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="../deprecated.html">
+                                        <i class="icon-list-alt"></i>&#160;Deprecated
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="go_to_top">
+            <a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>
+        </div>
+    </div>
+    
+    <div id="___" class="container">
+        <noscript>
+            <div class="alert alert-warning">
+                Javascript is disabled; several features are only available if Javascript is enabled.
+            </div>
+        </noscript>
+
+        
+            <style>
+        .deprecated h2 {
+            text-decoration: line-through;
+        }
+    </style>
+    <div class="row">
+        <div class="span4">
+                    <div class="btn-group view pull-right" data-toggle="buttons-radio">
+        <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+        <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    </div>
+    <div class="btn-group visibility" data-toggle="buttons-checkbox">
+        <button class="btn public active" title="Show public elements">Public</button>
+        <button class="btn protected" title="Show protected elements">Protected</button>
+        <button class="btn private" title="Show private elements">Private</button>
+        <button class="btn inherited active" title="Show inherited elements">Inherited</button>
+    </div>
+
+        <ul class="side-nav nav nav-list">
+        <li class="nav-header">
+            <i class="icon-custom icon-method"></i> Methods
+            <ul>
+                                                                                                    <li class="method public inherited">
+        <a href="#method___construct" title="__construct :: Model_Base init">
+            <span class="description">Model_Base init</span><pre>__construct</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addIcePack" title="addIcePack :: Add Ice Pack">
+            <span class="description">Add Ice Pack</span><pre>addIcePack</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addNewMakeModel" title="addNewMakeModel :: Add New Make Model">
+            <span class="description">Add New Make Model</span><pre>addNewMakeModel</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_addVaccineCarrier" title="addVaccineCarrier :: Add Vaccine Carrier">
+            <span class="description">Add Vaccine Carrier</span><pre>addVaccineCarrier</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_coldboxAndVaccineCarrierCapacityByFacility" title="coldboxAndVaccineCarrierCapacityByFacility :: Coldbox And Vaccine Carrier Capacity By Facility">
+            <span class="description">Coldbox And Vaccine Carrier Capacity By Facility</span><pre>coldboxAndVaccineCarrierCapacityByFacility</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_coldboxAndVaccineCarriersByWorkingStatusGraph" title="coldboxAndVaccineCarriersByWorkingStatusGraph :: Coldbox And Vaccine Carriers By Working Status Graph">
+            <span class="description">Coldbox And Vaccine Carriers By Working Status Graph</span><pre>coldboxAndVaccineCarriersByWorkingStatusGraph</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_coldboxAndVaccineCarriersByWorkingStatusReport" title="coldboxAndVaccineCarriersByWorkingStatusReport :: Coldbox And Vaccine Carriers By Working Status Report">
+            <span class="description">Coldbox And Vaccine Carriers By Working Status Report</span><pre>coldboxAndVaccineCarriersByWorkingStatusReport</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_coldRooms4to20ByModelAndWorkingStatus" title="coldRooms4to20ByModelAndWorkingStatus :: Cold Rooms 4 to 20 By Model And Working Status">
+            <span class="description">Cold Rooms 4 to 20 By Model And Working Status</span><pre>coldRooms4to20ByModelAndWorkingStatus</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_distributionCFCFreeEquipmentByFType" title="distributionCFCFreeEquipmentByFType :: Distribution CFC Free Equipment By FType">
+            <span class="description">Distribution CFC Free Equipment By FType</span><pre>distributionCFCFreeEquipmentByFType</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getAllAssetsByType" title="getAllAssetsByType :: Get All Assets By Type">
+            <span class="description">Get All Assets By Type</span><pre>getAllAssetsByType</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getAssetDetailsById" title="getAssetDetailsById :: Get Asset Details By Id">
+            <span class="description">Get Asset Details By Id</span><pre>getAssetDetailsById</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getAssetsCapacityBySearch" title="getAssetsCapacityBySearch :: ">
+            <span class="description"></span><pre>getAssetsCapacityBySearch</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getModelsByGenericMake" title="getModelsByGenericMake :: Get Models By Generic Make">
+            <span class="description">Get Models By Generic Make</span><pre>getModelsByGenericMake</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getModelsByMakeId" title="getModelsByMakeId :: Get Models By Make Id">
+            <span class="description">Get Models By Make Id</span><pre>getModelsByMakeId</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getModelsBySearch" title="getModelsBySearch :: Get Models By Search">
+            <span class="description">Get Models By Search</span><pre>getModelsBySearch</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getQuantityByGenericMake" title="getQuantityByGenericMake :: Get Quantity By Generic Make">
+            <span class="description">Get Quantity By Generic Make</span><pre>getQuantityByGenericMake</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getRefrigeratorModelsByAgeGroupReport" title="getRefrigeratorModelsByAgeGroupReport :: Get Refrigerator Models By Age Group Report">
+            <span class="description">Get Refrigerator Models By Age Group Report</span><pre>getRefrigeratorModelsByAgeGroupReport</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getVaccineCarriers" title="getVaccineCarriers :: Get Vaccine Carriers">
+            <span class="description">Get Vaccine Carriers</span><pre>getVaccineCarriers</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getVoltageRegulators" title="getVoltageRegulators :: Get Voltage Regulators">
+            <span class="description">Get Voltage Regulators</span><pre>getVoltageRegulators</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_icepackFreezingCapacityAgainstRoutineAndSIA" title="icepackFreezingCapacityAgainstRoutineAndSIA :: Icepack Freezing Capacity Against Routine And SIA">
+            <span class="description">Icepack Freezing Capacity Against Routine And SIA</span><pre>icepackFreezingCapacityAgainstRoutineAndSIA</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_lineListOfEquipmentWithEquipmentUtilization" title="lineListOfEquipmentWithEquipmentUtilization :: Line List Of Equipment With Equipment Utilization">
+            <span class="description">Line List Of Equipment With Equipment Utilization</span><pre>lineListOfEquipmentWithEquipmentUtilization</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_lineListOfEquipmentWithWorkingStatus" title="lineListOfEquipmentWithWorkingStatus :: Line List Of Equipment With Working Status">
+            <span class="description">Line List Of Equipment With Working Status</span><pre>lineListOfEquipmentWithWorkingStatus</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_listingOfColdRoomFacilitiesAndWorkingStatus" title="listingOfColdRoomFacilitiesAndWorkingStatus :: Listing Of Cold Room Facilities And Working Status">
+            <span class="description">Listing Of Cold Room Facilities And Working Status</span><pre>listingOfColdRoomFacilitiesAndWorkingStatus</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_quantityOfColdBoxesCarriersGraph" title="quantityOfColdBoxesCarriersGraph :: Quantity Of Cold Boxes Carriers Graph">
+            <span class="description">Quantity Of Cold Boxes Carriers Graph</span><pre>quantityOfColdBoxesCarriersGraph</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_quantityOfColdBoxesCarriersReport" title="quantityOfColdBoxesCarriersReport :: Quantity Of Cold Boxes Carriers Report">
+            <span class="description">Quantity Of Cold Boxes Carriers Report</span><pre>quantityOfColdBoxesCarriersReport</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_refrigeratorFreezersUtilizationGraph" title="refrigeratorFreezersUtilizationGraph :: Refrigerator Freezers Utilization Graph">
+            <span class="description">Refrigerator Freezers Utilization Graph</span><pre>refrigeratorFreezersUtilizationGraph</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_refrigeratorFreezersUtilizationReport" title="refrigeratorFreezersUtilizationReport :: Refrigerator Freezers Utilization Report">
+            <span class="description">Refrigerator Freezers Utilization Report</span><pre>refrigeratorFreezersUtilizationReport</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_refrigeratorModelsByWorkingStatusGraph" title="refrigeratorModelsByWorkingStatusGraph :: Refrigerator Models By Working Status Graph">
+            <span class="description">Refrigerator Models By Working Status Graph</span><pre>refrigeratorModelsByWorkingStatusGraph</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_refrigeratorModelsByWorkingStatusReport" title="refrigeratorModelsByWorkingStatusReport :: Refrigerator Models By Working Status Report">
+            <span class="description">Refrigerator Models By Working Status Report</span><pre>refrigeratorModelsByWorkingStatusReport</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_stabilizersByWorkingStatusGraph" title="stabilizersByWorkingStatusGraph :: Stabilizers By Working Status Graph">
+            <span class="description">Stabilizers By Working Status Graph</span><pre>stabilizersByWorkingStatusGraph</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_standbyGeneratorsByFacilityTypeAndWorkingStatusGraph" title="standbyGeneratorsByFacilityTypeAndWorkingStatusGraph :: Standby Generators By Facility Type And Working Status Graph">
+            <span class="description">Standby Generators By Facility Type And Working Status Graph</span><pre>standbyGeneratorsByFacilityTypeAndWorkingStatusGraph</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_standbyGeneratorsByFacilityTypeAndWorkingStatusReport" title="standbyGeneratorsByFacilityTypeAndWorkingStatusReport :: Standby Generators By Facility Type And Working Status Report">
+            <span class="description">Standby Generators By Facility Type And Working Status Report</span><pre>standbyGeneratorsByFacilityTypeAndWorkingStatusReport</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_voltageStabilizersAndRegulatorsWorkingStatus" title="voltageStabilizersAndRegulatorsWorkingStatus :: Voltage Stabilizers And Regulators Working Status">
+            <span class="description">Voltage Stabilizers And Regulators Working Status</span><pre>voltageStabilizersAndRegulatorsWorkingStatus</pre>
+        </a>
+    </li>
+
+                                                </ul>
+        </li>
+        <li class="nav-header protected">» Protected
+            <ul>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </ul>
+        </li>
+        <li class="nav-header private">» Private
+            <ul>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </ul>
+        </li>
+        <li class="nav-header">
+            <i class="icon-custom icon-constant"></i> Constants
+            <ul>
+                                <li class="constant ">
+                    <a href="#constant_ACTIVE" title="ACTIVE :: ">
+                        <span class="description"></span><pre>ACTIVE</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_CAMPAIGNPRODUCTS" title="CAMPAIGNPRODUCTS :: ">
+                        <span class="description"></span><pre>CAMPAIGNPRODUCTS</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_DILUENT" title="DILUENT :: ">
+                        <span class="description"></span><pre>DILUENT</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_EXPIRED" title="EXPIRED :: ">
+                        <span class="description"></span><pre>EXPIRED</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_FINISHED" title="FINISHED :: ">
+                        <span class="description"></span><pre>FINISHED</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_INACTIVE" title="INACTIVE :: ">
+                        <span class="description"></span><pre>INACTIVE</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_INACTIVEVACCINE" title="INACTIVEVACCINE :: ">
+                        <span class="description"></span><pre>INACTIVEVACCINE</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_LOCATIONTYPE_CCM" title="LOCATIONTYPE_CCM :: ">
+                        <span class="description"></span><pre>LOCATIONTYPE_CCM</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_LOCATIONTYPE_NONCCM" title="LOCATIONTYPE_NONCCM :: ">
+                        <span class="description"></span><pre>LOCATIONTYPE_NONCCM</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_MERGEDPRODUCTS" title="MERGEDPRODUCTS :: ">
+                        <span class="description"></span><pre>MERGEDPRODUCTS</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_NONVACCINE" title="NONVACCINE :: ">
+                        <span class="description"></span><pre>NONVACCINE</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_PLACEMENT_TRANSACTION_TYPE_P" title="PLACEMENT_TRANSACTION_TYPE_P :: ">
+                        <span class="description"></span><pre>PLACEMENT_TRANSACTION_TYPE_P</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_PLACEMENT_TRANSACTION_TYPE_PICK" title="PLACEMENT_TRANSACTION_TYPE_PICK :: ">
+                        <span class="description"></span><pre>PLACEMENT_TRANSACTION_TYPE_PICK</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_PLACEMENT_TRANSACTION_TYPE_T" title="PLACEMENT_TRANSACTION_TYPE_T :: ">
+                        <span class="description"></span><pre>PLACEMENT_TRANSACTION_TYPE_T</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_PRIORITY1" title="PRIORITY1 :: ">
+                        <span class="description"></span><pre>PRIORITY1</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_PRIORITY2" title="PRIORITY2 :: ">
+                        <span class="description"></span><pre>PRIORITY2</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_PRIORITY3" title="PRIORITY3 :: ">
+                        <span class="description"></span><pre>PRIORITY3</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_REVLOGISTICS" title="REVLOGISTICS :: ">
+                        <span class="description"></span><pre>REVLOGISTICS</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_ROUITINEPRODUCTS" title="ROUITINEPRODUCTS :: ">
+                        <span class="description"></span><pre>ROUITINEPRODUCTS</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_RUNNING" title="RUNNING :: ">
+                        <span class="description"></span><pre>RUNNING</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_STACKED" title="STACKED :: ">
+                        <span class="description"></span><pre>STACKED</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOTAL" title="TOTAL :: ">
+                        <span class="description"></span><pre>TOTAL</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_VACCINECATEGORY" title="VACCINECATEGORY :: ">
+                        <span class="description"></span><pre>VACCINECATEGORY</pre>
+                    </a>
+                </li>
+                            </ul>
+        </li>
+    </ul>
+
+
+        </div>
+
+        <div class="span8">
+            <div class="element class">
+                <h1>Model_CcmModels</h1>
+                <small style="display: block; text-align: right">
+                                            Extends <a href="../classes/Model_Base.html">\Model_Base</a>
+                                                        </small>
+                <p class="short_description">Model for CCM Models</p>
+                <div class="details">
+                    <div class="long_description">
+                        
+                    </div>
+                    <table class="table table-bordered">
+                                                                                    <tr>
+                                    <th>
+                                        package
+                                                                            </th>
+                                    <td>
+                                                                                    
+                                                                                <p>Default</p>
+                                    </td>
+                                </tr>
+                                                                                                                                                                                </table>
+
+                    <h3><i class="icon-custom icon-method"></i> Methods</h3>
+                                                                <a id="method___construct"></a>
+                        <div class="element clickable method public  method___construct inherited" data-toggle="collapse" data-target=".method___construct .collapse">
+                            <h2>Model_Base init</h2>
+                            <pre>__construct() </pre>
+                            <div class="labels">
+                                <span class="label">inherited</span>                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addIcePack"></a>
+                        <div class="element clickable method public  method_addIcePack" data-toggle="collapse" data-target=".method_addIcePack .collapse">
+                            <h2>Add Ice Pack</h2>
+                            <pre>addIcePack() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addNewMakeModel"></a>
+                        <div class="element clickable method public  method_addNewMakeModel" data-toggle="collapse" data-target=".method_addNewMakeModel .collapse">
+                            <h2>Add New Make Model</h2>
+                            <pre>addNewMakeModel() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_addVaccineCarrier"></a>
+                        <div class="element clickable method public  method_addVaccineCarrier" data-toggle="collapse" data-target=".method_addVaccineCarrier .collapse">
+                            <h2>Add Vaccine Carrier</h2>
+                            <pre>addVaccineCarrier() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_coldboxAndVaccineCarrierCapacityByFacility"></a>
+                        <div class="element clickable method public  method_coldboxAndVaccineCarrierCapacityByFacility" data-toggle="collapse" data-target=".method_coldboxAndVaccineCarrierCapacityByFacility .collapse">
+                            <h2>Coldbox And Vaccine Carrier Capacity By Facility</h2>
+                            <pre>coldboxAndVaccineCarrierCapacityByFacility() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_coldboxAndVaccineCarriersByWorkingStatusGraph"></a>
+                        <div class="element clickable method public  method_coldboxAndVaccineCarriersByWorkingStatusGraph" data-toggle="collapse" data-target=".method_coldboxAndVaccineCarriersByWorkingStatusGraph .collapse">
+                            <h2>Coldbox And Vaccine Carriers By Working Status Graph</h2>
+                            <pre>coldboxAndVaccineCarriersByWorkingStatusGraph() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_coldboxAndVaccineCarriersByWorkingStatusReport"></a>
+                        <div class="element clickable method public  method_coldboxAndVaccineCarriersByWorkingStatusReport" data-toggle="collapse" data-target=".method_coldboxAndVaccineCarriersByWorkingStatusReport .collapse">
+                            <h2>Coldbox And Vaccine Carriers By Working Status Report</h2>
+                            <pre>coldboxAndVaccineCarriersByWorkingStatusReport() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_coldRooms4to20ByModelAndWorkingStatus"></a>
+                        <div class="element clickable method public  method_coldRooms4to20ByModelAndWorkingStatus" data-toggle="collapse" data-target=".method_coldRooms4to20ByModelAndWorkingStatus .collapse">
+                            <h2>Cold Rooms 4 to 20 By Model And Working Status</h2>
+                            <pre>coldRooms4to20ByModelAndWorkingStatus() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_distributionCFCFreeEquipmentByFType"></a>
+                        <div class="element clickable method public  method_distributionCFCFreeEquipmentByFType" data-toggle="collapse" data-target=".method_distributionCFCFreeEquipmentByFType .collapse">
+                            <h2>Distribution CFC Free Equipment By FType</h2>
+                            <pre>distributionCFCFreeEquipmentByFType() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_getAllAssetsByType"></a>
+                        <div class="element clickable method public  method_getAllAssetsByType" data-toggle="collapse" data-target=".method_getAllAssetsByType .collapse">
+                            <h2>Get All Assets By Type</h2>
+                            <pre>getAllAssetsByType() : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_getAssetDetailsById"></a>
+                        <div class="element clickable method public  method_getAssetDetailsById" data-toggle="collapse" data-target=".method_getAssetDetailsById .collapse">
+                            <h2>Get Asset Details By Id</h2>
+                            <pre>getAssetDetailsById() : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_getAssetsCapacityBySearch"></a>
+                        <div class="element clickable method public  method_getAssetsCapacityBySearch" data-toggle="collapse" data-target=".method_getAssetsCapacityBySearch .collapse">
+                            <h2>getAssetsCapacityBySearch</h2>
+                            <pre>getAssetsCapacityBySearch() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_getModelsByGenericMake"></a>
+                        <div class="element clickable method public  method_getModelsByGenericMake" data-toggle="collapse" data-target=".method_getModelsByGenericMake .collapse">
+                            <h2>Get Models By Generic Make</h2>
+                            <pre>getModelsByGenericMake() : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_getModelsByMakeId"></a>
+                        <div class="element clickable method public  method_getModelsByMakeId" data-toggle="collapse" data-target=".method_getModelsByMakeId .collapse">
+                            <h2>Get Models By Make Id</h2>
+                            <pre>getModelsByMakeId() : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_getModelsBySearch"></a>
+                        <div class="element clickable method public  method_getModelsBySearch" data-toggle="collapse" data-target=".method_getModelsBySearch .collapse">
+                            <h2>Get Models By Search</h2>
+                            <pre>getModelsBySearch(\type $order = null, \type $sort = null) : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$order</h4>
+                                                <code>\type</code><p></p>
+                                            </div>
+                                                                                    <div class="subelement argument">
+                                                <h4>$sort</h4>
+                                                <code>\type</code><p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_getQuantityByGenericMake"></a>
+                        <div class="element clickable method public  method_getQuantityByGenericMake" data-toggle="collapse" data-target=".method_getQuantityByGenericMake .collapse">
+                            <h2>Get Quantity By Generic Make</h2>
+                            <pre>getQuantityByGenericMake() : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_getRefrigeratorModelsByAgeGroupReport"></a>
+                        <div class="element clickable method public  method_getRefrigeratorModelsByAgeGroupReport" data-toggle="collapse" data-target=".method_getRefrigeratorModelsByAgeGroupReport .collapse">
+                            <h2>Get Refrigerator Models By Age Group Report</h2>
+                            <pre>getRefrigeratorModelsByAgeGroupReport() : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_getVaccineCarriers"></a>
+                        <div class="element clickable method public  method_getVaccineCarriers" data-toggle="collapse" data-target=".method_getVaccineCarriers .collapse">
+                            <h2>Get Vaccine Carriers</h2>
+                            <pre>getVaccineCarriers() : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_getVoltageRegulators"></a>
+                        <div class="element clickable method public  method_getVoltageRegulators" data-toggle="collapse" data-target=".method_getVoltageRegulators .collapse">
+                            <h2>Get Voltage Regulators</h2>
+                            <pre>getVoltageRegulators() : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_icepackFreezingCapacityAgainstRoutineAndSIA"></a>
+                        <div class="element clickable method public  method_icepackFreezingCapacityAgainstRoutineAndSIA" data-toggle="collapse" data-target=".method_icepackFreezingCapacityAgainstRoutineAndSIA .collapse">
+                            <h2>Icepack Freezing Capacity Against Routine And SIA</h2>
+                            <pre>icepackFreezingCapacityAgainstRoutineAndSIA() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_lineListOfEquipmentWithEquipmentUtilization"></a>
+                        <div class="element clickable method public  method_lineListOfEquipmentWithEquipmentUtilization" data-toggle="collapse" data-target=".method_lineListOfEquipmentWithEquipmentUtilization .collapse">
+                            <h2>Line List Of Equipment With Equipment Utilization</h2>
+                            <pre>lineListOfEquipmentWithEquipmentUtilization() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_lineListOfEquipmentWithWorkingStatus"></a>
+                        <div class="element clickable method public  method_lineListOfEquipmentWithWorkingStatus" data-toggle="collapse" data-target=".method_lineListOfEquipmentWithWorkingStatus .collapse">
+                            <h2>Line List Of Equipment With Working Status</h2>
+                            <pre>lineListOfEquipmentWithWorkingStatus() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_listingOfColdRoomFacilitiesAndWorkingStatus"></a>
+                        <div class="element clickable method public  method_listingOfColdRoomFacilitiesAndWorkingStatus" data-toggle="collapse" data-target=".method_listingOfColdRoomFacilitiesAndWorkingStatus .collapse">
+                            <h2>Listing Of Cold Room Facilities And Working Status</h2>
+                            <pre>listingOfColdRoomFacilitiesAndWorkingStatus() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_quantityOfColdBoxesCarriersGraph"></a>
+                        <div class="element clickable method public  method_quantityOfColdBoxesCarriersGraph" data-toggle="collapse" data-target=".method_quantityOfColdBoxesCarriersGraph .collapse">
+                            <h2>Quantity Of Cold Boxes Carriers Graph</h2>
+                            <pre>quantityOfColdBoxesCarriersGraph() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_quantityOfColdBoxesCarriersReport"></a>
+                        <div class="element clickable method public  method_quantityOfColdBoxesCarriersReport" data-toggle="collapse" data-target=".method_quantityOfColdBoxesCarriersReport .collapse">
+                            <h2>Quantity Of Cold Boxes Carriers Report</h2>
+                            <pre>quantityOfColdBoxesCarriersReport() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_refrigeratorFreezersUtilizationGraph"></a>
+                        <div class="element clickable method public  method_refrigeratorFreezersUtilizationGraph" data-toggle="collapse" data-target=".method_refrigeratorFreezersUtilizationGraph .collapse">
+                            <h2>Refrigerator Freezers Utilization Graph</h2>
+                            <pre>refrigeratorFreezersUtilizationGraph() : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_refrigeratorFreezersUtilizationReport"></a>
+                        <div class="element clickable method public  method_refrigeratorFreezersUtilizationReport" data-toggle="collapse" data-target=".method_refrigeratorFreezersUtilizationReport .collapse">
+                            <h2>Refrigerator Freezers Utilization Report</h2>
+                            <pre>refrigeratorFreezersUtilizationReport() : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_refrigeratorModelsByWorkingStatusGraph"></a>
+                        <div class="element clickable method public  method_refrigeratorModelsByWorkingStatusGraph" data-toggle="collapse" data-target=".method_refrigeratorModelsByWorkingStatusGraph .collapse">
+                            <h2>Refrigerator Models By Working Status Graph</h2>
+                            <pre>refrigeratorModelsByWorkingStatusGraph() : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_refrigeratorModelsByWorkingStatusReport"></a>
+                        <div class="element clickable method public  method_refrigeratorModelsByWorkingStatusReport" data-toggle="collapse" data-target=".method_refrigeratorModelsByWorkingStatusReport .collapse">
+                            <h2>Refrigerator Models By Working Status Report</h2>
+                            <pre>refrigeratorModelsByWorkingStatusReport() : \type</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>\type</code><p></p>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_stabilizersByWorkingStatusGraph"></a>
+                        <div class="element clickable method public  method_stabilizersByWorkingStatusGraph" data-toggle="collapse" data-target=".method_stabilizersByWorkingStatusGraph .collapse">
+                            <h2>Stabilizers By Working Status Graph</h2>
+                            <pre>stabilizersByWorkingStatusGraph() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_standbyGeneratorsByFacilityTypeAndWorkingStatusGraph"></a>
+                        <div class="element clickable method public  method_standbyGeneratorsByFacilityTypeAndWorkingStatusGraph" data-toggle="collapse" data-target=".method_standbyGeneratorsByFacilityTypeAndWorkingStatusGraph .collapse">
+                            <h2>Standby Generators By Facility Type And Working Status Graph</h2>
+                            <pre>standbyGeneratorsByFacilityTypeAndWorkingStatusGraph() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_standbyGeneratorsByFacilityTypeAndWorkingStatusReport"></a>
+                        <div class="element clickable method public  method_standbyGeneratorsByFacilityTypeAndWorkingStatusReport" data-toggle="collapse" data-target=".method_standbyGeneratorsByFacilityTypeAndWorkingStatusReport .collapse">
+                            <h2>Standby Generators By Facility Type And Working Status Report</h2>
+                            <pre>standbyGeneratorsByFacilityTypeAndWorkingStatusReport() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                                            <a id="method_voltageStabilizersAndRegulatorsWorkingStatus"></a>
+                        <div class="element clickable method public  method_voltageStabilizersAndRegulatorsWorkingStatus" data-toggle="collapse" data-target=".method_voltageStabilizersAndRegulatorsWorkingStatus .collapse">
+                            <h2>Voltage Stabilizers And Regulators Working Status</h2>
+                            <pre>voltageStabilizersAndRegulatorsWorkingStatus() </pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+
+                            
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+
+                        </div>
+                    
+                                            <h3><i class="icon-custom icon-constant"></i> Constants</h3>
+                                                    <a id="constant_INACTIVE"> </a>
+                            <div class="element clickable constant  constant_INACTIVE inherited" data-toggle="collapse" data-target=".constant_INACTIVE .collapse">
+                                <h2>INACTIVE</h2>
+                                <pre>INACTIVE</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_ACTIVE"> </a>
+                            <div class="element clickable constant  constant_ACTIVE inherited" data-toggle="collapse" data-target=".constant_ACTIVE .collapse">
+                                <h2>ACTIVE</h2>
+                                <pre>ACTIVE</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_ROUITINEPRODUCTS"> </a>
+                            <div class="element clickable constant  constant_ROUITINEPRODUCTS inherited" data-toggle="collapse" data-target=".constant_ROUITINEPRODUCTS .collapse">
+                                <h2>ROUITINEPRODUCTS</h2>
+                                <pre>ROUITINEPRODUCTS</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_VACCINECATEGORY"> </a>
+                            <div class="element clickable constant  constant_VACCINECATEGORY inherited" data-toggle="collapse" data-target=".constant_VACCINECATEGORY .collapse">
+                                <h2>VACCINECATEGORY</h2>
+                                <pre>VACCINECATEGORY</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_CAMPAIGNPRODUCTS"> </a>
+                            <div class="element clickable constant  constant_CAMPAIGNPRODUCTS inherited" data-toggle="collapse" data-target=".constant_CAMPAIGNPRODUCTS .collapse">
+                                <h2>CAMPAIGNPRODUCTS</h2>
+                                <pre>CAMPAIGNPRODUCTS</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_NONVACCINE"> </a>
+                            <div class="element clickable constant  constant_NONVACCINE inherited" data-toggle="collapse" data-target=".constant_NONVACCINE .collapse">
+                                <h2>NONVACCINE</h2>
+                                <pre>NONVACCINE</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_INACTIVEVACCINE"> </a>
+                            <div class="element clickable constant  constant_INACTIVEVACCINE inherited" data-toggle="collapse" data-target=".constant_INACTIVEVACCINE .collapse">
+                                <h2>INACTIVEVACCINE</h2>
+                                <pre>INACTIVEVACCINE</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_MERGEDPRODUCTS"> </a>
+                            <div class="element clickable constant  constant_MERGEDPRODUCTS inherited" data-toggle="collapse" data-target=".constant_MERGEDPRODUCTS .collapse">
+                                <h2>MERGEDPRODUCTS</h2>
+                                <pre>MERGEDPRODUCTS</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_DILUENT"> </a>
+                            <div class="element clickable constant  constant_DILUENT inherited" data-toggle="collapse" data-target=".constant_DILUENT .collapse">
+                                <h2>DILUENT</h2>
+                                <pre>DILUENT</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_LOCATIONTYPE_CCM"> </a>
+                            <div class="element clickable constant  constant_LOCATIONTYPE_CCM inherited" data-toggle="collapse" data-target=".constant_LOCATIONTYPE_CCM .collapse">
+                                <h2>LOCATIONTYPE_CCM</h2>
+                                <pre>LOCATIONTYPE_CCM</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_LOCATIONTYPE_NONCCM"> </a>
+                            <div class="element clickable constant  constant_LOCATIONTYPE_NONCCM inherited" data-toggle="collapse" data-target=".constant_LOCATIONTYPE_NONCCM .collapse">
+                                <h2>LOCATIONTYPE_NONCCM</h2>
+                                <pre>LOCATIONTYPE_NONCCM</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_PLACEMENT_TRANSACTION_TYPE_P"> </a>
+                            <div class="element clickable constant  constant_PLACEMENT_TRANSACTION_TYPE_P inherited" data-toggle="collapse" data-target=".constant_PLACEMENT_TRANSACTION_TYPE_P .collapse">
+                                <h2>PLACEMENT_TRANSACTION_TYPE_P</h2>
+                                <pre>PLACEMENT_TRANSACTION_TYPE_P</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_PLACEMENT_TRANSACTION_TYPE_PICK"> </a>
+                            <div class="element clickable constant  constant_PLACEMENT_TRANSACTION_TYPE_PICK inherited" data-toggle="collapse" data-target=".constant_PLACEMENT_TRANSACTION_TYPE_PICK .collapse">
+                                <h2>PLACEMENT_TRANSACTION_TYPE_PICK</h2>
+                                <pre>PLACEMENT_TRANSACTION_TYPE_PICK</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_PLACEMENT_TRANSACTION_TYPE_T"> </a>
+                            <div class="element clickable constant  constant_PLACEMENT_TRANSACTION_TYPE_T inherited" data-toggle="collapse" data-target=".constant_PLACEMENT_TRANSACTION_TYPE_T .collapse">
+                                <h2>PLACEMENT_TRANSACTION_TYPE_T</h2>
+                                <pre>PLACEMENT_TRANSACTION_TYPE_T</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_FINISHED"> </a>
+                            <div class="element clickable constant  constant_FINISHED inherited" data-toggle="collapse" data-target=".constant_FINISHED .collapse">
+                                <h2>FINISHED</h2>
+                                <pre>FINISHED</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_STACKED"> </a>
+                            <div class="element clickable constant  constant_STACKED inherited" data-toggle="collapse" data-target=".constant_STACKED .collapse">
+                                <h2>STACKED</h2>
+                                <pre>STACKED</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_RUNNING"> </a>
+                            <div class="element clickable constant  constant_RUNNING inherited" data-toggle="collapse" data-target=".constant_RUNNING .collapse">
+                                <h2>RUNNING</h2>
+                                <pre>RUNNING</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_EXPIRED"> </a>
+                            <div class="element clickable constant  constant_EXPIRED inherited" data-toggle="collapse" data-target=".constant_EXPIRED .collapse">
+                                <h2>EXPIRED</h2>
+                                <pre>EXPIRED</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOTAL"> </a>
+                            <div class="element clickable constant  constant_TOTAL inherited" data-toggle="collapse" data-target=".constant_TOTAL .collapse">
+                                <h2>TOTAL</h2>
+                                <pre>TOTAL</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_PRIORITY1"> </a>
+                            <div class="element clickable constant  constant_PRIORITY1 inherited" data-toggle="collapse" data-target=".constant_PRIORITY1 .collapse">
+                                <h2>PRIORITY1</h2>
+                                <pre>PRIORITY1</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_PRIORITY2"> </a>
+                            <div class="element clickable constant  constant_PRIORITY2 inherited" data-toggle="collapse" data-target=".constant_PRIORITY2 .collapse">
+                                <h2>PRIORITY2</h2>
+                                <pre>PRIORITY2</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_PRIORITY3"> </a>
+                            <div class="element clickable constant  constant_PRIORITY3 inherited" data-toggle="collapse" data-target=".constant_PRIORITY3 .collapse">
+                                <h2>PRIORITY3</h2>
+                                <pre>PRIORITY3</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_REVLOGISTICS"> </a>
+                            <div class="element clickable constant  constant_REVLOGISTICS inherited" data-toggle="collapse" data-target=".constant_REVLOGISTICS .collapse">
+                                <h2>REVLOGISTICS</h2>
+                                <pre>REVLOGISTICS</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                            
+                                                                <h3><i class="icon-custom icon-property"></i> Properties</h3>
+                                                    <a id="property__table"> </a>
+                            <div class="element clickable property  private property__table" data-toggle="collapse" data-target=".property__table .collapse">
+                                <h2>$_table</h2>
+                                <pre>_table : \type</pre>
+                                <div class="labels">
+                                                                                                        </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        var
+                                                    </th>
+                                                    <td>
+                                                                                                                    
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                                    <h3>Type(s)</h3>
+                                            <code>\type</code>
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property__identity"> </a>
+                            <div class="element clickable property  protected property__identity inherited" data-toggle="collapse" data-target=".property__identity .collapse">
+                                <h2>$_identity</h2>
+                                <pre>_identity : \type</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        var
+                                                    </th>
+                                                    <td>
+                                                                                                                    
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                                    <h3>Type(s)</h3>
+                                            <code>\type</code>
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property__em"> </a>
+                            <div class="element clickable property  protected property__em inherited" data-toggle="collapse" data-target=".property__em .collapse">
+                                <h2>$_em for read/write connection</h2>
+                                <pre>_em : \type</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        var
+                                                    </th>
+                                                    <td>
+                                                                                                                    
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                                    <h3>Type(s)</h3>
+                                            <code>\type</code>
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property__em_read"> </a>
+                            <div class="element clickable property  protected property__em_read inherited" data-toggle="collapse" data-target=".property__em_read .collapse">
+                                <h2>for read only connection</h2>
+                                <pre>_em_read : \type</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        var
+                                                    </th>
+                                                    <td>
+                                                                                                                    
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                                    <h3>Type(s)</h3>
+                                            <code>\type</code>
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property__user_id"> </a>
+                            <div class="element clickable property  protected property__user_id inherited" data-toggle="collapse" data-target=".property__user_id .collapse">
+                                <h2>$_user_id</h2>
+                                <pre>_user_id : \type</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        var
+                                                    </th>
+                                                    <td>
+                                                                                                                    
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                                    <h3>Type(s)</h3>
+                                            <code>\type</code>
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_form_values"> </a>
+                            <div class="element clickable property  public property_form_values inherited" data-toggle="collapse" data-target=".property_form_values .collapse">
+                                <h2>$form_values</h2>
+                                <pre>form_values : \type</pre>
+                                <div class="labels">
+                                    <span class="label">inherited</span>                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        var
+                                                    </th>
+                                                    <td>
+                                                                                                                    
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                                    <h3>Type(s)</h3>
+                                            <code>\type</code>
+                                                                            </div>
+                                </div>
+                            </div>
+                                                            </div>
+            </div>
+            <a id="\Model_CcmModels"></a>
+            <ul class="breadcrumb">
+                <li><a href="../index.html"><i class="icon-custom icon-class"></i></a></li>
+                    
+    
+    <li><span class="divider">\</span><a href="../namespaces/default.html">\</a></li>
+
+                <li class="active"><span class="divider">\</span><a href="../classes/Model_CcmModels.html">Model_CcmModels</a></li>
+            </ul>
+        </div>
+    </div>
+
+    </div>
+
+        <footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by
+            <a href="http://glyphicons.com/">Glyphicons</a>.<br/>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and<br/>
+            generated on Tue, 24 May 2016 07:23:15 +0000.<br/>
+    </footer>
+    </body>
+</html>

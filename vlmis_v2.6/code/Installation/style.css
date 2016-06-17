@@ -1,0 +1,142 @@
+body
+{
+	margin: 0px;
+	background: #FFFFFF;
+	font-family: "Open Sans",sans-serif;
+	color:#FFFFFF;
+	background:#F0F0F0;
+}		
+.header-content
+{
+	margin-top: 10px;
+	width:100%; 
+	position:fixed; 
+	top:0px;			
+}		
+.header
+{
+	height:auto;
+	background:#F0F0F0;						
+	margin:0px auto;
+	width:auto;
+	background:#f2f2f2;
+}		
+.content
+{
+	width: auto;
+	background:#F0F0F0;			
+	height:300px;
+	margin:70px auto;
+}
+.headergreen
+{
+	width:100%;
+	background-color:#009c00;
+	box-shadow:2px 2px 2px #333;
+	height:44px;
+}
+.vaccine-banner
+{
+	background-image:url("/MyImages/vaccine_img.jpg");
+	background-position: top right;
+	height: 320px;
+	top:0px;
+	margin-top:0px;
+}
+.vaccine-landing-green
+{
+	background:#009c00;
+	text-transform:uppercase;
+	font-weight:500 !important;
+	width:310px;
+	height:33px;
+	line-height:20px;
+	font-size:20px !important;
+	padding: 5px;
+	
+}
+.container
+{
+	margin-right:auto;
+	margin-left:auto;
+	padding-left:15px;
+	padding-right:15px;
+	width:auto;
+	
+}
+.headergreen-content
+{
+	font-size:30px;
+	width:auto;
+	text-align:center;
+	padding-top:5px;
+}
+.description
+{
+	color:#00000;
+	margin-left:20px;
+	color:#000000;	
+}
+.btn-green
+{
+	background-color:#009c00 !important;
+	height:34px;
+	width:100px;
+	border-width:0;
+	font-size:14px;
+	color:#FFFFFF;	
+	cursor:pointer;
+}
+.footer
+{
+	font-size:12px;
+	z-index: 15;
+	background-color: #009c00 !important;	
+	padding: 8px 20px 5px 20px;
+	line-height:1.4285;
+	background:#ffab62;
+	width:100%;
+	position:fixed;
+	bottom:0;
+	left:0;
+}
+.footer-inner
+{
+	display:inline-block;
+}
+.loadingIcon
+{
+	color: #000000;
+	font-size: 20px;
+	position: absolute;
+	z-index:15;
+	top:45%;
+	left:50%;
+	margin: -100px 0 0 -150px;
+	width: 100%;
+	/* //margin-left: 650px;
+	//margin-top: 200px; */
+}
+.fa-cog
+{
+	color: green;
+	text-shadow: 1px 1px 1px #ccc;
+}
+.fa-spinner
+{
+	color: green;
+	text-shadow: 1px 1px 1px #ccc;
+}
+.fa-check-square
+{
+	color: green;
+}
+.showcss
+{ 
+	display:block;
+}
+.hidecss
+{ 
+	visibility: hidden;
+	display:none;
+}
